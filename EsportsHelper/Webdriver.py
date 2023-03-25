@@ -1,13 +1,14 @@
 import undetected_chromedriver as uc
 from rich import print
 
+
 class Webdriver:
     def __init__(self, headless) -> None:
         self.headless = headless
 
     def createWebdriver(self):
         options = self.addWebdriverOptions(uc.ChromeOptions())
-        print("[green]正在创建浏览器...")
+        print("[green]正在准备中...")
         return uc.Chrome(options=options)
 
     def addWebdriverOptions(self, options):

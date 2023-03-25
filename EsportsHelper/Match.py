@@ -39,38 +39,44 @@ class Match:
         self.driver = driver
         self.config = config
         self.rewards = Rewards(log=log, driver=driver, config=config)
-        self.twitch = Twitch(driver=driver)
+        self.twitch = Twitch(driver=driver, log=log)
+        self.youtube = Youtube(driver=driver, log=log)
         self.currentWindows = {}
-        self.originalWindow = self.driver.current_window_handle
-        self.youtube = Youtube(driver=driver)
+        self.mainWindow = self.driver.current_window_handle
 
-    def watchForMatches(self, delay):
+    def watchMatches(self, delay):
         self.currentWindows = {}
-        self.originalWindow = self.driver.current_window_handle
+        self.mainWindow = self.driver.current_window_handle
         while True:
             try:
-                self.driver.switch_to.window(self.originalWindow)
+                self.driver.switch_to.window(self.mainWindow)
                 time.sleep(3)
+                # raise Exception("测试")
                 self.driver.get("https://lolesports.com/schedule")
                 time.sleep(5)
-                liveMatches = self.getLiveMatches()
-                self.log.info(f"现在有 {len(liveMatches)} 场比赛正在直播中")
-                print(f"[green]现在有 {len(liveMatches)} 场比赛正在直播中[/green]")
-                self.closeFinishedMatches(liveMatches=liveMatches)
+                liveMatches = self.getMatches()
+                if len(liveMatches) == 0:
+                    self.log.info("没有赛区正在直播")
+                    print(f"[green]没有赛区正在直播[/green]")
+                else:
+                    self.log.info(f"现在有 {len(liveMatches)} 个赛区正在直播中")
+                    print(f"[green]现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
+                self.closeTabs(liveMatches=liveMatches)
                 self.openNewMatches(liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
                 time.sleep(3)
-                self.driver.switch_to.window(self.originalWindow)
+                self.driver.switch_to.window(self.mainWindow)
                 self.log.info(f"下一次检查在: {datetime.now() + timedelta(seconds=delay)}")
                 self.log.debug("============================================")
-                print(f"[green]下一次检查在: {datetime.now() + timedelta(seconds=delay)}[/green]")
+                print(f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=delay)).strftime('%m月%d日%H时%M分%S秒')}[/green]")
                 print(f"[green]============================================[/green]")
                 time.sleep(delay)
             except Exception as e:
                 self.log.error("发生错误")
                 print(f"[red]发生错误[/red]")
                 traceback.print_exc()
+                self.log.error(traceback.format_exc())
 
-    def getLiveMatches(self):
+    def getMatches(self):
         try:
             matches = []
             elements = self.driver.find_elements(by=By.CSS_SELECTOR, value=".EventMatch .event.live")
@@ -81,24 +87,29 @@ class Match:
             self.log.error("获取比赛列表失败")
             print(f"[red]获取比赛列表失败[/red]")
             traceback.print_exc()
+            self.log.error(traceback.format_exc())
             return []
 
-    def closeFinishedMatches(self, liveMatches):
-        toRemove = []
-        for k in self.currentWindows.keys():
-            self.driver.switch_to.window(self.currentWindows[k])
-            if k not in liveMatches:
-                self.log.info(f"{k} 比赛结束")
-                print(f"[green]{k} 比赛结束[/green]")
-                self.driver.close()
-                toRemove.append(k)
-                self.driver.switch_to.window(self.originalWindow)
-                time.sleep(5)
-            else:
-                self.rewards.checkRewards(k)
-        for k in toRemove:
-            self.currentWindows.pop(k, None)
-        self.driver.switch_to.window(self.originalWindow)
+    def closeTabs(self, liveMatches):
+        try:
+            removeList = []
+            for k in self.currentWindows.keys():
+                self.driver.switch_to.window(self.currentWindows[k])
+                if k not in liveMatches:
+                    self.log.info(f"{k} 比赛结束")
+                    print(f"[green]{k} 比赛结束[/green]")
+                    self.driver.close()
+                    removeList.append(k)
+                    self.driver.switch_to.window(self.mainWindow)
+                    time.sleep(5)
+                else:
+                    self.rewards.checkRewards(k)
+            for k in removeList:
+                self.currentWindows.pop(k, None)
+            self.driver.switch_to.window(self.mainWindow)
+        except Exception as e:
+            traceback.print_exc()
+            self.log.error(traceback.format_exc())
 
     def openNewMatches(self, liveMatches, disWatchMatches):
         newLiveMatches = set(liveMatches) - set(self.currentWindows.keys())
@@ -131,6 +142,8 @@ class Match:
                 except TimeoutException:
                     self.log.critical("无法设置 Twitch 清晰度. 这场比赛是在 Twitch 上吗?")
                     print("[red]无法设置 Twitch 清晰度. 这场比赛是在 Twitch 上吗?")
+                    traceback.print_exc()
+                    self.log.error(traceback.format_exc())
             else:
                 url = match
                 self.driver.get(url)
@@ -142,4 +155,6 @@ class Match:
                 except TimeoutException:
                     self.log.critical(f"无法设置 Youtube 清晰度. 这场比赛是在 Youtube 上吗?")
                     print("[red]无法设置 Youtube 清晰度. 这场比赛是在 Youtube 上吗?")
+                    traceback.print_exc()
+                    self.log.error(traceback.format_exc())
             time.sleep(5)

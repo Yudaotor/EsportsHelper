@@ -5,9 +5,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 
+
 class Youtube:
-    def __init__(self, driver) -> None:
+    def __init__(self, driver, log) -> None:
         self.driver = driver
+        self.log = log
 
     def setYoutubeQuality(self):
         try:
@@ -29,3 +31,4 @@ class Youtube:
             self.driver.switch_to.default_content()
         except Exception as e:
             traceback.print_exc()
+            self.log.error(traceback.format_exc())

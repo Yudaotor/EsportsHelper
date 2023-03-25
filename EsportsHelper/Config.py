@@ -1,3 +1,4 @@
+import traceback
 from pathlib import Path
 from yaml.parser import ParserError
 from rich import print
@@ -35,8 +36,8 @@ class Config:
             print("[red]配置文件格式错误")
             raise ex
         except Exception as ex:
-            log.error(ex)
-            print(ex)
+            traceback.print_exc()
+            self.log.error(traceback.format_exc())
             raise ex
 
     def __findConfig(self, configPath):

@@ -7,8 +7,9 @@ from selenium.webdriver.common.by import By
 
 
 class Twitch:
-    def __init__(self, driver) -> None:
+    def __init__(self, driver, log) -> None:
         self.driver = driver
+        self.log = log
 
     def setTwitchQuality(self):
         try:
@@ -29,3 +30,4 @@ class Twitch:
             self.driver.switch_to.default_content()
         except Exception as e:
             traceback.print_exc()
+            self.log.error(traceback.format_exc())
