@@ -45,7 +45,7 @@ def main():
     except Exception as ex:
         traceback.print_exc()
         log.error(traceback.format_exc())
-        print("[red]生成WEBDRIVER失败! 你是否使用的是最新版浏览器? 网络是否没问题?为你配置的浏览器检查一下更新吧\n按任意键退出...")
+        print("[red]生成WEBDRIVER失败!\n 你是否使用的是最新版谷歌浏览器? 网络是否没问题?\n为谷歌浏览器检查一下更新吧,或者说，去下一个？\n按任意键退出...")
         input()
         exit()
     loginHandler = LoginHandler(log=log, driver=driver)
