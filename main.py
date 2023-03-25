@@ -29,7 +29,7 @@ def info():
 
 def main():
     info()
-    parser = argparse.ArgumentParser(prog='CapsuleFarmer.exe', description='Farm Esports Capsules by watching lolesports.com.')
+    parser = argparse.ArgumentParser(prog='EsportsHelper.exe', description='EsportsHelper help you to watch matches')
     parser.add_argument('-c', '--config', dest="configPath", default="./config.yaml",
                         help='config file path')
     args = parser.parse_args()
