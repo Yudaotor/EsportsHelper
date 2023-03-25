@@ -14,14 +14,14 @@ from EsportsHelper.Config import Config
 from EsportsHelper.Match import Match
 
 
-CURRENT_VERSION = 1.0
+CURRENT_VERSION = "1.0.0"
 
 
 def info():
     print("[green]=========================================================")
-    print(f"=========        感谢使用 [blue]电竞助手 v{CURRENT_VERSION}[/blue]!        =========")
+    print(f"========        感谢使用 [blue]电竞助手 v{CURRENT_VERSION}[/blue]!        ========")
     print("============ 本程序开源于github链接地址如下: ============")
-    print("====        https://github.com/Yudaotor/EsportsHelper          ====")
+    print("====   https://github.com/Yudaotor/EsportsHelper     ====")
     print("==== 请在使用前[red]阅读教程文件[/red], 以确保你的配置符合要求! ====")
     print("[green]=========================================================")
     print()
@@ -38,7 +38,7 @@ def main():
     config = Config(log, args.configPath)
     if not VersionManager.isLatestVersion(CURRENT_VERSION):
         log.warning("\n==!!! 新版本可用 !!!==\n ==请从此处下载: ==")
-    print("[yellow]\n==!!! 新版本可用 !!!==\n ==请从此处下载: ==[/yellow]")
+    print("[yellow]\n==!!! 新版本可用 !!!==\n ==请从此处下载: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
     driver = None
     try:
         driver = Webdriver(headless=config.headless).createWebdriver()
