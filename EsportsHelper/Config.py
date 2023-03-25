@@ -17,6 +17,8 @@ class Config:
                 self.password = config.get("password", "NoPassword")
                 self.delay = config.get("delay", 600)
                 self.disWatchMatches = config.get("disWatchMatches", [])
+                while "" in self.disWatchMatches:
+                    self.disWatchMatches.remove("")
                 if self.username == "NoUsername" or self.password == "NoPassword":
                     log.error("配置文件中没有账号密码")
                     print("[red]配置文件中没有账号密码")
