@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException
+from rich import print
 
 
 class Rewards:
@@ -27,11 +28,14 @@ class Rewards:
         for i in range(retries):
             if self.findRewardsCheckmark():
                 self.log.info(f"{match} 有资格获取掉落 ✔ ")
+                print(f"[green]{match} 有资格获取掉落 ✔ ")
                 break
             else:
                 if i < 3:
                     self.log.warning(f"{match} 没有资格获取掉落 ❌ 重试中...")
+                    print(f"[yellow]{match} 没有资格获取掉落 ❌ 重试中...")
                     self.driver.refresh()
                 else:
                     self.log.error(f"{match} 没有资格获取掉落 ❌ ")
+                    print(f"[red]{match} 没有资格获取掉落 ❌ ")
 
