@@ -92,8 +92,13 @@ class Match:
             for k in self.currentWindows.keys():
                 self.driver.switch_to.window(self.currentWindows[k])
                 if k not in liveMatches:
-                    self.log.info(f"{k} 比赛结束")
-                    print(f"[green]{k} 比赛结束[/green]")
+                    splitUrl = k.split('/')
+                    if splitUrl[-2] != "live":
+                        match = splitUrl[-2]
+                    else:
+                        match = splitUrl[-1]
+                    self.log.info(f"{match} 比赛结束")
+                    print(f"[green]{match} 比赛结束[/green]")
                     self.driver.close()
                     removeList.append(k)
                     self.driver.switch_to.window(self.mainWindow)
