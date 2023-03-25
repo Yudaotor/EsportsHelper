@@ -1,4 +1,6 @@
 import traceback
+
+import requests
 from rich import print
 from selenium.webdriver.common.by import By
 import time
@@ -10,29 +12,6 @@ from EsportsHelper.Youtube import Youtube
 
 
 class Match:
-    OVERRIDES = {
-        "https://lolesports.com/live/lck_challengers_league": "https://lolesports.com/live/lck_challengers_league/lckcl",
-        "https://lolesports.com/live/lpl": "https://lolesports.com/live/lpl/lpl",
-        "https://lolesports.com/live/lck": "https://lolesports.com/live/lck/lck",
-        "https://lolesports.com/live/lec": "https://lolesports.com/live/lec/lec",
-        "https://lolesports.com/live/lcs": "https://lolesports.com/live/lcs/lcs",
-        "https://lolesports.com/live/lco": "https://lolesports.com/live/lco/lco",
-        "https://lolesports.com/live/cblol_academy": "https://lolesports.com/live/cblol_academy/cblol",
-        "https://lolesports.com/live/cblol": "https://lolesports.com/live/cblol/cblol",
-        "https://lolesports.com/live/lla": "https://lolesports.com/live/lla/lla",
-        "https://lolesports.com/live/ljl-japan/ljl": "https://lolesports.com/live/ljl-japan/riotgamesjp",
-        "https://lolesports.com/live/ljl-japan": "https://lolesports.com/live/ljl-japan/riotgamesjp",
-        "https://lolesports.com/live/turkiye-sampiyonluk-ligi": "https://lolesports.com/live/turkiye-sampiyonluk-ligi/riotgamesturkish",
-        "https://lolesports.com/live/cblol-brazil": "https://lolesports.com/live/cblol-brazil/cblol",
-        "https://lolesports.com/live/pcs/lXLbvl3T_lc": "https://lolesports.com/live/pcs/lolpacific",
-        "https://lolesports.com/live/ljl_academy/ljl": "https://lolesports.com/live/ljl_academy/riotgamesjp",
-        "https://lolesports.com/live/european-masters": "https://lolesports.com/live/european-masters/EUMasters",
-        "https://lolesports.com/live/worlds": "https://lolesports.com/live/worlds/riotgames",
-        "https://lolesports.com/live/honor_division": "https://lolesports.com/live/honor_division/lvpmexlol",
-        "https://lolesports.com/live/volcano_discover_league": "https://lolesports.com/live/volcano_discover_league/lvpecuador",
-        "https://lolesports.com/live/pcs": "https://lolesports.com/live/pcs/lolpacific",
-        "https://lolesports.com/live/hitpoint_masters": "https://lolesports.com/live/hitpoint_masters/hitpointcz",
-    }
 
     def __init__(self, log, driver, config) -> None:
         self.log = log
@@ -43,6 +22,24 @@ class Match:
         self.youtube = Youtube(driver=driver, log=log)
         self.currentWindows = {}
         self.mainWindow = self.driver.current_window_handle
+        self.OVERRIDES = {}
+        try:
+            remoteBestStreamsFile = requests.get("https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt")
+            if remoteBestStreamsFile.status_code == 200:
+                override = remoteBestStreamsFile.text.split(",")
+                first = True
+                for o in override:
+                    temp = o.split("|")
+                    if len(temp) == 2:
+                        if first:
+                            first = False
+                        else:
+                            temp[0] = temp[0][1:]
+                        self.OVERRIDES[temp[0]] = temp[1]
+        except Exception as ex:
+            traceback.print_exc()
+            print(f"[red]获取文件失败,请检查网络[/red]")
+            input("按任意键退出")
 
     def watchMatches(self, delay):
         self.currentWindows = {}
@@ -51,7 +48,6 @@ class Match:
             try:
                 self.driver.switch_to.window(self.mainWindow)
                 time.sleep(3)
-                # raise Exception("测试")
                 self.driver.get("https://lolesports.com/schedule")
                 time.sleep(5)
                 liveMatches = self.getMatches()
@@ -134,6 +130,7 @@ class Match:
             if match in self.OVERRIDES:
                 url = self.OVERRIDES[match]
                 self.driver.get(url)
+
                 self.rewards.checkRewards(url)
                 try:
                     self.twitch.setTwitchQuality()
