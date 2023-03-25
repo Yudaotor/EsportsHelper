@@ -14,6 +14,7 @@ class Webdriver:
     def addWebdriverOptions(self, options):
         options.add_argument("--disable-extensions")
         options.add_argument('--disable-audio-output')
+        options.add_experimental_option("prefs", {"credentials_enable_service": False, "profile.password_manager_enabled": False})
         if self.headless:
             options.add_argument("--headless")
             user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.44"

@@ -38,7 +38,7 @@ def main():
     config = Config(log, args.configPath)
     if not VersionManager.isLatestVersion(CURRENT_VERSION):
         log.warning("\n==!!! 新版本可用 !!!==\n ==请从此处下载: ==")
-    print("[yellow]\n==!!! 新版本可用 !!!==\n ==请从此处下载: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
+        print("[yellow]\n==!!! 新版本可用 !!!==\n ==请从此处下载: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
     driver = None
     try:
         driver = Webdriver(headless=config.headless).createWebdriver()
