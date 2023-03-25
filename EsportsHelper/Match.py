@@ -98,7 +98,7 @@ class Match:
                     else:
                         match = splitUrl[-1]
                     self.log.info(f"{match} 比赛结束")
-                    print(f"[green]{match} 比赛结束[/green]")
+                    print(f"[yellow]{match} 比赛结束[/green]")
                     self.driver.close()
                     removeList.append(k)
                     self.driver.switch_to.window(self.mainWindow)
