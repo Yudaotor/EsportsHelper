@@ -51,6 +51,7 @@ class Match:
                 self.driver.get("https://lolesports.com/schedule")
                 time.sleep(5)
                 liveMatches = self.getMatches()
+                time.sleep(3)
                 if len(liveMatches) == 0:
                     self.log.info("没有赛区正在直播")
                     print(f"[green]没有赛区正在直播[/green]")
