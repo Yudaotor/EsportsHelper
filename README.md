@@ -4,7 +4,7 @@
 哦对了,用的是谷歌浏览器哦 （必须要下一个最新版的谷歌浏览器哦）  
 **如何下载**:点击右侧的[release](https://github.com/Yudaotor/EsportsHelper/releases)下载
 ## 联系我
-使用过程中有遇到什么问题在github上提出issue  
+使用过程中有遇到什么问题或者建议可以在github上提出issue  
 或者可以联系我  
 telegram: https://t.me/Yudaotor  
 discord: Khalil#7843  
