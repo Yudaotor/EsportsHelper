@@ -37,7 +37,7 @@ class Match:
                         self.OVERRIDES[temp[0]] = temp[1]
         except Exception as ex:
             traceback.print_exc()
-            print(f"[red]获取文件失败,请检查网络是否能连上github[/red]")
+            print(f"[red]〒.〒 获取文件失败,请检查网络是否能连上github[/red]")
             input("按任意键退出")
 
     def watchMatches(self, delay):
@@ -45,14 +45,13 @@ class Match:
         self.mainWindow = self.driver.current_window_handle
         while True:
             try:
-                self.log.info("开始检查直播...")
-                print(f"[green]开始检查直播...[/green]")
-
+                self.log.info(" (●__●) 开始检查直播...")
+                print(f"[green] (●__●) 开始检查直播...[/green]")
                 self.driver.switch_to.window(self.mainWindow)
                 isDrop, imgUrl, title = self.rewards.checkNewDrops()
                 if isDrop:
-                    self.log.info(f"发现新的掉落: {title}")
-                    print(f"[blue]发现新的掉落: {title}[/blue]")
+                    self.log.info(f"(ΩДΩ)发现新的掉落: {title}")
+                    print(f"[blue](ΩДΩ)发现新的掉落: {title}[/blue]")
                     if self.config.connectorDropsUrl != "":
                         self.rewards.notifyDrops(imgUrl=imgUrl, title=title)
                 time.sleep(3)
@@ -62,11 +61,11 @@ class Match:
                 liveMatches = self.getMatches()
                 time.sleep(3)
                 if len(liveMatches) == 0:
-                    self.log.info("没有赛区正在直播")
-                    print(f"[green]没有赛区正在直播[/green]")
+                    self.log.info("〒.〒 没有赛区正在直播")
+                    print(f"[green]〒.〒 没有赛区正在直播[/green]")
                 else:
-                    self.log.info(f"现在有 {len(liveMatches)} 个赛区正在直播中")
-                    print(f"[green]现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
+                    self.log.info(f"(^o^)现在有 {len(liveMatches)} 个赛区正在直播中")
+                    print(f"[green](^o^)现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
 
                 self.closeTabs(liveMatches=liveMatches)
 
@@ -80,7 +79,7 @@ class Match:
                 print(f"[green]============================================[/green]")
                 time.sleep(delay)
             except Exception as e:
-                self.log.error("发生错误")
+                self.log.error("（○･ ○）发生错误")
                 print(f"[red]发生错误[/red]")
                 traceback.print_exc()
                 self.log.error(traceback.format_exc())
@@ -93,8 +92,8 @@ class Match:
                 matches.append(element.get_attribute("href"))
             return matches
         except Exception as e:
-            self.log.error("获取比赛列表失败")
-            print(f"[red]获取比赛列表失败[/red]")
+            self.log.error("（○･ ○）获取比赛列表失败")
+            print(f"[red]（○･ ○）获取比赛列表失败[/red]")
             traceback.print_exc()
             self.log.error(traceback.format_exc())
             return []
@@ -110,8 +109,8 @@ class Match:
                         match = splitUrl[-2]
                     else:
                         match = splitUrl[-1]
-                    self.log.info(f"{match} 比赛结束")
-                    print(f"[yellow]{match} 比赛结束[/yellow]")
+                    self.log.info(f"̋(@˃́D˂@) {match} 比赛结束")
+                    print(f"[yellow]̋(@˃́D˂@) {match} 比赛结束[/yellow]")
                     self.driver.close()
                     removeList.append(k)
                     self.driver.switch_to.window(self.mainWindow)
@@ -137,8 +136,8 @@ class Match:
                         skipName = splitUrl[-2]
                     else:
                         skipName = splitUrl[-1]
-                    self.log.debug(f"{skipName}比赛跳过")
-                    print(f"[yellow]{skipName}比赛跳过")
+                    self.log.debug(f"(*^▽^*) {skipName}比赛跳过")
+                    print(f"[yellow](*^▽^*) {skipName}比赛跳过")
                     flag = False
                     break
             if not flag:
@@ -153,14 +152,14 @@ class Match:
                 self.rewards.checkRewards(url)
                 try:
                     if self.twitch.setTwitchQuality():
-                        self.log.info("Twitch 清晰度设置成功")
-                        print("[green]Twitch 清晰度设置成功")
+                        self.log.info("(≧▽≦) Twitch 清晰度设置成功")
+                        print("[green](≧▽≦) Twitch 清晰度设置成功")
                     else:
-                        self.log.critical("Twitch 清晰度设置失败")
-                        print("[red]Twitch 清晰度设置失败")
+                        self.log.critical("(°D°) Twitch 清晰度设置失败")
+                        print("[red](°D°) Twitch 清晰度设置失败")
                 except Exception:
-                    self.log.critical("无法设置 Twitch 清晰度.")
-                    print("[red]无法设置 Twitch 清晰度.")
+                    self.log.critical("(°D°) 无法设置 Twitch 清晰度.")
+                    print("[red](°D°) 无法设置 Twitch 清晰度.")
                     traceback.print_exc()
                     self.log.error(traceback.format_exc())
             else:
@@ -168,15 +167,15 @@ class Match:
                 self.driver.get(url)
                 try:
                     if self.youtube.setYoutubeQuality():
-                        self.log.info("Youtube 清晰度设置成功")
-                        print("[green]Youtube 清晰度设置成功")
+                        self.log.info("(≧▽≦) Youtube 清晰度设置成功")
+                        print("[green](≧▽≦) Youtube 清晰度设置成功")
                     else:
-                        self.log.critical("Youtube 清晰度设置失败")
-                        print("[red]Youtube 清晰度设置失败")
+                        self.log.critical("(°D°) Youtube 清晰度设置失败")
+                        print("[red](°D°) Youtube 清晰度设置失败")
                     self.rewards.checkRewards(url)
                 except Exception:
-                    self.log.critical(f"无法设置 Youtube 清晰度.")
-                    print("[red]无法设置 Youtube 清晰度.")
+                    self.log.critical(f"(°D°) 无法设置 Youtube 清晰度.")
+                    print("[red](°D°) 无法设置 Youtube 清晰度.")
                     traceback.print_exc()
                     self.log.error(traceback.format_exc())
             time.sleep(5)
