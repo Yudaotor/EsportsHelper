@@ -11,7 +11,7 @@ class Twitch:
         self.driver = driver
         self.log = log
 
-    def setTwitchQuality(self):
+    def setTwitchQuality(self) -> bool:
         try:
             wait = WebDriverWait(self.driver, 10)
             wait.until(ec.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR, "iframe[title=Twitch]")))
@@ -28,6 +28,8 @@ class Twitch:
             self.driver.execute_script("arguments[0].click();", options[-1])
             time.sleep(1)
             self.driver.switch_to.default_content()
+            return True
         except Exception as e:
             traceback.print_exc()
             self.log.error(traceback.format_exc())
+            return False

@@ -11,14 +11,11 @@ class Youtube:
         self.driver = driver
         self.log = log
 
-    def setYoutubeQuality(self):
+    def setYoutubeQuality(self) -> bool:
         try:
             wait = WebDriverWait(self.driver, 10)
             wait.until(ec.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR, "iframe[id=video-player-youtube]")))
             wait.until(ec.presence_of_element_located((By.XPATH, "/html/body/div/div/div[27]/div[2]/div[1]/button"))).click()
-
-            # muteButton = wait.until(ec.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div[27]/div[2]/div[1]/span/button")))
-            # self.driver.execute_script("arguments[0].click();", muteButton)
             time.sleep(1)
             settingsButton = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "button[data-tooltip-target-id=ytp-settings-button]")))
             self.driver.execute_script("arguments[0].click();", settingsButton)
@@ -29,6 +26,8 @@ class Youtube:
             option = wait.until(ec.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div[25]/div/div[2]/div[6]/div")))
             self.driver.execute_script("arguments[0].click();", option)
             self.driver.switch_to.default_content()
+            return True
         except Exception as e:
             traceback.print_exc()
             self.log.error(traceback.format_exc())
+            return False
