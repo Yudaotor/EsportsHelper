@@ -82,12 +82,13 @@ class Rewards:
                         }
                     }
                     requests.post(self.config.connectorDropsUrl, json=data)
+                    time.sleep(5)
                 elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
                     embed = {
                         "title": "掉落提醒",
                         "description": f"{title[i]}",
                         "image": {"url": f"{imgUrl[i]}"},
-                        "thumbnail": {"url": f"{imgUrl[i]}"},
+                        "thumbnail": {"url": "https://www.cdnjson.com/images/2023/03/26/QQ20230326153220.jpg"},
                         "color": 6676471,
                     }
                     params = {
@@ -95,11 +96,13 @@ class Rewards:
                         "embeds": [embed]
                     }
                     requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    time.sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
-                        "text": f"{title[i]}",
+                        "text": f"{title[i]}"
                     }
                     requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    time.sleep(5)
         except Exception:
             self.log.error("掉落提醒失败")
             traceback.print_exc()
