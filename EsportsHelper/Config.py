@@ -17,6 +17,7 @@ class Config:
                 self.password = config.get("password", "NoPassword")
                 self.delay = config.get("delay", 600)
                 self.disWatchMatches = config.get("disWatchMatches", [])
+                self.connectorDropsUrl = config.get("connectorDropsUrl", "")
                 while "" in self.disWatchMatches:
                     self.disWatchMatches.remove("")
                 if self.username == "NoUsername" or self.password == "NoPassword":
@@ -26,6 +27,8 @@ class Config:
                     if self.headless == "True" or self.headless == "true":
                         self.headless = True
                     elif self.headless == "False" or self.headless == "false":
+                        self.headless = False
+                    else:
                         self.headless = False
                 if isinstance(self.delay, str):
                     self.delay = int(self.delay)
