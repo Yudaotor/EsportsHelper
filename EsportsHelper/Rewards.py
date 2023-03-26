@@ -14,7 +14,7 @@ class Rewards:
         self.driver = driver
         self.config = config
 
-    def findRewardsCheckmark(self):
+    def findRewardMark(self):
         wait = WebDriverWait(self.driver, 15)
         try:
             wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div[class=status-summary] g")))
@@ -29,7 +29,7 @@ class Rewards:
         else:
             match = splitUrl[-1]
         for i in range(retries):
-            if self.findRewardsCheckmark():
+            if self.findRewardMark():
                 self.log.info(f"{match} 正常观看 √√√√√ ")
                 print(f"{match} 正常观看 [green]√√√√√ ")
                 break
