@@ -30,8 +30,8 @@ class Rewards:
             match = splitUrl[-1]
         for i in range(retries):
             if self.findRewardsCheckmark():
-                self.log.info(f"{match} 可以正常观看 √√√√√ ")
-                print(f"{match} 可以正常观看 [green]√√√√√ ")
+                self.log.info(f"{match} 正常观看 √√√√√ ")
+                print(f"{match} 正常观看 [green]√√√√√ ")
                 break
             else:
                 if i < 3:
