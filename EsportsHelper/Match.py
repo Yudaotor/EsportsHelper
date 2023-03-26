@@ -5,7 +5,6 @@ from rich import print
 from selenium.webdriver.common.by import By
 import time
 from datetime import datetime, timedelta
-from selenium.common.exceptions import TimeoutException
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
 from EsportsHelper.Youtube import Youtube
@@ -58,7 +57,7 @@ class Match:
                         self.rewards.notifyDrops(imgUrl=imgUrl, title=title)
                 time.sleep(3)
 
-                self.driver.get("https://lolesports.com/schedule")
+                self.driver.get("https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
                 time.sleep(5)
                 liveMatches = self.getMatches()
                 time.sleep(3)
