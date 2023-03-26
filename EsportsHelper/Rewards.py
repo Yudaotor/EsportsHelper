@@ -15,7 +15,7 @@ class Rewards:
         self.config = config
 
     def findRewardMark(self):
-        wait = WebDriverWait(self.driver, 15)
+        wait = WebDriverWait(self.driver, 25)
         try:
             wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div[class=status-summary] g")))
         except TimeoutException:
