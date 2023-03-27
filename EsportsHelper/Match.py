@@ -66,8 +66,8 @@ class Match:
                     self.log.info("〒.〒 没有赛区正在直播")
                     print(f"[green]〒.〒 没有赛区正在直播[/green]")
                 else:
-                    self.log.info(f"^o^ 现在有 {len(liveMatches)} 个赛区正在直播中")
-                    print(f"[green]^o^ 现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
+                    self.log.info(f"ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中")
+                    print(f"[green]ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
 
                 self.closeTabs(liveMatches=liveMatches)
 
@@ -151,11 +151,12 @@ class Match:
             if match in self.OVERRIDES:
                 url = self.OVERRIDES[match]
                 self.driver.get(url)
-                self.rewards.checkRewards(url)
+                if not self.rewards.checkRewards(url):
+                    return
                 try:
                     if self.twitch.setTwitchQuality():
-                        self.log.info("≧▽≦ Twitch 清晰度设置成功")
-                        print("[green]≧▽≦ Twitch 清晰度设置成功")
+                        self.log.info("≧-≦ Twitch 清晰度设置成功")
+                        print("[green]≧-≦ Twitch 清晰度设置成功")
                     else:
                         self.log.critical("°D° Twitch 清晰度设置失败")
                         print("[red]°D° Twitch 清晰度设置失败")
@@ -169,8 +170,8 @@ class Match:
                 self.driver.get(url)
                 try:
                     if self.youtube.setYoutubeQuality():
-                        self.log.info("≧▽≦ Youtube 清晰度设置成功")
-                        print("[green]≧▽≦ Youtube 清晰度设置成功")
+                        self.log.info("≧-≦ Youtube 清晰度设置成功")
+                        print("[green]≧-≦ Youtube 清晰度设置成功")
                     else:
                         self.log.critical("°D° Youtube 清晰度设置失败")
                         print("[red]°D° Youtube 清晰度设置失败")
