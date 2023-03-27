@@ -12,6 +12,8 @@ discord: Khalil#7843
 ## 界面
 ![image](https://user-images.githubusercontent.com/87225219/227703640-4ddeb386-36c8-4940-87bd-8af654d377a8.png)
 
+## 运行平台  
+windows,linux  
 
 ## 特性
 1. 自动打开浏览器,进入lolesports.com,查询哪些赛区在进行比赛(在放录播的赛区会被忽视),进入观看并设置为最低清晰度(为了节省流量)
