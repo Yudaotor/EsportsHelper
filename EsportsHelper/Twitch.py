@@ -13,10 +13,14 @@ class Twitch:
 
     def setTwitchQuality(self) -> bool:
         try:
-            wait = WebDriverWait(self.driver, 10)
+            wait = WebDriverWait(self.driver, 15)
             wait.until(ec.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR, "iframe[title=Twitch]")))
             time.sleep(3)
-            wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button]"))).click()
+            muteButton = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button]")))
+            try:
+                muteButton.click()
+            except TimeoutError:
+                self.driver.execute_script("arguments[0].click();", muteButton)
             time.sleep(1)
             settingsButton = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "button[data-a-target=player-settings-button]")))
             self.driver.execute_script("arguments[0].click();", settingsButton)
