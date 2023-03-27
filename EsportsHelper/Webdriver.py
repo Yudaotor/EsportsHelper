@@ -8,7 +8,7 @@ class Webdriver:
 
     def createWebdriver(self):
         options = self.addWebdriverOptions(uc.ChromeOptions())
-        print("[green]  ㅍ_ㅍ 正在准备中...")
+        print("[green]ㅍ_ㅍ 正在准备中...")
         return uc.Chrome(options=options)
 
     def addWebdriverOptions(self, options):
