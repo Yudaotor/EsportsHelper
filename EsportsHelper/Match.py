@@ -45,18 +45,20 @@ class Match:
         self.mainWindow = self.driver.current_window_handle
         while True:
             try:
-                self.log.info(" (●__●) 开始检查直播...")
-                print(f"[green] (●__●) 开始检查直播...[/green]")
+                self.log.info("●_● 开始检查直播...")
+                print(f"[green]●_● 开始检查直播...[/green]")
                 self.driver.switch_to.window(self.mainWindow)
                 isDrop, imgUrl, title = self.rewards.checkNewDrops()
                 if isDrop:
-                    self.log.info(f"(ΩДΩ)发现新的掉落: {title}")
-                    print(f"[blue](ΩДΩ)发现新的掉落: {title}[/blue]")
+                    self.log.info(f"ΩДΩ 发现新的掉落: {title}")
+                    print(f"[blue]ΩДΩ 发现新的掉落: {title}[/blue]")
                     if self.config.connectorDropsUrl != "":
                         self.rewards.notifyDrops(imgUrl=imgUrl, title=title)
                 time.sleep(3)
-
-                self.driver.get("https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
+                try:
+                    self.driver.get("https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
+                except Exception as e:
+                    self.driver.get("https://lolesports.com/schedule")
                 time.sleep(5)
                 liveMatches = self.getMatches()
                 time.sleep(3)
@@ -64,8 +66,8 @@ class Match:
                     self.log.info("〒.〒 没有赛区正在直播")
                     print(f"[green]〒.〒 没有赛区正在直播[/green]")
                 else:
-                    self.log.info(f"(^o^)现在有 {len(liveMatches)} 个赛区正在直播中")
-                    print(f"[green](^o^)现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
+                    self.log.info(f"^o^ 现在有 {len(liveMatches)} 个赛区正在直播中")
+                    print(f"[green]^o^ 现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
 
                 self.closeTabs(liveMatches=liveMatches)
 
@@ -75,12 +77,12 @@ class Match:
                 self.driver.switch_to.window(self.mainWindow)
                 self.log.info(f"下一次检查在: {datetime.now() + timedelta(seconds=delay)}")
                 self.log.debug("============================================")
-                print(f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=delay)).strftime('%m月%d日%H时%M分%S秒')}[/green]")
+                print(f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=delay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
                 print(f"[green]============================================[/green]")
                 time.sleep(delay)
             except Exception as e:
-                self.log.error("（○･ ○）发生错误")
-                print(f"[red]发生错误[/red]")
+                self.log.error("Q･Q 发生错误")
+                print(f"[red]Q･Q 发生错误[/red]")
                 traceback.print_exc()
                 self.log.error(traceback.format_exc())
 
@@ -92,8 +94,8 @@ class Match:
                 matches.append(element.get_attribute("href"))
             return matches
         except Exception as e:
-            self.log.error("（○･ ○）获取比赛列表失败")
-            print(f"[red]（○･ ○）获取比赛列表失败[/red]")
+            self.log.error("Q･Q 获取比赛列表失败")
+            print(f"[red]Q･Q 获取比赛列表失败[/red]")
             traceback.print_exc()
             self.log.error(traceback.format_exc())
             return []
@@ -109,8 +111,8 @@ class Match:
                         match = splitUrl[-2]
                     else:
                         match = splitUrl[-1]
-                    self.log.info(f"̋(@˃́D˂@) {match} 比赛结束")
-                    print(f"[yellow]̋(@˃́D˂@) {match} 比赛结束[/yellow]")
+                    self.log.info(f"̋0.0 {match} 比赛结束")
+                    print(f"[yellow]̋0.0 {match} 比赛结束[/yellow]")
                     self.driver.close()
                     removeList.append(k)
                     self.driver.switch_to.window(self.mainWindow)
@@ -136,8 +138,8 @@ class Match:
                         skipName = splitUrl[-2]
                     else:
                         skipName = splitUrl[-1]
-                    self.log.debug(f"(*^▽^*) {skipName}比赛跳过")
-                    print(f"[yellow](*^▽^*) {skipName}比赛跳过")
+                    self.log.debug(f"^▽^ {skipName}比赛跳过")
+                    print(f"[yellow]^▽^ {skipName}比赛跳过")
                     flag = False
                     break
             if not flag:
@@ -152,14 +154,14 @@ class Match:
                 self.rewards.checkRewards(url)
                 try:
                     if self.twitch.setTwitchQuality():
-                        self.log.info("(≧▽≦) Twitch 清晰度设置成功")
-                        print("[green](≧▽≦) Twitch 清晰度设置成功")
+                        self.log.info("≧▽≦ Twitch 清晰度设置成功")
+                        print("[green]≧▽≦ Twitch 清晰度设置成功")
                     else:
-                        self.log.critical("(°D°) Twitch 清晰度设置失败")
-                        print("[red](°D°) Twitch 清晰度设置失败")
+                        self.log.critical("°D° Twitch 清晰度设置失败")
+                        print("[red]°D° Twitch 清晰度设置失败")
                 except Exception:
-                    self.log.critical("(°D°) 无法设置 Twitch 清晰度.")
-                    print("[red](°D°) 无法设置 Twitch 清晰度.")
+                    self.log.critical("°D° 无法设置 Twitch 清晰度.")
+                    print("[red]°D° 无法设置 Twitch 清晰度.")
                     traceback.print_exc()
                     self.log.error(traceback.format_exc())
             else:
@@ -167,15 +169,15 @@ class Match:
                 self.driver.get(url)
                 try:
                     if self.youtube.setYoutubeQuality():
-                        self.log.info("(≧▽≦) Youtube 清晰度设置成功")
-                        print("[green](≧▽≦) Youtube 清晰度设置成功")
+                        self.log.info("≧▽≦ Youtube 清晰度设置成功")
+                        print("[green]≧▽≦ Youtube 清晰度设置成功")
                     else:
-                        self.log.critical("(°D°) Youtube 清晰度设置失败")
-                        print("[red](°D°) Youtube 清晰度设置失败")
+                        self.log.critical("°D° Youtube 清晰度设置失败")
+                        print("[red]°D° Youtube 清晰度设置失败")
                     self.rewards.checkRewards(url)
                 except Exception:
-                    self.log.critical(f"(°D°) 无法设置 Youtube 清晰度.")
-                    print("[red](°D°) 无法设置 Youtube 清晰度.")
+                    self.log.critical(f"°D° 无法设置 Youtube 清晰度.")
+                    print("[red]°D° 无法设置 Youtube 清晰度.")
                     traceback.print_exc()
                     self.log.error(traceback.format_exc())
             time.sleep(5)
