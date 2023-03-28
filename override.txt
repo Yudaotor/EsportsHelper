@@ -23,3 +23,4 @@ https://lolesports.com/live/movistar_fiber_golden_league|https://lolesports.com/
 https://lolesports.com/live/honor_league|https://lolesports.com/live/honor_league/lvpcl,
 https://lolesports.com/live/nlc/nlclol|https://lolesports.com/live/nlc/nlclol,
 https://lolesports.com/live/elite_series|https://lolesports.com/live/elite_series/rtbf_ixpe,
+https://lolesports.com/live/north_american_challenger_league|https://lolesports.com/live/north_american_challenger_league/challengersleague
