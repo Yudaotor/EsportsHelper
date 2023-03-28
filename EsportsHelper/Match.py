@@ -1,8 +1,10 @@
 import random
+import sys
 import traceback
 
 import requests
 from rich import print
+from selenium.common import WebDriverException
 from selenium.webdriver.common.by import By
 import time
 from datetime import datetime, timedelta
@@ -24,6 +26,7 @@ class Match:
         self.currentWindows = {}
         self.mainWindow = self.driver.current_window_handle
         self.OVERRIDES = {}
+        self.retryTimes = 3
         try:
             req = requests.session()
             headers = {'Content-Type': 'text/plain; charset=utf-8', 'Connection': 'close'}
@@ -89,11 +92,31 @@ class Match:
                 print(f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
                 print(f"[green]============================================[/green]")
                 time.sleep(newDelay)
+                self.retryTimes = 3
+            except WebDriverException as e:
+                self.retryTimes -= 1
+                self.log.error("Q_Q webdriver发生错误, 重试中")
+                print(f"[red]Q_Q webdriver发生错误, 重试中[/red]")
+                time.sleep(2)
+                if self.retryTimes <= 0:
+                    self.log.error("Q_Q webdriver发生错误, 将于3秒后退出...")
+                    print(f"[red]Q_Q webdriver发生错误, 将于3秒后退出...[/red]")
+                    time.sleep(3)
+                    self.driver.quit()
+                    sys.exit()
             except Exception as e:
+                self.retryTimes -= 1
                 self.log.error("Q_Q 发生错误")
                 print(f"[red]Q_Q 发生错误[/red]")
                 traceback.print_exc()
                 self.log.error(traceback.format_exc())
+                time.sleep(2)
+                if self.retryTimes <= 0:
+                    self.log.error("Q_Q 发生错误, 将于3秒后退出...")
+                    print(f"[red]Q_Q 发生错误, 将于3秒后退出...[/red]")
+                    time.sleep(3)
+                    self.driver.quit()
+                    sys.exit()
 
     def getMatchInfo(self):
         try:
