@@ -1,3 +1,4 @@
+import random
 import traceback
 
 import requests
@@ -79,10 +80,11 @@ class Match:
                 self.log.debug("============================================")
                 print(f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=delay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
                 print(f"[green]============================================[/green]")
-                time.sleep(delay)
+                randomDelay = random.randint(int(delay * 0.7), int(delay * 1.3))
+                time.sleep(randomDelay)
             except Exception as e:
-                self.log.error("Q･Q 发生错误")
-                print(f"[red]Q･Q 发生错误[/red]")
+                self.log.error("Q_Q 发生错误")
+                print(f"[red]Q_Q 发生错误[/red]")
                 traceback.print_exc()
                 self.log.error(traceback.format_exc())
 
@@ -94,8 +96,8 @@ class Match:
                 matches.append(element.get_attribute("href"))
             return matches
         except Exception as e:
-            self.log.error("Q･Q 获取比赛列表失败")
-            print(f"[red]Q･Q 获取比赛列表失败[/red]")
+            self.log.error("Q_Q 获取比赛列表失败")
+            print(f"[red]Q_Q 获取比赛列表失败[/red]")
             traceback.print_exc()
             self.log.error(traceback.format_exc())
             return []
@@ -138,7 +140,7 @@ class Match:
                         skipName = splitUrl[-2]
                     else:
                         skipName = splitUrl[-1]
-                    self.log.debug(f"^▽^ {skipName}比赛跳过")
+                    self.log.info(f"^▽^ {skipName}比赛跳过")
                     print(f"[yellow]^▽^ {skipName}比赛跳过")
                     flag = False
                     break
@@ -155,8 +157,8 @@ class Match:
                     return
                 try:
                     if self.twitch.setTwitchQuality():
-                        self.log.info("≧-≦ Twitch 清晰度设置成功")
-                        print("[green]≧-≦ Twitch 清晰度设置成功")
+                        self.log.info(">-< Twitch 清晰度设置成功")
+                        print("[green]>-< Twitch 清晰度设置成功")
                     else:
                         self.log.critical("°D° Twitch 清晰度设置失败")
                         print("[red]°D° Twitch 清晰度设置失败")
@@ -170,8 +172,8 @@ class Match:
                 self.driver.get(url)
                 try:
                     if self.youtube.setYoutubeQuality():
-                        self.log.info("≧-≦ Youtube 清晰度设置成功")
-                        print("[green]≧-≦ Youtube 清晰度设置成功")
+                        self.log.info(">-< Youtube 清晰度设置成功")
+                        print("[green]>-< Youtube 清晰度设置成功")
                     else:
                         self.log.critical("°D° Youtube 清晰度设置失败")
                         print("[red]°D° Youtube 清晰度设置失败")
