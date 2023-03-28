@@ -19,7 +19,7 @@ class Twitch:
             muteButton = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button]")))
             try:
                 muteButton.click()
-            except TimeoutError:
+            except Exception:
                 self.driver.execute_script("arguments[0].click();", muteButton)
             time.sleep(1)
             settingsButton = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "button[data-a-target=player-settings-button]")))

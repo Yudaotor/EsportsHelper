@@ -13,9 +13,13 @@ class Youtube:
 
     def setYoutubeQuality(self) -> bool:
         try:
-            wait = WebDriverWait(self.driver, 10)
+            wait = WebDriverWait(self.driver, 15)
             wait.until(ec.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR, "iframe[id=video-player-youtube]")))
-            wait.until(ec.presence_of_element_located((By.XPATH, "/html/body/div/div/div[27]/div[2]/div[1]/button"))).click()
+            playButton = wait.until(ec.presence_of_element_located((By.XPATH, "/html/body/div/div/div[27]/div[2]/div[1]/button")))
+            try:
+                playButton.click()
+            except Exception:
+                self.driver.execute_script("arguments[0].click();", playButton)
             time.sleep(1)
             settingsButton = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "button[data-tooltip-target-id=ytp-settings-button]")))
             self.driver.execute_script("arguments[0].click();", settingsButton)
