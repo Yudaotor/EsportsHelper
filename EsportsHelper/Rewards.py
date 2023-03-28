@@ -14,7 +14,7 @@ class Rewards:
         self.driver = driver
         self.config = config
 
-    def findRewardMark(self):
+    def isRewardMarkExist(self):
         wait = WebDriverWait(self.driver, 25)
         try:
             wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div[class=status-summary] g")))
@@ -22,19 +22,19 @@ class Rewards:
             return False
         return True
 
-    def checkRewards(self, url, retries=4) -> bool:
+    def checkRewards(self, url, retryTimes=4) -> bool:
         splitUrl = url.split('/')
         if splitUrl[-2] != "live":
             match = splitUrl[-2]
         else:
             match = splitUrl[-1]
-        for i in range(retries):
-            if self.findRewardMark():
+        for i in range(retryTimes):
+            if self.isRewardMarkExist():
                 self.log.info(f"√√√√√ {match} 正常观看 √√√√√ ")
                 print(f"[green]√√√√√[/green] {match} 正常观看 [green]√√√√√ ")
                 return True
             else:
-                if i < 3:
+                if i != retryTimes - 1:
                     self.log.warning(f"××××× {match} 观看异常 ××××× 重试中...")
                     print(f"[yellow]×××××[/yellow] {match} 观看异常 [yellow]××××× 重试中...")
                     self.driver.refresh()
@@ -111,6 +111,6 @@ class Rewards:
                     requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                     time.sleep(5)
         except Exception:
-            self.log.error("〒.〒  掉落提醒失败")
+            self.log.error("〒.〒 掉落提醒失败")
             traceback.print_exc()
-            print("[red]〒.〒  掉落提醒失败[/red]")
+            print("[red]〒.〒 掉落提醒失败[/red]")

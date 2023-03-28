@@ -47,7 +47,7 @@ def main():
     except Exception as ex:
         traceback.print_exc()
         log.error(traceback.format_exc())
-        print("[red]눈_눈 生成WEBDRIVER失败!\n 你是否使用的是最新版谷歌浏览器? 网络是否没问题?\n为谷歌浏览器检查一下更新吧,或者说，去下一个？\n以上都检查过的话可以试一下用管理员方式打开\n按任意键退出...")
+        print("[red]눈_눈 生成WEBDRIVER失败!\n你是否使用的是最新版谷歌浏览器? 网络是否没问题?\n为谷歌浏览器检查一下更新吧,或者说，去下一个？\n以上都检查过的话可以试一下用管理员方式打开\n按任意键退出...")
         input()
         exit()
     loginHandler = LoginHandler(log=log, driver=driver)
@@ -59,21 +59,23 @@ def main():
     try:
         loginHandler.automaticLogIn(config.username, config.password)
     except TimeoutException:
-        log.error("(눈_눈) 自动登录失败,账号密码是否正确?")
-        print("[red](눈_눈) 自动登录失败,账号密码是否正确?[/red]")
+        log.error("눈_눈 自动登录失败,账号密码是否正确?")
+        print("[red]눈_눈 自动登录失败,账号密码是否正确?[/red]")
         if config.headless:
             driver.quit()
             log.info("退出中...")
             print("[green]退出中...[/green]")
+            input("按任意键退出")
             exit()
     while not driver.find_elements(by=By.CSS_SELECTOR, value="div.riotbar-summoner-name"):
         print("[red]눈_눈 自动登录失败...[/red]")
         log.error("눈_눈 自动登录失败...")
-        log.info("눈_눈 等待登录中...")
-        print("[yellow]눈_눈 等待登录中...[/yellow]")
+        log.info("눈_눈 等待手动登录中...")
+        print("[yellow]눈_눈 等待手动登录中...[/yellow]")
         time.sleep(5)
-    log.info("∩_∩ 好嘞 登录成功!ε=(´ο｀*)")
-    print("[green]∩_∩ 好嘞 登录成功![/green]")
+    log.info("∩_∩ 好嘞 登录成功")
+    print("[green]∩_∩ 好嘞 登录成功[/green]")
+
     Match(log=log, driver=driver, config=config).watchMatches(delay=config.delay)
 
 
