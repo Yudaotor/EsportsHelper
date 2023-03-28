@@ -185,8 +185,8 @@ class Match:
                     return
                 try:
                     if self.twitch.setTwitchQuality():
-                        self.log.info(">_< Twitch 清晰度设置成功")
-                        print("[green]>_< Twitch 清晰度设置成功")
+                        self.log.info(">_< Twitch 160p清晰度设置成功")
+                        print("[green]>_< Twitch 160p清晰度设置成功")
                     else:
                         self.log.critical("°D° Twitch 清晰度设置失败")
                         print("[red]°D° Twitch 清晰度设置失败")
@@ -200,8 +200,8 @@ class Match:
                 self.driver.get(url)
                 try:
                     if self.youtube.setYoutubeQuality():
-                        self.log.info(">_< Youtube 清晰度设置成功")
-                        print("[green]>_< Youtube 清晰度设置成功")
+                        self.log.info(">_< Youtube 144p清晰度设置成功")
+                        print("[green]>_< Youtube 144p清晰度设置成功")
                     else:
                         self.log.critical("°D° Youtube 清晰度设置失败")
                         print("[red]°D° Youtube 清晰度设置失败")
