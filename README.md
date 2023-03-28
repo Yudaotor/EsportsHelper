@@ -1,10 +1,10 @@
-# EsportsHelper
+# 电竞助手 EsportsHelper
 通过selenium模拟浏览器来自动观看电竞比赛,网址:[lolesports](lolesports.com)  
 至于会不会被拳头检测到这个问题,目前还没有答案.  
-哦对了,用的是谷歌浏览器哦  
+哦对了,用的是谷歌浏览器哦 （必须要下一个最新版的谷歌浏览器哦）  
 **如何下载**:点击右侧的[release](https://github.com/Yudaotor/EsportsHelper/releases)下载
 ## 联系我
-使用过程中有遇到什么问题在github上提出issue  
+使用过程中有遇到什么问题或者建议可以在github上提出issue  
 或者可以联系我  
 telegram: https://t.me/Yudaotor  
 discord: Khalil#7843  
@@ -12,6 +12,8 @@ discord: Khalil#7843
 ## 界面
 ![image](https://user-images.githubusercontent.com/87225219/227703640-4ddeb386-36c8-4940-87bd-8af654d377a8.png)
 
+## 运行平台  
+windows,linux  
 
 ## 特性
 1. 自动打开浏览器,进入lolesports.com,查询哪些赛区在进行比赛(在放录播的赛区会被忽视),进入观看并设置为最低清晰度(为了节省流量)
@@ -49,3 +51,5 @@ volcano_discover_league:volcano_discover_league
 hitpoint_masters:hitpoint_masters 
 worlds:worlds  
 european-masters:european-masters  
+## by the way
+本项目思路及部分代码来自Poro，感谢。[此处](https://github.com/LeagueOfPoro/EsportsCapsuleFarmer)
