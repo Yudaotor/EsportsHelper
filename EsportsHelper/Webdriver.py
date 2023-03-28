@@ -1,5 +1,6 @@
 import undetected_chromedriver as uc
 from rich import print
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 class Webdriver:
@@ -9,7 +10,15 @@ class Webdriver:
     def createWebdriver(self):
         options = self.addWebdriverOptions(uc.ChromeOptions())
         print("[green]ㅍ_ㅍ 正在准备中...")
-        return uc.Chrome(options=options)
+        if self.config.platForm == "linux":
+            return uc.Chrome(options=options)
+        elif self.config.platForm == "windows":
+            chromeDriverManager = ChromeDriverManager(path=".\\driver")
+            version = int(chromeDriverManager.driver.get_version().split(".")[0])
+            driverPath = chromeDriverManager.install()
+            return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version)
+        else:
+            print("[red]不支持的操作系统")
 
     def addWebdriverOptions(self, options):
         options.add_argument("--disable-extensions")
