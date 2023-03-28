@@ -6,6 +6,7 @@ from rich import print
 from selenium.webdriver.common.by import By
 import time
 from datetime import datetime, timedelta
+from urllib3.exceptions import MaxRetryError
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
 from EsportsHelper.Youtube import Youtube
@@ -24,9 +25,11 @@ class Match:
         self.mainWindow = self.driver.current_window_handle
         self.OVERRIDES = {}
         try:
-            remoteBestStreamsFile = requests.get("https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt")
-            if remoteBestStreamsFile.status_code == 200:
-                override = remoteBestStreamsFile.text.split(",")
+            req = requests.session()
+            headers = {'Content-Type': 'text/plain; charset=utf-8', 'Connection': 'close'}
+            remoteOverrideFile = req.get("https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
+            if remoteOverrideFile.status_code == 200:
+                override = remoteOverrideFile.text.split(",")
                 first = True
                 for o in override:
                     temp = o.split("|")
@@ -36,6 +39,10 @@ class Match:
                         else:
                             temp[0] = temp[0][1:]
                         self.OVERRIDES[temp[0]] = temp[1]
+        except MaxRetryError:
+            self.log.error("获取文件失败, 请稍等再试")
+            print(f"[red]〒.〒 获取文件失败, 请稍等再试[/red]")
+            input("按任意键退出")
         except Exception as ex:
             traceback.print_exc()
             print(f"[red]〒.〒 获取文件失败,请检查网络是否能连上github[/red]")
@@ -61,7 +68,7 @@ class Match:
                 except Exception as e:
                     self.driver.get("https://lolesports.com/schedule")
                 time.sleep(5)
-                liveMatches = self.getMatches()
+                liveMatches = self.getMatchInfo()
                 time.sleep(3)
                 if len(liveMatches) == 0:
                     self.log.info("〒.〒 没有赛区正在直播")
@@ -70,9 +77,9 @@ class Match:
                     self.log.info(f"ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中")
                     print(f"[green]ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
 
-                self.closeTabs(liveMatches=liveMatches)
+                self.closeFinishedTabs(liveMatches=liveMatches)
 
-                self.openNewMatches(liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
+                self.startWatchNewMatches(liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
                 time.sleep(3)
 
                 self.driver.switch_to.window(self.mainWindow)
@@ -88,7 +95,7 @@ class Match:
                 traceback.print_exc()
                 self.log.error(traceback.format_exc())
 
-    def getMatches(self):
+    def getMatchInfo(self):
         try:
             matches = []
             elements = self.driver.find_elements(by=By.CSS_SELECTOR, value=".EventMatch .event.live")
@@ -102,7 +109,7 @@ class Match:
             self.log.error(traceback.format_exc())
             return []
 
-    def closeTabs(self, liveMatches):
+    def closeFinishedTabs(self, liveMatches):
         try:
             removeList = []
             for k in self.currentWindows.keys():
@@ -128,7 +135,7 @@ class Match:
             traceback.print_exc()
             self.log.error(traceback.format_exc())
 
-    def openNewMatches(self, liveMatches, disWatchMatches):
+    def startWatchNewMatches(self, liveMatches, disWatchMatches):
         newLiveMatches = set(liveMatches) - set(self.currentWindows.keys())
         for match in newLiveMatches:
 
@@ -140,8 +147,8 @@ class Match:
                         skipName = splitUrl[-2]
                     else:
                         skipName = splitUrl[-1]
-                    self.log.info(f"^▽^ {skipName}比赛跳过")
-                    print(f"[yellow]^▽^ {skipName}比赛跳过")
+                    self.log.info(f"X_X {skipName}比赛跳过")
+                    print(f"[yellow]X_X {skipName}比赛跳过")
                     flag = False
                     break
             if not flag:
@@ -157,8 +164,8 @@ class Match:
                     return
                 try:
                     if self.twitch.setTwitchQuality():
-                        self.log.info(">-< Twitch 清晰度设置成功")
-                        print("[green]>-< Twitch 清晰度设置成功")
+                        self.log.info(">_< Twitch 清晰度设置成功")
+                        print("[green]>_< Twitch 清晰度设置成功")
                     else:
                         self.log.critical("°D° Twitch 清晰度设置失败")
                         print("[red]°D° Twitch 清晰度设置失败")
@@ -172,8 +179,8 @@ class Match:
                 self.driver.get(url)
                 try:
                     if self.youtube.setYoutubeQuality():
-                        self.log.info(">-< Youtube 清晰度设置成功")
-                        print("[green]>-< Youtube 清晰度设置成功")
+                        self.log.info(">_< Youtube 清晰度设置成功")
+                        print("[green]>_< Youtube 清晰度设置成功")
                     else:
                         self.log.critical("°D° Youtube 清晰度设置失败")
                         print("[red]°D° Youtube 清晰度设置失败")
