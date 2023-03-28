@@ -1,8 +1,8 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-FILE_SIZE = 1024 * 1024 * 100  # 100 MB
-BACKUP_COUNT = 5  # keep up to 5 files
+FILE_SIZE = 1024 * 1024 * 100
+BACKUP_COUNT = 5
 
 
 class Logger:
@@ -26,7 +26,7 @@ class Logger:
         log.info("-------------------------------------------------")
         log.info("----------- Program started   ---------------")
         log.info("----------- 本项目开源于github   ---------------")
-        log.info(r"----- 地址: -------")
+        log.info(r"----- 地址: https://github.com/Yudaotor/EsportsHelper -------")
         log.info(r"----------- 可以点一个小星星吗(*^_^*) ---------------")
         log.info("-------------------------------------------------")
         return log
