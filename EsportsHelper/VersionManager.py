@@ -1,4 +1,4 @@
-import traceback
+from traceback import print_exc
 import requests as req
 from rich import print
 
@@ -16,7 +16,7 @@ class VersionManager:
                 return "0.0.0"
         except Exception as e:
             print("[red]从github获取最新版信息失败!")
-            traceback.print_exc()
+            print_exc()
             return "0.0.0"
 
     @staticmethod

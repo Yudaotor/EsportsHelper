@@ -1,6 +1,5 @@
 import time
-import traceback
-
+from traceback import print_exc, format_exc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -40,6 +39,6 @@ class LoginHandler:
             time.sleep(5)
             wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.riotbar-summoner-name")))
         except Exception as e:
-            traceback.print_exc()
-            self.log.error(traceback.format_exc())
+            print_exc()
+            self.log.error(format_exc())
 

@@ -1,4 +1,4 @@
-import traceback
+from traceback import print_exc, format_exc
 from pathlib import Path
 from yaml.parser import ParserError
 from rich import print
@@ -27,8 +27,8 @@ class Config:
             log.error("配置文件格式错误")
             print("[red]配置文件格式错误")
         except Exception as ex:
-            traceback.print_exc()
-            self.log.error(traceback.format_exc())
+            print_exc()
+            self.log.error(format_exc())
 
     def format(self):
         while "" in self.disWatchMatches:

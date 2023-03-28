@@ -1,9 +1,9 @@
-import sys
-import traceback
+from sys import exit
+from traceback import print_exc, format_exc
 from pathlib import Path
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
-import time
+from time import sleep
 import argparse
 from rich import print
 from EsportsHelper.LoginHandler import LoginHandler
@@ -46,14 +46,14 @@ def main():
     try:
         driver = Webdriver(config).createWebdriver()
     except TypeError:
-        traceback.print_exc()
-        log.error(traceback.format_exc())
+        print_exc()
+        log.error(format_exc())
         print("[red]눈_눈 生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n以上都检查过的话如还不行检查节点或是尝试可以用管理员方式打开\n按任意键退出...")
         input()
         exit()
     except Exception:
-        traceback.print_exc()
-        log.error(traceback.format_exc())
+        print_exc()
+        log.error(format_exc())
         print("[red]눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用\n按任意键退出...")
         input()
         exit()
@@ -80,7 +80,7 @@ def main():
         log.error("눈_눈 自动登录失败...")
         log.info("눈_눈 等待手动登录中...")
         print("[yellow]눈_눈 等待手动登录中...[/yellow]")
-        time.sleep(5)
+        sleep(5)
     log.info("∩_∩ 好嘞 登录成功")
     print("[green]∩_∩ 好嘞 登录成功[/green]")
 
@@ -95,4 +95,4 @@ if __name__ == '__main__':
         if driver is not None:
             driver.quit()
         print("[red]------程序退出------")
-        sys.exit()
+        exit()
