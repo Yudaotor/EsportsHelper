@@ -37,6 +37,7 @@ def main():
                         help='config file path')
     args = parser.parse_args()
     Path("./logs/").mkdir(parents=True, exist_ok=True)
+    Path("./driver/").mkdir(parents=True, exist_ok=True)
     log = Logger().createLogger()
     config = Config(log, args.configPath)
     if not VersionManager.isLatestVersion(CURRENT_VERSION):
@@ -44,10 +45,16 @@ def main():
         print("[yellow]\n==!!! 新版本可用 !!!==\n ==请从此处下载: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
     try:
         driver = Webdriver(config).createWebdriver()
-    except Exception as ex:
+    except TypeError:
         traceback.print_exc()
         log.error(traceback.format_exc())
-        print("[red]눈_눈 生成WEBDRIVER失败!\n你是否使用的是最新版谷歌浏览器? 网络是否没问题?\n为谷歌浏览器检查一下更新吧,或者说，去下一个？\n以上都检查过的话可以试一下用管理员方式打开\n按任意键退出...")
+        print("[red]눈_눈 生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n以上都检查过的话如还不行检查节点或是尝试可以用管理员方式打开\n按任意键退出...")
+        input()
+        exit()
+    except Exception:
+        traceback.print_exc()
+        log.error(traceback.format_exc())
+        print("[red]눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用\n按任意键退出...")
         input()
         exit()
     loginHandler = LoginHandler(log=log, driver=driver)
@@ -56,6 +63,7 @@ def main():
             "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
     except Exception as e:
         driver.get("https://lolesports.com/schedule")
+    driver.set_window_size(960, 768)
     try:
         loginHandler.automaticLogIn(config.username, config.password)
     except TimeoutException:
