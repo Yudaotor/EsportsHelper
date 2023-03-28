@@ -43,11 +43,11 @@ def main():
         log.warning("\n==!!! 新版本可用 !!!==\n ==请从此处下载: ==")
         print("[yellow]\n==!!! 新版本可用 !!!==\n ==请从此处下载: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
     try:
-        driver = Webdriver(headless=config.headless).createWebdriver()
+        driver = Webdriver(config).createWebdriver()
     except Exception as ex:
         traceback.print_exc()
         log.error(traceback.format_exc())
-        print("[red]눈_눈 生成WEBDRIVER失败!\n 你是否使用的是最新版谷歌浏览器? 网络是否没问题?\n为谷歌浏览器检查一下更新吧,或者说，去下一个？\n按任意键退出...")
+        print("[red]눈_눈 生成WEBDRIVER失败!\n 你是否使用的是最新版谷歌浏览器? 网络是否没问题?\n为谷歌浏览器检查一下更新吧,或者说，去下一个？\n以上都检查过的话可以试一下用管理员方式打开\n按任意键退出...")
         input()
         exit()
     loginHandler = LoginHandler(log=log, driver=driver)
@@ -82,6 +82,7 @@ if __name__ == '__main__':
         main()
     except (KeyboardInterrupt, SystemExit):
         global driver
-        driver.quit()
+        if driver is not None:
+            driver.quit()
         print("[red]------程序退出------")
         sys.exit()

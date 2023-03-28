@@ -22,7 +22,7 @@ class Rewards:
             return False
         return True
 
-    def checkRewards(self, url, retries=4):
+    def checkRewards(self, url, retries=4) -> bool:
         splitUrl = url.split('/')
         if splitUrl[-2] != "live":
             match = splitUrl[-2]
@@ -32,7 +32,7 @@ class Rewards:
             if self.findRewardMark():
                 self.log.info(f"√√√√√ {match} 正常观看 √√√√√ ")
                 print(f"[green]√√√√√[/green] {match} 正常观看 [green]√√√√√ ")
-                break
+                return True
             else:
                 if i < 3:
                     self.log.warning(f"××××× {match} 观看异常 ××××× 重试中...")
@@ -41,6 +41,7 @@ class Rewards:
                 else:
                     self.log.error(f"××××× {match} 观看异常 ××××× ")
                     print(f"[red]×××××[/red] {match} 观看异常 [red]××××× ")
+                    return False
 
     def checkNewDrops(self):
         try:
@@ -69,9 +70,9 @@ class Rewards:
             else:
                 return isDrop, [], []
         except Exception:
-            self.log.error(" 〒.〒  检查掉落失败")
+            self.log.error("〒.〒 检查掉落失败")
             traceback.print_exc()
-            print("[red] 〒.〒  检查掉落失败[/red]")
+            print("[red]〒.〒 检查掉落失败[/red]")
             return False, [], []
 
     def notifyDrops(self, imgUrl, title):
@@ -110,6 +111,6 @@ class Rewards:
                     requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                     time.sleep(5)
         except Exception:
-            self.log.error(" 〒.〒  掉落提醒失败")
+            self.log.error("〒.〒  掉落提醒失败")
             traceback.print_exc()
-            print("[red] 〒.〒  掉落提醒失败[/red]")
+            print("[red]〒.〒  掉落提醒失败[/red]")
