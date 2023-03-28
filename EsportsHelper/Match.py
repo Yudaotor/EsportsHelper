@@ -81,14 +81,14 @@ class Match:
 
                 self.startWatchNewMatches(liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
                 time.sleep(3)
-
+                randomDelay = random.randint(int(delay * 0.08), int(delay * 0.15))
+                newDelay = randomDelay * 10
                 self.driver.switch_to.window(self.mainWindow)
-                self.log.info(f"下一次检查在: {datetime.now() + timedelta(seconds=delay)}")
+                self.log.info(f"下一次检查在: {datetime.now() + timedelta(seconds=newDelay)}")
                 self.log.debug("============================================")
-                print(f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=delay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
+                print(f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
                 print(f"[green]============================================[/green]")
-                randomDelay = random.randint(int(delay * 0.7), int(delay * 1.3))
-                time.sleep(randomDelay)
+                time.sleep(newDelay)
             except Exception as e:
                 self.log.error("Q_Q 发生错误")
                 print(f"[red]Q_Q 发生错误[/red]")
