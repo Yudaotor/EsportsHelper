@@ -51,3 +51,5 @@ volcano_discover_league:volcano_discover_league
 hitpoint_masters:hitpoint_masters 
 worlds:worlds  
 european-masters:european-masters  
+## by the way
+本项目思路及部分代码来自Poro，感谢。[此处](https://github.com/LeagueOfPoro/EsportsCapsuleFarmer)
