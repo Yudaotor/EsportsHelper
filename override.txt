@@ -19,3 +19,4 @@ https://lolesports.com/live/honor_division|https://lolesports.com/live/honor_div
 https://lolesports.com/live/volcano_discover_league|https://lolesports.com/live/volcano_discover_league/lvpecuador,
 https://lolesports.com/live/pcs|https://lolesports.com/live/pcs/lolpacific,
 https://lolesports.com/live/hitpoint_masters|https://lolesports.com/live/hitpoint_masters/hitpointcz,
+https://lolesports.com/live/movistar_fiber_golden_league|https://lolesports.com/live/movistar_fiber_golden_league/lvpcol,
