@@ -18,19 +18,17 @@ class Config:
                 self.delay = config.get("delay", 600)
                 self.disWatchMatches = config.get("disWatchMatches", [])
                 self.connectorDropsUrl = config.get("connectorDropsUrl", "")
+                self.platForm = config.get("platForm", "windows")
                 self.format()
         except FileNotFoundError as ex:
             log.error("配置文件找不到")
             print("[red]配置文件找不到")
-            raise ex
         except (ParserError, KeyError) as ex:
             log.error("配置文件格式错误")
             print("[red]配置文件格式错误")
-            raise ex
         except Exception as ex:
             traceback.print_exc()
             self.log.error(traceback.format_exc())
-            raise ex
 
     def format(self):
         while "" in self.disWatchMatches:
@@ -47,6 +45,12 @@ class Config:
                 self.headless = False
         if isinstance(self.delay, str):
             self.delay = int(self.delay)
+        if not isinstance(self.platForm, str):
+            self.platForm = "windows"
+        else:
+            self.platForm = self.platForm.lower()
+            if self.platForm not in ["windows", "linux"]:
+                self.platForm = "windows"
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)
