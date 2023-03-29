@@ -25,6 +25,14 @@ discord: Khalil#7843
 ## 运行平台  
 windows,linux  
 
+### mac
+暂时运行方法：
+```shell
+python -m pip install -r requirements.txt
+./run_job.sh 0
+```
+
+
 ## 特性
 1. 自动打开浏览器,进入lolesports.com,查询哪些赛区在进行比赛(在放录播的赛区会被忽视),进入观看并设置为最低清晰度(为了节省流量)
 2. 可以自行设置是否选择无头模式(默认关闭)(无头模式即headless,开启后浏览器会不可见,在后台运行,缓解电脑CPU压力)
