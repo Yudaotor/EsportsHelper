@@ -49,21 +49,16 @@ class Rewards:
             isDrop = False
             imgUrl = []
             title = []
-            imgEl = self.driver.find_elements(by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[1]/img")
+            imgEl = self.driver.find_elements(by=By.CSS_SELECTOR, value="img[class=img]")
             if len(imgEl) > 0:
                 for img in imgEl:
                     imgUrl.append(img.get_attribute("src"))
                 isDrop = True
-            titleEl = self.driver.find_elements(by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[2]/div[2]")
+            titleEl = self.driver.find_elements(by=By.CSS_SELECTOR, value="div[class=title]")
             if len(titleEl) > 0:
                 for tit in titleEl:
                     title.append(tit.text)
                 isDrop = True
-            closeButton = self.driver.find_elements(by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[3]/button[1]")
-            time.sleep(1)
-            if len(closeButton) > 0:
-                for i in range(len(closeButton) - 1, -1, -1):
-                    closeButton[i].click()
             self.driver.implicitly_wait(15)
             if isDrop:
                 return isDrop, imgUrl, title
