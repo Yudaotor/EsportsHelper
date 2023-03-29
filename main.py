@@ -14,7 +14,7 @@ from EsportsHelper.Webdriver import Webdriver
 from EsportsHelper.Logger import log
 from EsportsHelper.Config import Config
 from EsportsHelper.Match import Match
-from EsportsHelper.util import KnockNotify, info, Quit
+from EsportsHelper.util import info, Quit
 
 
 global driver
@@ -77,10 +77,8 @@ def main():
 
     config = Config(log, args.configPath)
 
-    KnockNotify("🫡尝试挂机")
     Watch(config)
     log.info("观看结束～")
-    KnockNotify("😎挂机结束")
 
 
 if __name__ == '__main__':

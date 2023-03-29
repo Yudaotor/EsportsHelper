@@ -13,7 +13,7 @@ from urllib3.exceptions import MaxRetryError
 
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
-from EsportsHelper.util import DebugScreen, KnockNotify, Quit
+from EsportsHelper.util import Quit
 from EsportsHelper.Youtube import Youtube
 
 

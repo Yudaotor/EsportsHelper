@@ -19,14 +19,7 @@ def info():
     VersionManager.checkVersion()
 
 
-def KnockNotify(msg):
-     subprocess.run(f"source ~/.personalrc; knock {msg}", shell=True)
-
-
 def Quit(driver=None, e=None):
-     if e:
-          KnockNotify(f"🥵停止挂机: '{e}'");
-
      if driver:
           driver.quit()
      log.error(e)
