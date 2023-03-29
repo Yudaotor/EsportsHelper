@@ -75,12 +75,22 @@ def main():
             print("[green]退出中...[/green]")
             input("按任意键退出")
             exit()
+    retryTimes = 4
     while not driver.find_elements(by=By.CSS_SELECTOR, value="div.riotbar-summoner-name"):
+        retryTimes = retryTimes - 1
+        if retryTimes < 0:
+            driver.quit()
+            log.error("눈_눈 自动登录失败")
+            print("[red]눈_눈 自动登录失败[/red]")
+            log.info("退出中...")
+            print("[yellow]退出中...[/yellow]")
+            input("按任意键退出")
+            exit()
         print("[red]눈_눈 自动登录失败...[/red]")
         log.error("눈_눈 自动登录失败...")
         log.info("눈_눈 等待手动登录中...")
         print("[yellow]눈_눈 等待手动登录中...[/yellow]")
-        sleep(5)
+        sleep(15)
     log.info("∩_∩ 好嘞 登录成功")
     print("[green]∩_∩ 好嘞 登录成功[/green]")
 

@@ -1,5 +1,6 @@
 import time
-from traceback import print_exc, format_exc
+from traceback import format_exc
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -38,7 +39,7 @@ class LoginHandler:
             print("[green]∩_∩ 账密 提交成功")
             time.sleep(5)
             wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.riotbar-summoner-name")))
-        except Exception as e:
-            print_exc()
+        except TimeoutException:
+            print("[red]×_× 登录超时")
             self.log.error(format_exc())
 
