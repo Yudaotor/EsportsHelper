@@ -1,5 +1,0 @@
-delay: 600                    # 每次检查的时间间隔，单位为秒(默认为600秒)
-headless: False              # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)
-username: "账号用户名"        # 必填，账号
-password: "密码"  # 必填，密码
-disWatchMatches: ["lck", "lpl", "lcs"] # 选填，不想看的赛区名称，可以在这里添加.(注意,是小写)

@@ -1,17 +1,21 @@
 import sys
+import random
+
+import time
+from time import sleep
 import traceback
-from pathlib import Path
+
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
-import time
 import argparse
 from rich import print
 from EsportsHelper.LoginHandler import LoginHandler
 from EsportsHelper.VersionManager import VersionManager
 from EsportsHelper.Webdriver import Webdriver
-from EsportsHelper.Logger import Logger
+from EsportsHelper.Logger import log
 from EsportsHelper.Config import Config
 from EsportsHelper.Match import Match
+from EsportsHelper.util import KnockNotify, Quit
 
 CURRENT_VERSION = "1.1.0"
 global driver
@@ -19,7 +23,8 @@ global driver
 
 def info():
     print("[green]=========================================================")
-    print(f"[green]========[/green]        感谢使用 [blue]电竞助手[/blue] v{CURRENT_VERSION}!        [green]========[/green]")
+    print(
+        f"[green]========[/green]        感谢使用 [blue]电竞助手[/blue] v{CURRENT_VERSION}!        [green]========[/green]")
     print("[green]============[/green] 本程序开源于github链接地址如下: [green]============[/green]")
     print("[green]====[/green]   https://github.com/Yudaotor/EsportsHelper     [green]====[/green]")
     print("[green]====[/green] 如觉得不错的话可以进上面链接请我喝杯咖啡支持下. [green]====[/green]")
@@ -29,20 +34,8 @@ def info():
     print()
 
 
-def main():
+def Watch(config):
     global driver
-    info()
-    parser = argparse.ArgumentParser(prog='EsportsHelper.exe', description='EsportsHelper help you to watch matches')
-    parser.add_argument('-c', '--config', dest="configPath", default="./config.yaml",
-                        help='config file path')
-    args = parser.parse_args()
-    Path("./logs/").mkdir(parents=True, exist_ok=True)
-    Path("./driver/").mkdir(parents=True, exist_ok=True)
-    log = Logger().createLogger()
-    config = Config(log, args.configPath)
-    if not VersionManager.isLatestVersion(CURRENT_VERSION):
-        log.warning("\n==!!! 新版本可用 !!!==\n ==请从此处下载: ==")
-        print("[yellow]\n==!!! 新版本可用 !!!==\n ==请从此处下载: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
     try:
         driver = Webdriver(config).createWebdriver()
     except TypeError:
@@ -63,36 +56,60 @@ def main():
             "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
     except Exception as e:
         driver.get("https://lolesports.com/schedule")
-    driver.set_window_size(960, 768)
-    try:
-        loginHandler.automaticLogIn(config.username, config.password)
-    except TimeoutException:
-        log.error("눈_눈 自动登录失败,账号密码是否正确?")
-        print("[red]눈_눈 自动登录失败,账号密码是否正确?[/red]")
-        if config.headless:
-            driver.quit()
-            log.info("退出中...")
-            print("[green]退出中...[/green]")
-            input("按任意键退出")
-            exit()
+    # driver.set_window_size(960, 768)
+    
+    try_log_time = 4
     while not driver.find_elements(by=By.CSS_SELECTOR, value="div.riotbar-summoner-name"):
-        print("[red]눈_눈 自动登录失败...[/red]")
-        log.error("눈_눈 自动登录失败...")
-        log.info("눈_눈 等待手动登录中...")
-        print("[yellow]눈_눈 等待手动登录中...[/yellow]")
-        time.sleep(5)
+        try:
+            loginHandler.automaticLogIn(config.username, config.password)
+        except TimeoutException:
+            try_log_time = try_log_time - 1
+            if try_log_time <= 0:
+                log.error("停止重试，结束程序")
+                Quit(driver, "无法登陆，账号密码可能错误")
+
+            log.error("눈_눈 自动登录失败,账号密码是否正确?")
+            print("[red]눈_눈 自动登录失败,账号密码是否正确?[/red]")    
+            sleep(5)
+            log.error("눈_눈 开始重试")
+
+        
+
     log.info("∩_∩ 好嘞 登录成功")
     print("[green]∩_∩ 好嘞 登录成功[/green]")
 
-    Match(log=log, driver=driver, config=config).watchMatches(delay=config.delay)
+    Match(log=log, driver=driver, config=config).watchMatches(delay=config.delay, max_run_hours=config.max_run_hours)
 
+
+def main():
+    global driver
+    info()
+    parser = argparse.ArgumentParser(
+        prog='EsportsHelper.exe', description='EsportsHelper help you to watch matches')
+    parser.add_argument('-c', '--config', dest="configPath", default="./config.yaml",
+                        help='config file path')
+    args = parser.parse_args()
+
+
+    config = Config(log, args.configPath)
+    if not VersionManager.isLatestVersion(CURRENT_VERSION):
+        log.warning("\n==!!! 新版本可用 !!!==\n ==请从此处下载: ==")
+        print("[yellow]\n==!!! 新版本可用 !!!==\n ==请从此处下载: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
+    
+
+    KnockNotify("🫡尝试挂机")
+    Watch(config)
+    log.info("观看结束～")
+    KnockNotify("😎挂机结束")
+    # relax_second = random.randint(60, 1200);
+    # log.info(f"模拟人类，休息{relax_second/60}分钟")
+    # sleep(relax_second)
+   
 
 if __name__ == '__main__':
     try:
         main()
     except (KeyboardInterrupt, SystemExit):
-        global driver
-        if driver is not None:
-            driver.quit()
-        print("[red]------程序退出------")
-        sys.exit()
+        Quit(driver, "程序被打断")
+    except Exception as e:
+        Quit(driver, e)

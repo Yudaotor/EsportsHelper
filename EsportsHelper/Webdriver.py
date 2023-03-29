@@ -23,14 +23,17 @@ class Webdriver:
     def addWebdriverOptions(self, options):
         options.add_argument("--disable-extensions")
         options.add_argument('--disable-audio-output')
+
         prefs = {
             "profile.password_manager_enabled": False,
             "credentials_enable_service": False,
         }
         options.add_experimental_option('prefs', prefs)
         if self.config.headless:
-            options.add_argument("--headless")
-            options.add_argument("--disable-gpu")
-            user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.44"
-            options.add_argument(f'user-agent={user_agent}')
+            options.add_argument("--headless=new")
+        options.add_argument("--disable-gpu")
+        options.add_argument('--no-sandbox')
+        # user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.44"
+        user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+        options.add_argument(f'user-agent={user_agent}')
         return options

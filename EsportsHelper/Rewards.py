@@ -7,6 +7,9 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException
 from rich import print
 
+from EsportsHelper.util import KnockNotify, DebugScreen
+
+
 
 class Rewards:
     def __init__(self, log, driver, config) -> None:
@@ -17,12 +20,13 @@ class Rewards:
     def isRewardMarkExist(self):
         wait = WebDriverWait(self.driver, 25)
         try:
-            wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div[class=status-summary] g")))
+            wait.until(ec.presence_of_element_located(
+                (By.CSS_SELECTOR, "div[class=status-summary] g")))
         except TimeoutException:
             return False
         return True
 
-    def checkRewards(self, url, retryTimes=4) -> bool:
+    def checkRewards(self, url, retryTimes=6) -> bool:
         splitUrl = url.split('/')
         if splitUrl[-2] != "live":
             match = splitUrl[-2]
@@ -30,36 +34,43 @@ class Rewards:
             match = splitUrl[-1]
         for i in range(retryTimes):
             if self.isRewardMarkExist():
-                self.log.info(f"√√√√√ {match} 正常观看 √√√√√ ")
-                print(f"[green]√√√√√[/green] {match} 正常观看 [green]√√√√√ ")
+                self.log.info(f"√√√√√ {match} 正常观看 可获取奖励 √√√√√ ")
+                print(f"[green]√√√√√[/green] {match} 正常观看 可获取奖励 [green]√√√√√ ")
                 return True
             else:
                 if i != retryTimes - 1:
                     self.log.warning(f"××××× {match} 观看异常 ××××× 重试中...")
-                    print(f"[yellow]×××××[/yellow] {match} 观看异常 [yellow]××××× 重试中...")
+                    print(
+                        f"[yellow]×××××[/yellow] {match} 观看异常 [yellow]××××× 重试中...")
                     self.driver.refresh()
                 else:
-                    self.log.error(f"××××× {match} 观看异常 ××××× ")
-                    print(f"[red]×××××[/red] {match} 观看异常 [red]××××× ")
+                    self.log.error(f"××××× {match} 观看异常 ××××× url={url}")
+                    print(f"[red]×××××[/red] {match} 观看异常 [red]××××× url={url}")
                     return False
 
     def checkNewDrops(self):
         try:
-            self.driver.implicitly_wait(5)
+            self.driver.implicitly_wait(15)
+            time.sleep(10)
+            DebugScreen(self.driver, "checkNewDrops", self.config.debug)
+
             isDrop = False
             imgUrl = []
             title = []
-            imgEl = self.driver.find_elements(by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[1]/img")
+            imgEl = self.driver.find_elements(
+                by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[1]/img")
             if len(imgEl) > 0:
                 for img in imgEl:
                     imgUrl.append(img.get_attribute("src"))
                 isDrop = True
-            titleEl = self.driver.find_elements(by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[2]/div[2]")
+            titleEl = self.driver.find_elements(
+                by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[2]/div[2]")
             if len(titleEl) > 0:
                 for tit in titleEl:
                     title.append(tit.text)
                 isDrop = True
-            closeButton = self.driver.find_elements(by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[3]/button[1]")
+            closeButton = self.driver.find_elements(
+                by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[3]/button[1]")
             time.sleep(1)
             if len(closeButton) > 0:
                 for i in range(len(closeButton) - 1, -1, -1):
@@ -75,7 +86,13 @@ class Rewards:
             print("[red]〒.〒 检查掉落失败[/red]")
             return False, [], []
 
+    def SystemNotify(self,  imgUrl, title):
+        for index, item in enumerate(zip(imgUrl, title)):
+            drop_msg = "有新的掉落啦，\n{item[0]}\n{item[1]}\n可检查: https://lolesports.com/rewards"
+            KnockNotify(drop_msg)
+
     def notifyDrops(self, imgUrl, title):
+        SystemNotify(imgUrl, title)
         try:
             for i in range(len(imgUrl)):
                 if "https://oapi.dingtalk.com" in self.config.connectorDropsUrl:
@@ -102,13 +119,15 @@ class Rewards:
                         "username": "EsportsHelper",
                         "embeds": [embed]
                     }
-                    requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    requests.post(self.config.connectorDropsUrl, headers={
+                                  "Content-type": "application/json"}, json=params)
                     time.sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
                         "text": f"{title[i]}"
                     }
-                    requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    requests.post(self.config.connectorDropsUrl, headers={
+                                  "Content-type": "application/json"}, json=params)
                     time.sleep(5)
         except Exception:
             self.log.error("〒.〒 掉落提醒失败")

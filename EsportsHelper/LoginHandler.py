@@ -25,7 +25,7 @@ class LoginHandler:
             self.log.info("눈_눈 登录中...")
             print("[yellow]눈_눈 登录中...")
             time.sleep(2)
-            wait = WebDriverWait(self.driver, 15)
+            wait = WebDriverWait(self.driver, 11)
             usernameInput = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "input[name=username]")))
             usernameInput.send_keys(username)
             time.sleep(1)

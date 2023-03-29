@@ -1,5 +1,7 @@
 chromedriver
 
+config.yaml
+
 # macOS 
 .DS_Store
 

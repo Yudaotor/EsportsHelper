@@ -1,16 +1,18 @@
 import random
 import traceback
+import time
 
 import requests
 from rich import print
 from selenium.webdriver.common.by import By
-import time
+from selenium.common.exceptions import NoSuchWindowException
+
 from datetime import datetime, timedelta
 from urllib3.exceptions import MaxRetryError
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
 from EsportsHelper.Youtube import Youtube
-
+from EsportsHelper.util import KnockNotify, Quit, DebugScreen
 
 class Match:
 
@@ -48,11 +50,16 @@ class Match:
             print(f"[red]〒.〒 获取文件失败,请检查网络是否能连上github[/red]")
             input("按任意键退出")
 
-    def watchMatches(self, delay):
+    def watchMatches(self, delay, max_run_hours):
         self.currentWindows = {}
         self.mainWindow = self.driver.current_window_handle
-        while True:
-            try:
+        max_run_second = max_run_hours * 3600
+        start_time_point = time.time()
+        
+        error_time = 0
+        max_erro_time = 10
+        while time.time() < start_time_point + max_run_second:
+            try:                
                 self.log.info("●_● 开始检查直播...")
                 print(f"[green]●_● 开始检查直播...[/green]")
                 self.driver.switch_to.window(self.mainWindow)
@@ -62,7 +69,7 @@ class Match:
                     print(f"[blue]ΩДΩ 发现新的掉落: {title}[/blue]")
                     if self.config.connectorDropsUrl != "":
                         self.rewards.notifyDrops(imgUrl=imgUrl, title=title)
-                time.sleep(3)
+                
                 try:
                     self.driver.get("https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
                 except Exception as e:
@@ -75,7 +82,8 @@ class Match:
                     print(f"[green]〒.〒 没有赛区正在直播[/green]")
                 else:
                     self.log.info(f"ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中")
-                    print(f"[green]ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
+                    print(
+                        f"[green]ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
 
                 self.closeFinishedTabs(liveMatches=liveMatches)
 
@@ -89,16 +97,23 @@ class Match:
                 print(f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
                 print(f"[green]============================================[/green]")
                 time.sleep(newDelay)
-            except Exception as e:
+            except Exception as e:                
                 self.log.error("Q_Q 发生错误")
                 print(f"[red]Q_Q 发生错误[/red]")
-                traceback.print_exc()
+                # traceback.print_exc()
                 self.log.error(traceback.format_exc())
+                error_time = error_time + 1
+                if error_time >= max_erro_time:
+                    self.log.error("错误太多，程序退出")
+                    Quit(self.driver)
+
+        self.log.info(f"模拟人类观赛行为: 停止观赛")
 
     def getMatchInfo(self):
         try:
             matches = []
-            elements = self.driver.find_elements(by=By.CSS_SELECTOR, value=".EventMatch .event.live")
+            elements = self.driver.find_elements(
+                by=By.CSS_SELECTOR, value=".EventMatch .event.live")
             for element in elements:
                 matches.append(element.get_attribute("href"))
             return matches
