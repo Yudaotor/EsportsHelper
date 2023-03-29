@@ -60,8 +60,8 @@ class Match:
                 isDrop, imgUrl, title = self.rewards.checkNewDrops()
                 if isDrop:
                     for tit in title:
-                        self.log.info(f"ΩДΩ 发现新的掉落: {tit}")
-                        print(f"[blue]ΩДΩ 发现新的掉落: {tit}[/blue]")
+                        self.log.info(f"ΩДΩ {self.config.username}发现新的掉落: {tit}")
+                        print(f"[blue]ΩДΩ {self.config.username}发现新的掉落: {tit}[/blue]")
                     if self.config.connectorDropsUrl != "":
                         self.rewards.notifyDrops(imgUrl=imgUrl, title=title)
                 sleep(3)

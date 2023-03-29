@@ -78,7 +78,7 @@ class Rewards:
                         "msgtype": "link",
                         "link": {
                             "text": "Drop掉落提醒",
-                            "title": f"{title[i]}",
+                            "title": f"[{self.config.username}]{title[i]}",
                             "picUrl": f"{imgUrl[i]}",
                             "messageUrl": "https://lolesports.com/rewards"
                         }
@@ -88,7 +88,7 @@ class Rewards:
                 elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
                     embed = {
                         "title": "掉落提醒",
-                        "description": f"{title[i]}",
+                        "description": f"[{self.config.username}]{title[i]}",
                         "image": {"url": f"{imgUrl[i]}"},
                         "thumbnail": {"url": "https://www.cdnjson.com/images/2023/03/26/QQ20230326153220.jpg"},
                         "color": 6676471,
@@ -101,7 +101,7 @@ class Rewards:
                     time.sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
-                        "text": f"{title[i]}"
+                        "text": f"[{self.config.username}]{title[i]}"
                     }
                     requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                     time.sleep(5)
