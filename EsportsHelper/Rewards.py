@@ -1,14 +1,14 @@
 import time
 import traceback
+
 import requests
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.common.exceptions import TimeoutException
 from rich import print
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import WebDriverWait
 
-from EsportsHelper.util import KnockNotify, DebugScreen
-
+from EsportsHelper.util import DebugScreen, KnockNotify
 
 
 class Rewards:
@@ -57,24 +57,16 @@ class Rewards:
             isDrop = False
             imgUrl = []
             title = []
-            imgEl = self.driver.find_elements(
-                by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[1]/img")
+            imgEl = self.driver.find_elements(by=By.CSS_SELECTOR, value="img[class=img]")
             if len(imgEl) > 0:
                 for img in imgEl:
                     imgUrl.append(img.get_attribute("src"))
                 isDrop = True
-            titleEl = self.driver.find_elements(
-                by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[2]/div[2]")
+            titleEl = self.driver.find_elements(by=By.CSS_SELECTOR, value="div[class=title]")
             if len(titleEl) > 0:
                 for tit in titleEl:
                     title.append(tit.text)
                 isDrop = True
-            closeButton = self.driver.find_elements(
-                by=By.XPATH, value="/html/body/div[2]/div[2]/div/div[3]/button[1]")
-            time.sleep(1)
-            if len(closeButton) > 0:
-                for i in range(len(closeButton) - 1, -1, -1):
-                    closeButton[i].click()
             self.driver.implicitly_wait(15)
             if isDrop:
                 return isDrop, imgUrl, title
@@ -100,7 +92,7 @@ class Rewards:
                         "msgtype": "link",
                         "link": {
                             "text": "Drop掉落提醒",
-                            "title": f"{title[i]}",
+                            "title": f"[{self.config.username}]{title[i]}",
                             "picUrl": f"{imgUrl[i]}",
                             "messageUrl": "https://lolesports.com/rewards"
                         }
@@ -110,7 +102,7 @@ class Rewards:
                 elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
                     embed = {
                         "title": "掉落提醒",
-                        "description": f"{title[i]}",
+                        "description": f"[{self.config.username}]{title[i]}",
                         "image": {"url": f"{imgUrl[i]}"},
                         "thumbnail": {"url": "https://www.cdnjson.com/images/2023/03/26/QQ20230326153220.jpg"},
                         "color": 6676471,
@@ -124,7 +116,7 @@ class Rewards:
                     time.sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
-                        "text": f"{title[i]}"
+                        "text": f"[{self.config.username}]{title[i]}"
                     }
                     requests.post(self.config.connectorDropsUrl, headers={
                                   "Content-type": "application/json"}, json=params)

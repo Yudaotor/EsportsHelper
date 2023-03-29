@@ -1,8 +1,9 @@
-import traceback
 from pathlib import Path
-from yaml.parser import ParserError
-from rich import print
+from traceback import format_exc, print_exc
+
 import yaml
+from rich import print
+from yaml.parser import ParserError
 
 
 class Config:
@@ -16,7 +17,7 @@ class Config:
                 self.username = config.get("username", "NoUsername")
                 self.password = config.get("password", "NoPassword")
                 self.delay = config.get("delay", 600)
-                self.max_run_hours = config.get("run_hours", 3.5)
+                self.max_run_hours = config.get("runHours", -1)
                 self.disWatchMatches = config.get("disWatchMatches", [])
                 self.connectorDropsUrl = config.get("connectorDropsUrl", "")
                 self.platForm = config.get("platForm", "windows")
@@ -30,8 +31,8 @@ class Config:
             log.error("配置文件格式错误")
             print("[red]配置文件格式错误")
         except Exception as ex:
-            traceback.print_exc()
-            self.log.error(traceback.format_exc())
+            print_exc()
+            self.log.error(format_exc())
 
     def format(self):
         while "" in self.disWatchMatches:

@@ -20,7 +20,7 @@ telegram: https://t.me/Yudaotor
 discord: Khalil#7843  
 可以给我点个小星星吗(*^_^*)⭐  
 ## 界面
-![image](https://user-images.githubusercontent.com/87225219/227703640-4ddeb386-36c8-4940-87bd-8af654d377a8.png)
+![image](https://user-images.githubusercontent.com/87225219/228434642-6b7317e5-1c0a-4931-b358-f6e2b304429b.png)
 
 ## 运行平台  
 windows,linux  
@@ -28,20 +28,27 @@ windows,linux
 ## 特性
 1. 自动打开浏览器,进入lolesports.com,查询哪些赛区在进行比赛(在放录播的赛区会被忽视),进入观看并设置为最低清晰度(为了节省流量)
 2. 可以自行设置是否选择无头模式(默认关闭)(无头模式即headless,开启后浏览器会不可见,在后台运行,缓解电脑CPU压力)
-3. 可以自行设置不观看哪些赛区的比赛.(默认为空)(注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看)
+3. 可以自行设置不观看哪些赛区的比赛.(默认为空)(注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看)(建议设置,避免观看所有比赛从而被检测)
 4. 可以自行设置多久来查询一次比赛最新信息.(默认600秒)(关闭已经结束的比赛和开启新开始的比赛)
+5. 掉落提醒(支持钉钉,Discord,饭碗警告)(尚未测试,不确定是否生效)
 
 ## 配置信息
 config.yaml
 ```yaml
-
-delay: 600                    # 每次检查的时间间隔，单位为秒(默认为600秒)  
-headless: False              # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)  
+### 必填项
 username: "账号用户名"        # 必填，账号  
 password: "密码"  # 必填，密码  
+### 选填项
+delay: 600                    # 每次检查的时间间隔，单位为秒(默认为600秒)(每次检测时间会在你设置的时延0.8-1.5倍之间随机波动)  
+headless: False              # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)  
 disWatchMatches: ["lck", "lpl", "lcs"] # 选填，不想看的赛区名称，可以在这里添加.(注意,是小写)  
+runHours: -1                  # 负值为一直运行，正值为运行小时, 默认-1
+
+connectorDropsUrl: "你的webhook链接"   # (支持钉钉,Discord,饭碗警告)(具体配置方法见此处[点我](https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F(%E5%8A%9F%E8%83%BD%E5%BE%85%E6%B5%8B%E8%AF%95)))  
+platForm: "windows"    # 使用平台,默认为windows,如需使用linux请在此处进行配置  
 ```
 
+### 不观看赛区的配置详解:
 注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看  
 可以设置一些赛区不观看,防止出现24小时观赛的情况  
 具体赛区名字可以见以下说明:  
@@ -64,7 +71,9 @@ volcano_discover_league:volcano_discover_league
 hitpoint_masters:hitpoint_masters 
 worlds:worlds  
 european-masters:european-masters  
-golden_league:movistar_fiber_golden_league
-honor_league:honor_league
+golden_league:movistar_fiber_golden_league  
+honor_league:honor_league  
+nlc:nlc  
+elite_series:elite_series  
 ## by the way
 本项目思路及部分代码来自Poro，感谢。[此处](https://github.com/LeagueOfPoro/EsportsCapsuleFarmer)

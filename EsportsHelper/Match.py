@@ -1,21 +1,23 @@
-import random
-import traceback
 import time
+from datetime import datetime, timedelta
+from random import randint
+from sys import exit
+from time import sleep
+from traceback import format_exc, print_exc
 
 import requests
 from rich import print
+from selenium.common import WebDriverException
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchWindowException
-
-from datetime import datetime, timedelta
 from urllib3.exceptions import MaxRetryError
+
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
+from EsportsHelper.util import DebugScreen, KnockNotify, Quit
 from EsportsHelper.Youtube import Youtube
-from EsportsHelper.util import KnockNotify, Quit, DebugScreen
+
 
 class Match:
-
     def __init__(self, log, driver, config) -> None:
         self.log = log
         self.driver = driver
@@ -26,10 +28,13 @@ class Match:
         self.currentWindows = {}
         self.mainWindow = self.driver.current_window_handle
         self.OVERRIDES = {}
+        self.retryTimes = 3
         try:
             req = requests.session()
-            headers = {'Content-Type': 'text/plain; charset=utf-8', 'Connection': 'close'}
-            remoteOverrideFile = req.get("https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
+            headers = {'Content-Type': 'text/plain; charset=utf-8',
+                       'Connection': 'close'}
+            remoteOverrideFile = req.get(
+                "https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
             if remoteOverrideFile.status_code == 200:
                 override = remoteOverrideFile.text.split(",")
                 first = True
@@ -46,7 +51,7 @@ class Match:
             print(f"[red]〒.〒 获取文件失败, 请稍等再试[/red]")
             input("按任意键退出")
         except Exception as ex:
-            traceback.print_exc()
+            print_exc()
             print(f"[red]〒.〒 获取文件失败,请检查网络是否能连上github[/red]")
             input("按任意键退出")
 
@@ -55,28 +60,29 @@ class Match:
         self.mainWindow = self.driver.current_window_handle
         max_run_second = max_run_hours * 3600
         start_time_point = time.time()
-        
-        error_time = 0
-        max_erro_time = 10
-        while time.time() < start_time_point + max_run_second:
-            try:                
+
+        while max_run_hours < 0 or time.time() < start_time_point + max_run_second:
+            try:
                 self.log.info("●_● 开始检查直播...")
                 print(f"[green]●_● 开始检查直播...[/green]")
                 self.driver.switch_to.window(self.mainWindow)
                 isDrop, imgUrl, title = self.rewards.checkNewDrops()
                 if isDrop:
-                    self.log.info(f"ΩДΩ 发现新的掉落: {title}")
-                    print(f"[blue]ΩДΩ 发现新的掉落: {title}[/blue]")
+                    for tit in title:
+                        self.log.info(
+                            f"ΩДΩ {self.config.username}发现新的掉落: {tit}")
+                        print(
+                            f"[blue]ΩДΩ {self.config.username}发现新的掉落: {tit}[/blue]")
                     if self.config.connectorDropsUrl != "":
                         self.rewards.notifyDrops(imgUrl=imgUrl, title=title)
-                
+                sleep(3)
                 try:
                     self.driver.get("https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
                 except Exception as e:
                     self.driver.get("https://lolesports.com/schedule")
-                time.sleep(5)
+                sleep(5)
                 liveMatches = self.getMatchInfo()
-                time.sleep(3)
+                sleep(3)
                 if len(liveMatches) == 0:
                     self.log.info("〒.〒 没有赛区正在直播")
                     print(f"[green]〒.〒 没有赛区正在直播[/green]")
@@ -87,27 +93,41 @@ class Match:
 
                 self.closeFinishedTabs(liveMatches=liveMatches)
 
-                self.startWatchNewMatches(liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
-                time.sleep(3)
-                randomDelay = random.randint(int(delay * 0.08), int(delay * 0.15))
+                self.startWatchNewMatches(
+                    liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
+                sleep(3)
+                randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
                 newDelay = randomDelay * 10
                 self.driver.switch_to.window(self.mainWindow)
-                self.log.info(f"下一次检查在: {datetime.now() + timedelta(seconds=newDelay)}")
+                self.log.info(
+                    f"下一次检查在: {datetime.now() + timedelta(seconds=newDelay)}")
                 self.log.debug("============================================")
-                print(f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
+                print(
+                    f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
                 print(f"[green]============================================[/green]")
-                time.sleep(newDelay)
-            except Exception as e:                
-                self.log.error("Q_Q 发生错误")
-                print(f"[red]Q_Q 发生错误[/red]")
-                # traceback.print_exc()
-                self.log.error(traceback.format_exc())
-                error_time = error_time + 1
-                if error_time >= max_erro_time:
-                    self.log.error("错误太多，程序退出")
+                sleep(newDelay)
+                self.retryTimes = 3
+            except WebDriverException as e:
+                self.retryTimes -= 1
+                self.log.error("Q_Q webdriver发生错误, 重试中")
+                print(f"[red]Q_Q webdriver发生错误, 重试中[/red]")
+                sleep(2)
+                if self.retryTimes <= 0:
+                    self.log.error("Q_Q webdriver发生错误, 将于3秒后退出...")
+                    print(f"[red]Q_Q webdriver发生错误, 将于3秒后退出...[/red]")
                     Quit(self.driver)
 
-        self.log.info(f"模拟人类观赛行为: 停止观赛")
+            except Exception as e:
+                self.retryTimes -= 1
+                self.log.error("Q_Q 发生错误")
+                print(f"[red]Q_Q 发生错误[/red]")
+                print_exc()
+                self.log.error(format_exc())
+                sleep(2)
+                if self.retryTimes <= 0:
+                    self.log.error("Q_Q 发生错误, 将于3秒后退出...")
+                    print(f"[red]Q_Q 发生错误, 将于3秒后退出...[/red]")
+                    Quit(self.driver)
 
     def getMatchInfo(self):
         try:
@@ -120,8 +140,8 @@ class Match:
         except Exception as e:
             self.log.error("Q_Q 获取比赛列表失败")
             print(f"[red]Q_Q 获取比赛列表失败[/red]")
-            traceback.print_exc()
-            self.log.error(traceback.format_exc())
+            print_exc()
+            self.log.error(format_exc())
             return []
 
     def closeFinishedTabs(self, liveMatches):
@@ -140,15 +160,15 @@ class Match:
                     self.driver.close()
                     removeList.append(k)
                     self.driver.switch_to.window(self.mainWindow)
-                    time.sleep(5)
+                    sleep(5)
                 else:
                     self.rewards.checkRewards(k)
             for k in removeList:
                 self.currentWindows.pop(k, None)
             self.driver.switch_to.window(self.mainWindow)
         except Exception as e:
-            traceback.print_exc()
-            self.log.error(traceback.format_exc())
+            print_exc()
+            self.log.error(format_exc())
 
     def startWatchNewMatches(self, liveMatches, disWatchMatches):
         newLiveMatches = set(liveMatches) - set(self.currentWindows.keys())
@@ -162,15 +182,15 @@ class Match:
                         skipName = splitUrl[-2]
                     else:
                         skipName = splitUrl[-1]
-                    self.log.info(f"X_X {skipName}比赛跳过")
-                    print(f"[yellow]X_X {skipName}比赛跳过")
+                    self.log.info(f"(╯#-_-)╯ {skipName}比赛跳过")
+                    print(f"[yellow](╯#-_-)╯ {skipName}比赛跳过")
                     flag = False
                     break
             if not flag:
                 continue
 
             self.driver.switch_to.new_window('tab')
-            time.sleep(1)
+            sleep(1)
             self.currentWindows[match] = self.driver.current_window_handle
             if match in self.OVERRIDES:
                 url = self.OVERRIDES[match]
@@ -179,23 +199,23 @@ class Match:
                     return
                 try:
                     if self.twitch.setTwitchQuality():
-                        self.log.info(">_< Twitch 清晰度设置成功")
-                        print("[green]>_< Twitch 清晰度设置成功")
+                        self.log.info(">_< Twitch 160p清晰度设置成功")
+                        print("[green]>_< Twitch 160p清晰度设置成功")
                     else:
                         self.log.critical("°D° Twitch 清晰度设置失败")
                         print("[red]°D° Twitch 清晰度设置失败")
                 except Exception:
                     self.log.critical("°D° 无法设置 Twitch 清晰度.")
                     print("[red]°D° 无法设置 Twitch 清晰度.")
-                    traceback.print_exc()
-                    self.log.error(traceback.format_exc())
+                    print_exc()
+                    self.log.error(format_exc())
             else:
                 url = match
                 self.driver.get(url)
                 try:
                     if self.youtube.setYoutubeQuality():
-                        self.log.info(">_< Youtube 清晰度设置成功")
-                        print("[green]>_< Youtube 清晰度设置成功")
+                        self.log.info(">_< Youtube 144p清晰度设置成功")
+                        print("[green]>_< Youtube 144p清晰度设置成功")
                     else:
                         self.log.critical("°D° Youtube 清晰度设置失败")
                         print("[red]°D° Youtube 清晰度设置失败")
@@ -203,6 +223,6 @@ class Match:
                 except Exception:
                     self.log.critical(f"°D° 无法设置 Youtube 清晰度.")
                     print("[red]°D° 无法设置 Youtube 清晰度.")
-                    traceback.print_exc()
-                    self.log.error(traceback.format_exc())
-            time.sleep(5)
+                    print_exc()
+                    self.log.error(format_exc())
+            sleep(5)

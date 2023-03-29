@@ -1,9 +1,10 @@
-import time
-import traceback
+from time import sleep
+from traceback import format_exc, print_exc
 
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class Youtube:
@@ -20,18 +21,21 @@ class Youtube:
                 playButton.click()
             except Exception:
                 self.driver.execute_script("arguments[0].click();", playButton)
-            time.sleep(1)
+            sleep(1)
             settingsButton = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "button[data-tooltip-target-id=ytp-settings-button]")))
             self.driver.execute_script("arguments[0].click();", settingsButton)
-            time.sleep(1)
+            sleep(1)
             qualityButton = wait.until(ec.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div[25]/div/div/div[2]/div[3]")))
             self.driver.execute_script("arguments[0].click();", qualityButton)
-            time.sleep(1)
+            sleep(1)
             option = wait.until(ec.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div[25]/div/div[2]/div[6]/div")))
             self.driver.execute_script("arguments[0].click();", option)
             self.driver.switch_to.default_content()
             return True
+        except TimeoutException as e:
+            self.log.error(format_exc())
+            return False
         except Exception as e:
-            traceback.print_exc()
-            self.log.error(traceback.format_exc())
+            print_exc()
+            self.log.error(format_exc())
             return False

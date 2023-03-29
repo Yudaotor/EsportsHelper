@@ -1,9 +1,11 @@
-import traceback
 import requests as req
-from rich import print
 
+from traceback import print_exc
+from rich import print
+from EsportsHelper.Logger import log
 
 class VersionManager:
+    CURRENT_VERSION = "1.1.0"
 
     @staticmethod
     def getLatestTag():
@@ -16,9 +18,22 @@ class VersionManager:
                 return "0.0.0"
         except Exception as e:
             print("[red]从github获取最新版信息失败!")
-            traceback.print_exc()
+            print_exc()
             return "0.0.0"
 
     @staticmethod
     def isLatestVersion(currentVersion):
         return currentVersion >= VersionManager.getLatestTag()
+
+
+
+    @staticmethod
+    def getVersion():
+        return VersionManager.CURRENT_VERSION
+    
+    @staticmethod
+    def checkVersion():
+        if not VersionManager.isLatestVersion(VersionManager.getVersion()):
+            log.warning("\n==!!! 新版本可用 !!!==\n ==请从此处下载: ==")
+            print("[yellow]\n==!!! 新版本可用 !!!==\n ==请从此处下载: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
+    

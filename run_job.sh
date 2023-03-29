@@ -1,6 +1,6 @@
 #!/bin/zsh
 DIR=$(readlink -f $(dirname $0))
-LOG=$DIR/logs/history
+LOG=$DIR/logs/scripts
 mkdir -p $LOG
 log_file=$LOG/$(date +%m%d-%H%M).log
 touch $log_file
