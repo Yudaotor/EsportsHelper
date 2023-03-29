@@ -1,6 +1,7 @@
 from time import sleep
 from traceback import print_exc, format_exc
 from rich import print
+from selenium.common import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
@@ -33,6 +34,9 @@ class Twitch:
             sleep(1)
             self.driver.switch_to.default_content()
             return True
+        except TimeoutException as e:
+            self.log.error(format_exc())
+            return False
         except Exception as e:
             print_exc()
             self.log.error(format_exc())
