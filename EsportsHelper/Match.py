@@ -59,8 +59,9 @@ class Match:
                 self.driver.switch_to.window(self.mainWindow)
                 isDrop, imgUrl, title = self.rewards.checkNewDrops()
                 if isDrop:
-                    self.log.info(f"ΩДΩ 发现新的掉落: {title}")
-                    print(f"[blue]ΩДΩ 发现新的掉落: {title}[/blue]")
+                    for tit in title:
+                        self.log.info(f"ΩДΩ 发现新的掉落: {tit}")
+                        print(f"[blue]ΩДΩ 发现新的掉落: {tit}[/blue]")
                     if self.config.connectorDropsUrl != "":
                         self.rewards.notifyDrops(imgUrl=imgUrl, title=title)
                 sleep(3)
@@ -168,8 +169,8 @@ class Match:
                         skipName = splitUrl[-2]
                     else:
                         skipName = splitUrl[-1]
-                    self.log.info(f"X_X {skipName}比赛跳过")
-                    print(f"[yellow]X_X {skipName}比赛跳过")
+                    self.log.info(f"(╯#-_-)╯ {skipName}比赛跳过")
+                    print(f"[yellow](╯#-_-)╯ {skipName}比赛跳过")
                     flag = False
                     break
             if not flag:
