@@ -1,7 +1,17 @@
+<p align="center">
+<a href="https://github.com/Yudaotor/EsportsHelper"><img alt="EsportsHelper" src="https://i.328888.xyz/2023/03/28/itMRQF.png"></a><br/>
+<a href="https://lolesports.com"><img alt="lolesports" src="https://img.shields.io/badge/WebSite-lol%20esports-445fa5.svg?style=plastic"></a>
+<a href="https://github.com/Yudaotor/EsportsHelper/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/Yudaotor/EsportsHelper"></a>
+<a href="https://github.com/Yudaotor/EsportsHelper/pulls"><img alt="PRWelcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat"></a><br/>
+<a href="https://www.cdnjson.com/images/2023/03/13/image-merge-1678713037835.png"><img alt="buymecoffee" src="https://user-images.githubusercontent.com/87225219/228188809-9d136e10-faa1-49b9-a6b7-b969dd1d8c7f.png"></a>
+</p>
+
+
 # 电竞助手 EsportsHelper
 通过selenium模拟浏览器来自动观看电竞比赛,网址:[lolesports](lolesports.com)  
 至于会不会被拳头检测到这个问题,目前还没有答案.  
 哦对了,用的是谷歌浏览器哦 （必须要下一个最新版的谷歌浏览器哦）  
+来自中国大陆的需搭配VPN使用  
 **如何下载**:点击右侧的[release](https://github.com/Yudaotor/EsportsHelper/releases)下载
 ## 联系我
 使用过程中有遇到什么问题或者建议可以在github上提出issue  
@@ -51,5 +61,7 @@ volcano_discover_league:volcano_discover_league
 hitpoint_masters:hitpoint_masters 
 worlds:worlds  
 european-masters:european-masters  
+golden_league:movistar_fiber_golden_league
+honor_league:honor_league
 ## by the way
 本项目思路及部分代码来自Poro，感谢。[此处](https://github.com/LeagueOfPoro/EsportsCapsuleFarmer)
