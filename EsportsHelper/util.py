@@ -27,6 +27,6 @@ def Quit(driver=None, e=None):
      sys.exit()
 
 
-def DebugScreen(driver, lint="checkNewXDrogs", debug=True):
+def DebugScreen(driver, lint="", debug=True):
      if debug:
           driver.save_screenshot( f"./logs/pics/{time.strftime('%b-%d-%H-%M-%S')}-{lint}.png" )

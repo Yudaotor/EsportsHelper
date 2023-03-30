@@ -51,7 +51,6 @@ class Rewards:
     def checkNewDrops(self):
         try:
             self.driver.implicitly_wait(15)
-            time.sleep(10)
             DebugScreen(self.driver, "checkNewDrops", self.config.debug)
 
             isDrop = False

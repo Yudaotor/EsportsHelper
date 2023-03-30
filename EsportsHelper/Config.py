@@ -17,7 +17,7 @@ class Config:
                 self.username = config.get("username", "NoUsername")
                 self.password = config.get("password", "NoPassword")
                 self.delay = config.get("delay", 600)
-                self.max_run_hours = config.get("runHours", -1)
+                self.maxRunHours = config.get("runHours", -1)
                 self.disWatchMatches = config.get("disWatchMatches", [])
                 self.connectorDropsUrl = config.get("connectorDropsUrl", "")
                 self.platForm = config.get("platForm", "windows")

@@ -55,13 +55,13 @@ class Match:
             print(f"[red]〒.〒 获取文件失败,请检查网络是否能连上github[/red]")
             input("按任意键退出")
 
-    def watchMatches(self, delay, max_run_hours):
+    def watchMatches(self, delay, maxRunHours):
         self.currentWindows = {}
         self.mainWindow = self.driver.current_window_handle
-        max_run_second = max_run_hours * 3600
-        start_time_point = time.time()
+        maxRunSecond = maxRunHours * 3600
+        startTimePoint = time.time()
 
-        while max_run_hours < 0 or time.time() < start_time_point + max_run_second:
+        while maxRunHours < 0 or time.time() < startTimePoint + maxRunSecond:
             try:
                 self.log.info("●_● 开始检查直播...")
                 print(f"[green]●_● 开始检查直播...[/green]")

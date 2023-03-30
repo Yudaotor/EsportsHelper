@@ -51,7 +51,7 @@ def Watch(config):
             try_log_time = try_log_time - 1
             if try_log_time <= 0:
                 log.error("停止重试，结束程序")
-                Quit(driver, "无法登陆，账号密码可能错误")
+                Quit(driver, "无法登陆，账号密码可能错误或者网络出现问题")
 
             log.error("눈_눈 自动登录失败,账号密码是否正确?")
             print("[red]눈_눈 自动登录失败,账号密码是否正确?[/red]")
@@ -62,7 +62,7 @@ def Watch(config):
     print("[green]∩_∩ 好嘞 登录成功[/green]")
 
     Match(log=log, driver=driver, config=config).watchMatches(
-        delay=config.delay, max_run_hours=config.max_run_hours)
+        delay=config.delay, maxRunHours=config.maxRunHours)
 
 
 def main():

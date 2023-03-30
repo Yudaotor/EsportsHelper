@@ -14,7 +14,8 @@ class Webdriver:
             return uc.Chrome(options=options)
         elif self.config.platForm == "windows":
             chromeDriverManager = ChromeDriverManager(path=".\\driver")
-            version = int(chromeDriverManager.driver.get_version().split(".")[0])
+            version = int(
+                chromeDriverManager.driver.get_version().split(".")[0])
             driverPath = chromeDriverManager.install()
             return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version)
         else:
@@ -32,8 +33,8 @@ class Webdriver:
         if self.config.headless:
             options.add_argument("--headless=new")
         options.add_argument("--disable-gpu")
-        options.add_argument('--no-sandbox')
-        # user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.44"
-        user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+        windows_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.44" 
+        mac_agent =  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+        user_agent = windows_agent if self.config.platForm == "windows" else mac_agent
         options.add_argument(f'user-agent={user_agent}')
         return options
