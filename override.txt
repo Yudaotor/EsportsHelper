@@ -24,3 +24,4 @@ https://lolesports.com/live/honor_league|https://lolesports.com/live/honor_leagu
 https://lolesports.com/live/nlc/nlclol|https://lolesports.com/live/nlc/nlclol,
 https://lolesports.com/live/elite_series|https://lolesports.com/live/elite_series/rtbf_ixpe,
 https://lolesports.com/live/lfl|https://lolesports.com/live/lfl/otplol_,
+https://lolesports.com/live/arabian_league|https://lolesports.com/live/arabian_league/lolesports_ar,
