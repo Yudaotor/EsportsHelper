@@ -28,6 +28,8 @@ class Webdriver:
             "credentials_enable_service": False,
         }
         options.add_experimental_option('prefs', prefs)
+        if self.config.proxy:
+            options.add_argument(f"--proxy-server={self.config.proxy}")
         if self.config.headless:
             options.add_argument("--headless")
             options.add_argument("--disable-gpu")

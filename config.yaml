@@ -3,3 +3,4 @@ headless: False              # 设置为True时，程序会在后台运行，否
 username: "账号用户名"        # 必填，账号
 password: "密码"  # 必填，密码
 disWatchMatches: ["lck", "lpl", "lcs"] # 选填，不想看的赛区名称，可以在这里添加.(注意,是小写)
+# proxy: "" # 代理地址，选填，加速器用户一般不用填。 e.g., "socks://127.0.0.1:20173"
