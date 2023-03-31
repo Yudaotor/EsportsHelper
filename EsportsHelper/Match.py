@@ -12,7 +12,8 @@ from urllib3.exceptions import MaxRetryError
 
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
-from EsportsHelper.util import Quit
+from EsportsHelper.Utils import Quit
+from EsportsHelper.Utils import desktopNotify
 from EsportsHelper.Youtube import Youtube
 
 
@@ -65,15 +66,15 @@ class Match:
                 self.log.info("●_● 开始检查直播...")
                 print(f"[green]●_● 开始检查直播...[/green]")
                 self.driver.switch_to.window(self.mainWindow)
-                isDrop, imgUrl, title = self.rewards.checkNewDrops()
+                isDrop, poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg = self.rewards.checkNewDrops()
                 if isDrop:
-                    for tit in title:
-                        self.log.info(
-                            f"ΩДΩ {self.config.username}发现新的掉落: {tit}")
-                        print(
-                            f"[blue]ΩДΩ {self.config.username}发现新的掉落: {tit}[/blue]")
-                    if self.config.connectorDropsUrl != "":
-                        self.rewards.notifyDrops(imgUrl=imgUrl, title=title)
+                    for i in range(len(poweredByImg)):
+                        self.log.info(f"ΩДΩ [{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}")
+                        print(f"ΩДΩ [{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}")
+                        if self.config.desktopNotify:
+                            desktopNotify(poweredByImg[i], productImg[i], unlockedDate[i], eventTitle[i], dropItem[i], dropItemImg[i])
+                        if self.config.connectorDropsUrl != "":
+                            self.rewards.notifyDrops(poweredByImg[i], productImg[i], unlockedDate[i], eventTitle[i], dropItem[i], dropItemImg[i])
                 sleep(3)
                 try:
                     self.driver.get("https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
