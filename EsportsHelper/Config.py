@@ -23,6 +23,7 @@ class Config:
                 self.platForm = config.get("platForm", "windows")
                 self.debug = config.get("debug", False)
                 self.proxy = config.get("proxy", "")
+                self.desktopNotify = config.get("desktopNotify", False)
                 self.format()
 
         except FileNotFoundError as ex:
@@ -38,9 +39,11 @@ class Config:
     def format(self):
         while "" in self.disWatchMatches:
             self.disWatchMatches.remove("")
+
         if self.username == "NoUsername" or self.password == "NoPassword":
             self.log.error("配置文件中没有账号密码信息")
             print("[red]配置文件中没有账号密码信息")
+
         if isinstance(self.headless, str):
             if self.headless == "True" or self.headless == "true":
                 self.headless = True
@@ -48,14 +51,23 @@ class Config:
                 self.headless = False
             else:
                 self.headless = False
+
         if isinstance(self.delay, str):
             self.delay = int(self.delay)
+
         if not isinstance(self.platForm, str):
             self.platForm = "windows"
         else:
             self.platForm = self.platForm.lower()
             if self.platForm not in ["windows", "linux"]:
                 self.platForm = "windows"
+
+        if self.desktopNotify == "True" or self.desktopNotify == "true":
+            self.desktopNotify = True
+        elif self.desktopNotify == "False" or self.desktopNotify == "false":
+            self.desktopNotify = False
+        else:
+            self.desktopNotify = False
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)
