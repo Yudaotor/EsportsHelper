@@ -1,15 +1,18 @@
+import time
+from datetime import datetime, timedelta
 from random import randint
-from sys import exit
-from traceback import print_exc, format_exc
+from time import sleep
+from traceback import format_exc, print_exc
+
 import requests
 from rich import print
 from selenium.common import WebDriverException
 from selenium.webdriver.common.by import By
-from time import sleep
-from datetime import datetime, timedelta
 from urllib3.exceptions import MaxRetryError
+
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
+from EsportsHelper.util import Quit
 from EsportsHelper.Youtube import Youtube
 
 
@@ -27,8 +30,10 @@ class Match:
         self.retryTimes = 3
         try:
             req = requests.session()
-            headers = {'Content-Type': 'text/plain; charset=utf-8', 'Connection': 'close'}
-            remoteOverrideFile = req.get("https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
+            headers = {'Content-Type': 'text/plain; charset=utf-8',
+                       'Connection': 'close'}
+            remoteOverrideFile = req.get(
+                "https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
             if remoteOverrideFile.status_code == 200:
                 override = remoteOverrideFile.text.split(",")
                 first = True
@@ -49,10 +54,13 @@ class Match:
             print(f"[red]〒.〒 获取文件失败,请检查网络是否能连上github[/red]")
             input("按任意键退出")
 
-    def watchMatches(self, delay):
+    def watchMatches(self, delay, maxRunHours):
         self.currentWindows = {}
         self.mainWindow = self.driver.current_window_handle
-        while True:
+        maxRunSecond = maxRunHours * 3600
+        startTimePoint = time.time()
+
+        while maxRunHours < 0 or time.time() < startTimePoint + maxRunSecond:
             try:
                 self.log.info("●_● 开始检查直播...")
                 print(f"[green]●_● 开始检查直播...[/green]")
@@ -60,8 +68,10 @@ class Match:
                 isDrop, imgUrl, title = self.rewards.checkNewDrops()
                 if isDrop:
                     for tit in title:
-                        self.log.info(f"ΩДΩ {self.config.username}发现新的掉落: {tit}")
-                        print(f"[blue]ΩДΩ {self.config.username}发现新的掉落: {tit}[/blue]")
+                        self.log.info(
+                            f"ΩДΩ {self.config.username}发现新的掉落: {tit}")
+                        print(
+                            f"[blue]ΩДΩ {self.config.username}发现新的掉落: {tit}[/blue]")
                     if self.config.connectorDropsUrl != "":
                         self.rewards.notifyDrops(imgUrl=imgUrl, title=title)
                 sleep(3)
@@ -77,18 +87,22 @@ class Match:
                     print(f"[green]〒.〒 没有赛区正在直播[/green]")
                 else:
                     self.log.info(f"ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中")
-                    print(f"[green]ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
+                    print(
+                        f"[green]ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
 
                 self.closeFinishedTabs(liveMatches=liveMatches)
 
-                self.startWatchNewMatches(liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
+                self.startWatchNewMatches(
+                    liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
                 sleep(3)
                 randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
                 newDelay = randomDelay * 10
                 self.driver.switch_to.window(self.mainWindow)
-                self.log.info(f"下一次检查在: {datetime.now() + timedelta(seconds=newDelay)}")
+                self.log.info(
+                    f"下一次检查在: {datetime.now() + timedelta(seconds=newDelay)}")
                 self.log.debug("============================================")
-                print(f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
+                print(
+                    f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
                 print(f"[green]============================================[/green]")
                 sleep(newDelay)
                 self.retryTimes = 3
@@ -96,31 +110,29 @@ class Match:
                 self.retryTimes -= 1
                 self.log.error("Q_Q webdriver发生错误, 重试中")
                 print(f"[red]Q_Q webdriver发生错误, 重试中[/red]")
+                print_exc()
                 sleep(2)
                 if self.retryTimes <= 0:
                     self.log.error("Q_Q webdriver发生错误, 将于3秒后退出...")
                     print(f"[red]Q_Q webdriver发生错误, 将于3秒后退出...[/red]")
-                    sleep(3)
-                    self.driver.quit()
-                    exit()
+                    Quit(self.driver, format_exc())
+
             except Exception as e:
                 self.retryTimes -= 1
                 self.log.error("Q_Q 发生错误")
                 print(f"[red]Q_Q 发生错误[/red]")
                 print_exc()
-                self.log.error(format_exc())
                 sleep(2)
                 if self.retryTimes <= 0:
                     self.log.error("Q_Q 发生错误, 将于3秒后退出...")
                     print(f"[red]Q_Q 发生错误, 将于3秒后退出...[/red]")
-                    sleep(3)
-                    self.driver.quit()
-                    exit()
+                    Quit(self.driver, format_exc())
 
     def getMatchInfo(self):
         try:
             matches = []
-            elements = self.driver.find_elements(by=By.CSS_SELECTOR, value=".EventMatch .event.live")
+            elements = self.driver.find_elements(
+                by=By.CSS_SELECTOR, value=".EventMatch .event.live")
             for element in elements:
                 matches.append(element.get_attribute("href"))
             return matches

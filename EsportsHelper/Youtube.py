@@ -1,10 +1,10 @@
 from time import sleep
-from traceback import print_exc, format_exc
+from traceback import format_exc, print_exc
 
 from selenium.common import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class Youtube:
