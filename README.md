@@ -71,16 +71,16 @@ cblol_academy:cblol_academy
 lla:lla  
 ljl:ljl-japan  
 ljl_academy:ljl_academy  
-turkiye-sampiyonluk-ligi:turkiye-sampiyonluk-ligi  
 cblol-brazil:cblol-brazil  
 pcs:pcs  
 honor_division:honor_division  
 volcano_discover_league:volcano_discover_league  
-hitpoint_masters:hitpoint_masters 
+hitpoint_masters:hitpoint_masters  
 worlds:worlds  
 european-masters:european-masters  
 golden_league:movistar_fiber_golden_league  
 honor_league:honor_league  
+tcl:turkiye-sampiyonluk-ligi
 nlc:nlc  
 elite_series:elite_series  
 ## by the way
