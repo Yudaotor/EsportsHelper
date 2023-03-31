@@ -50,8 +50,8 @@ password: "密码"  # 必填，密码
 delay: 600                    # 每次检查的时间间隔，单位为秒(默认为600秒)(每次检测时间会在你设置的时延0.8-1.5倍之间随机波动)  
 headless: False              # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)  
 disWatchMatches: ["lck", "lpl", "lcs"] # 选填，不想看的赛区名称，可以在这里添加.(注意,是小写)  
-runHours: -1                  # 负值为一直运行，正值为运行小时, 默认-1
-
+runHours: -1                  # (尚未实现)负值为一直运行，正值为运行小时, 默认-1
+proxy: "你的代理地址" # (尚未实现)代理地址，选填，一般用户不用填。 e.g., "socks://127.0.0.1:20173"
 connectorDropsUrl: "你的webhook链接"   # (支持钉钉,Discord,饭碗警告)(具体配置方法见此处[点我](https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F(%E5%8A%9F%E8%83%BD%E5%BE%85%E6%B5%8B%E8%AF%95)))  
 platForm: "windows"    # 使用平台,默认为windows,如需使用linux请在此处进行配置  
 ```
