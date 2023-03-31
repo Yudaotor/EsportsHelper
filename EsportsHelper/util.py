@@ -1,7 +1,7 @@
 import subprocess
 import sys
 import time
-
+from rich import print
 from EsportsHelper.Logger import log
 from EsportsHelper.VersionManager import VersionManager
 
