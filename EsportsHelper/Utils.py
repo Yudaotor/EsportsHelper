@@ -1,9 +1,10 @@
-import subprocess
 import sys
 import time
+from traceback import format_exc, print_exc
 
 from EsportsHelper.Logger import log
 from EsportsHelper.VersionManager import VersionManager
+from plyer import notification
 
 
 def info():
@@ -18,6 +19,28 @@ def info():
     print("[green]=========================================================")
     print()
     VersionManager.checkVersion()
+
+
+def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg):
+    try:
+        iconFilePart1 = ".\\icons\\"
+        iconFilePart2 = "EsportsHelper"
+        iconFilePart3 = ".ico"
+        iconFile = iconFilePart1 + iconFilePart2 + iconFilePart3
+        if dropItem == "Esports Capsule":
+            iconFile = iconFilePart1 + "EsportsCapsule" + iconFilePart3
+        elif dropItem == "Hextech Chest and Key Bundle":
+            iconFile = iconFilePart1 + "HextechChest" + iconFilePart3
+        notification.notify(
+            title="小傻瓜，掉寶啦！",
+            message=f"通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+            app_icon=iconFile,
+            timeout=30
+        )
+        log.info("桌面提醒成功！")
+    except Exception as e:
+        log.error("桌面提醒失败！")
+        log.error(format_exc())
 
 
 def Quit(driver=None, e=None):
