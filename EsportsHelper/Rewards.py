@@ -1,14 +1,11 @@
 import time
 import traceback
-
 import requests
-from rich import print
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
-
-from EsportsHelper.util import DebugScreen
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.common.exceptions import TimeoutException
+from rich import print
 
 
 class Rewards:
@@ -53,39 +50,47 @@ class Rewards:
             self.driver.implicitly_wait(15)
 
             isDrop = False
-            imgUrl = []
-            title = []
-            imgEl = self.driver.find_elements(by=By.CSS_SELECTOR, value="img[class=img]")
-            if len(imgEl) > 0:
-                for img in imgEl:
-                    imgUrl.append(img.get_attribute("src"))
+            poweredByImg = []
+            productImg = []
+            unlockedDate = []
+            eventTitle = []
+            dropItem = []
+            dropItemImg = []
+            drops = self.driver.find_elements(by=By.CSS_SELECTOR, value="div[class=drops-fulfilled]")
+            for drop in drops:
                 isDrop = True
-            titleEl = self.driver.find_elements(by=By.CSS_SELECTOR, value="div[class=title]")
-            if len(titleEl) > 0:
-                for tit in titleEl:
-                    title.append(tit.text)
-                isDrop = True
-            self.driver.implicitly_wait(15)
+                drop.click()
+                time.sleep(2)
+                poweredByImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=sponsor-image] > img[class=img]"))
+                productImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=product-image] > img[class=img]"))
+                unlockedDate.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=product-image] > div[class=unlocked-date]"))
+                eventTitle.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=product-image] > div[class=title]"))
+                dropItem.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=reward] > div[class=wrapper] > div[class=title]"))
+                dropItemImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=reward] > div[class=image] > img[class=img]"))
+                self.driver.refresh()
             if isDrop:
-                return isDrop, imgUrl, title
+                self.driver.implicitly_wait(15)
+                return isDrop, poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg
             else:
-                return isDrop, [], []
+                self.driver.implicitly_wait(15)
+                return isDrop, [], [], [], [], [], []
         except Exception:
+            self.driver.implicitly_wait(15)
             self.log.error("〒.〒 检查掉落失败")
             traceback.print_exc()
             print("[red]〒.〒 检查掉落失败[/red]")
-            return False, [], []
+            return False, [], [], [], [], [], []
 
-    def notifyDrops(self, imgUrl, title):
+    def notifyDrops(self, poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg):
         try:
-            for i in range(len(imgUrl)):
+            for i in range(len(poweredByImg)):
                 if "https://oapi.dingtalk.com" in self.config.connectorDropsUrl:
                     data = {
                         "msgtype": "link",
                         "link": {
                             "text": "Drop掉落提醒",
-                            "title": f"[{self.config.username}]{title[i]}",
-                            "picUrl": f"{imgUrl[i]}",
+                            "title": f"[{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}",
+                            "picUrl": f"{dropItemImg[i]}",
                             "messageUrl": "https://lolesports.com/rewards"
                         }
                     }
@@ -94,24 +99,28 @@ class Rewards:
                 elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
                     embed = {
                         "title": "掉落提醒",
-                        "description": f"[{self.config.username}]{title[i]}",
-                        "image": {"url": f"{imgUrl[i]}"},
-                        "thumbnail": {"url": "https://www.cdnjson.com/images/2023/03/26/QQ20230326153220.jpg"},
+                        "description": f"[{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}",
+                        "image": {"url": f"{productImg[i]}"},
+                        "thumbnail": {"url": f"{dropItemImg}"},
                         "color": 6676471,
                     }
                     params = {
                         "username": "EsportsHelper",
                         "embeds": [embed]
                     }
-                    requests.post(self.config.connectorDropsUrl, headers={
-                                  "Content-type": "application/json"}, json=params)
+                    requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                     time.sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
-                        "text": f"[{self.config.username}]{title[i]}"
+                        "text": f"[{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}",
                     }
-                    requests.post(self.config.connectorDropsUrl, headers={
-                                  "Content-type": "application/json"}, json=params)
+                    requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    time.sleep(5)
+                else:
+                    params = {
+                        "text": f"[{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}",
+                    }
+                    requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                     time.sleep(5)
         except Exception:
             self.log.error("〒.〒 掉落提醒失败")
