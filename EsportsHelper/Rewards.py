@@ -1,11 +1,14 @@
 import time
 import traceback
+
 import requests
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.common.exceptions import TimeoutException
 from rich import print
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import WebDriverWait
+
+from EsportsHelper.util import DebugScreen
 
 
 class Rewards:
@@ -17,12 +20,13 @@ class Rewards:
     def isRewardMarkExist(self):
         wait = WebDriverWait(self.driver, 25)
         try:
-            wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div[class=status-summary] g")))
+            wait.until(ec.presence_of_element_located(
+                (By.CSS_SELECTOR, "div[class=status-summary] g")))
         except TimeoutException:
             return False
         return True
 
-    def checkRewards(self, url, retryTimes=4) -> bool:
+    def checkRewards(self, url, retryTimes=6) -> bool:
         splitUrl = url.split('/')
         if splitUrl[-2] != "live":
             match = splitUrl[-2]
@@ -30,22 +34,24 @@ class Rewards:
             match = splitUrl[-1]
         for i in range(retryTimes):
             if self.isRewardMarkExist():
-                self.log.info(f"√√√√√ {match} 正常观看 √√√√√ ")
-                print(f"[green]√√√√√[/green] {match} 正常观看 [green]√√√√√ ")
+                self.log.info(f"√√√√√ {match} 正常观看 可获取奖励 √√√√√ ")
+                print(f"[green]√√√√√[/green] {match} 正常观看 可获取奖励 [green]√√√√√ ")
                 return True
             else:
                 if i != retryTimes - 1:
                     self.log.warning(f"××××× {match} 观看异常 ××××× 重试中...")
-                    print(f"[yellow]×××××[/yellow] {match} 观看异常 [yellow]××××× 重试中...")
+                    print(
+                        f"[yellow]×××××[/yellow] {match} 观看异常 [yellow]××××× 重试中...")
                     self.driver.refresh()
                 else:
-                    self.log.error(f"××××× {match} 观看异常 ××××× ")
-                    print(f"[red]×××××[/red] {match} 观看异常 [red]××××× ")
+                    self.log.error(f"××××× {match} 观看异常 ××××× url={url}")
+                    print(f"[red]×××××[/red] {match} 观看异常 [red]××××× url={url}")
                     return False
 
     def checkNewDrops(self):
         try:
-            self.driver.implicitly_wait(5)
+            self.driver.implicitly_wait(15)
+
             isDrop = False
             imgUrl = []
             title = []
@@ -97,13 +103,15 @@ class Rewards:
                         "username": "EsportsHelper",
                         "embeds": [embed]
                     }
-                    requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    requests.post(self.config.connectorDropsUrl, headers={
+                                  "Content-type": "application/json"}, json=params)
                     time.sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
                         "text": f"[{self.config.username}]{title[i]}"
                     }
-                    requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    requests.post(self.config.connectorDropsUrl, headers={
+                                  "Content-type": "application/json"}, json=params)
                     time.sleep(5)
         except Exception:
             self.log.error("〒.〒 掉落提醒失败")

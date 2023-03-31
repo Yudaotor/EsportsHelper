@@ -1,4 +1,6 @@
 import logging
+import time
+from pathlib import Path
 from logging.handlers import RotatingFileHandler
 
 FILE_SIZE = 1024 * 1024 * 100
@@ -7,10 +9,11 @@ BACKUP_COUNT = 5
 
 class Logger:
     @staticmethod
-    def createLogger():
+    def createLogger(log_path=Path("./logs/programs")):
+        log_path.mkdir(parents=True, exist_ok=True)
         level = logging.INFO
         fileHandler = RotatingFileHandler(
-            "./logs/EsportsHelper.log",
+            log_path / f"EsportsHelper{time.strftime('%b-%d-%H-%M')}.log",
             mode="a+",
             maxBytes=FILE_SIZE,
             backupCount=BACKUP_COUNT,
@@ -30,3 +33,6 @@ class Logger:
         log.info(r"----------- 可以点一个小星星吗(*^_^*) ---------------")
         log.info("-------------------------------------------------")
         return log
+
+
+log = Logger().createLogger()

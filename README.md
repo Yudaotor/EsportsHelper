@@ -25,6 +25,14 @@ discord: Khalil#7843
 ## 运行平台  
 windows,linux  
 
+### mac
+暂时运行方法：
+```shell
+python -m pip install -r requirements.txt
+./run_job.sh 0
+```
+
+
 ## 特性
 1. 自动打开浏览器,进入lolesports.com,查询哪些赛区在进行比赛(在放录播的赛区会被忽视),进入观看并设置为最低清晰度(为了节省流量)
 2. 可以自行设置是否选择无头模式(默认关闭)(无头模式即headless,开启后浏览器会不可见,在后台运行,缓解电脑CPU压力)
@@ -33,6 +41,8 @@ windows,linux
 5. 掉落提醒(支持钉钉,Discord,饭碗警告)(尚未测试,不确定是否生效)
 
 ## 配置信息
+config.yaml
+```yaml
 ### 必填项
 username: "账号用户名"        # 必填，账号  
 password: "密码"  # 必填，密码  
@@ -40,9 +50,12 @@ password: "密码"  # 必填，密码
 delay: 600                    # 每次检查的时间间隔，单位为秒(默认为600秒)(每次检测时间会在你设置的时延0.8-1.5倍之间随机波动)  
 headless: False              # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)  
 disWatchMatches: ["lck", "lpl", "lcs"] # 选填，不想看的赛区名称，可以在这里添加.(注意,是小写)  
+runHours: -1                  # 负值为一直运行，正值为运行小时, 默认-1
+
 connectorDropsUrl: "你的webhook链接"   # (支持钉钉,Discord,饭碗警告)(具体配置方法见此处[点我](https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F(%E5%8A%9F%E8%83%BD%E5%BE%85%E6%B5%8B%E8%AF%95)))  
 platForm: "windows"    # 使用平台,默认为windows,如需使用linux请在此处进行配置  
-proxy:"你的代理地址"    # 代理地址，选填，一般用户不用填。 e.g., "socks://127.0.0.1:20173"
+```
+
 ### 不观看赛区的配置详解:
 注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看  
 可以设置一些赛区不观看,防止出现24小时观赛的情况  
