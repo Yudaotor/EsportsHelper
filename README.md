@@ -6,7 +6,7 @@
 <a href="https://www.cdnjson.com/images/2023/03/13/image-merge-1678713037835.png"><img alt="buymecoffee" src="https://user-images.githubusercontent.com/87225219/228188809-9d136e10-faa1-49b9-a6b7-b969dd1d8c7f.png"></a>
 </p>
 
-
+**Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md)|[Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
 # 电竞助手 EsportsHelper
 通过selenium模拟浏览器来自动观看电竞比赛,网址:[lolesports](lolesports.com)  
 至于会不会被拳头检测到这个问题,目前还没有答案.  
