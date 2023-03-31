@@ -38,8 +38,20 @@ class LoginHandler:
             self.log.debug("∩_∩ 账密 提交成功")
             print("[green]∩_∩ 账密 提交成功")
             time.sleep(5)
+            if len(self.driver.find_elements(by=By.CSS_SELECTOR, value="div.text__web-code")) > 0:
+                self.insert2FACode()
             wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.riotbar-summoner-name")))
         except TimeoutException:
             print("[red]×_× 登录超时")
             self.log.error(format_exc())
 
+    def insert2FACode(self):
+        wait = WebDriverWait(self.driver, 20)
+        authText = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "h5.grid-panel__subtitle")))
+        self.log.info(f'输入二级验证代码 ({authText.text})')
+        code = input('代码: ')
+        codeInput = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.codefield__code--empty > div > input")))
+        codeInput.send_keys(code)
+        submitButton = wait.until(ec.element_to_be_clickable((By.CSS_SELECTOR, "button[type=submit]")))
+        self.driver.execute_script("arguments[0].click();", submitButton)
+        self.log.info("二级验证代码提交成功")
