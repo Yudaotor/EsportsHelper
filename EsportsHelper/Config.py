@@ -19,6 +19,7 @@ class Config:
                 self.disWatchMatches = config.get("disWatchMatches", [])
                 self.connectorDropsUrl = config.get("connectorDropsUrl", "")
                 self.platForm = config.get("platForm", "windows")
+                self.proxy = config.get("proxy", "")
                 self.format()
         except FileNotFoundError as ex:
             log.error("配置文件找不到")
