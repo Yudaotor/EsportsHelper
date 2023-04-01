@@ -1,10 +1,11 @@
 import sys
-import time
+from time import sleep, strftime
 from traceback import format_exc, print_exc
-
+from EsportsHelper import Config
 from EsportsHelper.Logger import log
 from EsportsHelper.VersionManager import VersionManager
 from plyer import notification
+from rich import print
 
 
 def info():
@@ -43,14 +44,16 @@ def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, 
         log.error(format_exc())
 
 
-def Quit(driver=None, e=None):
+def sysQuit(driver=None, e=None):
+    sleep(3)
     if driver:
-        driver.quit()
+        driver.sysQuit()
     log.error(e)
     log.info("[red]------程序退出------")
     sys.exit()
 
 
-def DebugScreen(driver, lint="", debug=True):
-    if debug:
-        driver.save_screenshot(f"./logs/pics/{time.strftime('%b-%d-%H-%M-%S')}-{lint}.png")
+def debugScreen(driver, lint=""):
+    if Config.config.debug:
+        log.info(f"DebugScreen: {lint}存储成功")
+        driver.save_screenshot(f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
