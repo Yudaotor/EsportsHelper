@@ -28,3 +28,4 @@ https://lolesports.com/live/arabian_league|https://lolesports.com/live/arabian_l
 https://lolesports.com/live/claro_gaming_stars_league|https://lolesports.com/live/claro_gaming_stars_league/lvpperu,
 https://lolesports.com/live/ultraliga|https://lolesports.com/live/ultraliga/polsatgames2,
 https://lolesports.com/live/liga_master_flo|https://lolesports.com/live/liga_master_flo/lvparg,
+https://lolesports.com/live/primeleague|https://lolesports.com/live/primeleague/primeleague,
