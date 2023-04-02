@@ -14,8 +14,8 @@
 来自中国大陆的需搭配VPN使用  
 **如何下载**:点击右侧的[release](https://github.com/Yudaotor/EsportsHelper/releases)下载
 ## 联系我
-使用过程中有遇到什么问题或者建议可以在github上提出issue 
-或者加TG群交流: https://t.me/+0PjLPCy_IIJhNzM1
+使用过程中有遇到什么问题或者建议可以在github上提出issue  
+或者加TG群交流: https://t.me/+0PjLPCy_IIJhNzM1  
 或者可以联系我  
 discord: Khalil#7843  
 可以给我点个小星星吗(*^_^*)⭐  
