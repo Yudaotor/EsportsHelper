@@ -17,7 +17,7 @@ class Config:
                 self.username = config.get("username", "NoUsername")
                 self.password = config.get("password", "NoPassword")
                 self.delay = config.get("delay", 600)
-                self.maxRunHours = config.get("runHours", -1)
+                self.maxRunHours = config.get("maxRunHours", -1)
                 self.disWatchMatches = config.get("disWatchMatches", [])
                 self.connectorDropsUrl = config.get("connectorDropsUrl", "")
                 self.platForm = config.get("platForm", "windows")
@@ -25,7 +25,7 @@ class Config:
                 self.proxy = config.get("proxy", "")
                 self.desktopNotify = config.get("desktopNotify", False)
                 self.closeStream = config.get("closeStream", False)
-                self.sleepPeriod = config.get("sleepPeriod", [])
+                self.sleepPeriod = config.get("sleepPeriod", "")
                 self.format()
 
         except FileNotFoundError as ex:
@@ -78,16 +78,24 @@ class Config:
             else:
                 self.closeStream = False
         if isinstance(self.sleepPeriod, str):
-            self.sleepPeriod = self.sleepPeriod.split("-")
-            if len(self.sleepPeriod) != 2:
+            sleepPeriod = self.sleepPeriod.split("-")
+            if len(sleepPeriod) != 2:
                 self.sleepPeriod = ""
             else:
-                if self.sleepPeriod[0] > self.sleepPeriod[1]:
+                if sleepPeriod[0] > sleepPeriod[1]:
                     self.sleepPeriod = ""
-                elif self.sleepPeriod[0] < "0" or self.sleepPeriod[1] > "24":
+                elif sleepPeriod[0] < "0" or sleepPeriod[1] > "24":
                     self.sleepPeriod = ""
         else:
             self.sleepPeriod = ""
+        if isinstance(self.maxRunHours, str):
+            if self.maxRunHours == "":
+                self.maxRunHours = -1
+            else:
+                try:
+                    self.maxRunHours = int(self.maxRunHours)
+                except Exception:
+                    self.maxRunHours = -1
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)
