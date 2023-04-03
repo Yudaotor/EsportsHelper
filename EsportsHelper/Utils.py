@@ -93,18 +93,9 @@ def info():
 
 def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg):
     try:
-        iconFilePart1 = ".\\icons\\"
-        iconFilePart2 = "EsportsHelper"
-        iconFilePart3 = ".ico"
-        iconFile = iconFilePart1 + iconFilePart2 + iconFilePart3
-        if dropItem == "Esports Capsule":
-            iconFile = iconFilePart1 + "EsportsCapsule" + iconFilePart3
-        elif dropItem == "Hextech Chest and Key Bundle":
-            iconFile = iconFilePart1 + "HextechChest" + iconFilePart3
         notification.notify(
             title="小傻瓜，掉寶啦！",
             message=f"通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
-            app_icon=iconFile,
             timeout=30
         )
         log.info("桌面提醒成功！")
@@ -123,9 +114,13 @@ def sysQuit(driver=None, e=None):
 
 
 def debugScreen(driver, lint=""):
-    if Config.config.debug:
-        log.info(f"DebugScreen: {lint}存储成功")
-        driver.save_screenshot(f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
+    try:
+        if Config.config.debug:
+            log.info(f"DebugScreen: {lint}存储成功")
+            driver.save_screenshot(f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
+    except Exception as e:
+        log.error("DebugScreen: 截图失败")
+        log.error(format_exc())
 
 
 def downloadOverrideFile():
