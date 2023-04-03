@@ -71,9 +71,22 @@ class Match:
                 self.startWatchNewMatches(
                     liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
                 sleep(3)
-                # 随机数，用于随机延迟
-                randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
-                newDelay = randomDelay * 10
+                if self.config.sleepPeriod == "":
+                    # 随机数，用于随机延迟
+                    randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
+                    newDelay = randomDelay * 10
+                else:
+                    nowTime = int(time.localtime().tm_hour)
+                    sleepBegin = int(self.config.sleepPeriod.split("-")[0])
+                    sleepEnd = int(self.config.sleepPeriod.split("-")[1])
+                    print(sleepBegin, sleepEnd)
+                    if sleepBegin <= nowTime < sleepEnd:
+                        self.log.info("处于休眠时间，检查时间间隔为1小时")
+                        print(f"[green]处于休眠时间，检查时间间隔为1小时[/green]")
+                        newDelay = 3600
+                    else:
+                        randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
+                        newDelay = randomDelay * 10
                 self.driver.switch_to.window(self.mainWindow)
                 # 检查最近一个比赛的信息
                 self.checkNextMatch()

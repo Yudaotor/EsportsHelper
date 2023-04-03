@@ -25,6 +25,7 @@ class Config:
                 self.proxy = config.get("proxy", "")
                 self.desktopNotify = config.get("desktopNotify", False)
                 self.closeStream = config.get("closeStream", False)
+                self.sleepPeriod = config.get("sleepPeriod", [])
                 self.format()
 
         except FileNotFoundError as ex:
@@ -76,6 +77,17 @@ class Config:
                 self.closeStream = False
             else:
                 self.closeStream = False
+        if isinstance(self.sleepPeriod, str):
+            self.sleepPeriod = self.sleepPeriod.split("-")
+            if len(self.sleepPeriod) != 2:
+                self.sleepPeriod = ""
+            else:
+                if self.sleepPeriod[0] > self.sleepPeriod[1]:
+                    self.sleepPeriod = ""
+                elif self.sleepPeriod[0] < "0" or self.sleepPeriod[1] > "24":
+                    self.sleepPeriod = ""
+        else:
+            self.sleepPeriod = ""
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)
