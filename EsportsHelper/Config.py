@@ -24,6 +24,7 @@ class Config:
                 self.debug = config.get("debug", False)
                 self.proxy = config.get("proxy", "")
                 self.desktopNotify = config.get("desktopNotify", False)
+                self.closeStream = config.get("closeStream", False)
                 self.format()
 
         except FileNotFoundError as ex:
@@ -61,15 +62,25 @@ class Config:
             self.platForm = self.platForm.lower()
             if self.platForm not in ["windows", "linux"]:
                 self.platForm = "windows"
-
-        if self.desktopNotify == "True" or self.desktopNotify == "true":
-            self.desktopNotify = True
-        elif self.desktopNotify == "False" or self.desktopNotify == "false":
-            self.desktopNotify = False
-        else:
-            self.desktopNotify = False
+        if isinstance(self.desktopNotify, str):
+            if self.desktopNotify == "True" or self.desktopNotify == "true":
+                self.desktopNotify = True
+            elif self.desktopNotify == "False" or self.desktopNotify == "false":
+                self.desktopNotify = False
+            else:
+                self.desktopNotify = False
+        if isinstance(self.closeStream, str):
+            if self.closeStream == "True" or self.closeStream == "true":
+                self.closeStream = True
+            elif self.closeStream == "False" or self.closeStream == "false":
+                self.closeStream = False
+            else:
+                self.closeStream = False
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)
         if configPath.exists():
             return configPath
+
+
+config = ""
