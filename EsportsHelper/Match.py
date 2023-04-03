@@ -79,7 +79,6 @@ class Match:
                     nowTime = int(time.localtime().tm_hour)
                     sleepBegin = int(self.config.sleepPeriod.split("-")[0])
                     sleepEnd = int(self.config.sleepPeriod.split("-")[1])
-                    print(sleepBegin, sleepEnd)
                     if sleepBegin <= nowTime < sleepEnd:
                         self.log.info("处于休眠时间，检查时间间隔为1小时")
                         print(f"[green]处于休眠时间，检查时间间隔为1小时[/green]")
