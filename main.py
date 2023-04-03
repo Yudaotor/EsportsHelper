@@ -10,12 +10,12 @@ from EsportsHelper.Webdriver import Webdriver
 from EsportsHelper.Logger import log
 from EsportsHelper.Config import Config
 from EsportsHelper.Match import Match
-from EsportsHelper.util import info, Quit
+from EsportsHelper.Utils import info, sysQuit
 
 global driver
 
 
-def Watch(config):
+def watch(config):
     global driver
     try:
         driver = Webdriver(config).createWebdriver()
@@ -24,12 +24,12 @@ def Watch(config):
         print(
             "[red]눈_눈 生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n以上都检查过的话如还不行检查节点或是尝试可以用管理员方式打开\n按任意键退出...")
         input()
-        Quit(driver, format_exc())
+        sysQuit(driver, format_exc())
     except Exception as e:
         print_exc()
         print("[red]눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用\n按任意键退出...")
         input()
-        Quit(driver, format_exc())
+        sysQuit(driver, format_exc())
     loginHandler = LoginHandler(log=log, driver=driver)
     try:
         driver.get(
@@ -44,7 +44,7 @@ def Watch(config):
         except TimeoutException:
             tryLoginTimes = tryLoginTimes - 1
             if tryLoginTimes <= 0:
-                Quit(driver, "无法登陆，账号密码可能错误或者网络出现问题")
+                sysQuit(driver, "无法登陆，账号密码可能错误或者网络出现问题")
 
             log.error("눈_눈 自动登录失败,检查网络和账号密码")
             print("[red]눈_눈 自动登录失败,检查网络和账号密码[/red]")
@@ -53,7 +53,6 @@ def Watch(config):
 
     log.info("∩_∩ 好嘞 登录成功")
     print("[green]∩_∩ 好嘞 登录成功[/green]")
-
     Match(log=log, driver=driver, config=config).watchMatches(
         delay=config.delay, maxRunHours=config.maxRunHours)
 
@@ -70,7 +69,8 @@ def main():
 
     config = Config(log, args.configPath)
 
-    Watch(config)
+    watch(config)
+    print("[green]观看结束～[/green]")
     log.info("观看结束～")
 
 
@@ -78,6 +78,6 @@ if __name__ == '__main__':
     try:
         main()
     except (KeyboardInterrupt, SystemExit):
-        Quit(driver, "程序被打断")
+        sysQuit(driver, "程序被打断")
     except Exception as e:
-        Quit(driver, format_exc())
+        sysQuit(driver, format_exc())
