@@ -24,6 +24,7 @@ class Webdriver:
     def addWebdriverOptions(self, options):
         options.add_argument("--disable-extensions")
         options.add_argument('--disable-audio-output')
+        options.add_argument('--autoplay-policy=no-user-gesture-required')
         prefs = {
             "profile.password_manager_enabled": False,
             "credentials_enable_service": False,
