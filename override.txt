@@ -32,3 +32,4 @@ https://lolesports.com/live/primeleague|https://lolesports.com/live/primeleague/
 https://lolesports.com/live/greek_legends|https://lolesports.com/live/greek_legends/gamersloungegr,
 https://lolesports.com/live/superliga|https://lolesports.com/live/superliga/lvpes
 https://lolesports.com/live/north_american_challenger_league|https://lolesports.com/live/north_american_challenger_league/challengersleague,
+https://lolesports.com/live/lck_challengers_league|https://lolesports.com/live/lck_challengers_league/lckcl,
