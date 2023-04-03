@@ -143,7 +143,6 @@ class Match:
     def startWatchNewMatches(self, liveMatches, disWatchMatches):
         newLiveMatches = set(liveMatches) - set(self.currentWindows.keys())
         for match in newLiveMatches:
-            self.log.info(match)
             flag = True
             for disMatch in disWatchMatches:
                 if match.find(disMatch) != -1:
@@ -194,6 +193,9 @@ class Match:
             else:
                 url = match
                 self.driver.get(url)
+                # 方便下次添加入overrides中
+                self.log.info(self.driver.current_url)
+
                 self.youtube.playYoutubeStream()
                 if not self.rewards.checkRewards("youtube", url):
                     return
