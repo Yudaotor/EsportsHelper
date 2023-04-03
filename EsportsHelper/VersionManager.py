@@ -6,7 +6,7 @@ from EsportsHelper.Logger import log
 
 
 class VersionManager:
-    CURRENT_VERSION = "1.1.0"
+    CURRENT_VERSION = "1.2.0"
 
     @staticmethod
     def getLatestTag():
