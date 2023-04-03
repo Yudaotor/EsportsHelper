@@ -6,7 +6,7 @@
 <a href="https://www.cdnjson.com/images/2023/03/13/image-merge-1678713037835.png"><img alt="buymecoffee" src="https://user-images.githubusercontent.com/87225219/228188809-9d136e10-faa1-49b9-a6b7-b969dd1d8c7f.png"></a>
 </p>
 
-
+**Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md)|[Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
 # 电竞助手 EsportsHelper
 通过selenium模拟浏览器来自动观看电竞比赛,网址:[lolesports](lolesports.com)  
 至于会不会被拳头检测到这个问题,目前还没有答案.  
@@ -15,8 +15,8 @@
 **如何下载**:点击右侧的[release](https://github.com/Yudaotor/EsportsHelper/releases)下载
 ## 联系我
 使用过程中有遇到什么问题或者建议可以在github上提出issue  
+或者加TG群交流: https://t.me/+0PjLPCy_IIJhNzM1  
 或者可以联系我  
-telegram: https://t.me/Yudaotor  
 discord: Khalil#7843  
 可以给我点个小星星吗(*^_^*)⭐  
 ## 界面
@@ -71,16 +71,16 @@ cblol_academy:cblol_academy
 lla:lla  
 ljl:ljl-japan  
 ljl_academy:ljl_academy  
-turkiye-sampiyonluk-ligi:turkiye-sampiyonluk-ligi  
 cblol-brazil:cblol-brazil  
 pcs:pcs  
 honor_division:honor_division  
 volcano_discover_league:volcano_discover_league  
-hitpoint_masters:hitpoint_masters 
+hitpoint_masters:hitpoint_masters  
 worlds:worlds  
 european-masters:european-masters  
 golden_league:movistar_fiber_golden_league  
 honor_league:honor_league  
+tcl:turkiye-sampiyonluk-ligi
 nlc:nlc  
 elite_series:elite_series  
 ## by the way
