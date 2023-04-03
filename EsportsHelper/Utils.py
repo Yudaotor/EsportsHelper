@@ -32,6 +32,8 @@ class Utils:
                 log.error("错误提醒发送失败")
                 log.error(format_exc())
         if self.config.connectorDropsUrl != "":
+            s = requests.session()
+            s.keep_alive = False  # 关闭多余连接
             try:
                 if "https://oapi.dingtalk.com" in self.config.connectorDropsUrl:
                     data = {
@@ -43,7 +45,7 @@ class Utils:
                             "messageUrl": ""
                         }
                     }
-                    requests.post(self.config.connectorDropsUrl, json=data)
+                    s.post(self.config.connectorDropsUrl, json=data)
                 elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
                     embed = {
                         "title": "发生错误 停止获取Drop",
@@ -56,17 +58,17 @@ class Utils:
                         "username": "EsportsHelper",
                         "embeds": [embed]
                     }
-                    requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
                         "text": f"发生错误停止获取Drop{e}",
                     }
-                    requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                 else:
                     params = {
                         "text": f"发生错误停止获取Drop{e}",
                     }
-                    requests.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                 log.info(">_< 异常提醒成功")
                 print("异常提醒成功")
             except Exception as e:
