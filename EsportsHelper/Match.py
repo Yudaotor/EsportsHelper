@@ -27,60 +27,75 @@ class Match:
         self.utils = Utils(config=config)
 
     def watchMatches(self, delay, maxRunHours):
-        self.currentWindows = {}
-        self.mainWindow = self.driver.current_window_handle
-        maxRunSecond = maxRunHours * 3600
-        startTimePoint = time.time()
-        while maxRunHours < 0 or time.time() < startTimePoint + maxRunSecond:
-            self.log.info("●_● 开始检查直播...")
-            print(f"[green]●_● 开始检查直播...[/green]")
-            self.driver.switch_to.window(self.mainWindow)
-            isDrop, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
-            if isDrop:
-                for i in range(len(poweredByImg)):
-                    self.log.info(f"ΩДΩ [{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}")
-                    print(f"ΩДΩ [{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}")
-                    if self.config.desktopNotify:
-                        desktopNotify(poweredByImg[i], productImg[i], unlockedDate[i], eventTitle[i], dropItem[i], dropItemImg[i])
-                    if self.config.connectorDropsUrl != "":
-                        self.rewards.notifyDrops(poweredByImg[i], productImg[i], eventTitle[i], unlockedDate[i], dropItem[i], dropItemImg[i])
-            sleep(3)
-            # 来到lolesports网页首页
-            try:
-                self.getLolesportsWeb()
-            except Exception as e:
-                self.log.error(format_exc())
-                self.log.error("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...")
-                print(f"[red]Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...[/red]")
-                sysQuit(self.driver, "网络问题，将于3秒后退出...")
+        try:
+            self.currentWindows = {}
+            self.mainWindow = self.driver.current_window_handle
+            maxRunSecond = maxRunHours * 3600
+            startTimePoint = time.time()
+            while maxRunHours < 0 or time.time() < startTimePoint + maxRunSecond:
+                self.log.info("●_● 开始检查直播...")
+                print(f"[green]●_● 开始检查直播...[/green]")
+                self.driver.switch_to.window(self.mainWindow)
+                isDrop, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
+                if isDrop:
+                    for i in range(len(poweredByImg)):
+                        self.log.info(f"ΩДΩ [{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}")
+                        print(f"ΩДΩ [{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}")
+                        if self.config.desktopNotify:
+                            desktopNotify(poweredByImg[i], productImg[i], unlockedDate[i], eventTitle[i], dropItem[i], dropItemImg[i])
+                        if self.config.connectorDropsUrl != "":
+                            self.rewards.notifyDrops(poweredByImg[i], productImg[i], eventTitle[i], unlockedDate[i], dropItem[i], dropItemImg[i])
+                sleep(3)
+                # 来到lolesports网页首页
+                try:
+                    self.getLolesportsWeb()
+                except Exception as e:
+                    self.log.error(format_exc())
+                    self.log.error("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...")
+                    print(f"[red]Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...[/red]")
+                    sysQuit(self.driver, "网络问题，将于3秒后退出...")
 
-            sleep(4)
-            liveMatches = self.getMatchInfo()
-            sleep(3)
-            if len(liveMatches) == 0:
-                self.log.info("〒.〒 没有赛区正在直播")
-                print(f"[green]〒.〒 没有赛区正在直播[/green]")
-            else:
-                self.log.info(f"ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中")
+                sleep(4)
+                liveMatches = self.getMatchInfo()
+                sleep(3)
+                if len(liveMatches) == 0:
+                    self.log.info("〒.〒 没有赛区正在直播")
+                    print(f"[green]〒.〒 没有赛区正在直播[/green]")
+                else:
+                    self.log.info(f"ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中")
+                    print(
+                        f"[green]ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
+                # 关闭已经结束的赛区直播间
+                self.closeFinishedTabs(liveMatches=liveMatches)
+                # 开始观看新开始的直播
+                self.startWatchNewMatches(
+                    liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
+                sleep(3)
+                # 随机数，用于随机延迟
+                randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
+                newDelay = randomDelay * 10
+                self.driver.switch_to.window(self.mainWindow)
+                # 检查最近一个比赛的信息
+                self.checkNextMatch()
+                self.log.info(
+                    f"下一次检查在: {datetime.now() + timedelta(seconds=newDelay)}")
+                self.log.debug("============================================")
                 print(
-                    f"[green]ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
-
-            self.closeFinishedTabs(liveMatches=liveMatches)
-
-            self.startWatchNewMatches(
-                liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
-            sleep(3)
-            randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
-            newDelay = randomDelay * 10
-            self.driver.switch_to.window(self.mainWindow)
-            self.checkNextMatch()
-            self.log.info(
-                f"下一次检查在: {datetime.now() + timedelta(seconds=newDelay)}")
-            self.log.debug("============================================")
-            print(
-                f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
-            print(f"[green]============================================[/green]")
-            sleep(newDelay)
+                    f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
+                print(f"[green]============================================[/green]")
+                sleep(newDelay)
+        except NoSuchWindowException as e:
+            self.log.error("Q_Q 对应窗口找不到")
+            print(f"[red]Q_Q 对应窗口找不到[/red]")
+            self.log.error(format_exc())
+            self.utils.errorNotify("对应窗口找不到")
+            sysQuit(self.driver, "对应窗口找不到")
+        except Exception as e:
+            self.log.error("Q_Q 发生错误")
+            print(f"[red]Q_Q 发生错误[/red]")
+            self.log.error(format_exc())
+            self.utils.errorNotify("发生错误")
+            sysQuit(self.driver, "发生错误")
 
     def getMatchInfo(self):
         try:
