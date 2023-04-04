@@ -143,7 +143,10 @@ class Match:
                     self.driver.switch_to.window(self.mainWindow)
                     sleep(3)
                 else:
-                    self.rewards.checkRewards(k)
+                    if k in self.OVERRIDES:
+                        self.rewards.checkRewards("twitch", k)
+                    else:
+                        self.rewards.checkRewards("youtube", k)
             for k in removeList:
                 self.currentWindows.pop(k, None)
             self.driver.switch_to.window(self.mainWindow)
