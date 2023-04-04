@@ -38,7 +38,12 @@ python -m pip install -r requirements.txt
 2. 可以自行设置是否选择无头模式(默认关闭)(无头模式即headless,开启后浏览器会不可见,在后台运行,缓解电脑CPU压力)
 3. 可以自行设置不观看哪些赛区的比赛.(默认为空)(注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看)(建议设置,避免观看所有比赛从而被检测)
 4. 可以自行设置多久来查询一次比赛最新信息.(默认600秒)(关闭已经结束的比赛和开启新开始的比赛)
-5. 掉落提醒(支持钉钉,Discord,饭碗警告)(尚未测试,不确定是否生效)
+5. 掉落提醒(支持钉钉,Discord,饭碗警告)(尚未测试,不确定是否生效)（1.2版本可能失效）
+6. 软件发生错误时可以发送错误提醒
+7. 可以设置最长运行时间，到达时间后关闭软件  
+8. 可以设置休眠时间段，在时间段内软件会以1小时为间隔来检查
+9. 可以设置桌面提醒（尚未测试,不确定是否生效）
+10. 添加手动添加代理功能
 
 ## 配置信息
 config.yaml
@@ -49,11 +54,14 @@ password: "密码"  # 必填，密码
 ### 选填项
 delay: 600                    # 每次检查的时间间隔，单位为秒(默认为600秒)(每次检测时间会在你设置的时延0.8-1.5倍之间随机波动)  
 headless: False              # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)  
-disWatchMatches: ["lck", "lpl", "lcs"] # 选填，不想看的赛区名称，可以在这里添加.(注意,是小写)  
-runHours: -1                  # (尚未实现)负值为一直运行，正值为运行小时, 默认-1
-proxy: "你的代理地址" # (尚未实现)代理地址，选填，一般用户不用填。 e.g., "socks://127.0.0.1:20173"
+disWatchMatches: ["lck", "lpl", "lcs"] # 不想看的赛区名称，可以在这里添加.(注意,是小写)  
+maxRunHours: -1                  # 负值为一直运行，正值为运行小时, 默认-1
+proxy: "你的代理地址" # 代理地址，选填，一般用户不用填。 e.g., "socks://127.0.0.1:20173"
 connectorDropsUrl: "你的webhook链接"   # (支持钉钉,Discord,饭碗警告)(具体配置方法见此处[点我](https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F(%E5%8A%9F%E8%83%BD%E5%BE%85%E6%B5%8B%E8%AF%95)))  
 platForm: "windows"    # 使用平台,默认为windows,如需使用linux请在此处进行配置  
+closeStream: "False"   # 省流模式，默认False，关闭直播间的视频流（未知风险）（测试过，可以正常掉落）（有兴趣者自行尝试） 
+desktopNotify: "False"  # 系统弹窗提示，默认False
+sleepPeriod: "8-13" # 休眠时间段，（默认为空）格式为"开始小时-结束小时",在休眠时间段中会以1小时间隔来检查。区间为左闭合右开。
 ```
 
 ### 不观看赛区的配置详解:
@@ -66,6 +74,7 @@ lck_challengers_league:lck_challengers_league
 lec:lec  
 lcs:lcs  
 lco:lco  
+vcs:vcs  
 cblol:cblol  
 cblol_academy:cblol_academy  
 lla:lla  
@@ -83,5 +92,13 @@ honor_league:honor_league
 tcl:turkiye-sampiyonluk-ligi
 nlc:nlc  
 elite_series:elite_series  
+superliga:superliga  
+greek_legends:greek_legends  
+primeleague:primeleague  
+liga_master:liga_master_flo  
+ultraliga:ultraliga  
+claro_gaming_stars_league:claro_gaming_stars_league  
+arabian_league:arabian_league  
+lfl:lfl  
 ## by the way
 本项目思路及部分代码来自Poro，感谢。[此处](https://github.com/LeagueOfPoro/EsportsCapsuleFarmer)
