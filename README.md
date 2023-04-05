@@ -43,7 +43,8 @@ python -m pip install -r requirements.txt
 7. 可以设置最长运行时间，到达时间后关闭软件  
 8. 可以设置休眠时间段，在时间段内软件会以1小时为间隔来检查
 9. 可以设置桌面提醒（尚未测试,不确定是否生效）
-10. 添加手动添加代理功能
+10. 可以手动添加代理(绝大部分用户无需配置)
+11. 可以设置删除视频流元素(节省流量)(风险未知,有兴趣自行尝试) 
 
 ## 配置信息
 config.yaml
@@ -59,7 +60,7 @@ maxRunHours: -1                  # 负值为一直运行，正值为运行小时
 proxy: "你的代理地址" # 代理地址，选填，一般用户不用填。 e.g., "socks://127.0.0.1:20173"
 connectorDropsUrl: "你的webhook链接"   # (支持钉钉,Discord,饭碗警告)(具体配置方法见此处[点我](https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F(%E5%8A%9F%E8%83%BD%E5%BE%85%E6%B5%8B%E8%AF%95)))  
 platForm: "windows"    # 使用平台,默认为windows,如需使用linux请在此处进行配置  
-closeStream: "False"   # 省流模式，默认False，关闭直播间的视频流（未知风险）（测试过，可以正常掉落）（有兴趣者自行尝试） 
+closeStream: "False"   # 省流模式，默认False，关闭直播间的视频流（未知风险）（有兴趣者自行尝试） 
 desktopNotify: "False"  # 系统弹窗提示，默认False
 sleepPeriod: "8-13" # 休眠时间段，（默认为空）格式为"开始小时-结束小时",在休眠时间段中会以1小时间隔来检查。区间为左闭合右开。
 ```
