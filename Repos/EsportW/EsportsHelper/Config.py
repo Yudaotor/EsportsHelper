@@ -3,6 +3,7 @@ from traceback import format_exc, print_exc
 
 import yaml
 from rich import print
+from utils import print_red
 from yaml.parser import ParserError
 
 
@@ -30,10 +31,10 @@ class Config:
 
         except FileNotFoundError as ex:
             log.error("Configuration file cannot be found")
-            print("[red]Configuration file cannot be found[/red]")
+            print_red("Configuration file cannot be found")
         except (ParserError, KeyError) as ex:
             log.error("Configuration file format error")
-            print("[red]Configuration file format error[/red]")
+            print_red("Configuration file format error")
         except Exception as ex:
             print_exc()
             self.log.error(format_exc())
@@ -44,7 +45,7 @@ class Config:
 
         if self.username == "NoUsername" or self.password == "NoPassword":
             self.log.error("There is no account or password info in the configuration file")
-            print("[red]There is no account or password info in the configuration file[/red]")
+            print_red("here is no account or password info in the configuration file")
 
         if isinstance(self.headless, str):
             if self.headless == "True" or self.headless == "true":

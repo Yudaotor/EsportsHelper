@@ -1,0 +1,9 @@
+2023-04-05 17:05:49,301 INFO: -------------------------------------------------
+2023-04-05 17:05:49,302 INFO: -------------- Program started ------------------
+2023-04-05 17:05:49,302 INFO: -------------------------------------------------
+2023-04-05 17:05:50,696 ERROR: Traceback (most recent call last):
+  File "C:\Users\Dmitry\VS\Repos\EsportW\EsportsHelper\Config.py", line 14, in __init__
+    with open(configPath, "r", encoding='utf-8') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+

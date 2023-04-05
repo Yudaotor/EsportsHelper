@@ -4,6 +4,7 @@ from random import randint
 from time import sleep
 from traceback import format_exc, print_exc
 from rich import print
+from utils import print_red, print_green, print_yellow
 from selenium.common import WebDriverException, NoSuchWindowException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from retrying import retry
@@ -52,7 +53,7 @@ class Match:
                 except Exception as e:
                     self.log.error(format_exc())
                     self.log.error("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...")
-                    print(f"[red]Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...[/red]")
+                    print_red(f"无法打开Lolesports网页，网络问题，将于3秒后退出...")
                     sysQuit(self.driver, "网络问题，将于3秒后退出...")
 
                 sleep(4)
@@ -94,17 +95,17 @@ class Match:
                 self.log.debug("============================================")
                 print(
                     f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
-                print(f"[green]============================================[/green]")
+                print_green(f"============================================")
                 sleep(newDelay)
         except NoSuchWindowException as e:
             self.log.error("Q_Q 对应窗口找不到")
-            print(f"[red]Q_Q 对应窗口找不到[/red]")
+            print_red(f"对应窗口找不到")
             self.log.error(format_exc())
             self.utils.errorNotify("对应窗口找不到")
             sysQuit(self.driver, "对应窗口找不到")
         except Exception as e:
             self.log.error("Q_Q 发生错误")
-            print(f"[red]Q_Q 发生错误[/red]")
+            print_red(f"发生错误")
             self.log.error(format_exc())
             self.utils.errorNotify("发生错误")
             sysQuit(self.driver, "发生错误")
@@ -119,7 +120,7 @@ class Match:
             return matches
         except Exception as e:
             self.log.error("Q_Q 获取比赛列表失败")
-            print(f"[red]Q_Q 获取比赛列表失败[/red]")
+            print_red(f"获取比赛列表失败")
             self.log.error(format_exc())
             return []
 
@@ -136,7 +137,7 @@ class Match:
                     else:
                         match = splitUrl[-1]
                     self.log.info(f"0.0 {match} 比赛结束")
-                    print(f"[green]0.0 {match} 比赛结束[/green]")
+                    print_green(f"{match} 比赛结束")
                     self.driver.close()
                     removeList.append(k)
                     sleep(2)
@@ -151,7 +152,7 @@ class Match:
                 self.currentWindows.pop(k, None)
             self.driver.switch_to.window(self.mainWindow)
         except Exception as e:
-            print(f"[red]Q_Q 关闭已结束的比赛时发送错误[/red]")
+            print_red(f"关闭已结束的比赛时发送错误")
             self.utils.errorNotify(e="Q_Q 关闭已结束的比赛时发送错误")
             self.log.error(format_exc())
 
@@ -167,7 +168,7 @@ class Match:
                     else:
                         skipName = splitUrl[-1]
                     self.log.info(f"(╯#-_-)╯ {skipName}比赛跳过")
-                    print(f"[yellow](╯#-_-)╯ {skipName}比赛跳过")
+                    print_yellow(f"(╯#-_-)╯ {skipName}比赛跳过")
                     flag = False
                     break
             if not flag:
@@ -187,22 +188,22 @@ class Match:
                         self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
                     except Exception:
                         self.log.error("°D° 关闭 Twitch 流失败.")
-                        print("[red]°D° 关闭 Twitch 流失败.")
+                        print_red("关闭 Twitch 流失败.")
                         self.log.error(format_exc())
                     else:
                         self.log.info(">_< Twitch 流关闭成功")
-                        print("[green]>_< Twitch 流关闭成功")
+                        print_green("Twitch 流关闭成功")
                 else:
                     try:
                         if self.twitch.setTwitchQuality():
                             self.log.info(">_< Twitch 160p清晰度设置成功")
-                            print("[green]>_< Twitch 160p清晰度设置成功")
+                            print_green(">_< Twitch 160p清晰度设置成功")
                         else:
                             self.log.error("°D° Twitch 清晰度设置失败")
-                            print("[red]°D° Twitch 清晰度设置失败")
+                            print_red("°D° Twitch 清晰度设置失败")
                     except Exception:
                         self.log.error("°D° 无法设置 Twitch 清晰度.")
-                        print("[red]°D° 无法设置 Twitch 清晰度.")
+                        print_red("°D° 无法设置 Twitch 清晰度.")
                         self.log.error(format_exc())
             # 判定为Youtube流
             else:
@@ -220,22 +221,22 @@ class Match:
                         self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
                     except Exception:
                         self.log.error("°D° 关闭 Youtube 流失败.")
-                        print("[red]°D° 关闭 Youtube 流失败.")
+                        print_red("°D° 关闭 Youtube 流失败.")
                         self.log.error(format_exc())
                     else:
                         self.log.info(">_< Youtube 流关闭成功")
-                        print("[green]>_< Youtube 流关闭成功")
+                        print_green(">_< Youtube 流关闭成功")
                 else:
                     try:
                         if self.youtube.setYoutubeQuality():
                             self.log.info(">_< Youtube 144p清晰度设置成功")
-                            print("[green]>_< Youtube 144p清晰度设置成功")
+                            print_green(">_< Youtube 144p清晰度设置成功")
                         else:
                             self.log.error("°D° Youtube 清晰度设置失败")
-                            print("[red]°D° Youtube 清晰度设置失败")
+                            print_red("°D° Youtube 清晰度设置失败")
                     except Exception:
                         self.log.error(f"°D° 无法设置 Youtube 清晰度.")
-                        print("[red]°D° 无法设置 Youtube 清晰度.")
+                        print_red("°D° 无法设置 Youtube 清晰度.")
                         self.log.error(format_exc())
             sleep(5)
 
@@ -252,11 +253,11 @@ class Match:
                 nextMatchAMOrPM = ""
             nextMatchLeague = self.driver.find_element(
                 by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.name").text
-            print(f"[green]下一场比赛时间: 日期{nextMatchDayTime} 时间{nextMatchAMOrPM} {nextMatchTime}时 赛区{nextMatchLeague}[/green]")
+            print_green(f"下一场比赛时间: 日期{nextMatchDayTime} 时间{nextMatchAMOrPM} {nextMatchTime}时 赛区{nextMatchLeague}[/green]")
         except Exception:
             self.log.error("Q_Q 获取下一场比赛时间失败")
             self.log.error(format_exc())
-            print(f"[red]Q_Q 获取下一场比赛时间失败[/red]")
+            print_red(f"获取下一场比赛时间失败")
 
     # 重复尝试获取网页最多4次，等待时间以2分钟为基数，每次递增2分钟
     @retry(stop_max_attempt_number=4, wait_incrementing_increment=120000, wait_incrementing_start=120000)
@@ -265,7 +266,7 @@ class Match:
             self.driver.get(
                 "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
         except Exception:
-            print("[red]Q_Q 获取Lolesports网页失败,重试中...[/red]")
+            print_red("Q_Q 获取Lolesports网页失败,重试中...")
             self.log.error("Q_Q 获取Lolesports网页失败,重试中...")
             self.driver.get(
                 "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")

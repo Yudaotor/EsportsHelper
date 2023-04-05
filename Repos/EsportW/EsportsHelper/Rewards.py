@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException
 from rich import print
+from utils import print_red
 from EsportsHelper.Utils import debugScreen
 
 
@@ -85,7 +86,7 @@ class Rewards:
             self.driver.implicitly_wait(15)
             self.log.error("〒.〒 检查掉落失败")
             traceback.print_exc()
-            print("[red]〒.〒 检查掉落失败[/red]")
+            print_red("检查掉落失败")
             return False, [], [], [], [], [], [], []
 
     def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg):
@@ -156,4 +157,4 @@ class Rewards:
         except Exception:
             self.log.error("〒.〒 掉落提醒失败")
             traceback.print_exc()
-            print("[red]〒.〒 掉落提醒失败[/red]")
+            print_red("掉落提醒失败")

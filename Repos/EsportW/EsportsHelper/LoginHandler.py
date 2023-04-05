@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from rich import print
+from utils import print_green, print_yellow, print_red
 
 
 class LoginHandler:
@@ -23,7 +24,7 @@ class LoginHandler:
             loginButton = self.driver.find_element(by=By.CSS_SELECTOR, value="a[data-riotbar-link-id=login]")
             self.driver.execute_script("arguments[0].click();", loginButton)
             self.log.info("Logging in...")
-            print("[yellow]Logging in...[/yellow]")
+            print_yellow("Logging in...")
             time.sleep(2)
             wait = WebDriverWait(self.driver, 11)
             usernameInput = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "input[name=username]")))
@@ -36,13 +37,13 @@ class LoginHandler:
             time.sleep(1)
             self.driver.execute_script("arguments[0].click();", submitButton)
             self.log.debug("Logged in succesfully")
-            print("[green]Logged in succesfully[/green]")
+            print_green("Logged in succesfully")
             time.sleep(5)
             if len(self.driver.find_elements(by=By.CSS_SELECTOR, value="div.text__web-code")) > 0:
                 self.insert2FACode()
             wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.riotbar-summoner-name")))
         except TimeoutException:
-            print("[red]Login timeout[/red]")
+            print_red("Login timeout")
             self.log.error(format_exc())
 
     def insert2FACode(self):
