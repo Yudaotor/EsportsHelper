@@ -55,7 +55,10 @@ class Config:
                 self.headless = False
 
         if isinstance(self.delay, str):
-            self.delay = int(self.delay)
+            try:
+                self.delay = int(self.delay)
+            except ValueError:
+                self.delay = 600
 
         if not isinstance(self.platForm, str):
             self.platForm = "windows"
@@ -94,8 +97,17 @@ class Config:
             else:
                 try:
                     self.maxRunHours = int(self.maxRunHours)
-                except Exception:
+                except ValueError:
                     self.maxRunHours = -1
+        if isinstance(self.debug, str):
+            if self.debug == "True" or self.debug == "true":
+                self.debug = True
+            elif self.debug == "False" or self.debug == "false":
+                self.debug = False
+            else:
+                self.debug = False
+        if not isinstance(self.proxy, str):
+            self.proxy = ""
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)
