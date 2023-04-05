@@ -1,7 +1,6 @@
 import sys
 from time import sleep, strftime
 from traceback import format_exc, print_exc
-
 import requests
 from urllib3.exceptions import MaxRetryError
 
@@ -11,7 +10,14 @@ from EsportsHelper.VersionManager import VersionManager
 from plyer import notification
 from rich import print
 
+def print_green(text):
+    print("\033[32m{}\033[0m".format(text))
 
+def print_red(text):
+    print("\033[31m{}\033[0m".format(text))
+
+def print_yellow(text):
+    print("\033[33m{}\033[0m".format(text))
 class Utils:
     def __init__(self, config):
         self.config = config
@@ -21,19 +27,19 @@ class Utils:
         if self.config.desktopNotify:
             try:
                 notification.notify(
-                    title="小傻瓜，出事啦！",
-                    message=f"错误信息：{e}",
+                    title="Something happaned",
+                    message=f"Error{e}",
                     timeout=30
                 )
-                print("错误提醒发送成功")
-                log.info("错误提醒发送成功")
+                print("Notification sent sucessfully")
+                log.info("Notification sent sucessfully")
             except Exception as e:
-                print("错误提醒发送失败")
-                log.error("错误提醒发送失败")
+                print("Failed to send notification")
+                log.error("Failed to send notification")
                 log.error(format_exc())
         if self.config.connectorDropsUrl != "":
             s = requests.session()
-            s.keep_alive = False  # 关闭多余连接
+            s.keep_alive = False  # Turn off excess connection
             try:
                 if "https://oapi.dingtalk.com" in self.config.connectorDropsUrl:
                     data = {
@@ -48,7 +54,7 @@ class Utils:
                     s.post(self.config.connectorDropsUrl, json=data)
                 elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
                     embed = {
-                        "title": "发生错误 停止获取Drop",
+                        "title": "An error occurred. Work stopped.",
                         "description": f"{e}",
                         "image": {"url": f""},
                         "thumbnail": {"url": f""},
@@ -61,12 +67,12 @@ class Utils:
                     s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
-                        "text": f"发生错误停止获取Drop{e}",
+                        "text": f"An error occurred. Work stopped. {e}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                 else:
                     params = {
-                        "text": f"发生错误停止获取Drop{e}",
+                        "text": f"An error occurred. Work stopped. {e}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                 log.info(">_< 异常提醒成功")
@@ -78,15 +84,15 @@ class Utils:
 
 
 def info():
-    print("[green]=========================================================")
+    print_green("=========================================================")
     print(
         f"[green]========[/green]        感谢使用 [blue]电竞助手[/blue] v{VersionManager.getVersion()}!        [green]========[/green]")
-    print("[green]============[/green] 本程序开源于github链接地址如下: [green]============[/green]")
+    print_green("============ 本程序开源于github链接地址如下: [green]============[/green]")
     print("[green]====[/green]   https://github.com/Yudaotor/EsportsHelper     [green]====[/green]")
     print("[green]====[/green] 如觉得不错的话可以进上面链接请我喝杯咖啡支持下. [green]====[/green]")
     print("[green]====[/green] 请在使用前[red]阅读教程文件[/red], 以确保你的配置符合要求! [green]====[/green]")
     print("[green]====[/green] 如需关闭请勿直接右上角×关闭，请按Ctrl+C来关闭. [green]====[/green]")
-    print("[green]=========================================================")
+    print_green("[green]=========================================================")
     print()
     VersionManager.checkVersion()
 
