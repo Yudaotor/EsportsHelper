@@ -6,25 +6,35 @@
 <a href="https://www.cdnjson.com/images/2023/03/13/image-merge-1678713037835.png"><img alt="buymecoffee" src="https://user-images.githubusercontent.com/87225219/228188809-9d136e10-faa1-49b9-a6b7-b969dd1d8c7f.png"></a>
 </p>
 
-**Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md)|[Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
+**Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
+
 # EsportsHelper
-Automatically watch lolesports through selenium and undetected_chromedriver,url:[lolesports](lolesports.com)  
-As for the question of whether it will be detected by riot, there is no answer yet.    
-Oh, You must download Google Chrome (must be the next latest version)  
-**HOW TO Download**:click here[release](https://github.com/Yudaotor/EsportsHelper/releases)
+Automatically watch [LolEsports](lolesports.com) broadcasts using selenium and undetected_chromedriver.
+
+Google Chrome must be downloaded in order to work (must be the latest version).
+
+**DOWNLOAD**:
+
+Click here: [Releases](https://github.com/Yudaotor/EsportsHelper/releases)
+
+**WORD OF CAUTION:** 
+
+Currently unknown if it will be detected or punished by Riot, use at your own risk.
+
 ## Contact Me
-If you encounter any problems or suggestions in the process of use, you can create an issue on github  
-Or you can contact me by
-telegram: https://t.me/Yudaotor  
-discord: Khalil#7843  
-Can you give me a little star?(*^_^*)⭐  
+If you encounter any problems or suggestions in the process of use, feel free to create an issue on GitHub or contact me:
+
+Telegram: https://t.me/Yudaotor, Discord username: Khalil#7843 
+
+Can you please give me a little star?(*^_^*)⭐  
+
 ## GUI
 ![image](https://user-images.githubusercontent.com/87225219/228434642-6b7317e5-1c0a-4931-b358-f6e2b304429b.png)
 
 ## OS  
-windows,linux  
+Windows, Linux  
 
-### mac
+## MacOS
 Temporary operation method：
 ```shell
 python -m pip install -r requirements.txt
@@ -32,37 +42,40 @@ python -m pip install -r requirements.txt
 ```
 
 
-## Feature
-1. Automatically open your browser, go to lolesports.com, check which divisions are playing (the divisions that are playing recorded games will be ignored), enter to watch,turn on vol and set to the lowest stream. 
-2. You can set whether to choose the headless mode (default off) (headless mode that is, headless, open the browser will not be visible, running in the background, to ease the pressure on the computer CPU)
-3. You can set yourself which divisions you do not watch. (Default is empty) (Note, here is the logic of the inclusion relationship, for example: when you set lck, lck_challengers also will not watch) (recommended, to avoid watching all games and thus be detected)
-4. You can set how often you want to check the latest information of the competition. (Default 600 seconds) (Close closed matches and open new ones)
-5. Drop alert (Discord) (not yet tested, not sure if it works)
-6. Error alerts can be sent when an error occurs in the software
-7. You can set the maximum run time and close the software when the time is reached
-8. You can set a hibernation time period in which the software will check at 1 hour intervals
-9. You can set the desktop reminder (not yet tested, not sure if it works)
-10. Add the function of adding proxy manually
-11. You can open the function of deleting video elements (save net. risk unknown)
+## Features
+1. Automatically opens your browser, proceeds to lolesports.com, checks which leagues are currently playing (VODs will be ignored), enters to watch, turns on the volume and sets the quality of the stream to the lowest. 
+2. Option to set whether program will launch in headless mode or with a visible browser window (Off by default). Headless mode is opening the browser without GUI. (It will not be visible, set to running in the background in order to lower CPU usage).
+3. Option to set which Leagues broadcasts to ignore. (Empty by default). Please note, that there is a logic of the inclusion relationship, for example: if LCK is set to be ignored, LCK_Challengers will also be ignored. (This option is highly recommended, avoid watching all broadcasts and be detected because of that).
+4. Option to set how often the latest information about the broadcast will be checked. (600 seconds by default). Upon checking, it will close ended broadcasts and open new ones.
+5. Drop alerts using Discord webhook. (Not yet tested, not sure if it works).
+6. Error alerts when an error occurs in the software.
+7. Option to set the maximum run time of program. It will force the instance to automatically close when the time limit is reached.
+8. Option to set a hibernation period in which the software will be put in sleep mode for set time.
+9. Desktop notifications. (Not yet tested, not sure if it works).
+10. Option to manually add a proxy.
+11. Option of deleting video-player elements in order to save traffic. (Risk currently unknown).
 
 ## Configuation
-config.yaml
+Using config.yaml file.
 ```yaml
-### Required
-username: "username"        # username  
-password: "password"  # password  
-### Optional
-delay: 600                    # Time interval for each check in seconds (default is 600 seconds) (each detection time will fluctuate randomly between 0.8 and 1.5 times the time delay you set) 
-headless: False              # When set to True, the program will run in the background, otherwise it will open a browser window (default is False)  
-disWatchMatches: ["lck", "lpl", "lcs"] # Optional, you can add the name of the race you don't want to see here. (Note, it is lowercase)    
-runHours: -1                  # negative value is always running, positive value is running hours, default -1
-proxy: "" # proxy address, optional, not required for general users. e.g., "127.0.0.1:7890"
-connectorDropsUrl: ""   # discord link
-platForm: "windows"    # OS, the default is windows, if you want to use linux, please configure here  
-closeStream: "False"   #  the function of deleting video elements (save net. risk unknown)
-desktopNotify: "False"  # deskTopNotify
-sleepPeriod: "8-13" # Hibernation time period, (default is empty) in the format of "start hour - end hour", will be checked in 1 hour intervals in the hibernation time period. The interval is left-closed and right-open.
+
+## Required fields in config.yaml
+Username: "username"  # Riot account username  
+Password: "password"  # Riot account password  
+
+## Optional
+
+delay: 600                              # Time interval for each check in seconds (600 seconds by default). Each check time will fluctuate randomly between 0.8 and 1.5 times the time delay you set. 
+headless: False                         # When set to True, the program will run in the background; otherwise it will open a browser window (False by default).  
+disWatchMatches: ["lck", "lpl", "lcs"]  # Optional, here you can add Leagues you wish to ignore. Please note, names should be in lowercase.    
+runHours: -1                            # Negative value is always running, positive value is running by hours, default -1.
+proxy: ""                               # Proxy address, not required for general users, e.g., "127.0.0.1:7890".
+connectorDropsUrl: ""                   # Discord webhook link.
+platForm: "windows"                     # OS, Windows is set by default. If you want to use the program on Linux, please change the value here.  
+closeStream: "False"                    # Option of deleting video-player elements to save traffic. (Risk currently unknown).
+desktopNotify: "False"                  # Experimental feature to enable Desktop notifications.
+sleepPeriod: "8-13"                     # Hibernation period, empty by default. The format is "Start hour – End hour". Time will be checked at 1 hour intervals during the hibernation period. The first number is the start of the hibernation, the second number is its end.
 ```
 
-## by the way
-The project idea and part of the code are from Poro, thanks.[Here](https://github.com/LeagueOfPoro/EsportsCapsuleFarmer)
+## Honorable mention
+The project idea and part of the code are from Poro, kudos. [Here is the link to the original Farmer](https://github.com/LeagueOfPoro/EsportsCapsuleFarmer).
