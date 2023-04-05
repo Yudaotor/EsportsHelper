@@ -38,6 +38,12 @@ python -m pip install -r requirements.txt
 3. You can set yourself which divisions you do not watch. (Default is empty) (Note, here is the logic of the inclusion relationship, for example: when you set lck, lck_challengers also will not watch) (recommended, to avoid watching all games and thus be detected)
 4. You can set how often you want to check the latest information of the competition. (Default 600 seconds) (Close closed matches and open new ones)
 5. Drop alert (Discord) (not yet tested, not sure if it works)
+6. Error alerts can be sent when an error occurs in the software
+7. You can set the maximum run time and close the software when the time is reached
+8. You can set a hibernation time period in which the software will check at 1 hour intervals
+9. You can set the desktop reminder (not yet tested, not sure if it works)
+10. Add the function of adding proxy manually
+11. You can open the function of deleting video elements (save net. risk unknown)
 
 ## Configuation
 config.yaml
@@ -49,10 +55,13 @@ password: "password"  # password
 delay: 600                    # Time interval for each check in seconds (default is 600 seconds) (each detection time will fluctuate randomly between 0.8 and 1.5 times the time delay you set) 
 headless: False              # When set to True, the program will run in the background, otherwise it will open a browser window (default is False)  
 disWatchMatches: ["lck", "lpl", "lcs"] # Optional, you can add the name of the race you don't want to see here. (Note, it is lowercase)    
-runHours: -1                  # (not yet implemented) negative value is always running, positive value is running hours, default -1
-proxy: "" # (Not yet implemented) proxy address, optional, not required for general users. e.g., "socks://127.0.0.1:20173"
+runHours: -1                  # negative value is always running, positive value is running hours, default -1
+proxy: "" # proxy address, optional, not required for general users. e.g., "127.0.0.1:7890"
 connectorDropsUrl: ""   # discord link
 platForm: "windows"    # OS, the default is windows, if you want to use linux, please configure here  
+closeStream: "False"   #  the function of deleting video elements (save net. risk unknown)
+desktopNotify: "False"  # deskTopNotify
+sleepPeriod: "8-13" # Hibernation time period, (default is empty) in the format of "start hour - end hour", will be checked in 1 hour intervals in the hibernation time period. The interval is left-closed and right-open.
 ```
 
 ## by the way
