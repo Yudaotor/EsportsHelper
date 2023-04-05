@@ -1,4 +1,3 @@
-#!/bin/zsh
 DIR=$(readlink -f $(dirname $0))
 LOG=$DIR/logs/scripts
 mkdir -p $LOG
@@ -17,7 +16,7 @@ else
     sleep_time=$1
 fi
 
-echo "模拟操作，随机睡眠 $(($sleep_time / 60))分钟" | tee -a $log_file
+echo "Simulating operation, random sleep $(($sleep_time / 60)) minutes" | tee -a $log_file
 sleep $sleep_time
 echo "Starting the program\n" | tee -a $log_file
 

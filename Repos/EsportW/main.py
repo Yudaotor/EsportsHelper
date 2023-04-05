@@ -1,16 +1,16 @@
 import argparse
-from selenium.common.exceptions import TimeoutException
-from traceback import print_exc, format_exc
-from selenium.webdriver.common.by import By
 from time import sleep
+from traceback import format_exc, print_exc
 
-from rich import print
-from EsportsHelper.LoginHandler import LoginHandler
-from EsportsHelper.Webdriver import Webdriver
-from EsportsHelper.Logger import log
 from EsportsHelper.Config import Config
+from EsportsHelper.Logger import log
+from EsportsHelper.LoginHandler import LoginHandler
 from EsportsHelper.Match import Match
 from EsportsHelper.Utils import info, sysQuit
+from EsportsHelper.Webdriver import Webdriver
+from rich import print
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
 
 global driver
 
@@ -22,12 +22,12 @@ def watch(config):
     except TypeError:
         print_exc()
         print(
-            "[red]눈_눈 生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n以上都检查过的话如还不行检查节点或是尝试可以用管理员方式打开\n按任意键退出...")
+            "[red]Error: Webdriver generation failure!\nCan't find the latest version of Google browser! If you haven't downloaded it or not the latest version, please check again and try again\nIf you have checked above, if you don’t check the node or try it, you can open it with an administrator\nExit by pressing any key...[/red]")
         input()
         sysQuit(driver, format_exc())
     except Exception as e:
         print_exc()
-        print("[red]눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用\n按任意键退出...")
+        print("[red]Error: Webdriver generation failure!\nIs there a Google browser?\nIs it a network problem? Please check whether the VPN node is available\nExit by pressing any key...[/red]")
         input()
         sysQuit(driver, format_exc())
     loginHandler = LoginHandler(log=log, driver=driver)
@@ -44,15 +44,17 @@ def watch(config):
         except TimeoutException:
             tryLoginTimes = tryLoginTimes - 1
             if tryLoginTimes <= 0:
-                sysQuit(driver, "无法登陆，账号密码可能错误或者网络出现问题")
+                sysQuit(
+                    driver, "Unable to log in, wrong credentials or there is a problem with the network")
 
-            log.error("눈_눈 自动登录失败,检查网络和账号密码")
-            print("[red]눈_눈 自动登录失败,检查网络和账号密码[/red]")
+            log.error(
+                "Error: Automatic login fails, check the network and account password")
+            print("[red]Error: Automatic login fails, check the network and account password[/red]")
             sleep(5)
-            log.error("눈_눈 开始重试")
+            log.error("Start cancelled")
 
-    log.info("∩_∩ 好嘞 登录成功")
-    print("[green]∩_∩ 好嘞 登录成功[/green]")
+    log.info("Logged in succesfully")
+    print("[green]Logged in succesfully[/green]")
     Match(log=log, driver=driver, config=config).watchMatches(
         delay=config.delay, maxRunHours=config.maxRunHours)
 
@@ -70,14 +72,14 @@ def main():
     config = Config(log, args.configPath)
 
     watch(config)
-    print("[green]观看结束～[/green]")
-    log.info("观看结束～")
+    log.info("Watch the end")
+    print("[green]Watch the end[/green]")
 
 
 if __name__ == '__main__':
     try:
         main()
     except (KeyboardInterrupt, SystemExit):
-        sysQuit(driver, "程序被打断")
+        sysQuit(driver, "The program is interrupted")
     except Exception as e:
         sysQuit(driver, format_exc())

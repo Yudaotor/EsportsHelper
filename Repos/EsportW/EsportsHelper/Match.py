@@ -33,20 +33,20 @@ class Match:
             maxRunSecond = maxRunHours * 3600
             startTimePoint = time.time()
             while maxRunHours < 0 or time.time() < startTimePoint + maxRunSecond:
-                self.log.info("●_● 开始检查直播...")
-                print(f"[green]●_● 开始检查直播...[/green]")
+                self.log.info("Checking live broadcasts...")
+                print(f"[green]Checking live broadcasts...[/green]")
                 self.driver.switch_to.window(self.mainWindow)
                 isDrop, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
                 if isDrop:
                     for i in range(len(poweredByImg)):
-                        self.log.info(f"ΩДΩ [{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}")
-                        print(f"ΩДΩ [{self.config.username}]通过事件{eventTitle[i]} 获得{dropItem[i]} {unlockedDate[i]}")
+                        self.log.info(f"Account [{self.config.username}] Broadcast {eventTitle[i]} Drop {dropItem[i]} {unlockedDate[i]}")
+                        print(f"Account [{self.config.username}] Broadcast {eventTitle[i]} Drop {dropItem[i]} {unlockedDate[i]}")
                         if self.config.desktopNotify:
                             desktopNotify(poweredByImg[i], productImg[i], unlockedDate[i], eventTitle[i], dropItem[i], dropItemImg[i])
                         if self.config.connectorDropsUrl != "":
                             self.rewards.notifyDrops(poweredByImg[i], productImg[i], eventTitle[i], unlockedDate[i], dropItem[i], dropItemImg[i])
                 sleep(3)
-                # 来到lolesports网页首页
+                # Getting to LOLESPORTS website homepage
                 try:
                     self.getLolesportsWeb()
                 except Exception as e:

@@ -12,12 +12,7 @@ Automatically watch lolesports through selenium and undetected_chromedriver,url:
 As for the question of whether it will be detected by riot, there is no answer yet.    
 Oh, You must download Google Chrome (must be the next latest version)  
 **HOW TO Download**:click here[release](https://github.com/Yudaotor/EsportsHelper/releases)
-## Contact Me
-If you encounter any problems or suggestions in the process of use, you can create an issue on github  
-Or you can contact me by
-telegram: https://t.me/Yudaotor  
-discord: Khalil#7843  
-Can you give me a little star?(*^_^*)⭐  
+
 ## GUI
 ![image](https://user-images.githubusercontent.com/87225219/228434642-6b7317e5-1c0a-4931-b358-f6e2b304429b.png)
 

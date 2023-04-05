@@ -29,11 +29,11 @@ class Config:
                 self.format()
 
         except FileNotFoundError as ex:
-            log.error("配置文件找不到")
-            print("[red]配置文件找不到")
+            log.error("Configuration file cannot be found")
+            print("[red]Configuration file cannot be found[/red]")
         except (ParserError, KeyError) as ex:
-            log.error("配置文件格式错误")
-            print("[red]配置文件格式错误")
+            log.error("Configuration file format error")
+            print("[red]Configuration file format error[/red]")
         except Exception as ex:
             print_exc()
             self.log.error(format_exc())
@@ -43,8 +43,8 @@ class Config:
             self.disWatchMatches.remove("")
 
         if self.username == "NoUsername" or self.password == "NoPassword":
-            self.log.error("配置文件中没有账号密码信息")
-            print("[red]配置文件中没有账号密码信息")
+            self.log.error("There is no account or password info in the configuration file")
+            print("[red]There is no account or password info in the configuration file[/red]")
 
         if isinstance(self.headless, str):
             if self.headless == "True" or self.headless == "true":

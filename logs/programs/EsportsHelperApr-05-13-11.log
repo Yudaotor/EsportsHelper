@@ -1,0 +1,12 @@
+2023-04-05 13:11:09,164 INFO: -------------------------------------------------
+2023-04-05 13:11:09,164 INFO: ----------- Program started   ---------------
+2023-04-05 13:11:09,165 INFO: ----------- 本项目开源于github   ---------------
+2023-04-05 13:11:09,167 INFO: ----- 地址: https://github.com/Yudaotor/EsportsHelper -------
+2023-04-05 13:11:09,169 INFO: ----------- 可以点一个小星星吗(*^_^*) ---------------
+2023-04-05 13:11:09,171 INFO: -------------------------------------------------
+2023-04-05 13:11:10,800 ERROR: Traceback (most recent call last):
+  File "C:\Users\Dmitry\VS\Repos\EsportW\EsportsHelper\Config.py", line 14, in __init__
+    with open(configPath, "r", encoding='utf-8') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+
