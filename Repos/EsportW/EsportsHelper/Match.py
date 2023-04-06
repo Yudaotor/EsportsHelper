@@ -3,15 +3,17 @@ from datetime import datetime, timedelta
 from random import randint
 from time import sleep
 from traceback import format_exc, print_exc
-from rich import print
-from utils import print_red, print_green, print_yellow
-from selenium.common import WebDriverException, NoSuchWindowException, NoSuchElementException
-from selenium.webdriver.common.by import By
-from retrying import retry
+
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
-from EsportsHelper.Utils import sysQuit, desktopNotify, downloadOverrideFile, Utils
+from EsportsHelper.Utils import (Utils, desktopNotify, downloadOverrideFile,
+                                 sysQuit)
 from EsportsHelper.Youtube import Youtube
+from retrying import retry
+from rich import print
+from selenium.common import (NoSuchElementException, NoSuchWindowException,
+                             WebDriverException)
+from selenium.webdriver.common.by import By
 
 
 class Match:
@@ -20,7 +22,8 @@ class Match:
         self.driver = driver
         self.config = config
         self.youtube = Youtube(driver=driver, log=log)
-        self.rewards = Rewards(log=log, driver=driver, config=config, youtube=self.youtube)
+        self.rewards = Rewards(log=log, driver=driver,
+                               config=config, youtube=self.youtube)
         self.twitch = Twitch(driver=driver, log=log)
         self.currentWindows = {}
         self.mainWindow = self.driver.current_window_handle
@@ -35,17 +38,21 @@ class Match:
             startTimePoint = time.time()
             while maxRunHours < 0 or time.time() < startTimePoint + maxRunSecond:
                 self.log.info("Checking live broadcasts...")
-                print(f"[green]Checking live broadcasts...[/green]")
+                print(f"[GREEN]Checking live broadcasts...[/GREEN]")
                 self.driver.switch_to.window(self.mainWindow)
                 isDrop, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
                 if isDrop:
                     for i in range(len(poweredByImg)):
-                        self.log.info(f"Account [{self.config.username}] Broadcast {eventTitle[i]} Drop {dropItem[i]} {unlockedDate[i]}")
-                        print(f"Account [{self.config.username}] Broadcast {eventTitle[i]} Drop {dropItem[i]} {unlockedDate[i]}")
+                        self.log.info(
+                            f"Account [{self.config.username}] Broadcast {eventTitle[i]} Drop {dropItem[i]} {unlockedDate[i]}")
+                        print(
+                            f"Account [{self.config.username}] Broadcast {eventTitle[i]} Drop {dropItem[i]} {unlockedDate[i]}")
                         if self.config.desktopNotify:
-                            desktopNotify(poweredByImg[i], productImg[i], unlockedDate[i], eventTitle[i], dropItem[i], dropItemImg[i])
+                            desktopNotify(
+                                poweredByImg[i], productImg[i], unlockedDate[i], eventTitle[i], dropItem[i], dropItemImg[i])
                         if self.config.connectorDropsUrl != "":
-                            self.rewards.notifyDrops(poweredByImg[i], productImg[i], eventTitle[i], unlockedDate[i], dropItem[i], dropItemImg[i])
+                            self.rewards.notifyDrops(
+                                poweredByImg[i], productImg[i], eventTitle[i], unlockedDate[i], dropItem[i], dropItemImg[i])
                 sleep(3)
                 # Getting to LOLESPORTS website homepage
                 try:
@@ -53,19 +60,19 @@ class Match:
                 except Exception as e:
                     self.log.error(format_exc())
                     self.log.error("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...")
-                    print_red(f"无法打开Lolesports网页，网络问题，将于3秒后退出...")
+                    print(f"[RED]无法打开Lolesports网页，网络问题，将于3秒后退出...[/RED]")
                     sysQuit(self.driver, "网络问题，将于3秒后退出...")
 
                 sleep(4)
                 liveMatches = self.getMatchInfo()
                 sleep(3)
                 if len(liveMatches) == 0:
-                    self.log.info("〒.〒 没有赛区正在直播")
-                    print(f"[green]〒.〒 没有赛区正在直播[/green]")
+                    self.log.info("No live broadcasts")
+                    print(f"[GREEN]No live broadcasts[/GREEN]")
                 else:
-                    self.log.info(f"ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中")
+                    self.log.info(f"现在有 {len(liveMatches)} 个赛区正在直播中")
                     print(
-                        f"[green]ㅎ.ㅎ 现在有 {len(liveMatches)} 个赛区正在直播中[/green]")
+                        f"[GREEN]现在有 {len(liveMatches)} 个赛区正在直播中[/GREEN]")
                 # 关闭已经结束的赛区直播间
                 self.closeFinishedTabs(liveMatches=liveMatches)
                 # 开始观看新开始的直播
@@ -82,10 +89,11 @@ class Match:
                     sleepEnd = int(self.config.sleepPeriod.split("-")[1])
                     if sleepBegin <= nowTime < sleepEnd:
                         self.log.info("处于休眠时间，检查时间间隔为1小时")
-                        print(f"[green]处于休眠时间，检查时间间隔为1小时[/green]")
+                        print(f"[GREEN]处于休眠时间，检查时间间隔为1小时[/GREEN]")
                         newDelay = 3600
                     else:
-                        randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
+                        randomDelay = randint(
+                            int(delay * 0.08), int(delay * 0.15))
                         newDelay = randomDelay * 10
                 self.driver.switch_to.window(self.mainWindow)
                 # 检查最近一个比赛的信息
@@ -94,18 +102,18 @@ class Match:
                     f"下一次检查在: {datetime.now() + timedelta(seconds=newDelay)}")
                 self.log.debug("============================================")
                 print(
-                    f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
-                print_green(f"============================================")
+                    f"[GREEN]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/GREEN]")
+                print(f"[GREEN]============================================")
                 sleep(newDelay)
         except NoSuchWindowException as e:
             self.log.error("Q_Q 对应窗口找不到")
-            print_red(f"对应窗口找不到")
+            print(f"[RED]对应窗口找不到")
             self.log.error(format_exc())
             self.utils.errorNotify("对应窗口找不到")
             sysQuit(self.driver, "对应窗口找不到")
         except Exception as e:
             self.log.error("Q_Q 发生错误")
-            print_red(f"发生错误")
+            print(f"[RED]发生错误")
             self.log.error(format_exc())
             self.utils.errorNotify("发生错误")
             sysQuit(self.driver, "发生错误")
@@ -120,7 +128,7 @@ class Match:
             return matches
         except Exception as e:
             self.log.error("Q_Q 获取比赛列表失败")
-            print_red(f"获取比赛列表失败")
+            print(f"[RED]获取比赛列表失败")
             self.log.error(format_exc())
             return []
 
@@ -137,7 +145,7 @@ class Match:
                     else:
                         match = splitUrl[-1]
                     self.log.info(f"0.0 {match} 比赛结束")
-                    print_green(f"{match} 比赛结束")
+                    print(f"[GREEN]{match} 比赛结束")
                     self.driver.close()
                     removeList.append(k)
                     sleep(2)
@@ -152,7 +160,7 @@ class Match:
                 self.currentWindows.pop(k, None)
             self.driver.switch_to.window(self.mainWindow)
         except Exception as e:
-            print_red(f"关闭已结束的比赛时发送错误")
+            print(f"[RED]关闭已结束的比赛时发送错误")
             self.utils.errorNotify(e="Q_Q 关闭已结束的比赛时发送错误")
             self.log.error(format_exc())
 
@@ -185,25 +193,26 @@ class Match:
                     return
                 if self.config.closeStream:
                     try:
-                        self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
+                        self.driver.execute_script(
+                            """var data=document.querySelector('#video-player').remove()""")
                     except Exception:
                         self.log.error("°D° 关闭 Twitch 流失败.")
-                        print_red("关闭 Twitch 流失败.")
+                        print("[RED]关闭 Twitch 流失败.")
                         self.log.error(format_exc())
                     else:
                         self.log.info(">_< Twitch 流关闭成功")
-                        print_green("Twitch 流关闭成功")
+                        print("[GREEN]Twitch 流关闭成功")
                 else:
                     try:
                         if self.twitch.setTwitchQuality():
                             self.log.info(">_< Twitch 160p清晰度设置成功")
-                            print_green(">_< Twitch 160p清晰度设置成功")
+                            print("[GREEN]>_< Twitch 160p清晰度设置成功")
                         else:
                             self.log.error("°D° Twitch 清晰度设置失败")
-                            print_red("°D° Twitch 清晰度设置失败")
+                            print("[RED]°D° Twitch 清晰度设置失败")
                     except Exception:
                         self.log.error("°D° 无法设置 Twitch 清晰度.")
-                        print_red("°D° 无法设置 Twitch 清晰度.")
+                        print("[RED]°D° 无法设置 Twitch 清晰度.")
                         self.log.error(format_exc())
             # 判定为Youtube流
             else:
@@ -218,25 +227,26 @@ class Match:
                 # 关闭 Youtube 流
                 if self.config.closeStream:
                     try:
-                        self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
+                        self.driver.execute_script(
+                            """var data=document.querySelector('#video-player').remove()""")
                     except Exception:
                         self.log.error("°D° 关闭 Youtube 流失败.")
-                        print_red("°D° 关闭 Youtube 流失败.")
+                        print("[RED]°D° 关闭 Youtube 流失败.")
                         self.log.error(format_exc())
                     else:
                         self.log.info(">_< Youtube 流关闭成功")
-                        print_green(">_< Youtube 流关闭成功")
+                        print("[GREEN]>_< Youtube 流关闭成功")
                 else:
                     try:
                         if self.youtube.setYoutubeQuality():
                             self.log.info(">_< Youtube 144p清晰度设置成功")
-                            print_green(">_< Youtube 144p清晰度设置成功")
+                            print("[GREEN]>_< Youtube 144p清晰度设置成功")
                         else:
                             self.log.error("°D° Youtube 清晰度设置失败")
-                            print_red("°D° Youtube 清晰度设置失败")
+                            print("[RED]°D° Youtube 清晰度设置失败")
                     except Exception:
                         self.log.error(f"°D° 无法设置 Youtube 清晰度.")
-                        print_red("°D° 无法设置 Youtube 清晰度.")
+                        print("[RED]°D° 无法设置 Youtube 清晰度.")
                         self.log.error(format_exc())
             sleep(5)
 
@@ -253,11 +263,12 @@ class Match:
                 nextMatchAMOrPM = ""
             nextMatchLeague = self.driver.find_element(
                 by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.name").text
-            print_green(f"下一场比赛时间: 日期{nextMatchDayTime} 时间{nextMatchAMOrPM} {nextMatchTime}时 赛区{nextMatchLeague}[/green]")
+            print_green(
+                f"下一场比赛时间: 日期{nextMatchDayTime} 时间{nextMatchAMOrPM} {nextMatchTime}时 赛区{nextMatchLeague}[/GREEN]")
         except Exception:
             self.log.error("Q_Q 获取下一场比赛时间失败")
             self.log.error(format_exc())
-            print_red(f"获取下一场比赛时间失败")
+            print(f"[RED]获取下一场比赛时间失败")
 
     # 重复尝试获取网页最多4次，等待时间以2分钟为基数，每次递增2分钟
     @retry(stop_max_attempt_number=4, wait_incrementing_increment=120000, wait_incrementing_start=120000)
@@ -266,8 +277,7 @@ class Match:
             self.driver.get(
                 "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
         except Exception:
-            print_red("Q_Q 获取Lolesports网页失败,重试中...")
+            print("[RED]Q_Q 获取Lolesports网页失败,重试中...")
             self.log.error("Q_Q 获取Lolesports网页失败,重试中...")
             self.driver.get(
                 "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
-

@@ -1,23 +1,16 @@
 import sys
 from time import sleep, strftime
 from traceback import format_exc, print_exc
-import requests
-from urllib3.exceptions import MaxRetryError
 
+import requests
 from EsportsHelper import Config
 from EsportsHelper.Logger import log
 from EsportsHelper.VersionManager import VersionManager
 from plyer import notification
 from rich import print
+from urllib3.exceptions import MaxRetryError
 
-def print_green(text):
-    print("\033[32m{}\033[0m".format(text))
 
-def print_red(text):
-    print("\033[31m{}\033[0m".format(text))
-
-def print_yellow(text):
-    print("\033[33m{}\033[0m".format(text))
 class Utils:
     def __init__(self, config):
         self.config = config
@@ -64,17 +57,20 @@ class Utils:
                         "username": "EsportsHelper",
                         "embeds": [embed]
                     }
-                    s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    s.post(self.config.connectorDropsUrl, headers={
+                           "Content-type": "application/json"}, json=params)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
                         "text": f"An error occurred. Work stopped. {e}",
                     }
-                    s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    s.post(self.config.connectorDropsUrl, headers={
+                           "Content-type": "application/json"}, json=params)
                 else:
                     params = {
                         "text": f"An error occurred. Work stopped. {e}",
                     }
-                    s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    s.post(self.config.connectorDropsUrl, headers={
+                           "Content-type": "application/json"}, json=params)
                 log.info(">_< 异常提醒成功")
                 print("异常提醒成功")
             except Exception as e:
@@ -84,15 +80,16 @@ class Utils:
 
 
 def info():
-    print_green("=========================================================")
+    print("[GREEN]=========================================================")
     print(
-        f"[green]========[/green]        感谢使用 [blue]电竞助手[/blue] v{VersionManager.getVersion()}!        [green]========[/green]")
-    print_green("============ 本程序开源于github链接地址如下: [green]============[/green]")
-    print("[green]====[/green]   https://github.com/Yudaotor/EsportsHelper     [green]====[/green]")
-    print("[green]====[/green] 如觉得不错的话可以进上面链接请我喝杯咖啡支持下. [green]====[/green]")
-    print("[green]====[/green] 请在使用前[red]阅读教程文件[/red], 以确保你的配置符合要求! [green]====[/green]")
-    print("[green]====[/green] 如需关闭请勿直接右上角×关闭，请按Ctrl+C来关闭. [green]====[/green]")
-    print_green("[green]=========================================================")
+        f"[GREEN]========[/GREEN]        感谢使用 [blue]电竞助手[/blue] v{VersionManager.getVersion()}!        [GREEN]========[/GREEN]")
+    print("[GREEN]============ 本程序开源于github链接地址如下: [GREEN]============[/GREEN]")
+    print("[GREEN]====[/GREEN]   https://github.com/Yudaotor/EsportsHelper     [GREEN]====[/GREEN]")
+    print("[GREEN]====[/GREEN] 如觉得不错的话可以进上面链接请我喝杯咖啡支持下. [GREEN]====[/GREEN]")
+    print("[GREEN]====[/GREEN] 请在使用前[RED]阅读教程文件[/RED], 以确保你的配置符合要求! [GREEN]====[/GREEN]")
+    print("[GREEN]====[/GREEN] 如需关闭请勿直接右上角×关闭，请按Ctrl+C来关闭. [GREEN]====[/GREEN]")
+    print(
+        "[GREEN]=========================================================")
     print()
     VersionManager.checkVersion()
 
@@ -115,7 +112,7 @@ def sysQuit(driver=None, e=None):
     if driver:
         driver.quit()
     log.error(e)
-    log.info("[red]------程序退出------")
+    log.info("[RED]------程序退出------")
     sys.exit()
 
 
@@ -123,7 +120,8 @@ def debugScreen(driver, lint=""):
     try:
         if Config.config.debug:
             log.info(f"DebugScreen: {lint}存储成功")
-            driver.save_screenshot(f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
+            driver.save_screenshot(
+                f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
     except Exception as e:
         log.error("DebugScreen: 截图失败")
         log.error(format_exc())
@@ -155,12 +153,12 @@ def downloadOverrideFile():
             sys.exit()
     except MaxRetryError:
         log.error("获取文件失败, 请稍等再试")
-        print(f"[red]〒.〒 获取文件失败, 请稍等再试[/red]")
+        print(f"[RED]〒.〒 获取文件失败, 请稍等再试[/RED]")
         input("按任意键退出")
         sysQuit(e="获取文件失败")
     except Exception as ex:
         print_exc()
         log.error("获取文件失败")
-        print(f"[red]〒.〒 获取文件失败,请检查网络是否能连上github[/red]")
+        print(f"[RED]〒.〒 获取文件失败,请检查网络是否能连上github[/RED]")
         input("按任意键退出")
         sysQuit(e="获取文件失败")

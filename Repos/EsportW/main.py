@@ -7,15 +7,15 @@ from EsportsHelper.Config import Config
 from EsportsHelper.Logger import log
 from EsportsHelper.LoginHandler import LoginHandler
 from EsportsHelper.Match import Match
-from EsportsHelper.Utils import info, sysQuit, print_green, print_red
+from EsportsHelper.Utils import info, sysQuit
 from EsportsHelper.Webdriver import Webdriver
 from match import Match
 from rich import print
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 
-
 global driver
+
 
 def watch(config):
     global driver
@@ -23,12 +23,12 @@ def watch(config):
         driver = Webdriver(config).createWebdriver()
     except TypeError:
         print_exc()
-        print_red("Error: Webdriver generation failure!\nCan't find the latest version of Google browser! If you haven't downloaded it or not the latest version, please check again and try again\nIf you have checked above, if you don’t check the node or try it, you can open it with an administrator\nExit by pressing any key...")
+        print("[RED]Error: Webdriver generation failure!\nCan't find the latest version of Google browser! If you haven't downloaded it or not the latest version, please check again and try again\nIf you have checked above, if you don’t check the node or try it, you can open it with an administrator\nExit by pressing any key...[/RED]")
         input()
         sysQuit(driver, format_exc())
     except Exception as e:
         print_exc()
-        print_red("Error: Webdriver generation failure!\nIs there a Google browser?\nIs it a network problem? Please check whether the VPN node is available\nExit by pressing any key...")
+        print("[RED]Error: Webdriver generation failure!\nIs there a Google browser?\nIs it a network problem? Please check whether the VPN node is available\nExit by pressing any key...[/RED]")
         input()
         sysQuit(driver, format_exc())
 
@@ -39,7 +39,7 @@ def watch(config):
     except Exception as e:
         driver.get("https://lolesports.com/schedule")
     driver.set_window_size(960, 768)
-    
+
     tryLoginTimes = 4
     while not driver.find_elements(by=By.CSS_SELECTOR, value="div.riotbar-summoner-name"):
         try:
@@ -47,13 +47,15 @@ def watch(config):
         except TimeoutException:
             tryLoginTimes -= 1
             if tryLoginTimes <= 0:
-                sysQuit(driver, "Unable to log in, wrong credentials or there is a problem with the network")
-            print_red("Error: Automatic login fails, check the network and account password")
+                sysQuit(
+                    driver, "Unable to log in, wrong credentials or there is a problem with the network")
+            print(
+                "[RED]Error: Automatic login fails, check the network and account password[/RED]")
 
             sleep(5)
-            print_red("Start cancelled")
+            print("[RED]Start cancelled[/RED]")
             sysQuit(driver, "Automatic login fails")
-    print_green("Logged in succesfully")
+    print("[GREEN]Logged in succesfully[/GREEN]")
 
     Match(log=log, driver=driver, config=config).watchMatches(
         delay=config.delay, maxRunHours=config.maxRunHours)
@@ -72,8 +74,8 @@ def main():
     config = Config(log, args.configPath)
 
     watch(config)
-    
- 
+
+
 if __name__ == '__main__':
     try:
         main()

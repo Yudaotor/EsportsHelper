@@ -44,8 +44,10 @@ class Config:
             self.disWatchMatches.remove("")
 
         if self.username == "NoUsername" or self.password == "NoPassword":
-            self.log.error("There is no account or password info in the configuration file")
-            print_red("here is no account or password info in the configuration file")
+            self.log.error(
+                "There is no account or password info in the configuration file")
+            print_red(
+                "here is no account or password info in the configuration file")
 
         if isinstance(self.headless, str):
             if self.headless == "True" or self.headless == "true":

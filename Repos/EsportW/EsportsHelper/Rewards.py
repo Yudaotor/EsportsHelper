@@ -1,13 +1,14 @@
 import time
 import traceback
+
 import requests
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.common.exceptions import TimeoutException
-from rich import print
-from utils import print_red
 from EsportsHelper.Utils import debugScreen
+from rich import print
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import WebDriverWait
+from utils import print_red
 
 
 class Rewards:
@@ -47,7 +48,8 @@ class Rewards:
                         self.youtube.playYoutubeStream()
                 else:
                     self.log.error(f"××××× {match} 观看异常 ××××× url={url}")
-                    print(f"[red]×××××[/red] {match} 观看异常 [red]××××× url={url}")
+                    print(
+                        f"[red]×××××[/red] {match} 观看异常 [red]××××× url={url}")
                     return False
 
     def checkNewDrops(self):
@@ -60,7 +62,8 @@ class Rewards:
             dropItem = []
             dropItemImg = []
             unlockedDate = []
-            drops = self.driver.find_elements(by=By.CSS_SELECTOR, value="div.InformNotifications > div > div.product-image > img")
+            drops = self.driver.find_elements(
+                by=By.CSS_SELECTOR, value="div.InformNotifications > div > div.product-image > img")
             if len(drops) > 0:
                 for i in range(len(drops)):
                     isDrop = True
@@ -68,13 +71,20 @@ class Rewards:
                     drops[i].click()
                     debugScreen(self.driver, "after click")
                     time.sleep(2)
-                    poweredByImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=presented-by] > img[class=img]").get_attribute("src"))
-                    productImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=product-image] > img[class=img]").get_attribute("src"))
-                    eventTitle.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.title.short").text)
-                    dropItem.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=reward] > div[class=wrapper] > div[class=title]").text)
-                    unlockedDate.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.unlocked-date").text)
-                    dropItemImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=reward] > div[class=image] > img[class=img]").get_attribute("src"))
-                    closeButton = self.driver.find_element(by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.close")
+                    poweredByImg.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div[class=presented-by] > img[class=img]").get_attribute("src"))
+                    productImg.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div[class=product-image] > img[class=img]").get_attribute("src"))
+                    eventTitle.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.title.short").text)
+                    dropItem.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div[class=reward] > div[class=wrapper] > div[class=title]").text)
+                    unlockedDate.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.unlocked-date").text)
+                    dropItemImg.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div[class=reward] > div[class=image] > img[class=img]").get_attribute("src"))
+                    closeButton = self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.close")
                     closeButton.click()
             if isDrop:
                 self.driver.implicitly_wait(15)
@@ -139,19 +149,22 @@ class Rewards:
                     "username": "EsportsHelper",
                     "embeds": [embed]
                 }
-                s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                s.post(self.config.connectorDropsUrl, headers={
+                       "Content-type": "application/json"}, json=params)
                 time.sleep(5)
             elif "https://fwalert.com" in self.config.connectorDropsUrl:
                 params = {
                     "text": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                 }
-                s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                s.post(self.config.connectorDropsUrl, headers={
+                       "Content-type": "application/json"}, json=params)
                 time.sleep(5)
             else:
                 params = {
                     "text": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                 }
-                s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                s.post(self.config.connectorDropsUrl, headers={
+                       "Content-type": "application/json"}, json=params)
                 time.sleep(5)
             self.log.info(">_< 掉落提醒成功")
         except Exception:
