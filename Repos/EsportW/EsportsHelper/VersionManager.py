@@ -3,7 +3,6 @@ import requests as req
 from traceback import print_exc
 from rich import print
 from EsportsHelper.Logger import log
-from Utils import print_yellow, print_red
 
 
 class VersionManager:
