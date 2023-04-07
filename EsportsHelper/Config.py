@@ -4,7 +4,8 @@ from traceback import format_exc, print_exc
 import yaml
 from rich import print
 from yaml.parser import ParserError
-
+from yaml.scanner import ScannerError
+from EsportsHelper.Utils import sysQuit
 
 class Config:
     def __init__(self, log, configPath: str) -> None:
@@ -31,12 +32,17 @@ class Config:
         except FileNotFoundError as ex:
             log.error("配置文件找不到")
             print("[red]配置文件找不到")
-        except (ParserError, KeyError) as ex:
-            log.error("配置文件格式错误")
-            print("[red]配置文件格式错误")
+            input("按任意键退出")
+            sysQuit(None, "配置文件找不到")
+        except (ParserError, KeyError, ScannerError) as ex:
+            log.error("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格")
+            print("[red]配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格")
+            input("按任意键退出")
+            sysQuit(None, "配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格")
         except Exception as ex:
-            print_exc()
-            self.log.error(format_exc())
+            input("按任意键退出")
+            sysQuit(None, "读取config文件时发生错误")
+            log.error(format_exc())
 
     def format(self):
         while "" in self.disWatchMatches:
