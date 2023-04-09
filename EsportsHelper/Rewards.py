@@ -86,7 +86,7 @@ class Rewards:
             self.log.error("〒.〒 检查掉落失败")
             traceback.print_exc()
             print("[red]〒.〒 检查掉落失败[/red]")
-            return False, [], [], [], [], [], [], []
+            return False, [], [], [], [], [], []
 
     def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg):
         try:
