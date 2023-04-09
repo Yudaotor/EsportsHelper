@@ -252,7 +252,9 @@ class Match:
                 nextMatchAMOrPM = ""
             nextMatchLeague = self.driver.find_element(
                 by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.name").text
-            print(f"[green]下一场比赛时间: 日期{nextMatchDayTime} 时间{nextMatchAMOrPM} {nextMatchTime}时 赛区{nextMatchLeague}[/green]")
+            nextMatchBO = self.driver.find_element(
+                by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.strategy").text
+            print(f"[green]下一场比赛时间: 日期{nextMatchDayTime} 时间{nextMatchAMOrPM} {nextMatchTime}时 赛区{nextMatchLeague} {nextMatchBO}[/green]")
         except Exception:
             self.log.error("Q_Q 获取下一场比赛时间失败")
             self.log.error(format_exc())
