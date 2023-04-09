@@ -154,6 +154,6 @@ def downloadOverrideFile():
     except Exception as ex:
         print_exc()
         log.error("获取文件失败")
-        print(f"[red]〒.〒 获取文件失败,请检查网络是否能连上github[/red]")
+        print(f"[red]〒.〒 获取重定向文件失败,请检查网络是否能连上github,稍后重试[/red]")
         input("按任意键退出")
         sysQuit(e="获取文件失败")
