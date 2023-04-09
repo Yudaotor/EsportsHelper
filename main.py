@@ -34,6 +34,17 @@ def watch(config):
             "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
     except Exception:
         driver.get("https://lolesports.com/schedule")
+
+    try:
+        driver.find_element(by=By.CSS_SELECTOR, value="#riotbar-right-content > div._1K9T69nrXajaz_b4HNuhtI.riotbar-locale-switcher > div > a").click()
+        sleep(1)
+        driver.find_element(by=By.CSS_SELECTOR, value="#riotbar-right-content > div._1K9T69nrXajaz_b4HNuhtI.riotbar-locale-switcher > div._2iYBTCEu1pbDL1lBawLJ3O.locale-switcher-dropdown > ul > li._3ZPhOxFe_GN4YLoFzVszZ5.active-language > a").click()
+    except TimeoutException:
+        log.error("눈_눈 切换语言失败")
+        log.error(format_exc())
+    except Exception:
+        log.error("눈_눈 切换语言失败")
+        log.error(format_exc())
     driver.set_window_size(960, 768)
     tryLoginTimes = 4
     while not driver.find_elements(by=By.CSS_SELECTOR, value="div.riotbar-summoner-name"):
