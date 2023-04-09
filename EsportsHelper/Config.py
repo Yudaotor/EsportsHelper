@@ -7,6 +7,7 @@ from yaml.parser import ParserError
 from yaml.scanner import ScannerError
 from EsportsHelper.Utils import sysQuit
 
+
 class Config:
     def __init__(self, log, configPath: str) -> None:
         self.log = log
@@ -64,6 +65,7 @@ class Config:
             try:
                 self.delay = int(self.delay)
             except ValueError:
+                print("[red]检查间隔配置错误,已恢复默认值")
                 self.delay = 600
 
         if not isinstance(self.platForm, str):
@@ -89,13 +91,21 @@ class Config:
         if isinstance(self.sleepPeriod, str):
             sleepPeriod = self.sleepPeriod.split("-")
             if len(sleepPeriod) != 2:
+                print("[red]睡眠时间段配置错误,已恢复默认值")
                 self.sleepPeriod = ""
             else:
-                if sleepPeriod[0] > sleepPeriod[1]:
-                    self.sleepPeriod = ""
-                elif sleepPeriod[0] < "0" or sleepPeriod[1] > "24":
+                try:
+                    if int(sleepPeriod[0]) > int(sleepPeriod[1]):
+                        print("[red]睡眠时间段配置错误,已恢复默认值")
+                        self.sleepPeriod = ""
+                    elif sleepPeriod[0] < "0" or sleepPeriod[1] > "24":
+                        print("[red]睡眠时间段配置错误,已恢复默认值")
+                        self.sleepPeriod = ""
+                except ValueError:
+                    print("[red]睡眠时间段配置错误,已恢复默认值")
                     self.sleepPeriod = ""
         else:
+            print("[red]睡眠时间段配置错误,已恢复默认值")
             self.sleepPeriod = ""
         if isinstance(self.maxRunHours, str):
             if self.maxRunHours == "":
@@ -104,6 +114,7 @@ class Config:
                 try:
                     self.maxRunHours = int(self.maxRunHours)
                 except ValueError:
+                    print("[red]最大运行时间配置错误,已恢复默认值")
                     self.maxRunHours = -1
         if isinstance(self.debug, str):
             if self.debug == "True" or self.debug == "true":
@@ -113,6 +124,7 @@ class Config:
             else:
                 self.debug = False
         if not isinstance(self.proxy, str):
+            print("[red]代理配置错误,已恢复默认值")
             self.proxy = ""
 
     def __findConfigFile(self, configPath):
@@ -121,4 +133,3 @@ class Config:
             return configPath
 
 
-config = ""
