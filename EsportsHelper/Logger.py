@@ -11,6 +11,7 @@ class Logger:
     @staticmethod
     def createLogger(log_path=Path("./logs/programs")):
         log_path.mkdir(parents=True, exist_ok=True)
+        Path("./logs/pics").mkdir(parents=True, exist_ok=True)
         level = logging.INFO
         fileHandler = RotatingFileHandler(
             log_path / f"EsportsHelper{time.strftime('%b-%d-%H-%M')}.log",
