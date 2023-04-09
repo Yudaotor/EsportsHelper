@@ -88,25 +88,27 @@ class Config:
                 self.closeStream = False
             else:
                 self.closeStream = False
-        if isinstance(self.sleepPeriod, str):
-            sleepPeriod = self.sleepPeriod.split("-")
-            if len(sleepPeriod) != 2:
-                print("[red]睡眠时间段配置错误,已恢复默认值")
-                self.sleepPeriod = ""
-            else:
-                try:
-                    if int(sleepPeriod[0]) > int(sleepPeriod[1]):
-                        print("[red]睡眠时间段配置错误,已恢复默认值")
-                        self.sleepPeriod = ""
-                    elif sleepPeriod[0] < "0" or sleepPeriod[1] > "24":
-                        print("[red]睡眠时间段配置错误,已恢复默认值")
-                        self.sleepPeriod = ""
-                except ValueError:
+
+        if self.sleepPeriod != "":
+            if isinstance(self.sleepPeriod, str):
+                sleepPeriod = self.sleepPeriod.split("-")
+                if len(sleepPeriod) != 2:
                     print("[red]睡眠时间段配置错误,已恢复默认值")
                     self.sleepPeriod = ""
-        else:
-            print("[red]睡眠时间段配置错误,已恢复默认值")
-            self.sleepPeriod = ""
+                else:
+                    try:
+                        if int(sleepPeriod[0]) > int(sleepPeriod[1]):
+                            print("[red]睡眠时间段配置错误,已恢复默认值")
+                            self.sleepPeriod = ""
+                        elif sleepPeriod[0] < "0" or sleepPeriod[1] > "24":
+                            print("[red]睡眠时间段配置错误,已恢复默认值")
+                            self.sleepPeriod = ""
+                    except ValueError:
+                        print("[red]睡眠时间段配置错误,已恢复默认值")
+                        self.sleepPeriod = ""
+            else:
+                print("[red]睡眠时间段配置错误,已恢复默认值")
+                self.sleepPeriod = ""
         if isinstance(self.maxRunHours, str):
             if self.maxRunHours == "":
                 self.maxRunHours = -1
