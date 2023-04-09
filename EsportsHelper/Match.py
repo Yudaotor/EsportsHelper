@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from retrying import retry
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
-from EsportsHelper.Utils import sysQuit, desktopNotify, downloadOverrideFile, Utils
+from EsportsHelper.Utils import sysQuit, desktopNotify, downloadOverrideFile, Utils, getMatchName
 from EsportsHelper.Youtube import Youtube
 
 
@@ -130,11 +130,7 @@ class Match:
                 self.driver.switch_to.window(self.currentWindows[k])
                 sleep(1)
                 if k not in liveMatches:
-                    splitUrl = k.split('/')
-                    if splitUrl[-2] != "live":
-                        match = splitUrl[-2]
-                    else:
-                        match = splitUrl[-1]
+                    match = getMatchName(k)
                     self.log.info(f"0.0 {match} 比赛结束")
                     print(f"[green]0.0 {match} 比赛结束[/green]")
                     self.driver.close()
@@ -161,11 +157,7 @@ class Match:
             flag = True
             for disMatch in disWatchMatches:
                 if match.find(disMatch) != -1:
-                    splitUrl = match.split('/')
-                    if splitUrl[-2] != "live":
-                        skipName = splitUrl[-2]
-                    else:
-                        skipName = splitUrl[-1]
+                    skipName = getMatchName(match)
                     self.log.info(f"(╯#-_-)╯ {skipName}比赛跳过")
                     print(f"[yellow](╯#-_-)╯ {skipName}比赛跳过")
                     flag = False

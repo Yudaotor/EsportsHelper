@@ -1,11 +1,13 @@
 import time
-import traceback
+from traceback import format_exc
 import requests
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException
 from rich import print
+
+from EsportsHelper.Utils import getMatchName
 
 
 class Rewards:
@@ -26,11 +28,7 @@ class Rewards:
         return True
 
     def checkRewards(self, stream, url, retryTimes=6) -> bool:
-        splitUrl = url.split('/')
-        if splitUrl[-2] != "live":
-            match = splitUrl[-2]
-        else:
-            match = splitUrl[-1]
+        match = getMatchName(url)
         for i in range(retryTimes):
             if self.isRewardMarkExist():
                 self.log.info(f"√√√√√ {match} 正常观看 可获取奖励 √√√√√ ")
@@ -84,7 +82,7 @@ class Rewards:
         except Exception:
             self.driver.implicitly_wait(15)
             self.log.error("〒.〒 检查掉落失败")
-            traceback.print_exc()
+            self.log.error(format_exc())
             print("[red]〒.〒 检查掉落失败[/red]")
             return False, [], [], [], [], [], []
 
@@ -155,5 +153,5 @@ class Rewards:
             self.log.info(">_< 掉落提醒成功")
         except Exception:
             self.log.error("〒.〒 掉落提醒失败")
-            traceback.print_exc()
+            self.log.error(format_exc())
             print("[red]〒.〒 掉落提醒失败[/red]")

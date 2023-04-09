@@ -157,3 +157,17 @@ def downloadOverrideFile():
         print(f"[red]〒.〒 获取重定向文件失败,请检查网络是否能连上github,稍后重试[/red]")
         input("按任意键退出")
         sysQuit(e="获取文件失败")
+
+
+# 从url中获取比赛赛区名
+def getMatchName(url) -> str:
+    splitUrl = url.split('/')
+    if splitUrl[-2] != "live":
+        match = splitUrl[-2]
+    else:
+        match = splitUrl[-1]
+    if "cblol-brazil" == match:
+        match = "cblol"
+    elif "ljl-japan" == match:
+        match = "ljl"
+    return match
