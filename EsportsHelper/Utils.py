@@ -76,6 +76,15 @@ class Utils:
                 log.error("异常提醒失败")
                 log.error(format_exc())
 
+    def debugScreen(self, driver, lint=""):
+        try:
+            if self.config.debug:
+                log.info(f"DebugScreen: {lint}存储成功")
+                driver.save_screenshot(f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
+        except Exception:
+            log.error("DebugScreen: 截图失败")
+            log.error(format_exc())
+
 
 def info():
     print("[green]=========================================================")
@@ -111,16 +120,6 @@ def sysQuit(driver=None, e=None):
     log.error(e)
     log.info("[red]------程序退出------")
     sys.exit()
-
-
-def debugScreen(driver, lint=""):
-    try:
-        if Config.config.debug:
-            log.info(f"DebugScreen: {lint}存储成功")
-            driver.save_screenshot(f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
-    except Exception as e:
-        log.error("DebugScreen: 截图失败")
-        log.error(format_exc())
 
 
 def downloadOverrideFile():

@@ -6,15 +6,15 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException
 from rich import print
-from EsportsHelper.Utils import debugScreen
 
 
 class Rewards:
-    def __init__(self, log, driver, config, youtube) -> None:
+    def __init__(self, log, driver, config, youtube, utils) -> None:
         self.log = log
         self.driver = driver
         self.config = config
         self.youtube = youtube
+        self.utils = utils
 
     def isRewardMarkExist(self):
         wait = WebDriverWait(self.driver, 25)
@@ -63,9 +63,9 @@ class Rewards:
             if len(drops) > 0:
                 for i in range(len(drops)):
                     isDrop = True
-                    debugScreen(self.driver, "before click")
+                    self.utils.debugScreen(self.driver, "before click")
                     drops[i].click()
-                    debugScreen(self.driver, "after click")
+                    self.utils.debugScreen(self.driver, "after click")
                     time.sleep(2)
                     poweredByImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=presented-by] > img[class=img]").get_attribute("src"))
                     productImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=product-image] > img[class=img]").get_attribute("src"))

@@ -18,13 +18,13 @@ class Match:
         self.log = log
         self.driver = driver
         self.config = config
+        self.utils = Utils(config=config)
         self.youtube = Youtube(driver=driver, log=log)
-        self.rewards = Rewards(log=log, driver=driver, config=config, youtube=self.youtube)
+        self.rewards = Rewards(log=log, driver=driver, config=config, youtube=self.youtube, utils=self.utils)
         self.twitch = Twitch(driver=driver, log=log)
         self.currentWindows = {}
         self.mainWindow = self.driver.current_window_handle
         self.OVERRIDES = downloadOverrideFile()
-        self.utils = Utils(config=config)
 
     def watchMatches(self, delay, maxRunHours):
         try:
