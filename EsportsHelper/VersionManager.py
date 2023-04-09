@@ -1,6 +1,6 @@
 import requests as req
 
-from traceback import print_exc
+from traceback import print_exc, format_exc
 from rich import print
 from EsportsHelper.Logger import log
 
@@ -19,7 +19,7 @@ class VersionManager:
                 return "0.0.0"
         except Exception as e:
             print("[red]从github获取最新版信息失败!")
-            print_exc()
+            log.error(format_exc())
             return "0.0.0"
 
     @staticmethod

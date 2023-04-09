@@ -39,6 +39,5 @@ class Twitch:
             self.log.error(format_exc())
             return False
         except Exception as e:
-            print_exc()
             self.log.error(format_exc())
             return False

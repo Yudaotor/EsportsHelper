@@ -52,6 +52,5 @@ class Youtube:
             self.log.error(format_exc())
             return False
         except Exception:
-            print_exc()
             self.log.error(format_exc())
             return False
