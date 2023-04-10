@@ -45,6 +45,7 @@ class Rewards:
                 else:
                     self.log.error(f"××××× {match} 观看异常 ××××× url={url}")
                     print(f"[red]×××××[/red] {match} 观看异常 [red]××××× url={url}")
+                    self.utils.errorNotify(f"××××× {match} 观看异常 ×××××")
                     return False
 
     def checkNewDrops(self):
