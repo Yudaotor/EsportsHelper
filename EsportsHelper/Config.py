@@ -28,6 +28,7 @@ class Config:
                 self.desktopNotify = config.get("desktopNotify", False)
                 self.closeStream = config.get("closeStream", False)
                 self.sleepPeriod = config.get("sleepPeriod", "")
+                self.countDrops = config.get("countDrops", False)
                 self.format()
 
         except FileNotFoundError as ex:
@@ -128,6 +129,13 @@ class Config:
         if not isinstance(self.proxy, str):
             print("[red]代理配置错误,已恢复默认值")
             self.proxy = ""
+        if isinstance(self.countDrops, str):
+            if self.countDrops == "True" or self.countDrops == "true":
+                self.countDrops = True
+            elif self.countDrops == "False" or self.countDrops == "false":
+                self.countDrops = False
+            else:
+                self.countDrops = False
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)
