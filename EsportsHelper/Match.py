@@ -29,6 +29,7 @@ class Match:
         self.mainWindow = self.driver.current_window_handle
         self.OVERRIDES = downloadOverrideFile()
         self.historyDrops = 0
+        self.dropsDict = {}
 
     def watchMatches(self, delay, maxRunHours):
         try:
@@ -36,6 +37,7 @@ class Match:
             self.mainWindow = self.driver.current_window_handle
             maxRunSecond = maxRunHours * 3600
             startTimePoint = time.time()
+            endTimePoint = startTimePoint + maxRunSecond
             if self.config.countDrops:
                 # 打开奖励页面
                 try:
@@ -43,16 +45,17 @@ class Match:
                     self.driver.get("https://lolesports.com/rewards")
                     self.rewardWindow = self.driver.current_window_handle
                     # 初始化掉落计数
-                    self.historyDrops = self.countDrops()
+                    self.historyDrops = self.countDrops(isInit=True)
                 except Exception:
-                    print(f"[red]打开奖励页面失败[/red]")
+                    print(f"[red]检查掉落数失败[/red]")
+                    self.log.error("检查掉落数失败")
                     self.log.error(format_exc())
-            while maxRunHours < 0 or time.time() < startTimePoint + maxRunSecond:
+            while maxRunHours < 0 or time.time() < endTimePoint:
                 self.log.info("●_● 开始检查...")
                 print(f"[green]●_● 开始检查...[/green]")
                 dropsNumber = self.countDrops()
                 if dropsNumber != 0:
-                    print(f"[green]$_$ 本次运行掉落:{dropsNumber - self.historyDrops} 生涯总掉落:{self.countDrops()}[/green]")
+                    print(f"[green]$_$ 本次运行掉落总和:{dropsNumber - self.historyDrops} 生涯总掉落:{dropsNumber}[/green]")
                 self.driver.switch_to.window(self.mainWindow)
                 isDrop, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
                 if isDrop:
@@ -109,10 +112,12 @@ class Match:
                 self.checkNextMatch()
                 self.log.info(
                     f"下一次检查在: {datetime.now() + timedelta(seconds=newDelay)}")
-                self.log.debug("============================================")
+                self.log.debug("==================================================")
                 print(
                     f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月',d='日',h='时',f='分',s='秒')}[/green]")
-                print(f"[green]============================================[/green]")
+                if maxRunHours != -1:
+                    print(f"[green]预计结束程序时间: {time.strftime('%H:%M', time.localtime(endTimePoint))} [/green]")
+                print(f"[green]==================================================[/green]")
                 sleep(newDelay)
         except NoSuchWindowException as e:
             self.log.error("Q_Q 对应窗口找不到")
@@ -282,7 +287,7 @@ class Match:
             self.driver.get(
                 "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
 
-    def countDrops(self):
+    def countDrops(self, isInit=False):
         if self.config.countDrops:
             try:
                 self.driver.switch_to.window(self.rewardWindow)
@@ -291,15 +296,38 @@ class Match:
                 dropLocale = self.driver.find_elements(by=By.CSS_SELECTOR, value="div.name")
                 dropNumber = self.driver.find_elements(by=By.CSS_SELECTOR, value="div.dropCount")
                 sumNumber = 0
-                for i in range(0, len(dropLocale)):
-                    # print(dropLocale[i].text + ":" + dropNumber[i].text[:-6], end=" ")
-                    # if (i + 1) % 3 == 0 and i != len(dropLocale) - 1:
-                    #     print()
-                    sumNumber = sumNumber + int(dropNumber[i].text[:-6])
-                return sumNumber
             except Exception:
-                self.log.error("눈_눈 统计掉落失败")
+                print("[red]Q_Q 获取掉落数失败[/red]")
+                self.log.error("Q_Q 获取掉落数失败")
                 self.log.error(format_exc())
                 return 0
+            # 不是第一次运行
+            if not isInit:
+                try:
+                    dropNumberInfo = []
+                    for i in range(0, len(dropLocale)):
+                        if self.dropsDict.get(dropLocale[i].text, 0) != int(dropNumber[i].text[:-6]):
+                            dropNumberInfo.append(dropLocale[i].text + ":" + str(int(dropNumber[i].text[:-6]) - self.dropsDict.get(dropLocale[i].text, 0)))
+                        sumNumber = sumNumber + int(dropNumber[i].text[:-6])
+                    if len(dropNumberInfo) != 0:
+                        print(f"[green]$_$ 本次运行掉落详细: {dropNumberInfo}[/green]")
+                    return sumNumber
+                except Exception:
+                    print("[red]눈_눈 统计掉落失败[/red]")
+                    self.log.error("눈_눈 统计掉落失败")
+                    self.log.error(format_exc())
+                    return 0
+            # 第一次运行
+            else:
+                try:
+                    for i in range(0, len(dropLocale)):
+                        self.dropsDict[dropLocale[i].text] = int(dropNumber[i].text[:-6])
+                        sumNumber = sumNumber + int(dropNumber[i].text[:-6])
+                    return sumNumber
+                except Exception:
+                    print("[red]눈_눈 初始化掉落数失败[/red]")
+                    self.log.error("눈_눈 初始化掉落数失败")
+                    self.log.error(format_exc())
+                    return 0
         else:
             return 0
