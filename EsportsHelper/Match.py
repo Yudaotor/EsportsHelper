@@ -170,8 +170,8 @@ class Match:
                 self.currentWindows.pop(k, None)
             self.driver.switch_to.window(self.mainWindow)
         except Exception as e:
-            print(f"[red]Q_Q 关闭已结束的比赛时发送错误[/red]")
-            self.utils.errorNotify(e="Q_Q 关闭已结束的比赛时发送错误")
+            print(f"[red]Q_Q 关闭已结束的比赛时发生错误[/red]")
+            self.utils.errorNotify(e="Q_Q 关闭已结束的比赛时发生错误")
             self.log.error(format_exc())
 
     def startWatchNewMatches(self, liveMatches, disWatchMatches):
