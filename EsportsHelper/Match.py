@@ -292,6 +292,7 @@ class Match:
         if self.config.countDrops:
             try:
                 self.driver.switch_to.window(self.rewardWindow)
+                self.driver.refresh()
                 wait = WebDriverWait(self.driver, 10)
                 wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.name")))
                 dropLocale = self.driver.find_elements(by=By.CSS_SELECTOR, value="div.name")
@@ -305,7 +306,6 @@ class Match:
             # 不是第一次运行
             if not isInit:
                 try:
-                    self.driver.refresh()
                     dropNumberInfo = []
                     for i in range(0, len(dropLocale)):
                         if self.dropsDict.get(dropLocale[i].text, 0) != int(dropNumber[i].text[:-6]):
