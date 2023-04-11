@@ -50,7 +50,7 @@ class Config:
         while "" in self.disWatchMatches:
             self.disWatchMatches.remove("")
 
-        if self.username == "NoUsername" or self.password == "NoPassword":
+        if self.username == "账号用户名" or self.password == "密码":
             self.log.error("配置文件中没有账号密码信息")
             print("[red]配置文件中没有账号密码信息")
 
