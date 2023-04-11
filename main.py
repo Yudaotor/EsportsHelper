@@ -1,16 +1,18 @@
 import argparse
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from traceback import format_exc
 from selenium.webdriver.common.by import By
 from time import sleep
-
+from selenium.webdriver.support import expected_conditions as ec
 from rich import print
+from selenium.webdriver.support.wait import WebDriverWait
+
 from EsportsHelper.LoginHandler import LoginHandler
 from EsportsHelper.Webdriver import Webdriver
 from EsportsHelper.Logger import log
 from EsportsHelper.Config import Config
 from EsportsHelper.Match import Match
-from EsportsHelper.Utils import info, sysQuit
+from EsportsHelper.Utils import info, sysQuit, getLolesportsWeb
 
 global driver
 
@@ -21,29 +23,39 @@ def init(config):
     try:
         driver = Webdriver(config).createWebdriver()
     except TypeError:
+        driver = None
+        log.error(format_exc())
         print(
             "[red]눈_눈 生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开")
         input("按任意键退出...")
-        sysQuit(driver, format_exc())
+        sysQuit(driver)
+    except WebDriverException:
+        driver = None
+        log.error(format_exc())
+        print("[red]눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试")
+        input("按任意键退出...")
+        sysQuit(driver)
     except Exception:
+        driver = None
+        log.error(format_exc())
         print("[red]눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用")
         input("按任意键退出...")
-        sysQuit(driver, format_exc())
+        sysQuit(driver)
     # 设置窗口大小
     driver.set_window_size(960, 768)
     # 打开观赛页面
     try:
-        driver.get(
-            "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
+        getLolesportsWeb(driver)
     except Exception:
-        print("[red]눈_눈 无法打开网页!\n请检查网络是否正常,将于60秒后重试")
-        log.error("无法打开网页!\n请检查网络是否正常,将于60秒后重试")
-        sleep(60)
-        driver.get(
-            "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
+        log.error(format_exc())
+        log.error("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...")
+        print(f"[red]Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...[/red]")
+        sysQuit(driver, "网络问题，将于3秒后退出...")
     # 切换语言到英语
     try:
-        driver.find_element(by=By.CSS_SELECTOR, value="#riotbar-right-content > div._1K9T69nrXajaz_b4HNuhtI.riotbar-locale-switcher > div > a").click()
+        wait = WebDriverWait(driver, 20)
+        languageButton = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "#riotbar-right-content > div._1K9T69nrXajaz_b4HNuhtI.riotbar-locale-switcher > div > a")))
+        languageButton.click()
         driver.find_element(by=By.CSS_SELECTOR,
                             value="#riotbar-right-content > div._1K9T69nrXajaz_b4HNuhtI.riotbar-locale-switcher > div._2iYBTCEu1pbDL1lBawLJ3O.locale-switcher-dropdown > ul > li:nth-child(1) > a").click()
         log.info("切换语言成功")
@@ -57,22 +69,27 @@ def init(config):
 
 def login(config):
     loginHandler = LoginHandler(log=log, driver=driver)
-    tryLoginTimes = 4
-    while not driver.find_elements(by=By.CSS_SELECTOR, value="div.riotbar-summoner-name"):
-        try:
-            loginHandler.automaticLogIn(config.username, config.password)
-        except TimeoutException:
-            tryLoginTimes = tryLoginTimes - 1
-            if tryLoginTimes <= 0:
-                sysQuit(driver, "无法登陆，账号密码可能错误或者网络出现问题")
+    if config.userDataDir == "":
+        tryLoginTimes = 4
+        while not driver.find_elements(by=By.CSS_SELECTOR, value="div.riotbar-summoner-name"):
+            try:
+                loginHandler.automaticLogIn(config.username, config.password)
+            except TimeoutException:
+                tryLoginTimes = tryLoginTimes - 1
+                if tryLoginTimes <= 0:
+                    sysQuit(driver, "无法登陆，账号密码可能错误或者网络出现问题")
 
-            log.error("눈_눈 自动登录失败,检查网络和账号密码")
-            print("[red]눈_눈 自动登录失败,检查网络和账号密码[/red]")
-            sleep(5)
-            log.error("눈_눈 开始重试")
+                log.error("눈_눈 自动登录失败,检查网络和账号密码")
+                print("[red]눈_눈 自动登录失败,检查网络和账号密码[/red]")
+                sleep(5)
+                log.error("눈_눈 开始重试")
 
-    log.info("∩_∩ 好嘞 登录成功")
-    print("[green]∩_∩ 好嘞 登录成功[/green]")
+        log.info("∩_∩ 好嘞 登录成功")
+        print("[green]∩_∩ 好嘞 登录成功[/green]")
+    else:
+        loginHandler.userDataLogin()
+        log.info("∩_∩ 使用系统数据 自动登录成功")
+        print("[green]∩_∩ 使用系统数据 自动登录成功[/green]")
 
 
 def watch(config):
@@ -93,7 +110,7 @@ def main():
 
     config = Config(log, args.configPath)
     init(config)
-    sleep(2)
+    sleep(3)
     login(config)
     sleep(1)
     watch(config)
