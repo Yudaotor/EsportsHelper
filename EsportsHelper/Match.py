@@ -11,7 +11,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
-from EsportsHelper.Utils import sysQuit, desktopNotify, downloadOverrideFile, Utils, getMatchName
+from EsportsHelper.Utils import sysQuit, desktopNotify, downloadOverrideFile, Utils, getMatchName, getLolesportsWeb
 from EsportsHelper.Youtube import Youtube
 
 
@@ -70,8 +70,8 @@ class Match:
                 sleep(3)
                 # 来到lolesports网页首页
                 try:
-                    self.getLolesportsWeb()
-                except Exception as e:
+                    getLolesportsWeb(self.driver)
+                except Exception:
                     self.log.error(format_exc())
                     self.log.error("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...")
                     print(f"[red]Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...[/red]")
@@ -276,22 +276,11 @@ class Match:
             self.log.error(format_exc())
             print(f"[red]Q_Q 获取下一场比赛时间失败[/red]")
 
-    # 重复尝试获取网页最多4次，等待时间以2分钟为基数，每次递增2分钟
-    @retry(stop_max_attempt_number=4, wait_incrementing_increment=120000, wait_incrementing_start=120000)
-    def getLolesportsWeb(self):
-        try:
-            self.driver.get(
-                "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
-        except Exception:
-            print("[red]Q_Q 获取Lolesports网页失败,重试中...[/red]")
-            self.log.error("Q_Q 获取Lolesports网页失败,重试中...")
-            self.driver.get(
-                "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,european-masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
-
     def countDrops(self, isInit=False):
         if self.config.countDrops:
             try:
                 self.driver.switch_to.window(self.rewardWindow)
+                self.driver.refresh()
                 wait = WebDriverWait(self.driver, 10)
                 wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.name")))
                 dropLocale = self.driver.find_elements(by=By.CSS_SELECTOR, value="div.name")
@@ -305,7 +294,6 @@ class Match:
             # 不是第一次运行
             if not isInit:
                 try:
-                    self.driver.refresh()
                     dropNumberInfo = []
                     for i in range(0, len(dropLocale)):
                         if self.dropsDict.get(dropLocale[i].text, 0) != int(dropNumber[i].text[:-6]):
