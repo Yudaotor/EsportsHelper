@@ -17,8 +17,12 @@ class Webdriver:
             version = int(
                 chromeDriverManager.driver.get_version().split(".")[0])
             driverPath = chromeDriverManager.install()
-            if self.config.chromePath != "":
+            if self.config.chromePath != "" and self.config.userDataDir != "":
+                return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version, browser_executable_path=self.config.chromePath, user_data_dir=self.config.userDataDir)
+            elif self.config.chromePath != "" and self.config.userDataDir == "":
                 return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version, browser_executable_path=self.config.chromePath)
+            elif self.config.chromePath == "" and self.config.userDataDir != "":
+                return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version, user_data_dir=self.config.userDataDir)
             else:
                 return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version)
         else:
