@@ -56,6 +56,7 @@ class Match:
                 dropsNumber = self.countDrops()
                 if dropsNumber != 0:
                     print(f"[green]$_$ 本次运行掉落总和:{dropsNumber - self.historyDrops} 生涯总掉落:{dropsNumber}[/green]")
+                    self.log.info(f"$_$ 本次运行掉落总和:{dropsNumber - self.historyDrops} 生涯总掉落:{dropsNumber}")
                 self.driver.switch_to.window(self.mainWindow)
                 isDrop, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
                 if isDrop:
@@ -304,6 +305,7 @@ class Match:
             # 不是第一次运行
             if not isInit:
                 try:
+                    self.driver.refresh()
                     dropNumberInfo = []
                     for i in range(0, len(dropLocale)):
                         if self.dropsDict.get(dropLocale[i].text, 0) != int(dropNumber[i].text[:-6]):
@@ -311,6 +313,7 @@ class Match:
                         sumNumber = sumNumber + int(dropNumber[i].text[:-6])
                     if len(dropNumberInfo) != 0:
                         print(f"[green]$_$ 本次运行掉落详细: {dropNumberInfo}[/green]")
+                        self.log.info(f"本次运行掉落详细: {dropNumberInfo}")
                     return sumNumber
                 except Exception:
                     print("[red]눈_눈 统计掉落失败[/red]")
