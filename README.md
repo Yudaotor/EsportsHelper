@@ -25,6 +25,8 @@ discord: Khalil#7843
 ## 运行平台  
 windows,linux  
 
+### linux  
+如何在linux中运行请点击右侧查看教程[linux教程](https://github.com/Yudaotor/EsportsHelper/wiki/%E5%A6%82%E4%BD%95%E5%9C%A8linux%E7%8E%AF%E5%A2%83%E8%BF%90%E8%A1%8C%EF%BC%88run-in-linux%EF%BC%89)
 ### mac
 暂时运行方法：
 ```shell
