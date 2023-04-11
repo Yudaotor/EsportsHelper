@@ -62,10 +62,10 @@ class Rewards:
             if len(drops) > 0:
                 for i in range(len(drops)):
                     isDrop = True
-                    self.utils.debugScreen(self.driver, "before click")
+                    self.utils.debugScreen(self.driver, "点击掉落前")
                     drops[i].click()
-                    self.utils.debugScreen(self.driver, "after click")
-                    time.sleep(2)
+                    time.sleep(3)
+                    self.utils.debugScreen(self.driver, "点击掉落后")
                     poweredByImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=presented-by] > img[class=img]").get_attribute("src"))
                     productImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=product-image] > img[class=img]").get_attribute("src"))
                     eventTitle.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.title.short").text)
