@@ -5,7 +5,6 @@ import yaml
 from rich import print
 from yaml.parser import ParserError
 from yaml.scanner import ScannerError
-from EsportsHelper.Utils import sysQuit
 
 
 class Config:
@@ -30,29 +29,27 @@ class Config:
                 self.sleepPeriod = config.get("sleepPeriod", "")
                 self.countDrops = config.get("countDrops", False)
                 self.chromePath = config.get("chromePath", "")
+                self.userDataDir = config.get("userDataDir", "")
                 self.format()
 
         except FileNotFoundError as ex:
             log.error("配置文件找不到")
             print("[red]配置文件找不到")
             input("按任意键退出")
-            sysQuit(None, "配置文件找不到")
         except (ParserError, KeyError, ScannerError) as ex:
             log.error("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格")
             log.error(format_exc())
             print("[red]配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格")
             input("按任意键退出")
-            sysQuit(None, "配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格")
         except Exception as ex:
             input("按任意键退出")
-            sysQuit(None, "读取config文件时发生错误")
             log.error(format_exc())
 
     def format(self):
         while "" in self.disWatchMatches:
             self.disWatchMatches.remove("")
 
-        if self.username == "账号用户名" or self.password == "密码":
+        if self.userDataDir == "" and self.username == "账号用户名" or self.password == "密码":
             self.log.error("配置文件中没有账号密码信息")
             print("[red]配置文件中没有账号密码信息")
 
