@@ -3,6 +3,7 @@ from time import sleep, strftime
 from traceback import format_exc, print_exc
 
 import requests
+from retrying import retry
 from urllib3.exceptions import MaxRetryError
 
 from EsportsHelper import Config
@@ -171,3 +172,16 @@ def getMatchName(url) -> str:
     elif "ljl-japan" == match:
         match = "ljl"
     return match
+
+
+# 重复尝试获取网页最多4次，等待时间以2分钟为基数，每次递增2分钟
+@retry(stop_max_attempt_number=4, wait_incrementing_increment=120000, wait_incrementing_start=120000)
+def getLolesportsWeb(driver):
+    try:
+        driver.get(
+            "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,emea_masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
+    except Exception:
+        print("[red]Q_Q 获取Lolesports网页失败,重试中...[/red]")
+        log.error("Q_Q 获取Lolesports网页失败,重试中...")
+        driver.get(
+            "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,emea_masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
