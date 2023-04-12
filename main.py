@@ -19,26 +19,26 @@ global driver
 
 def init(config):
     global driver
-    # 生成webdriver
+    # WebDriver start
     try:
         driver = Webdriver(config).createWebdriver()
     except TypeError:
         driver = None
         log.error(format_exc())
         print(
-            "[red]눈_눈 生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开")
+            "[red]生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开")
         input("按任意键退出...")
         sysQuit(driver)
     except WebDriverException:
         driver = None
         log.error(format_exc())
-        print("[red]눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试")
+        print("[red]生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试")
         input("按任意键退出...")
         sysQuit(driver)
     except Exception:
         driver = None
         log.error(format_exc())
-        print("[red]눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用")
+        print("[red]生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用")
         input("按任意键退出...")
         sysQuit(driver)
     # 设置窗口大小
@@ -48,22 +48,23 @@ def init(config):
         getLolesportsWeb(driver)
     except Exception:
         log.error(format_exc())
-        log.error("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...")
-        print(f"[red]Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...[/red]")
+        log.error("无法打开Lolesports网页，网络问题，将于3秒后退出...")
+        print(f"[red]无法打开Lolesports网页，网络问题，将于3秒后退出...[/red]")
         sysQuit(driver, "网络问题，将于3秒后退出...")
     # 切换语言到英语
     try:
         wait = WebDriverWait(driver, 20)
-        languageButton = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "#riotbar-right-content > div._1K9T69nrXajaz_b4HNuhtI.riotbar-locale-switcher > div > a")))
+        languageButton = wait.until(ec.presence_of_element_located(
+            (By.CSS_SELECTOR, "#riotbar-right-content > div._1K9T69nrXajaz_b4HNuhtI.riotbar-locale-switcher > div > a")))
         languageButton.click()
         driver.find_element(by=By.CSS_SELECTOR,
                             value="#riotbar-right-content > div._1K9T69nrXajaz_b4HNuhtI.riotbar-locale-switcher > div._2iYBTCEu1pbDL1lBawLJ3O.locale-switcher-dropdown > ul > li:nth-child(1) > a").click()
         log.info("切换语言成功")
     except TimeoutException:
-        log.error("눈_눈 切换语言失败")
+        log.error("切换语言失败")
         log.error(format_exc())
     except Exception:
-        log.error("눈_눈 切换语言失败")
+        log.error("切换语言失败")
         log.error(format_exc())
 
 
@@ -79,17 +80,17 @@ def login(config):
                 if tryLoginTimes <= 0:
                     sysQuit(driver, "无法登陆，账号密码可能错误或者网络出现问题")
 
-                log.error("눈_눈 自动登录失败,检查网络和账号密码")
-                print("[red]눈_눈 自动登录失败,检查网络和账号密码[/red]")
+                log.error("自动登录失败,检查网络和账号密码")
+                print("[red]自动登录失败,检查网络和账号密码[/red]")
                 sleep(5)
-                log.error("눈_눈 开始重试")
+                log.error("开始重试")
 
-        log.info("∩_∩ 好嘞 登录成功")
-        print("[green]∩_∩ 好嘞 登录成功[/green]")
+        log.info(" 好嘞 登录成功")
+        print("[green] 好嘞 登录成功[/green]")
     else:
         loginHandler.userDataLogin()
-        log.info("∩_∩ 使用系统数据 自动登录成功")
-        print("[green]∩_∩ 使用系统数据 自动登录成功[/green]")
+        log.info(" 使用系统数据 自动登录成功")
+        print("[green] 使用系统数据 自动登录成功[/green]")
 
 
 def watch(config):
@@ -114,14 +115,14 @@ def main():
     login(config)
     sleep(1)
     watch(config)
-    print("[green]观看结束～[/green]")
-    log.info("观看结束～")
+    print("[green]Watching broadcast")
+    log.info("Watching broadcast")
 
 
 if __name__ == '__main__':
     try:
         main()
     except (KeyboardInterrupt, SystemExit):
-        sysQuit(driver, "程序被打断")
+        sysQuit(driver, "Program work interrupted.")
     except Exception as e:
         sysQuit(driver, format_exc())

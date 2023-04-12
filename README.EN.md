@@ -47,7 +47,7 @@ python -m pip install -r requirements.txt
 2. Option to set whether program will launch in headless mode or with a visible browser window (Off by default). Headless mode is opening the browser without GUI. (It will not be visible, set to running in the background in order to lower CPU usage).
 3. Option to set which Leagues broadcasts to ignore. (Empty by default). Please note, that there is a logic of the inclusion relationship, for example: if LCK is set to be ignored, LCK_Challengers will also be ignored. (This option is highly recommended, avoid watching all broadcasts and be detected because of that).
 4. Option to set how often the latest information about the broadcast will be checked. (600 seconds by default). Upon checking, it will close ended broadcasts and open new ones.
-5. Drop alerts using Discord webhook. (cant notify all drops Riot sometimes willnot notify in web page.).
+5. Drop alerts using Discord webhook. (Not all drops alerts will be shown as LolEsports site can miss notification).
 6. Error alerts when an error occurs in the software.
 7. Option to set the maximum run time of program. It will force the instance to automatically close when the time limit is reached.
 8. Option to set a hibernation period in which the software will be put in sleep mode for set time.
