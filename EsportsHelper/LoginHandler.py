@@ -61,10 +61,10 @@ class LoginHandler:
 
     def userDataLogin(self):
         try:
-            loginButton = self.driver.find_element(by=By.CSS_SELECTOR, value="a[data-riotbar-link-id=login]")
-            self.driver.execute_script("arguments[0].click();", loginButton)
             wait = WebDriverWait(self.driver, 10)
-            wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.riotbar-summoner-name")))
+            while not wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.riotbar-summoner-name"))):
+                loginButton = self.driver.find_element(by=By.CSS_SELECTOR, value="a[data-riotbar-link-id=login]")
+                self.driver.execute_script("arguments[0].click();", loginButton)
         except TimeoutException:
             print("[red]×_× 自动登录失败,请去浏览器手动登录后再行尝试")
             self.log.error("自动登录失败,请去浏览器手动登录后再行尝试")
