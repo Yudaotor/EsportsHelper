@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from rich import print
-
+from EsportsHelper.Utils import sysQuit
 from EsportsHelper.Utils import getLolesportsWeb
 
 
@@ -62,10 +62,12 @@ class LoginHandler:
     def userDataLogin(self):
         try:
             wait = WebDriverWait(self.driver, 10)
-            while not wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.riotbar-summoner-name"))):
-                loginButton = self.driver.find_element(by=By.CSS_SELECTOR, value="a[data-riotbar-link-id=login]")
-                self.driver.execute_script("arguments[0].click();", loginButton)
+            loginButton = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "a[data-riotbar-link-id=login]")))
+            self.driver.execute_script("arguments[0].click();", loginButton)
         except TimeoutException:
-            print("[red]×_× 自动登录失败,请去浏览器手动登录后再行尝试")
-            self.log.error("自动登录失败,请去浏览器手动登录后再行尝试")
+            if self.driver.find_element(By.CSS_SELECTOR, "div.riotbar-summoner-name"):
+                return
+            print("[red]×_× 免密登录失败,请去浏览器手动登录后再行尝试")
+            self.log.error("免密登录失败,请去浏览器手动登录后再行尝试")
             self.log.error(format_exc())
+            sysQuit(self.driver, "免密登录失败,请去浏览器手动登录后再行尝试")
