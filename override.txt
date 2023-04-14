@@ -33,3 +33,4 @@ https://lolesports.com/live/primeleague|https://lolesports.com/live/primeleague/
 https://lolesports.com/live/greek_legends|https://lolesports.com/live/greek_legends/gamersloungegr,
 https://lolesports.com/live/superliga|https://lolesports.com/live/superliga/lvpes,
 https://lolesports.com/live/emea_masters|https://lolesports.com/live/emea_masters/EUniverse_TV,
+https://lolesports.com/live/tft_esports|https://lolesports.com/live/tft_esports/teamfighttactics,
