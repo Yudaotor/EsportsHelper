@@ -95,7 +95,7 @@ def info():
     print("[green]====[/green]   https://github.com/Yudaotor/EsportsHelper     [green]====[/green]")
     print("[green]====[/green] 如觉得不错的话可以进上面链接请我喝杯咖啡支持下. [green]====[/green]")
     print("[green]====[/green] 请在使用前[red]阅读教程文件[/red], 以确保你的配置符合要求! [green]====[/green]")
-    print("[green]====[/green] 如需关闭请勿直接右上角×关闭，请按Ctrl+C来关闭. [green]====[/green]")
+    print("[green]====[/green] 如需关闭请勿直接右上角X关闭，请按Ctrl+C来关闭. [green]====[/green]")
     print("[green]=========================================================")
     print()
     VersionManager.checkVersion()
@@ -119,7 +119,7 @@ def sysQuit(driver=None, e=None):
     if driver:
         driver.quit()
     log.error(e)
-    log.info("[red]------程序退出------")
+    log.info("------程序退出------")
     sys.exit()
 
 
