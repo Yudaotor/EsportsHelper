@@ -27,7 +27,7 @@ class Config:
                 self.desktopNotify = config.get("desktopNotify", False)
                 self.closeStream = config.get("closeStream", False)
                 self.sleepPeriod = config.get("sleepPeriod", "")
-                self.countDrops = config.get("countDrops", False)
+                self.countDrops = config.get("countDrops", True)
                 self.chromePath = config.get("chromePath", "")
                 self.userDataDir = config.get("userDataDir", "")
                 self.ignoreBoardCast = config.get("ignoreBoardCast", True)
