@@ -47,6 +47,9 @@ python -m pip install -r requirements.txt
 9. 可以设置桌面提醒（尚未测试,不确定是否生效）
 10. 可以手动添加代理(绝大部分用户无需配置)
 11. 可以设置删除视频流元素(节省流量)(风险未知,有兴趣自行尝试) 
+12. 可以查看程序本次运行得到的掉落数以及掉落赛区信息
+13. 可以通过本地浏览器缓存免账密登录
+14. 可以自定义谷歌浏览器的地址(支持绿色版即免安装版)
 
 ## 配置信息
 config.yaml
@@ -60,11 +63,15 @@ headless: False              # 设置为True时，程序会在后台运行，否
 disWatchMatches: ["lck", "lpl", "lcs"] # 不想看的赛区名称，可以在这里添加.(注意,是小写)  
 maxRunHours: -1                  # 负值为一直运行，正值为运行小时, 默认-1
 proxy: "你的代理地址" # 代理地址，选填，一般用户不用填。 e.g., "socks://127.0.0.1:20173"
-connectorDropsUrl: "你的webhook链接"   # (支持钉钉,Discord,饭碗警告)(具体配置方法见此处[点我](https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F(%E5%8A%9F%E8%83%BD%E5%BE%85%E6%B5%8B%E8%AF%95)))  
+connectorDropsUrl: "你的webhook链接"   # (支持钉钉,Discord,饭碗警告)具体配置方法见此处https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F(%E5%8A%9F%E8%83%BD%E5%BE%85%E6%B5%8B%E8%AF%95
 platForm: "windows"    # 使用平台,默认为windows,如需使用linux请在此处进行配置  
 closeStream: "False"   # 省流模式，默认False，关闭直播间的视频流（未知风险）（有兴趣者自行尝试） 
 desktopNotify: "False"  # 系统弹窗提示，默认False
 sleepPeriod: "8-13" # 休眠时间段，（默认为空）格式为"开始小时-结束小时",在休眠时间段中会以1小时间隔来检查。区间为左闭合右开。
+ignoreBoardCast: True    # 设置为否会提前进入直播间，以及将支持某些一直处于转播的赛区直播
+userDataDir: "C:\\Users\\Khalil\\AppData\\Local\\Google\\Chrome\\User Data"  # 例子,其中Khalil处改为自己电脑的名字,具体教程见https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E6%9C%AC%E5%9C%B0%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98-%E5%85%8D%E8%B4%A6%E5%AF%86%E7%99%BB%E5%BD%95
+chromePath: "谷歌浏览器自订路径"
+countDrops: True     #是否检查掉落数
 ```
 
 ### 不观看赛区的配置详解:
