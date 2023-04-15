@@ -29,10 +29,24 @@ class Rewards:
 
     def checkRewards(self, stream, url, retryTimes=6) -> bool:
         match = getMatchName(url)
+        teams = ""
         for i in range(retryTimes):
             if self.isRewardMarkExist():
-                self.log.info(f"√√√√√ {match} 正常观看 可获取奖励 √√√√√ ")
-                print(f"[green]√√√√√[/green] {match} 正常观看 可获取奖励 [green]√√√√√ ")
+                try:
+                    if stream == "twitch":
+                        wait = WebDriverWait(self.driver, 15)
+                        wait.until(ec.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR, "iframe[title=Twitch]")))
+                        teams = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.Layout-sc-1xcs6mc-0.bZVrjx.tw-card-body > div > p:nth-child(2)"))).text
+                        self.driver.switch_to.default_content()
+                    elif stream == "youtube":
+                        teams = self.driver.find_element(By.CSS_SELECTOR, "iframe[id=video-player-youtube]").get_attribute("title")
+                    if teams != "":
+                        teams = teams.split("|")[0]
+                except Exception:
+                    self.log.error(format_exc())
+                self.log.info(f"√√√√√ {match} 正常观看 可获取奖励 {teams} √√√√√ ")
+                print(f"[green]√√√√√[/green] {match} 正常观看 可获取奖励 {teams} [green]√√√√√ ")
+
                 return True
             else:
                 if i != retryTimes - 1:
