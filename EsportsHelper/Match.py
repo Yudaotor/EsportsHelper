@@ -300,9 +300,13 @@ class Match:
                 try:
                     dropNumberInfo = []
                     for i in range(0, len(dropLocale)):
-                        if self.dropsDict.get(dropLocale[i].text, 0) != int(dropNumber[i].text[:-6]):
-                            dropNumberInfo.append(dropLocale[i].text + ":" + str(int(dropNumber[i].text[:-6]) - self.dropsDict.get(dropLocale[i].text, 0)))
-                        sumNumber = sumNumber + int(dropNumber[i].text[:-6])
+                        if dropNumber[i].text[:-6] == '':
+                            continue
+                        dropNumberNow = int(dropNumber[i].text[:-6])
+                        dropLocaleNow = dropLocale[i].text
+                        if self.dropsDict.get(dropLocaleNow, 0) != dropNumberNow:
+                            dropNumberInfo.append(dropLocaleNow + ":" + str(dropNumberNow - self.dropsDict.get(dropLocaleNow, 0)))
+                        sumNumber = sumNumber + dropNumberNow
                     if len(dropNumberInfo) != 0:
                         print(f"[green]$_$ 本次运行掉落详细: {dropNumberInfo}[/green]")
                         self.log.info(f"本次运行掉落详细: {dropNumberInfo}")
