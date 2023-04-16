@@ -1,13 +1,13 @@
 import time
 from traceback import format_exc
+
 import requests
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.common.exceptions import TimeoutException
+from EsportsHelper.Utils import _, _log, getMatchName
 from rich import print
-from EsportsHelper.Utils import _, _log
-from EsportsHelper.Utils import getMatchName
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class Rewards:
@@ -35,31 +35,40 @@ class Rewards:
                 try:
                     if stream == "twitch":
                         wait = WebDriverWait(self.driver, 15)
-                        wait.until(ec.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR, "iframe[title=Twitch]")))
-                        teams = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.Layout-sc-1xcs6mc-0.bZVrjx.tw-card-body > div > p:nth-child(2)"))).text
+                        wait.until(ec.frame_to_be_available_and_switch_to_it(
+                            (By.CSS_SELECTOR, "iframe[title=Twitch]")))
+                        teams = wait.until(ec.presence_of_element_located(
+                            (By.CSS_SELECTOR, "div.Layout-sc-1xcs6mc-0.bZVrjx.tw-card-body > div > p:nth-child(2)"))).text
                         self.driver.switch_to.default_content()
                     elif stream == "youtube":
-                        teams = self.driver.find_element(By.CSS_SELECTOR, "iframe[id=video-player-youtube]").get_attribute("title")
+                        teams = self.driver.find_element(
+                            By.CSS_SELECTOR, "iframe[id=video-player-youtube]").get_attribute("title")
                     if teams != "":
                         teams = teams.split("|")[0]
                 except Exception:
                     self.log.error(format_exc())
-                self.log.info(f"√√√√√ {match} {_log('正常观看 可获取奖励', lang=self.config.language)} {teams} √√√√√ ")
-                print(f"[green]√√√√√[/green] {match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} {teams} [green]√√√√√ ")
+                self.log.info(
+                    f"√√√√√ {match} {_log('正常观看 可获取奖励', lang=self.config.language)} {teams} √√√√√ ")
+                print(
+                    f"[green]√√√√√[/green] {match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} {teams} [green]√√√√√ ")
 
                 return True
             else:
                 if i != retryTimes - 1:
-                    self.log.warning(f"××××× {match} {_log('观看异常 重试中...', self.config.language)} ××××× ")
+                    self.log.warning(
+                        f"××××× {match} {_log('观看异常 重试中...', self.config.language)} ××××× ")
                     print(
                         f"[yellow]×××××[/yellow] {match} {_('观看异常 重试中...', color='yellow', lang=self.config.language)}[yellow]××××× ")
                     self.driver.refresh()
                     if stream == "youtube":
                         self.youtube.playYoutubeStream()
                 else:
-                    self.log.error(f"××××× {match} {_log('观看异常', lang=self.config.language)} ××××× ")
-                    print(f"[red]×××××[/red] {match} {_('观看异常', color='red', lang=self.config.language)} [red]××××× ")
-                    self.utils.errorNotify(f"××××× {match} {_log('观看异常', lang=self.config.language)} ××××× ")
+                    self.log.error(
+                        f"××××× {match} {_log('观看异常', lang=self.config.language)} ××××× ")
+                    print(
+                        f"[red]×××××[/red] {match} {_('观看异常', color='red', lang=self.config.language)} [red]××××× ")
+                    self.utils.errorNotify(
+                        f"××××× {match} {_log('观看异常', lang=self.config.language)} ××××× ")
                     return False
 
     def checkNewDrops(self):
@@ -72,18 +81,26 @@ class Rewards:
             dropItem = []
             dropItemImg = []
             unlockedDate = []
-            drops = self.driver.find_elements(by=By.CSS_SELECTOR, value="div.InformNotifications > div > div.product-image > img")
+            drops = self.driver.find_elements(
+                by=By.CSS_SELECTOR, value="div.InformNotifications > div > div.product-image > img")
             if len(drops) > 0:
                 for i in range(len(drops)):
                     isDrop = True
                     drops[i].click()
-                    poweredByImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=presented-by] > img[class=img]").get_attribute("src"))
-                    productImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=product-image] > img[class=img]").get_attribute("src"))
-                    eventTitle.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.title.short").text)
-                    dropItem.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=reward] > div[class=wrapper] > div[class=title]").text)
-                    unlockedDate.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.unlocked-date").text)
-                    dropItemImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=reward] > div[class=image] > img[class=img]").get_attribute("src"))
-                    closeButton = self.driver.find_element(by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.close")
+                    poweredByImg.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div[class=presented-by] > img[class=img]").get_attribute("src"))
+                    productImg.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div[class=product-image] > img[class=img]").get_attribute("src"))
+                    eventTitle.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.title.short").text)
+                    dropItem.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div[class=reward] > div[class=wrapper] > div[class=title]").text)
+                    unlockedDate.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.unlocked-date").text)
+                    dropItemImg.append(self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div[class=reward] > div[class=image] > img[class=img]").get_attribute("src"))
+                    closeButton = self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.close")
                     closeButton.click()
             if isDrop:
                 self.driver.implicitly_wait(15)
@@ -148,19 +165,22 @@ class Rewards:
                     "username": "EsportsHelper",
                     "embeds": [embed]
                 }
-                s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                s.post(self.config.connectorDropsUrl, headers={
+                       "Content-type": "application/json"}, json=params)
                 time.sleep(5)
             elif "https://fwalert.com" in self.config.connectorDropsUrl:
                 params = {
                     "text": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                 }
-                s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                s.post(self.config.connectorDropsUrl, headers={
+                       "Content-type": "application/json"}, json=params)
                 time.sleep(5)
             else:
                 params = {
                     "text": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                 }
-                s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                s.post(self.config.connectorDropsUrl, headers={
+                       "Content-type": "application/json"}, json=params)
                 time.sleep(5)
             self.log.info(_log(">_< 掉落提醒成功", lang=self.config.language))
         except Exception:
