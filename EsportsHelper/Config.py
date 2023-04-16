@@ -27,21 +27,22 @@ class Config:
                 self.desktopNotify = config.get("desktopNotify", False)
                 self.closeStream = config.get("closeStream", False)
                 self.sleepPeriod = config.get("sleepPeriod", "")
-                self.countDrops = config.get("countDrops", False)
+                self.countDrops = config.get("countDrops", True)
                 self.chromePath = config.get("chromePath", "")
                 self.userDataDir = config.get("userDataDir", "")
+                self.ignoreBoardCast = config.get("ignoreBoardCast", True)
                 self.format()
 
-        except FileNotFoundError as ex:
+        except FileNotFoundError:
             log.error("配置文件找不到")
             print("[red]配置文件找不到")
             input("按任意键退出")
-        except (ParserError, KeyError, ScannerError) as ex:
-            log.error("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格")
+        except (ParserError, KeyError, ScannerError):
+            log.error("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠")
             log.error(format_exc())
-            print("[red]配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格")
+            print("[red]配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠")
             input("按任意键退出")
-        except Exception as ex:
+        except Exception:
             input("按任意键退出")
             log.error(format_exc())
 
@@ -138,6 +139,16 @@ class Config:
         if not isinstance(self.chromePath, str):
             print("[red]chrome路径配置错误,已恢复默认值")
             self.chromePath = ""
+        if not isinstance(self.userDataDir, str):
+            print("[red]用户数据userDataDir路径配置错误,已恢复默认值")
+            self.userDataDir = ""
+        if isinstance(self.ignoreBoardCast, str):
+            if self.ignoreBoardCast == "True" or self.ignoreBoardCast == "true":
+                self.ignoreBoardCast = True
+            elif self.ignoreBoardCast == "False" or self.ignoreBoardCast == "false":
+                self.ignoreBoardCast = False
+            else:
+                self.ignoreBoardCast = True
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)

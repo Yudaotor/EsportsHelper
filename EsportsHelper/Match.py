@@ -136,8 +136,12 @@ class Match:
     def getMatchInfo(self):
         try:
             matches = []
-            elements = self.driver.find_elements(
-                by=By.CSS_SELECTOR, value=".EventMatch .event.live")
+            if self.config.ignoreBoardCast:
+                elements = self.driver.find_elements(
+                    by=By.CSS_SELECTOR, value=".EventMatch .event.live")
+            else:
+                elements = self.driver.find_elements(
+                    by=By.CSS_SELECTOR, value=".event.live")
             for element in elements:
                 matches.append(element.get_attribute("href"))
             return matches
