@@ -2,7 +2,6 @@ import logging
 import time
 from pathlib import Path
 from logging.handlers import RotatingFileHandler
-
 FILE_SIZE = 1024 * 1024 * 100
 BACKUP_COUNT = 5
 
@@ -29,9 +28,9 @@ class Logger:
         log = logging.getLogger("EsportsHelper")
         log.info("-------------------------------------------------")
         log.info("----------- Program started   ---------------")
-        log.info("----------- 本项目开源于github   ---------------")
-        log.info(r"----- 地址: https://github.com/Yudaotor/EsportsHelper -------")
-        log.info(r"----------- 可以点一个小星星吗(*^_^*) ---------------")
+        log.info("----------- OpenSourse in github   ---------------")
+        log.info(r"----- Address: https://github.com/Yudaotor/EsportsHelper -------")
+        log.info(r"----------- Please give me a star,Thanks(*^_^*) ---------------")
         log.info("-------------------------------------------------")
         return log
 

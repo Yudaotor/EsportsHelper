@@ -1,6 +1,7 @@
 import undetected_chromedriver as uc
 from rich import print
 from webdriver_manager.chrome import ChromeDriverManager
+from EsportsHelper.Utils import _, _log
 
 
 class Webdriver:
@@ -9,7 +10,7 @@ class Webdriver:
 
     def createWebdriver(self):
         options = self.addWebdriverOptions(uc.ChromeOptions())
-        print("[green]ㅍ_ㅍ 正在准备中...")
+        print(_("ㅍ_ㅍ 正在准备中...", color="yellow", lang=self.config.language))
         if self.config.platForm == "linux":
             return uc.Chrome(options=options)
         elif self.config.platForm == "windows":
@@ -26,7 +27,7 @@ class Webdriver:
             else:
                 return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version)
         else:
-            print("[red]不支持的操作系统")
+            print(_("不支持的操作系统", color="red", lang=self.config.language))
 
     def addWebdriverOptions(self, options):
         options.add_argument("--disable-extensions")
