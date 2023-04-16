@@ -12,8 +12,7 @@ from EsportsHelper.Webdriver import Webdriver
 from EsportsHelper.Logger import log
 from EsportsHelper.Config import Config
 from EsportsHelper.Match import Match
-from EsportsHelper.Utils import info, sysQuit, getLolesportsWeb
-
+from EsportsHelper.Utils import sysQuit, getLolesportsWeb, _, _log, Utils
 global driver
 
 
@@ -25,21 +24,20 @@ def init(config):
     except TypeError:
         driver = None
         log.error(format_exc())
-        print(
-            "[red]눈_눈 生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开")
-        input("按任意键退出...")
+        print(_("눈_눈 生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开\n按任意键退出...", color="red", lang=config.language))
+        input()
         sysQuit(driver)
     except WebDriverException:
         driver = None
         log.error(format_exc())
-        print("[red]눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试")
-        input("按任意键退出...")
+        print(_("눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试\n按任意键退出...", color="red", lang=config.language))
+        input()
         sysQuit(driver)
     except Exception:
         driver = None
         log.error(format_exc())
-        print("[red]눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用")
-        input("按任意键退出...")
+        print(_("눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用\n按任意键退出...", color="red", lang=config.language))
+        input()
         sysQuit(driver)
     # 设置窗口大小
     driver.set_window_size(960, 768)
@@ -48,9 +46,9 @@ def init(config):
         getLolesportsWeb(driver)
     except Exception:
         log.error(format_exc())
-        log.error("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...")
-        print(f"[red]Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...[/red]")
-        sysQuit(driver, "网络问题，将于3秒后退出...")
+        log.error(_log("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...", lang=config.language))
+        print(_("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...", color="red", lang=config.language))
+        sysQuit(driver, _log("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出..."))
     # 切换语言到英语
     try:
         wait = WebDriverWait(driver, 20)
@@ -58,17 +56,17 @@ def init(config):
         languageButton.click()
         driver.find_element(by=By.CSS_SELECTOR,
                             value="#riotbar-right-content > div._1K9T69nrXajaz_b4HNuhtI.riotbar-locale-switcher > div._2iYBTCEu1pbDL1lBawLJ3O.locale-switcher-dropdown > ul > li:nth-child(1) > a").click()
-        log.info("切换语言成功")
+        log.info(_log("切换语言成功", lang=config.language))
     except TimeoutException:
-        log.error("눈_눈 切换语言失败")
+        log.error(_log("切换语言失败", lang=config.language))
         log.error(format_exc())
     except Exception:
-        log.error("눈_눈 切换语言失败")
+        log.error(_log("切换语言失败", lang=config.language))
         log.error(format_exc())
 
 
 def login(config):
-    loginHandler = LoginHandler(log=log, driver=driver)
+    loginHandler = LoginHandler(log=log, driver=driver, config=config)
     if config.userDataDir == "":
         tryLoginTimes = 4
         while not driver.find_elements(by=By.CSS_SELECTOR, value="div.riotbar-summoner-name"):
@@ -77,19 +75,20 @@ def login(config):
             except TimeoutException:
                 tryLoginTimes = tryLoginTimes - 1
                 if tryLoginTimes <= 0:
-                    sysQuit(driver, "无法登陆，账号密码可能错误或者网络出现问题")
+                    sysQuit(driver, _log("无法登陆，账号密码可能错误或者网络出现问题"))
+                    print(_("无法登陆，账号密码可能错误或者网络出现问题", color="red", lang=config.language))
 
-                log.error("눈_눈 自动登录失败,检查网络和账号密码")
-                print("[red]눈_눈 自动登录失败,检查网络和账号密码[/red]")
+                log.error(_log("눈_눈 自动登录失败,检查网络和账号密码", lang=config.language))
+                print(_("눈_눈 自动登录失败,检查网络和账号密码", color="red", lang=config.language))
                 sleep(5)
-                log.error("눈_눈 开始重试")
+                log.error(_log("눈_눈 开始重试", lang=config.language))
 
-        log.info("∩_∩ 好嘞 登录成功")
-        print("[green]∩_∩ 好嘞 登录成功[/green]")
+        log.info(_log("∩_∩ 好嘞 登录成功", lang=config.language))
+        print(_("∩_∩ 好嘞 登录成功", color="green", lang=config.language))
     else:
         loginHandler.userDataLogin()
-        log.info("∩_∩ 使用系统数据 自动登录成功")
-        print("[green]∩_∩ 使用系统数据 自动登录成功[/green]")
+        log.info(_log("∩_∩ 使用系统数据 自动登录成功", lang=config.language))
+        print(_("∩_∩ 使用系统数据 自动登录成功", color="green", lang=config.language))
 
 
 def watch(config):
@@ -99,8 +98,6 @@ def watch(config):
 
 def main():
     global driver
-    # 打印banner信息
-    info()
     # 解析配置参数
     parser = argparse.ArgumentParser(
         prog='EsportsHelper.exe', description='EsportsHelper help you to watch matches')
@@ -109,19 +106,23 @@ def main():
     args = parser.parse_args()
 
     config = Config(log, args.configPath)
+    # 打印banner信息
+    utils = Utils(config)
+    utils.info()
+
     init(config)
     sleep(3)
     login(config)
     sleep(1)
     watch(config)
-    print("[green]观看结束～[/green]")
-    log.info("观看结束～")
+    print(_("观看结束～", color="green", lang=config.language))
+    log.info(_log("观看结束～", lang=config.language))
 
 
 if __name__ == '__main__':
     try:
         main()
     except (KeyboardInterrupt, SystemExit):
-        sysQuit(driver, "程序被打断")
+        sysQuit(driver, "Exit")
     except Exception as e:
         sysQuit(driver, format_exc())

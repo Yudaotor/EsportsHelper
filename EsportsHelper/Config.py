@@ -5,6 +5,7 @@ import yaml
 from rich import print
 from yaml.parser import ParserError
 from yaml.scanner import ScannerError
+from EsportsHelper.Utils import _, _log
 
 
 class Config:
@@ -31,28 +32,33 @@ class Config:
                 self.chromePath = config.get("chromePath", "")
                 self.userDataDir = config.get("userDataDir", "")
                 self.ignoreBoardCast = config.get("ignoreBoardCast", True)
+                self.language = config.get("language", "zh-CN")
                 self.format()
 
         except FileNotFoundError:
-            log.error("配置文件找不到")
-            print("[red]配置文件找不到")
-            input("按任意键退出")
+            log.error(_log("配置文件找不到", lang=self.language))
+            print(_("配置文件找不到", color="red", lang=self.language))
+            input(_("按任意键退出", color="red", lang=self.language))
         except (ParserError, KeyError, ScannerError):
-            log.error("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠")
+            log.error(_log("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", lang=self.language))
             log.error(format_exc())
-            print("[red]配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠")
-            input("按任意键退出")
+            print(_("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", color="red", lang=config.language))
+            input(_("按任意键退出", color="red", lang=self.language))
         except Exception:
-            input("按任意键退出")
+            input(_("按任意键退出", color="red", lang=self.language))
             log.error(format_exc())
 
     def format(self):
+        if isinstance(self.language, str):
+            if self.language not in ["zh_CN", "en_US"]:
+                self.language = "zh_CN"
+                print(_("语言配置错误,已恢复zh_CN默认值", color="red", lang=self.language))
         while "" in self.disWatchMatches:
             self.disWatchMatches.remove("")
 
         if self.userDataDir == "" and self.username == "账号用户名" or self.password == "密码":
-            self.log.error("配置文件中没有账号密码信息")
-            print("[red]配置文件中没有账号密码信息")
+            self.log.error(_log("配置文件中没有账号密码信息", lang=self.language))
+            print(_("配置文件中没有账号密码信息", color="red", lang=self.language))
 
         if isinstance(self.headless, str):
             if self.headless == "True" or self.headless == "true":
@@ -66,7 +72,7 @@ class Config:
             try:
                 self.delay = int(self.delay)
             except ValueError:
-                print("[red]检查间隔配置错误,已恢复默认值")
+                print(_("检查间隔配置错误,已恢复默认值", color="red", lang=self.language))
                 self.delay = 600
 
         if not isinstance(self.platForm, str):
@@ -94,21 +100,21 @@ class Config:
             if isinstance(self.sleepPeriod, str):
                 sleepPeriod = self.sleepPeriod.split("-")
                 if len(sleepPeriod) != 2:
-                    print("[red]睡眠时间段配置错误,已恢复默认值")
+                    print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
                     self.sleepPeriod = ""
                 else:
                     try:
                         if int(sleepPeriod[0]) > int(sleepPeriod[1]):
-                            print("[red]睡眠时间段配置错误,已恢复默认值")
+                            print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
                             self.sleepPeriod = ""
                         elif sleepPeriod[0] < "0" or sleepPeriod[1] > "24":
-                            print("[red]睡眠时间段配置错误,已恢复默认值")
+                            print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
                             self.sleepPeriod = ""
                     except ValueError:
-                        print("[red]睡眠时间段配置错误,已恢复默认值")
+                        print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
                         self.sleepPeriod = ""
             else:
-                print("[red]睡眠时间段配置错误,已恢复默认值")
+                print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
                 self.sleepPeriod = ""
         if isinstance(self.maxRunHours, str):
             if self.maxRunHours == "":
@@ -117,7 +123,7 @@ class Config:
                 try:
                     self.maxRunHours = int(self.maxRunHours)
                 except ValueError:
-                    print("[red]最大运行时间配置错误,已恢复默认值")
+                    print(_("最大运行时间配置错误,已恢复默认值", color="red", lang=self.language))
                     self.maxRunHours = -1
         if isinstance(self.debug, str):
             if self.debug == "True" or self.debug == "true":
@@ -127,7 +133,7 @@ class Config:
             else:
                 self.debug = False
         if not isinstance(self.proxy, str):
-            print("[red]代理配置错误,已恢复默认值")
+            print(_("代理配置错误,已恢复默认值", color="red", lang=self.language))
             self.proxy = ""
         if isinstance(self.countDrops, str):
             if self.countDrops == "True" or self.countDrops == "true":
@@ -137,10 +143,10 @@ class Config:
             else:
                 self.countDrops = False
         if not isinstance(self.chromePath, str):
-            print("[red]chrome路径配置错误,已恢复默认值")
+            print(_("chrome路径配置错误,已恢复默认值", color="red", lang=self.language))
             self.chromePath = ""
         if not isinstance(self.userDataDir, str):
-            print("[red]用户数据userDataDir路径配置错误,已恢复默认值")
+            print(_("用户数据userDataDir路径配置错误,已恢复默认值", color="red", lang=self.language))
             self.userDataDir = ""
         if isinstance(self.ignoreBoardCast, str):
             if self.ignoreBoardCast == "True" or self.ignoreBoardCast == "true":

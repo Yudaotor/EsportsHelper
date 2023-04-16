@@ -5,6 +5,7 @@ from rich import print
 from EsportsHelper.Logger import log
 
 
+
 class VersionManager:
     CURRENT_VERSION = "1.3.0"
 
@@ -17,8 +18,8 @@ class VersionManager:
                 if "tag_name" in latestTagJson:
                     return str(latestTagJson["tag_name"][1:])
                 return "0.0.0"
-        except Exception as e:
-            print("[red]从github获取最新版信息失败!")
+        except Exception:
+            print("[red]Get Newest Version Failed")
             log.error(format_exc())
             return "0.0.0"
 
@@ -33,5 +34,5 @@ class VersionManager:
     @staticmethod
     def checkVersion():
         if not VersionManager.isLatestVersion(VersionManager.getVersion()):
-            log.warning("\n==!!! 新版本可用 !!!==\n ==请从此处下载: https://github.com/Yudaotor/EsportsHelper/releases/latest==")
-            print("[yellow]\n==!!! 新版本可用 !!!==\n ==请从此处下载: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
+            log.warning(f"\n==!!! NEW VERSION Available !!!==\n ==DownLoad: https://github.com/Yudaotor/EsportsHelper/releases/latest")
+            print("[yellow]\n==!!! NEW VERSION Available !!!==\n ==DownLoad: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")

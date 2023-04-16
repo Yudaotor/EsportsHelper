@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException
 from rich import print
-
+from EsportsHelper.Utils import _, _log
 from EsportsHelper.Utils import getMatchName
 
 
@@ -44,22 +44,22 @@ class Rewards:
                         teams = teams.split("|")[0]
                 except Exception:
                     self.log.error(format_exc())
-                self.log.info(f"√√√√√ {match} 正常观看 可获取奖励 {teams} √√√√√ ")
-                print(f"[green]√√√√√[/green] {match} 正常观看 可获取奖励 {teams} [green]√√√√√ ")
+                self.log.info(f"√√√√√ {match} {_log('正常观看 可获取奖励', lang=self.config.language)} {teams} √√√√√ ")
+                print(f"[green]√√√√√[/green] {match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} {teams} [green]√√√√√ ")
 
                 return True
             else:
                 if i != retryTimes - 1:
-                    self.log.warning(f"××××× {match} 观看异常 ××××× 重试中...")
+                    self.log.warning(f"××××× {match} {_log('观看异常 重试中...', self.config.language)} ××××× ")
                     print(
-                        f"[yellow]×××××[/yellow] {match} 观看异常 [yellow]××××× 重试中...")
+                        f"[yellow]×××××[/yellow] {match} {_('观看异常 重试中...', color='yellow', lang=self.config.language)}[yellow]××××× ")
                     self.driver.refresh()
                     if stream == "youtube":
                         self.youtube.playYoutubeStream()
                 else:
-                    self.log.error(f"××××× {match} 观看异常 ××××× url={url}")
-                    print(f"[red]×××××[/red] {match} 观看异常 [red]××××× url={url}")
-                    self.utils.errorNotify(f"××××× {match} 观看异常 ×××××")
+                    self.log.error(f"××××× {match} {_log('观看异常', lang=self.config.language)} ××××× ")
+                    print(f"[red]×××××[/red] {match} {_('观看异常', color='red', lang=self.config.language)} [red]××××× ")
+                    self.utils.errorNotify(f"××××× {match} {_log('观看异常', lang=self.config.language)} ××××× ")
                     return False
 
     def checkNewDrops(self):
@@ -76,10 +76,7 @@ class Rewards:
             if len(drops) > 0:
                 for i in range(len(drops)):
                     isDrop = True
-                    self.utils.debugScreen(self.driver, "点击掉落前")
                     drops[i].click()
-                    time.sleep(3)
-                    self.utils.debugScreen(self.driver, "点击掉落后")
                     poweredByImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=presented-by] > img[class=img]").get_attribute("src"))
                     productImg.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div[class=product-image] > img[class=img]").get_attribute("src"))
                     eventTitle.append(self.driver.find_element(by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.title.short").text)
@@ -96,9 +93,9 @@ class Rewards:
                 return isDrop, [], [], [], [], [], []
         except Exception:
             self.driver.implicitly_wait(15)
-            self.log.error("〒.〒 检查掉落失败")
+            self.log.error(_log("〒.〒 检查掉落失败", lang=self.config.language))
             self.log.error(format_exc())
-            print("[red]〒.〒 检查掉落失败[/red]")
+            print(_("〒.〒 检查掉落失败", color="red", lang=self.config.language))
             return False, [], [], [], [], [], []
 
     def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg):
@@ -139,7 +136,7 @@ class Rewards:
                     "inline": True
                 }
                 embed = {
-                    "title": "掉落提醒",
+                    "title": "Drop!",
                     "description": f"{self.config.username}",
                     "image": {"url": f"{productImg}"},
                     "thumbnail": {"url": f"{dropItemImg}"},
@@ -165,8 +162,8 @@ class Rewards:
                 }
                 s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
                 time.sleep(5)
-            self.log.info(">_< 掉落提醒成功")
+            self.log.info(_log(">_< 掉落提醒成功", lang=self.config.language))
         except Exception:
-            self.log.error("〒.〒 掉落提醒失败")
+            self.log.error(_log("〒.〒 掉落提醒失败", lang=self.config.language))
             self.log.error(format_exc())
-            print("[red]〒.〒 掉落提醒失败[/red]")
+            print(_("〒.〒 掉落提醒失败", color="red", lang=self.config.language))
