@@ -3,85 +3,85 @@ from time import sleep, strftime
 from traceback import format_exc, print_exc
 
 import requests
-from retrying import retry
-from urllib3.exceptions import MaxRetryError
 from EsportsHelper.Logger import log
 from EsportsHelper.VersionManager import VersionManager
 from plyer import notification
+from retrying import retry
 from rich import print
+from urllib3.exceptions import MaxRetryError
 
-i18n = {"눈_눈 生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开\n按任意键退出...": "1",
-        "눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试\n按任意键退出...": "2",
-        "눈_눈 生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用\n按任意键退出...": "3",
-        "Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...": "4",
-        "눈_눈 自动登录失败,检查网络和账号密码": "5",
-        "∩_∩ 好嘞 登录成功": "6",
-        "∩_∩ 使用系统数据 自动登录成功": "7",
-        "观看结束～": "8",
-        "切换语言成功": "9",
-        "切换语言失败": "10",
-        "无法登陆，账号密码可能错误或者网络出现问题": "11",
-        "눈_눈 开始重试": "12",
-        "配置文件找不到": "13",
-        "按任意键退出": "14",
-        "配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠": "1",
-        "配置文件中没有账号密码信息": "1",
-        "检查间隔配置错误,已恢复默认值": "1",
-        "睡眠时间段配置错误,已恢复默认值": "1",
-        "最大运行时间配置错误,已恢复默认值": "1",
-        "代理配置错误,已恢复默认值": "1",
-        "用户数据userDataDir路径配置错误,已恢复默认值": "1",
+i18n = {"WebDriver generation failure!\nThe latest version of Google Chrome is not found. Please check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator.\nExit the program by pressing any key...": "1",
+        "WebDriver generation failure!\nIs Google Chrome installed?\nIs Google Chrome currently open? Please close it and try again.\nExit the program by pressing any key...": "2",
+        "WebDriver generation failure!\nIs Google Chrome installed?\nIs there a network problem? Check VPN availability if one connected.\nExit the program by pressing any key...": "3",
+        "Network problem: cannot open LolEsports website. Exiting in 3 seconds...": "4",
+        "Automatic login failed. Please check the network availability and account credentials.": "5",
+        "Logged in successfully.": "6",
+        "Using system data. Auto-login success.": "7",
+        "Watch finished.": "8",
+        "Language switched successfully.": "9",
+        "The language switch failed.": "10",
+        "Login failed: wrong credentials or network problem.": "11",
+        "Restarting.": "12",
+        "Configuration file not found.": "13",
+        "Exit the program by pressing any key.": "14",
+        "Configuration file format error.\nPlease check if there are Chinese characters and single spaces after colons.\nChange single slash to double in configuration path if there are any.": "1",
+        "There are no account credentials in the configuration file.": "1",
+        "Incorrect interval configuration. The default value has been restored.": "1",
+        "Incorrect sleep time preiod. The default value has been restored.": "1",
+        "The maximum runtime set incorrectly. The default value has been restored.": "1",
+        "代理配置错误,default setting has been restored.": "1",
+        "用户数据userDataDir路径配置错误,default setting has been restored.": "1",
         "语言配置错误,已恢复zh_CN默认值": "1",
         '正常观看 可获取奖励': "1",
         "观看异常 重试中...": "1",
         "观看异常": "1",
-        "〒.〒 检查掉落失败": "1",
-        "〒.〒 掉落提醒失败": "1",
-        "Π——Π 无法打开Lolesports网页，网络问题": "1",
-        "눈_눈 登录中...": "1",
-        "∩_∩ 账密 提交成功": "1",
-        "×_× 网络问题 登录超时": "1",
+        "检查掉落失败": "1",
+        "掉落提醒失败": "1",
+        "无法打开Lolesports网页，网络问题": "1",
+        "登录中...": "1",
+        "账密 提交成功": "1",
+        "网络问题 登录超时": "1",
         "请输入二级验证代码:": "1",
         "二级验证代码提交成功": "1",
         "免密登录失败,请去浏览器手动登录后再行尝试": "1",
         "检查掉落数失败": "1",
-        "●_● 开始检查...": "1",
-        "$_$ 本次运行掉落总和:": "1",
+        "开始检查...": "1",
+        "本次运行掉落总和:": "1",
         "生涯总掉落:": "1",
-        "〒.〒 没有赛区正在直播": "1",
+        "没有赛区正在直播": "1",
         "赛区正在直播中": "1",
         "处于休眠时间，检查时间间隔为1小时": "1",
         "下一次检查在:": "1",
         "预计结束程序时间:": "1",
-        "Q_Q 对应窗口找不到": "1",
-        "Q_Q 发生错误": "1",
-        "Q_Q 获取比赛列表失败": "1",
+        "对应窗口找不到": "1",
+        "发生错误": "1",
+        "获取比赛列表失败": "1",
         "比赛结束": "1",
-        "Q_Q 关闭已结束的比赛时发生错误": "1",
+        "关闭已结束的比赛时发生错误": "1",
         "比赛跳过": "1",
-        "°D° 关闭 Twitch 流失败.": "1",
-        ">_< Twitch 160p清晰度设置成功": "1",
-        ">_< Twitch 流关闭成功": "1",
-        "°D° Twitch 清晰度设置失败": "1",
-        "°D° 无法设置 Twitch 清晰度.": "1",
-        "°D° 关闭 Youtube 流失败.": "1",
-        ">_< Youtube 流关闭成功": "1",
-        ">_< Youtube 144p清晰度设置成功": "1",
-        "°D° Youtube 清晰度设置失败": "1",
-        "°D° 无法设置 Youtube 清晰度.": "1",
+        "关闭 Twitch 流失败.": "1",
+        "Twitch 160p清晰度设置成功": "1",
+        "Twitch 流关闭成功": "1",
+        "Twitch 清晰度设置失败": "1",
+        "无法设置 Twitch 清晰度.": "1",
+        "关闭 Youtube 流失败.": "1",
+        "Youtube 流关闭成功": "1",
+        "Youtube 144p清晰度设置成功": "1",
+        "Youtube 清晰度设置失败": "1",
+        "无法设置 Youtube 清晰度.": "1",
         "下一场比赛时间:": "1",
-        "Q_Q 获取下一场比赛时间失败": "1",
-        "Q_Q 获取掉落数失败": "1",
-        "$_$ 本次运行掉落详细:": "1",
-        "QAQ 统计掉落失败": "1",
-        "QAQ 初始化掉落数失败": "1",
+        "获取下一场比赛时间失败": "1",
+        "获取掉落数失败": "1",
+        "本次运行掉落详细:": "1",
+        "统计掉落失败": "1",
+        "初始化掉落数失败": "1",
         "小傻瓜，出事啦": "1",
         "错误提醒发送成功": "1",
         "错误提醒发送失败": "1",
-        ">_< 异常提醒成功": "1",
+        "异常提醒成功": "1",
         "异常提醒失败": "1",
         "下载override文件失败": "1",
-        "ㅍ_ㅍ 正在准备中...": "1",
+        "正在准备中...": "1",
         "不支持的操作系统": "1",
         }
 
@@ -133,17 +133,20 @@ class Utils:
                         "username": "EsportsHelper",
                         "embeds": [embed]
                     }
-                    s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    s.post(self.config.connectorDropsUrl, headers={
+                           "Content-type": "application/json"}, json=params)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
                         "text": f"发生错误停止获取Drop{error}",
                     }
-                    s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    s.post(self.config.connectorDropsUrl, headers={
+                           "Content-type": "application/json"}, json=params)
                 else:
                     params = {
                         "text": f"发生错误停止获取Drop{error}",
                     }
-                    s.post(self.config.connectorDropsUrl, headers={"Content-type": "application/json"}, json=params)
+                    s.post(self.config.connectorDropsUrl, headers={
+                           "Content-type": "application/json"}, json=params)
                 log.info(_log(">_< 异常提醒成功", lang=self.config.language))
                 print(_("异常提醒成功", color="green", lang=self.config.language))
             except Exception as e:
@@ -155,7 +158,8 @@ class Utils:
         try:
             if self.config.debug:
                 log.info(f"DebugScreen: {lint} Successful")
-                driver.save_screenshot(f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
+                driver.save_screenshot(
+                    f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
         except Exception:
             log.error("DebugScreen: Failed")
             log.error(format_exc())
@@ -165,11 +169,15 @@ class Utils:
             print("[green]=========================================================")
             print(
                 f"[green]========[/green]        感谢使用 [blue]电竞助手[/blue] v{VersionManager.getVersion()}!        [green]========[/green]")
-            print("[green]============[/green] 本程序开源于github链接地址如下: [green]============[/green]")
-            print("[green]====[/green]   https://github.com/Yudaotor/EsportsHelper     [green]====[/green]")
+            print(
+                "[green]============[/green] 本程序开源于github链接地址如下: [green]============[/green]")
+            print(
+                "[green]====[/green]   https://github.com/Yudaotor/EsportsHelper     [green]====[/green]")
             print("[green]====[/green] 如觉得不错的话可以进上面链接请我喝杯咖啡支持下. [green]====[/green]")
-            print("[green]====[/green] 请在使用前[red]阅读教程文件[/red], 以确保你的配置符合要求! [green]====[/green]")
-            print("[green]====[/green]  如需关闭请勿直接右上角X关闭，请按Ctrl+C来关闭. [green]====[/green]")
+            print(
+                "[green]====[/green] 请在使用前[red]阅读教程文件[/red], 以确保你的配置符合要求! [green]====[/green]")
+            print(
+                "[green]====[/green]  如需关闭请勿直接右上角X关闭，请按Ctrl+C来关闭. [green]====[/green]")
             print("[green]=========================================================")
             print()
             VersionManager.checkVersion()
@@ -177,9 +185,12 @@ class Utils:
             print("[green]=========================================================")
             print(
                 f"[green]========[/green] Thanks for using [blue]EsportsHelper[/blue] v{VersionManager.getVersion()}!  [green]========[/green]")
-            print("[green]=========[/green]  The program is open source at github  [green]=========[/green]")
-            print("[green]====[/green]    https://github.com/Yudaotor/EsportsHelper[green]    ====[/green]")
-            print("[green]====[/green]      If you like it, please give me a star      [green]====[/green]")
+            print(
+                "[green]=========[/green]  The program is open source at github  [green]=========[/green]")
+            print(
+                "[green]====[/green]    https://github.com/Yudaotor/EsportsHelper[green]    ====[/green]")
+            print(
+                "[green]====[/green]      If you like it, please give me a star      [green]====[/green]")
             print("[green]=========================================================")
 
 
@@ -231,13 +242,13 @@ def downloadOverrideFile():
             sys.exit()
     except MaxRetryError:
         log.error("get overrides file failed")
-        print(f"[red]〒.〒 get overrides file failed, Try later[/red]")
+        print(f"[red]get overrides file failed, Try later[/red]")
         input("Press any key to exit...")
         sysQuit(e="get overrides file failed")
     except Exception as ex:
         print_exc()
         log.error("get overrides file failed")
-        print(f"[red]〒.〒 get overrides file failed, Try later[/red]")
+        print(f"[red]get overrides file failed, Try later[/red]")
         input("Press any key to exit...")
         sysQuit(e="get overrides file failed")
 
@@ -263,8 +274,8 @@ def getLolesportsWeb(driver):
         driver.get(
             "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,emea_masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
     except Exception:
-        print("[red]Q_Q Get LoLesports Web Page Failed,Retrying...[/red]")
-        log.error("Q_Q Get LoLesports Web Page Failed,Retrying...")
+        print("[red]Get LoLesports Web Page Failed,Retrying...[/red]")
+        log.error("Get LoLesports Web Page Failed,Retrying...")
         driver.get(
             "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,emea_masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
 

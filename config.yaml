@@ -2,4 +2,5 @@ delay: 600 # 每次检查的时间间隔，单位为秒(默认为600秒)(每次�
 headless: False # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)
 username: "账号用户名" # 必填，账号
 password: "密码" # 必填，密码
+language: "en_US"
 # 更多配置请参考readme中的配置说明
