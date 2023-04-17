@@ -54,7 +54,7 @@ class LoginHandler:
         wait = WebDriverWait(self.driver, 20)
         authText = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "h5.grid-panel__subtitle")))
         self.log.info(f'{_log("请输入二级验证代码:", lang=self.config.language)} ({authText.text})')
-        code = input({_("请输入二级验证代码:", color="yellow", lang=self.config.language)})
+        code = input(_log("请输入二级验证代码:", lang=self.config.language))
         codeInput = wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div.codefield__code--empty > div > input")))
         codeInput.send_keys(code)
         submitButton = wait.until(ec.element_to_be_clickable((By.CSS_SELECTOR, "button[type=submit]")))
