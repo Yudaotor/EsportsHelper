@@ -32,7 +32,7 @@ class Config:
                 self.chromePath = config.get("chromePath", "")
                 self.userDataDir = config.get("userDataDir", "")
                 self.ignoreBoardCast = config.get("ignoreBoardCast", True)
-                self.language = config.get("language", "zh-CN")
+                self.language = config.get("language", "zh_CN")
                 self.format()
 
         except FileNotFoundError:
