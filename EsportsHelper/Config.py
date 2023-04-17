@@ -31,7 +31,7 @@ class Config:
                 self.countDrops = config.get("countDrops", True)
                 self.chromePath = config.get("chromePath", "")
                 self.userDataDir = config.get("userDataDir", "")
-                self.ignoreBoardCast = config.get("ignoreBoardCast", True)
+                self.ignoreBroadCast = config.get("ignoreBroadCast", True)
                 self.language = config.get("language", "zh_CN")
                 self.format()
 
@@ -43,7 +43,8 @@ class Config:
             log.error(
                 _log("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", lang=self.language))
             log.error(format_exc())
-            print(_("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", color="red", lang=config.language))
+            print(_("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠",
+                  color="red", lang=config.language))
             input(_log("按任意键退出", lang=self.language))
         except Exception:
             input(_log("按任意键退出", lang=self.language))
@@ -152,13 +153,13 @@ class Config:
             print(_("用户数据userDataDir路径配置错误,已恢复默认值",
                   color="red", lang=self.language))
             self.userDataDir = ""
-        if isinstance(self.ignoreBoardCast, str):
-            if self.ignoreBoardCast == "True" or self.ignoreBoardCast == "true":
-                self.ignoreBoardCast = True
-            elif self.ignoreBoardCast == "False" or self.ignoreBoardCast == "false":
-                self.ignoreBoardCast = False
+        if isinstance(self.ignoreBroadCast, str):
+            if self.ignoreBroadCast == "True" or self.ignoreBroadCast == "true":
+                self.ignoreBroadCast = True
+            elif self.ignoreBroadCast == "False" or self.ignoreBroadCast == "false":
+                self.ignoreBroadCast = False
             else:
-                self.ignoreBoardCast = True
+                self.ignoreBroadCast = True
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)

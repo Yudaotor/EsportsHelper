@@ -19,7 +19,7 @@ global driver
 
 def init(config):
     global driver
-    # WebDriver start
+    # 生成webdriver
     try:
         driver = Webdriver(config).createWebdriver()
     except TypeError:

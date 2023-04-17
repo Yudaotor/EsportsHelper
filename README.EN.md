@@ -54,9 +54,9 @@ python -m pip install -r requirements.txt
 9. Desktop notifications. (Not yet tested, not sure if it works).
 10. Option to manually add a proxy.
 11. Option of deleting video-player elements in order to save traffic. (Risk currently unknown).
-12. You can view the number of drops and the drop information of session
-13. Password-free login via local browser cookie
-14.You can customize the address of Google Chrome (support portable version)
+12. You can view the number of drops and the drop information of current session.
+13. Password-free login using local browser cookies.
+14. You can customize the path of Google Chrome installation (Portable version).
 ## Configuation
 Using config.yaml file.
 ```yaml
@@ -77,10 +77,10 @@ platForm: "windows"                     # OS, Windows is set by default. If you 
 closeStream: "False"                    # Option of deleting video-player elements to save traffic. (Risk currently unknown).
 desktopNotify: "False"                  # Experimental feature to enable Desktop notifications.
 sleepPeriod: "8-13"                     # Hibernation period, empty by default. The format is "Start hour – End hour". Time will be checked at 1 hour intervals during the hibernation period. The first number is the start of the hibernation, the second number is its end.
-ignoreBoardCast: True                   # ignore BoardCast?
-userDataDir: "C:\\Users\\Khalil\\AppData\\Local\\Google\\Chrome\\User Data"  # cookie path
-chromePath: "X:\\xxxxx\\xx\\Chrome.exe" # chrome.exe path
-countDrops: True     #count Drops number?
+ignoreBroadCast: True                   # Option to ignore broadcasts.
+userDataDir: "C:\\Users\\xxxxx\\AppData\\Local\\Google\\Chrome\\User Data"  # Path to Chrome cookie files. 
+chromePath: "X:\\xxxxx\\xx\\Chrome.exe" # Chrome.exe location.
+countDrops: True                        # Option to monitor Drops number.
 ```
 
 ## Honorable mention

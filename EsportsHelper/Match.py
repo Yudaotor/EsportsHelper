@@ -162,7 +162,7 @@ class Match:
     def getMatchInfo(self):
         try:
             matches = []
-            if self.config.ignoreBoardCast:
+            if self.config.ignoreBroadCast:
                 elements = self.driver.find_elements(
                     by=By.CSS_SELECTOR, value=".EventMatch .event.live")
             else:
