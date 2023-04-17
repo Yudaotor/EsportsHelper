@@ -32,22 +32,21 @@ class Config:
                 self.chromePath = config.get("chromePath", "")
                 self.userDataDir = config.get("userDataDir", "")
                 self.ignoreBoardCast = config.get("ignoreBoardCast", True)
-                self.language = config.get("language", "zh-CN")
+                self.language = config.get("language", "zh_CN")
                 self.format()
 
         except FileNotFoundError:
             log.error(_log("配置文件找不到", lang=self.language))
             print(_("配置文件找不到", color="red", lang=self.language))
-            input(_("按任意键退出", color="red", lang=self.language))
+            input(_log("按任意键退出", lang=self.language))
         except (ParserError, KeyError, ScannerError):
             log.error(
                 _log("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", lang=self.language))
             log.error(format_exc())
-            print(_("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠",
-                  color="red", lang=config.language))
-            input(_("按任意键退出", color="red", lang=self.language))
+            print(_("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", color="red", lang=config.language))
+            input(_log("按任意键退出", lang=self.language))
         except Exception:
-            input(_("按任意键退出", color="red", lang=self.language))
+            input(_log("按任意键退出", lang=self.language))
             log.error(format_exc())
 
     def format(self):
