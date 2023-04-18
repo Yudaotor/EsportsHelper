@@ -1,7 +1,8 @@
 import logging
 import time
-from pathlib import Path
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
+
 FILE_SIZE = 1024 * 1024 * 100
 BACKUP_COUNT = 5
 

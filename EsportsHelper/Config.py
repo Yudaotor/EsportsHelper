@@ -2,10 +2,10 @@ from pathlib import Path
 from traceback import format_exc, print_exc
 
 import yaml
+from EsportsHelper.Utils import _, _log
 from rich import print
 from yaml.parser import ParserError
 from yaml.scanner import ScannerError
-from EsportsHelper.Utils import _, _log
 
 
 class Config:
@@ -31,7 +31,7 @@ class Config:
                 self.countDrops = config.get("countDrops", True)
                 self.chromePath = config.get("chromePath", "")
                 self.userDataDir = config.get("userDataDir", "")
-                self.ignoreBoardCast = config.get("ignoreBoardCast", True)
+                self.ignoreBroadCast = config.get("ignoreBroadCast", True)
                 self.language = config.get("language", "zh_CN")
                 self.format()
 
@@ -40,9 +40,11 @@ class Config:
             print(_("配置文件找不到", color="red", lang=self.language))
             input(_log("按任意键退出", lang=self.language))
         except (ParserError, KeyError, ScannerError):
-            log.error(_log("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", lang=self.language))
+            log.error(
+                _log("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", lang=self.language))
             log.error(format_exc())
-            print(_("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", color="red", lang=config.language))
+            print(_("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠",
+                  color="red", lang=config.language))
             input(_log("按任意键退出", lang=self.language))
         except Exception:
             input(_log("按任意键退出", lang=self.language))
@@ -105,10 +107,12 @@ class Config:
                 else:
                     try:
                         if int(sleepPeriod[0]) > int(sleepPeriod[1]):
-                            print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
+                            print(_("睡眠时间段配置错误,已恢复默认值",
+                                  color="red", lang=self.language))
                             self.sleepPeriod = ""
                         elif sleepPeriod[0] < "0" or sleepPeriod[1] > "24":
-                            print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
+                            print(_("睡眠时间段配置错误,已恢复默认值",
+                                  color="red", lang=self.language))
                             self.sleepPeriod = ""
                     except ValueError:
                         print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
@@ -146,19 +150,18 @@ class Config:
             print(_("chrome路径配置错误,已恢复默认值", color="red", lang=self.language))
             self.chromePath = ""
         if not isinstance(self.userDataDir, str):
-            print(_("用户数据userDataDir路径配置错误,已恢复默认值", color="red", lang=self.language))
+            print(_("用户数据userDataDir路径配置错误,已恢复默认值",
+                  color="red", lang=self.language))
             self.userDataDir = ""
-        if isinstance(self.ignoreBoardCast, str):
-            if self.ignoreBoardCast == "True" or self.ignoreBoardCast == "true":
-                self.ignoreBoardCast = True
-            elif self.ignoreBoardCast == "False" or self.ignoreBoardCast == "false":
-                self.ignoreBoardCast = False
+        if isinstance(self.ignoreBroadCast, str):
+            if self.ignoreBroadCast == "True" or self.ignoreBroadCast == "true":
+                self.ignoreBroadCast = True
+            elif self.ignoreBroadCast == "False" or self.ignoreBroadCast == "false":
+                self.ignoreBroadCast = False
             else:
-                self.ignoreBoardCast = True
+                self.ignoreBroadCast = True
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)
         if configPath.exists():
             return configPath
-
-

@@ -47,16 +47,16 @@ python -m pip install -r requirements.txt
 2. Option to set whether program will launch in headless mode or with a visible browser window (Off by default). Headless mode is opening the browser without GUI. (It will not be visible, set to running in the background in order to lower CPU usage).
 3. Option to set which Leagues broadcasts to ignore. (Empty by default). Please note, that there is a logic of the inclusion relationship, for example: if LCK is set to be ignored, LCK_Challengers will also be ignored. (This option is highly recommended, avoid watching all broadcasts and be detected because of that).
 4. Option to set how often the latest information about the broadcast will be checked. (600 seconds by default). Upon checking, it will close ended broadcasts and open new ones.
-5. Drop alerts using Discord webhook. (cant notify all drops Riot sometimes willnot notify in web page.).
+5. Drop alerts using Discord webhook. (Not all drops alerts will be shown as LolEsports site can miss notification).
 6. Error alerts when an error occurs in the software.
 7. Option to set the maximum run time of program. It will force the instance to automatically close when the time limit is reached.
 8. Option to set a hibernation period in which the software will be put in sleep mode for set time.
 9. Desktop notifications. (Not yet tested, not sure if it works).
 10. Option to manually add a proxy.
 11. Option of deleting video-player elements in order to save traffic. (Risk currently unknown).
-12. You can view the number of drops and the drop information of session
-13. Password-free login via local browser cookie
-14.You can customize the address of Google Chrome (support portable version)
+12. You can view the number of drops and the drop information of current session.
+13. Password-free login using local browser cookies.
+14. You can customize the path of Google Chrome installation (Portable version).
 ## Configuation
 Using config.yaml file.
 ```yaml
@@ -77,10 +77,10 @@ platForm: "windows"                     # OS, Windows is set by default. If you 
 closeStream: "False"                    # Option of deleting video-player elements to save traffic. (Risk currently unknown).
 desktopNotify: "False"                  # Experimental feature to enable Desktop notifications.
 sleepPeriod: "8-13"                     # Hibernation period, empty by default. The format is "Start hour – End hour". Time will be checked at 1 hour intervals during the hibernation period. The first number is the start of the hibernation, the second number is its end.
-ignoreBoardCast: True                   # ignore BoardCast?
-userDataDir: "C:\\Users\\Khalil\\AppData\\Local\\Google\\Chrome\\User Data"  # cookie path
-chromePath: "X:\\xxxxx\\xx\\Chrome.exe" # chrome.exe path
-countDrops: True     #count Drops number?
+ignoreBroadCast: True                   # Option to ignore broadcasts.
+userDataDir: "C:\\Users\\xxxxx\\AppData\\Local\\Google\\Chrome\\User Data"  # Path to Chrome cookie files. 
+chromePath: "X:\\xxxxx\\xx\\Chrome.exe" # Chrome.exe location.
+countDrops: True                        # Option to monitor Drops number.
 ```
 
 ## Honorable mention

@@ -1,7 +1,7 @@
 import undetected_chromedriver as uc
+from EsportsHelper.Utils import _, _log
 from rich import print
 from webdriver_manager.chrome import ChromeDriverManager
-from EsportsHelper.Utils import _, _log
 
 
 class Webdriver:

@@ -68,7 +68,7 @@ platForm: "windows"    # 使用平台,默认为windows,如需使用linux请在�
 closeStream: "False"   # 省流模式，默认False，关闭直播间的视频流（未知风险）（有兴趣者自行尝试） 
 desktopNotify: "False"  # 系统弹窗提示，默认False
 sleepPeriod: "8-13" # 休眠时间段，（默认为空）格式为"开始小时-结束小时",在休眠时间段中会以1小时间隔来检查。区间为左闭合右开。
-ignoreBoardCast: True    # 设置为否会提前进入直播间，以及将支持某些一直处于转播的赛区直播
+ignoreBroadCast: True    # 设置为否会提前进入直播间，以及将支持某些一直处于转播的赛区直播
 userDataDir: "C:\\Users\\Khalil\\AppData\\Local\\Google\\Chrome\\User Data"  # 例子,其中Khalil处改为自己电脑的名字,具体教程见https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E6%9C%AC%E5%9C%B0%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98-%E5%85%8D%E8%B4%A6%E5%AF%86%E7%99%BB%E5%BD%95
 chromePath: "谷歌浏览器自订路径"
 countDrops: True     #是否检查掉落数
