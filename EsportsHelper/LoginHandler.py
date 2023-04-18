@@ -54,6 +54,7 @@ class LoginHandler:
                 (By.CSS_SELECTOR, "div.riotbar-summoner-name")))
         except TimeoutException:
             print(_("×_× 网络问题 登录超时", color="red", lang=self.config.language))
+            self.log.error(_log("×_× 网络问题 登录超时", lang=self.config.language))
             self.log.error(format_exc())
 
     def insert2FACode(self):
