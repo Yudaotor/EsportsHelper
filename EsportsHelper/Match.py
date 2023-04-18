@@ -1,3 +1,4 @@
+import os
 import time
 from datetime import datetime, timedelta
 from random import randint
@@ -143,8 +144,13 @@ class Match:
                     print(
                         f"{_('预计结束程序时间:', color='green', lang=self.config.language)} {time.strftime('%H:%M', time.localtime(endTimePoint))}")
                 print(
-                    f"[green]==================================================[/green]")
+                    "[green]==================================================[/green]")
                 sleep(newDelay)
+            if time.time() >= endTimePoint and maxRunHours != -1 and self.config.platForm == "windows":
+                self.log.info(_log("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作", lang=self.config.language))
+                print(_("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作", color="yellow", lang=self.config.language))
+                os.system("shutdown -s -t 60")
+
         except NoSuchWindowException as e:
             self.log.error(_log("Q_Q 对应窗口找不到", lang=self.config.language))
             print(_("Q_Q 对应窗口找不到", color="red", lang=self.config.language))
@@ -328,7 +334,7 @@ class Match:
             nextMatchBO = self.driver.find_element(
                 by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.strategy").text
             print(
-                f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]DATE {nextMatchDayTime}|TIME {nextMatchAMOrPM} {nextMatchTime} CLOCK|{nextMatchLeague} {nextMatchBO}[/green]")
+                f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]DATE {nextMatchDayTime}|TIME {nextMatchAMOrPM} {nextMatchTime} |{nextMatchLeague} {nextMatchBO}[/green]")
         except Exception:
             self.log.error(_log("Q_Q 获取下一场比赛时间失败", lang=self.config.language))
             self.log.error(format_exc())
