@@ -8,11 +8,11 @@
 
 **Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
 # 电竞助手 EsportsHelper
-通过selenium模拟浏览器来自动观看电竞比赛,网址: [lolesports](lolesports.com)  
+通过Selenium模拟浏览器来自动观看电竞比赛,网址: [LolEsports](lolesports.com)  
 至于会不会被拳头检测到这个问题,目前还没有答案.  
 哦对了,用的是谷歌浏览器哦 （必须要下一个最新版的谷歌浏览器哦）  
 来自中国大陆的需搭配VPN使用  
-**如何下载**:点击右侧的[release](https://github.com/Yudaotor/EsportsHelper/releases)下载
+**如何下载**:点击右侧的[Releases](https://github.com/Yudaotor/EsportsHelper/releases)下载
 ## 联系我
 使用过程中有遇到什么问题或者建议可以在Github上提出issue  
 或者加TG群交流: https://t.me/+0PjLPCy_IIJhNzM1  
@@ -27,7 +27,7 @@ Windows, Linux
 
 ### Linux  
 如何在Linux中运行请点击右侧查看教程[Linux教程](https://github.com/Yudaotor/EsportsHelper/wiki/%E5%A6%82%E4%BD%95%E5%9C%A8linux%E7%8E%AF%E5%A2%83%E8%BF%90%E8%A1%8C%EF%BC%88run-in-linux%EF%BC%89)
-### Mac
+### macOS
 暂时运行方法：
 ```shell
 python -m pip install -r requirements.txt
@@ -36,9 +36,9 @@ python -m pip install -r requirements.txt
 
 
 ## 特性
-1. 自动打开浏览器,进入lolesports.com,查询哪些赛区在进行比赛(在放录播的赛区会被忽视),进入观看并设置为最低清晰度(为了节省流量)
+1. 自动打开浏览器,进入LolEsports.com,查询哪些赛区在进行比赛(在放录播的赛区会被忽视),进入观看并设置为最低清晰度(为了节省流量)
 2. 可以自行设置是否选择无头模式(默认关闭)(无头模式即headless,开启后浏览器会不可见,在后台运行,缓解电脑CPU压力)
-3. 可以自行设置不观看哪些赛区的比赛.(默认为空)(注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看)(建议设置,避免观看所有比赛从而被检测)
+3. 可以自行设置不观看哪些赛区的比赛.(默认为空)(注意,此处是包含关系的逻辑,举例:当你设置了LCK以后,LCK_Challengers同样不会观看)(建议设置,避免观看所有比赛从而被检测)
 4. 可以自行设置多久来查询一次比赛最新信息.(默认600秒)(关闭已经结束的比赛和开启新开始的比赛)
 5. 掉落提醒(支持钉钉,Discord,饭碗警告)(不是所有掉落都会被提醒,拳头的锅,有时候网页上不会出现弹窗)
 6. 软件发生错误时可以发送错误提醒
@@ -62,7 +62,7 @@ delay: 600                                    # 每次检查的时间间隔，�
 headless: False                               # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)  
 disWatchMatches: ["lck", "lpl", "lcs"]        # 不想看的赛区名称，可以在这里添加.(注意,是小写)  
 maxRunHours: -1                               # 负值为一直运行，正值为运行小时, 默认-1
-proxy: "你的代理地址" # 代理地址，选填，一般用户不用填。 e.g., "socks://127.0.0.1:20173"
+proxy: "你的代理地址"                          # 代理地址，选填，一般用户不用填。 e.g., "socks://127.0.0.1:20173"
 connectorDropsUrl: "你的webhook链接"           # (支持钉钉,Discord,饭碗警告)具体配置方法见此处https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F(%E5%8A%9F%E8%83%BD%E5%BE%85%E6%B5%8B%E8%AF%95
 platForm: "windows"                           # 使用平台,默认为Windows,如需使用Linux请在此处进行配置  
 closeStream: "False"                          # 省流模式，默认False，关闭直播间的视频流（未知风险）（有兴趣者自行尝试） 
