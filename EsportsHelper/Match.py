@@ -134,7 +134,7 @@ class Match:
                     self.log.info(
                         f"Q_P {len(liveMatches)} {_log('赛区正在直播中', lang=self.config.language)}")
                     print(
-                        f"Q_P {len(liveMatches)} {_('赛区正在直播中', color='green', lang=self.config.language)}")
+                        f"[green]P_P[/green] {len(liveMatches)} {_('赛区正在直播中', color='green', lang=self.config.language)}")
                 # 关闭已经结束的赛区直播间
                 self.closeFinishedTabs(liveMatches=liveMatches)
                 # 开始观看新开始的直播

@@ -48,27 +48,27 @@ class Rewards:
                 except Exception:
                     self.log.error(format_exc())
                 self.log.info(
-                    f"√√√√√ {match} {_log('正常观看 可获取奖励', lang=self.config.language)} {teams} √√√√√ ")
+                    f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} {teams}")
                 print(
-                    f"[green]√√√√√[/green] {match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} {teams} [green]√√√√√ ")
+                    f"{match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} {teams}")
 
                 return True
             else:
                 if i != retryTimes - 1:
                     self.log.warning(
-                        f"××××× {match} {_log('观看异常 重试中...', self.config.language)} ××××× ")
+                        f"{match} {_log('观看异常 重试中...', self.config.language)}")
                     print(
-                        f"[yellow]×××××[/yellow] {match} {_('观看异常 重试中...', color='yellow', lang=self.config.language)}[yellow]××××× ")
+                        f"{match} {_('观看异常 重试中...', color='yellow', lang=self.config.language)}")
                     self.driver.refresh()
                     if stream == "youtube":
                         self.youtube.playYoutubeStream()
                 else:
                     self.log.error(
-                        f"××××× {match} {_log('观看异常', lang=self.config.language)} ××××× ")
+                        f"{match} {_log('观看异常', lang=self.config.language)}")
                     print(
-                        f"[red]×××××[/red] {match} {_('观看异常', color='red', lang=self.config.language)} [red]××××× ")
+                        f"{match} {_('观看异常', color='red', lang=self.config.language)}")
                     self.utils.errorNotify(
-                        f"××××× {match} {_log('观看异常', lang=self.config.language)} ××××× ")
+                        f"{match} {_log('观看异常', lang=self.config.language)}")
                     return False
 
     def checkNewDrops(self):
