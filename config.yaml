@@ -1,6 +1,6 @@
-delay: 600 # 每次检查的时间间隔，单位为秒(默认为600秒)(每次检测时间会在你设置的时延0.8-1.5倍之间随机波动)
-headless: False # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)
-username: "账号用户名" # 必填，账号
-password: "密码" # 必填，密码
-language: "en_US"
-# 更多配置请参考readme中的配置说明
+delay: 600                # 每次检查的时间间隔，单位为秒(默认为600秒)(每次检测时间会在你设置的时延0.8-1.5倍之间随机波动) / Time interval for each check in seconds (600 seconds by default). Each check time will randomly range between 0.8 and 1.5 times the time delay you set
+headless: False           # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False) / # When set to True, the program will run in the background; otherwise it will open a browser window (set False by default)
+username: "账号用户名"     # 必填，账号 / Required field, username
+password: "密码"          # 必填，密码 / Required field, passward
+language: "en_US"         # 语言选择，zh_CN是中文，en_US是英文 / Language selection, zh_CN for Chinese (Simplified), en_US for English
+# 更多配置请参考readme中的配置说明 / Refer to the Readme file for more configuration options
