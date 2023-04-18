@@ -35,6 +35,8 @@ class Match:
         self.OVERRIDES = downloadOverrideFile()
         self.historyDrops = 0
         self.dropsDict = {}
+        self.sleepBeginList = []
+        self.sleepEndList = []
 
     def watchMatches(self, delay, maxRunHours):
         try:
@@ -47,38 +49,45 @@ class Match:
             if self.config.countDrops and sleepFlag is False:
                 # 打开奖励页面
                 self.getRewardPage(newTab=True)
+            # 获取休眠时间段
+            if self.config.sleepPeriod != [""]:
+                self.getSleepPeriod()
+            # 循环观赛
             while maxRunHours < 0 or time.time() < endTimePoint:
-                if self.config.sleepPeriod == "":
+                if self.sleepBeginList == [] and self.sleepEndList == []:
                     # 随机数，用于随机延迟
                     randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
                     newDelay = randomDelay * 10
                 else:
+                    isSleep = False
                     nowTime = int(time.localtime().tm_hour)
-                    sleepBegin = int(self.config.sleepPeriod.split("-")[0])
-                    sleepEnd = int(self.config.sleepPeriod.split("-")[1])
-                    if sleepBegin <= nowTime < sleepEnd:
-                        randomDelay = randint(
-                            int(delay * 0.08), int(delay * 0.15))
-                        newDelay = randomDelay * 10
-                        if sleepFlag is False:
-                            self.closeAllTabs()
-                            sleepFlag = True
-                        print(_("处于休眠时间...", color="green", lang=self.config.language))
-                        self.log.info(_log("处于休眠时间...", lang=self.config.language))
-                        print(f'{_("预计休眠状态将持续到", color="green", lang=self.config.language)} {sleepEnd} {_("点", color="green", lang=self.config.language)}')
-                        self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEnd} {_log("点", lang=self.config.language)}')
-                        print(
-                            "[green]==================================================[/green]")
-                        self.log.info("==================================================")
-                        sleep(newDelay)
+                    for sleepBegin, sleepEnd in zip(self.sleepBeginList, self.sleepEndList):
+                        if sleepBegin <= nowTime < sleepEnd:
+                            randomDelay = randint(
+                                int(delay * 0.08), int(delay * 0.15))
+                            newDelay = randomDelay * 10
+                            if sleepFlag is False:
+                                self.closeAllTabs()
+                                sleepFlag = True
+                            print(_("处于休眠时间...", color="green", lang=self.config.language))
+                            self.log.info(_log("处于休眠时间...", lang=self.config.language))
+                            print(f'{_("预计休眠状态将持续到", color="green", lang=self.config.language)} {sleepEnd} {_("点", color="green", lang=self.config.language)}')
+                            self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEnd} {_log("点", lang=self.config.language)}')
+                            print(
+                                "[green]==================================================[/green]")
+                            self.log.info("==================================================")
+                            isSleep = True
+                            sleep(newDelay)
+                            continue
+                        else:
+                            sleepFlag = False
+                            self.driver.switch_to.window(self.rewardWindow)
+                            self.getRewardPage()
+                            randomDelay = randint(
+                                int(delay * 0.08), int(delay * 0.15))
+                            newDelay = randomDelay * 10
+                    if isSleep:
                         continue
-                    else:
-                        sleepFlag = False
-                        self.driver.switch_to.window(self.rewardWindow)
-                        self.getRewardPage()
-                        randomDelay = randint(
-                            int(delay * 0.08), int(delay * 0.15))
-                        newDelay = randomDelay * 10
                 self.log.info(_log("●_● 开始检查...", lang=self.config.language))
                 print(_("●_● 开始检查...", color="yellow", lang=self.config.language))
                 dropsNumber = self.countDrops()
@@ -447,3 +456,10 @@ class Match:
             print(_("检查掉落数失败", color="red", lang=self.config.language))
             self.log.error(_log("检查掉落数失败", lang=self.config.language))
             self.log.error(format_exc())
+
+    def getSleepPeriod(self):
+        for period in self.config.sleepPeriod:
+            if period == "":
+                continue
+            self.sleepBeginList.append(int(period.split("-")[0]))
+            self.sleepEndList.append(int(period.split("-")[1]))

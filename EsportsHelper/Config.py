@@ -27,7 +27,7 @@ class Config:
                 self.proxy = config.get("proxy", "")
                 self.desktopNotify = config.get("desktopNotify", False)
                 self.closeStream = config.get("closeStream", False)
-                self.sleepPeriod = config.get("sleepPeriod", "")
+                self.sleepPeriod = config.get("sleepPeriod", [""])
                 self.countDrops = config.get("countDrops", True)
                 self.chromePath = config.get("chromePath", "")
                 self.userDataDir = config.get("userDataDir", "")
@@ -98,28 +98,31 @@ class Config:
             else:
                 self.closeStream = False
 
-        if self.sleepPeriod != "":
-            if isinstance(self.sleepPeriod, str):
-                sleepPeriod = self.sleepPeriod.split("-")
-                if len(sleepPeriod) != 2:
-                    print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
-                    self.sleepPeriod = ""
-                else:
-                    try:
-                        if int(sleepPeriod[0]) > int(sleepPeriod[1]):
-                            print(_("睡眠时间段配置错误,已恢复默认值",
-                                  color="red", lang=self.language))
-                            self.sleepPeriod = ""
-                        elif sleepPeriod[0] < "0" or sleepPeriod[1] > "24":
-                            print(_("睡眠时间段配置错误,已恢复默认值",
-                                  color="red", lang=self.language))
-                            self.sleepPeriod = ""
-                    except ValueError:
-                        print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
-                        self.sleepPeriod = ""
+        if self.sleepPeriod != [""]:
+            if isinstance(self.sleepPeriod, list):
+                afterFormat = []
+                for period in self.sleepPeriod:
+                    sleepPeriod = period.split("-")
+                    if len(sleepPeriod) != 2:
+                        print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                        afterFormat.append("")
+                    else:
+                        try:
+                            if int(sleepPeriod[0]) > int(sleepPeriod[1]):
+                                print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                                afterFormat.append("")
+                            elif sleepPeriod[0] < "0" or sleepPeriod[1] > "24":
+                                print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                                afterFormat.append("")
+                            else:
+                                afterFormat.append(period)
+                        except ValueError:
+                            print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                            afterFormat.append("")
+                self.sleepPeriod = afterFormat
             else:
                 print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
-                self.sleepPeriod = ""
+                self.sleepPeriod = [""]
         if isinstance(self.maxRunHours, str):
             if self.maxRunHours == "":
                 self.maxRunHours = -1
