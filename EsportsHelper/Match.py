@@ -38,24 +38,47 @@ class Match:
 
     def watchMatches(self, delay, maxRunHours):
         try:
+            sleepFlag = False
             self.currentWindows = {}
             self.mainWindow = self.driver.current_window_handle
             maxRunSecond = maxRunHours * 3600
             startTimePoint = time.time()
             endTimePoint = startTimePoint + maxRunSecond
-            if self.config.countDrops:
+            if self.config.countDrops and sleepFlag is False:
                 # 打开奖励页面
-                try:
-                    self.driver.switch_to.new_window('tab')
-                    self.driver.get("https://lolesports.com/rewards")
-                    self.rewardWindow = self.driver.current_window_handle
-                    # 初始化掉落计数
-                    self.historyDrops = self.countDrops(isInit=True)
-                except Exception:
-                    print(_("检查掉落数失败", color="red", lang=self.config.language))
-                    self.log.error(_log("检查掉落数失败", lang=self.config.language))
-                    self.log.error(format_exc())
+                self.getRewardPage(newTab=True)
             while maxRunHours < 0 or time.time() < endTimePoint:
+                if self.config.sleepPeriod == "":
+                    # 随机数，用于随机延迟
+                    randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
+                    newDelay = randomDelay * 10
+                else:
+                    nowTime = int(time.localtime().tm_hour)
+                    sleepBegin = int(self.config.sleepPeriod.split("-")[0])
+                    sleepEnd = int(self.config.sleepPeriod.split("-")[1])
+                    if sleepBegin <= nowTime < sleepEnd:
+                        randomDelay = randint(
+                            int(delay * 0.08), int(delay * 0.15))
+                        newDelay = randomDelay * 10
+                        if sleepFlag is False:
+                            self.closeAllTabs()
+                            sleepFlag = True
+                        print(_("处于休眠时间...", color="green", lang=self.config.language))
+                        self.log.info(_log("处于休眠时间...", lang=self.config.language))
+                        print(f'{_("预计休眠状态将持续到", color="green", lang=self.config.language)} {sleepEnd} {_("点", color="green", lang=self.config.language)}')
+                        self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEnd} {_log("点", lang=self.config.language)}')
+                        print(
+                            "[green]==================================================[/green]")
+                        self.log.info("==================================================")
+                        sleep(newDelay)
+                        continue
+                    else:
+                        sleepFlag = False
+                        self.driver.switch_to.window(self.rewardWindow)
+                        self.getRewardPage()
+                        randomDelay = randint(
+                            int(delay * 0.08), int(delay * 0.15))
+                        newDelay = randomDelay * 10
                 self.log.info(_log("●_● 开始检查...", lang=self.config.language))
                 print(_("●_● 开始检查...", color="yellow", lang=self.config.language))
                 dropsNumber = self.countDrops()
@@ -109,24 +132,6 @@ class Match:
                 self.startWatchNewMatches(
                     liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
                 sleep(3)
-                if self.config.sleepPeriod == "":
-                    # 随机数，用于随机延迟
-                    randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
-                    newDelay = randomDelay * 10
-                else:
-                    nowTime = int(time.localtime().tm_hour)
-                    sleepBegin = int(self.config.sleepPeriod.split("-")[0])
-                    sleepEnd = int(self.config.sleepPeriod.split("-")[1])
-                    if sleepBegin <= nowTime < sleepEnd:
-                        self.log.info(_log("处于休眠时间，检查时间间隔为1小时",
-                                      lang=self.config.language))
-                        print(_("处于休眠时间，检查时间间隔为1小时", color="green",
-                              lang=self.config.language))
-                        newDelay = 3600
-                    else:
-                        randomDelay = randint(
-                            int(delay * 0.08), int(delay * 0.15))
-                        newDelay = randomDelay * 10
                 self.driver.switch_to.window(self.mainWindow)
                 # 检查最近一个比赛的信息
                 self.checkNextMatch()
@@ -183,6 +188,35 @@ class Match:
             self.log.error(format_exc())
             return []
 
+    def closeAllTabs(self):
+        try:
+            self.driver.switch_to.new_window('tab')
+            newTab1 = self.driver.current_window_handle
+            sleep(1)
+            self.driver.switch_to.new_window('tab')
+            newTab2 = self.driver.current_window_handle
+            sleep(1)
+            for k in self.currentWindows.keys():
+                self.driver.switch_to.window(self.currentWindows[k])
+                sleep(1)
+                self.driver.close()
+                self.currentWindows.pop(k, None)
+                sleep(1)
+            self.driver.switch_to.window(self.mainWindow)
+            sleep(1)
+            self.driver.close()
+            self.mainWindow = newTab2
+            self.driver.switch_to.window(self.rewardWindow)
+            sleep(1)
+            self.driver.close()
+            self.rewardWindow = newTab1
+            print(_("Q_Q 所有窗口已关闭", color="green", lang=self.config.language))
+            self.log.info(_log("Q_Q 所有窗口已关闭", lang=self.config.language))
+        except Exception:
+            self.log.error(_log("Q_Q 关闭所有窗口时发生异常", lang=self.config.language))
+            print(_("Q_Q 关闭所有窗口时发生异常", color="red", lang=self.config.language))
+            self.log.error(format_exc())
+
     def closeFinishedTabs(self, liveMatches):
         try:
             removeList = []
@@ -208,7 +242,7 @@ class Match:
             for k in removeList:
                 self.currentWindows.pop(k, None)
             self.driver.switch_to.window(self.mainWindow)
-        except Exception as e:
+        except Exception:
             print(_("Q_Q 关闭已结束的比赛时发生错误", color="red", lang=self.config.language))
             self.utils.errorNotify(error=_log(
                 "Q_Q 关闭已结束的比赛时发生错误", lang=self.config.language))
@@ -400,3 +434,16 @@ class Match:
                     return 0
         else:
             return 0
+
+    def getRewardPage(self, newTab=False):
+        try:
+            if newTab:
+                self.driver.switch_to.new_window("tab")
+            self.driver.get("https://lolesports.com/rewards")
+            self.rewardWindow = self.driver.current_window_handle
+            # 初始化掉落计数
+            self.historyDrops = self.countDrops(isInit=True)
+        except Exception:
+            print(_("检查掉落数失败", color="red", lang=self.config.language))
+            self.log.error(_log("检查掉落数失败", lang=self.config.language))
+            self.log.error(format_exc())

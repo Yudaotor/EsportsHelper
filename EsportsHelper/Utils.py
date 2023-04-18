@@ -16,7 +16,7 @@ i18n = {"눈_눈 生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!�
         "Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...": "Network problem: cannot open LolEsports website. Exiting in 3 seconds...",
         "눈_눈 自动登录失败,检查网络和账号密码": "Automatic login failed. Please check the network availability and account credentials.",
         "∩_∩ 好嘞 登录成功": "Logged in successfully.",
-        "∩_∩ 使用系统数据 自动登录成功": "Using system data. Auto-login success.",
+        "∩_∩ 使用系统数据 自动登录成功": "Using browser cookies. Auto-login success.",
         "观看结束～": "Watch finished.",
         "切换语言成功": "Language switched successfully.",
         "切换语言失败": "The language switch failed.",
@@ -83,6 +83,12 @@ i18n = {"눈_눈 生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!�
         "下载override文件失败": "Failed to import override file.",
         "ㅍ_ㅍ 正在准备中...": "Preparing...",
         "不支持的操作系统": "Unsupported OS.",
+        "程序设定运行时长已到，将于60秒后关机,请及时做好准备工作": "The program has reached the set runtime. The system will shut down in 60 seconds. Please prepare accordingly.",
+        "Q_Q 关闭所有窗口时发生异常": "An exception occurred while closing all windows.",
+        "Q_Q 所有窗口已关闭": "All windows closed.",
+        "处于休眠时间...": "Sleeping...",
+        "预计休眠状态将持续到": "The sleep period will last until",
+        "点": "o'clock.",
         }
 
 
