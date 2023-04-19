@@ -21,17 +21,17 @@ class LoginHandler:
                 getLolesportsWeb(self.driver)
             except Exception:
                 self.log.error(format_exc())
-                self.log.error(_log("Π——Π 无法打开Lolesports网页，网络问题"),
+                self.log.error(_log("无法打开Lolesports网页，网络问题"),
                                lang=self.config.language)
-                print(_("Π——Π 无法打开Lolesports网页，网络问题",
+                print(_("无法打开Lolesports网页，网络问题",
                       color="red", lang=self.config.language))
             time.sleep(2)
             wait = WebDriverWait(self.driver, 11)
             loginButton = wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "a[data-riotbar-link-id=login]")))
             self.driver.execute_script("arguments[0].click();", loginButton)
-            self.log.info(_log("눈_눈 登录中...", lang=self.config.language))
-            print(_("눈_눈 登录中...", color="yellow", lang=self.config.language))
+            self.log.info(_log("登录中...", lang=self.config.language))
+            print(_("登录中...", color="yellow", lang=self.config.language))
             time.sleep(2)
             usernameInput = wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "input[name=username]")))
@@ -45,16 +45,16 @@ class LoginHandler:
                 (By.CSS_SELECTOR, "button[type=submit]")))
             time.sleep(1)
             self.driver.execute_script("arguments[0].click();", submitButton)
-            self.log.info(_log("∩_∩ 账密 提交成功", lang=self.config.language))
-            print(_("∩_∩ 账密 提交成功", color="green", lang=self.config.language))
+            self.log.info(_log("账密 提交成功", lang=self.config.language))
+            print(_("账密 提交成功", color="green", lang=self.config.language))
             time.sleep(5)
             if len(self.driver.find_elements(by=By.CSS_SELECTOR, value="div.text__web-code")) > 0:
                 self.insert2FACode()
             wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "div.riotbar-summoner-name")))
         except TimeoutException:
-            print(_("×_× 网络问题 登录超时", color="red", lang=self.config.language))
-            self.log.error(_log("×_× 网络问题 登录超时", lang=self.config.language))
+            print(_("网络问题 登录超时", color="red", lang=self.config.language))
+            self.log.error(_log("网络问题 登录超时", lang=self.config.language))
             self.log.error(format_exc())
 
     def insert2FACode(self):

@@ -35,5 +35,5 @@ class VersionManager:
     def checkVersion():
         if not VersionManager.isLatestVersion(VersionManager.getVersion()):
             log.warning(
-                f"\n==!!! NEW VERSION Available !!!==\n ==DownLoad: https://github.com/Yudaotor/EsportsHelper/releases/latest")
-            print("[yellow]\n==!!! NEW VERSION Available !!!==\n ==DownLoad: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
+                f"\n==!!! NEW VERSION AVAILABLE !!!==\n ==DownLoad: https://github.com/Yudaotor/EsportsHelper/releases/latest")
+            print("[yellow]\n==!!! NEW VERSION AVAILABLE !!!==\n ==DownLoad: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")

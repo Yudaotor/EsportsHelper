@@ -60,12 +60,15 @@ class Match:
                     newDelay = randomDelay * 10
                 else:
                     isSleep = False
-                    nowTime = int(time.localtime().tm_hour)
+                    nowTimeHour = int(time.localtime().tm_hour)
                     for sleepBegin, sleepEnd in zip(self.sleepBeginList, self.sleepEndList):
-                        if sleepBegin <= nowTime < sleepEnd:
-                            randomDelay = randint(
-                                int(delay * 0.08), int(delay * 0.15))
-                            newDelay = randomDelay * 10
+                        if sleepBegin <= nowTimeHour < sleepEnd:
+                            if nowTimeHour < sleepEnd - 1:
+                                newDelay = 3600
+                            else:
+                                randomDelay = randint(
+                                    int(delay * 0.08), int(delay * 0.15))
+                                newDelay = randomDelay * 10
                             if sleepFlag is False:
                                 self.closeAllTabs()
                                 sleepFlag = True
@@ -88,21 +91,21 @@ class Match:
                             newDelay = randomDelay * 10
                     if isSleep:
                         continue
-                self.log.info(_log("●_● 开始检查...", lang=self.config.language))
-                print(_("●_● 开始检查...", color="yellow", lang=self.config.language))
+                self.log.info(_log("开始检查...", lang=self.config.language))
+                print(_("开始检查...", color="yellow", lang=self.config.language))
                 dropsNumber = self.countDrops()
                 if dropsNumber != 0:
-                    print(f"{_('$_$ 本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} {_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber}")
+                    print(f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} {_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber}")
                     self.log.info(
-                        f"{_log('$_$ 本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.historyDrops} {_log('生涯总掉落:', lang=self.config.language)}{dropsNumber}")
+                        f"{_log('本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.historyDrops} {_log('生涯总掉落:', lang=self.config.language)}{dropsNumber}")
                 self.driver.switch_to.window(self.mainWindow)
                 isDrop, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
                 if isDrop:
                     for i in range(len(poweredByImg)):
                         self.log.info(
-                            f"ΩДΩ [{self.config.username}] BY {eventTitle[i]} GET {dropItem[i]} {unlockedDate[i]}")
+                            f"[{self.config.username}] BY {eventTitle[i]} GET {dropItem[i]} {unlockedDate[i]}")
                         print(
-                            f"ΩДΩ [{self.config.username}] BY {eventTitle[i]} GET {dropItem[i]} {unlockedDate[i]}")
+                            f"[{self.config.username}] BY {eventTitle[i]} GET {dropItem[i]} {unlockedDate[i]}")
                         if self.config.desktopNotify:
                             desktopNotify(
                                 poweredByImg[i], productImg[i], unlockedDate[i], eventTitle[i], dropItem[i], dropItemImg[i])
@@ -127,14 +130,14 @@ class Match:
                 sleep(3)
                 if len(liveMatches) == 0:
                     self.log.info(
-                        _log("〒.〒 没有赛区正在直播", lang=self.config.language))
-                    print(_("〒.〒 没有赛区正在直播", color="green",
+                        _log("没有赛区正在直播", lang=self.config.language))
+                    print(_("没有赛区正在直播", color="green",
                           lang=self.config.language))
                 else:
                     self.log.info(
-                        f"Q_P {len(liveMatches)} {_log('赛区正在直播中', lang=self.config.language)}")
+                        f"{len(liveMatches)} {_log('赛区正在直播中', lang=self.config.language)}")
                     print(
-                        f"[green]P_P[/green] {len(liveMatches)} {_('赛区正在直播中', color='green', lang=self.config.language)}")
+                        f"{len(liveMatches)} {_('赛区正在直播中', color='green', lang=self.config.language)}")
                 # 关闭已经结束的赛区直播间
                 self.closeFinishedTabs(liveMatches=liveMatches)
                 # 开始观看新开始的直播
@@ -166,18 +169,18 @@ class Match:
                 os.system("shutdown -s -t 60")
 
         except NoSuchWindowException as e:
-            self.log.error(_log("Q_Q 对应窗口找不到", lang=self.config.language))
-            print(_("Q_Q 对应窗口找不到", color="red", lang=self.config.language))
+            self.log.error(_log("对应窗口找不到", lang=self.config.language))
+            print(_("对应窗口找不到", color="red", lang=self.config.language))
             self.log.error(format_exc())
             self.utils.errorNotify(
-                _log("Q_Q 对应窗口找不到", lang=self.config.language))
-            sysQuit(self.driver, _log("Q_Q 对应窗口找不到", lang=self.config.language))
+                _log("对应窗口找不到", lang=self.config.language))
+            sysQuit(self.driver, _log("对应窗口找不到", lang=self.config.language))
         except Exception as e:
-            self.log.error(_log("Q_Q 发生错误", lang=self.config.language))
-            print(_("Q_Q 发生错误", color="red", lang=self.config.language))
+            self.log.error(_log("发生错误", lang=self.config.language))
+            print(_("发生错误", color="red", lang=self.config.language))
             self.log.error(format_exc())
-            self.utils.errorNotify(_log("Q_Q 发生错误", lang=self.config.language))
-            sysQuit(self.driver, _log("Q_Q 发生错误", lang=self.config.language))
+            self.utils.errorNotify(_log("发生错误", lang=self.config.language))
+            sysQuit(self.driver, _log("发生错误", lang=self.config.language))
 
     def getMatchInfo(self):
         try:
@@ -192,8 +195,8 @@ class Match:
                 matches.append(element.get_attribute("href"))
             return matches
         except Exception:
-            self.log.error(_log("Q_Q 获取比赛列表失败", lang=self.config.language))
-            print(_("Q_Q 获取比赛列表失败", color="red", lang=self.config.language))
+            self.log.error(_log("获取比赛列表失败", lang=self.config.language))
+            print(_("获取比赛列表失败", color="red", lang=self.config.language))
             self.log.error(format_exc())
             return []
 
@@ -222,11 +225,11 @@ class Match:
             self.rewardWindow = newTab1
             for k in removeList:
                 self.currentWindows.pop(k, None)
-            print(_("Q_Q 所有窗口已关闭", color="green", lang=self.config.language))
-            self.log.info(_log("Q_Q 所有窗口已关闭", lang=self.config.language))
+            print(_("所有窗口已关闭", color="green", lang=self.config.language))
+            self.log.info(_log("所有窗口已关闭", lang=self.config.language))
         except Exception:
-            self.log.error(_log("Q_Q 关闭所有窗口时发生异常", lang=self.config.language))
-            print(_("Q_Q 关闭所有窗口时发生异常", color="red", lang=self.config.language))
+            self.log.error(_log("关闭所有窗口时发生异常", lang=self.config.language))
+            print(_("关闭所有窗口时发生异常", color="red", lang=self.config.language))
             self.log.error(format_exc())
 
     def closeFinishedTabs(self, liveMatches):
@@ -238,9 +241,9 @@ class Match:
                 if k not in liveMatches:
                     match = getMatchName(k)
                     self.log.info(
-                        f"0.0 {match} {_log('比赛结束', lang=self.config.language)}")
+                        f"{match} {_log('比赛结束', lang=self.config.language)}")
                     print(
-                        f"0.0 {match} {_('比赛结束', color='green', lang=self.config.language)}")
+                        f"{match} {_('比赛结束', color='green', lang=self.config.language)}")
                     self.driver.close()
                     removeList.append(k)
                     sleep(2)
@@ -255,9 +258,9 @@ class Match:
                 self.currentWindows.pop(k, None)
             self.driver.switch_to.window(self.mainWindow)
         except Exception:
-            print(_("Q_Q 关闭已结束的比赛时发生错误", color="red", lang=self.config.language))
+            print(_("关闭已结束的比赛时发生错误", color="red", lang=self.config.language))
             self.utils.errorNotify(error=_log(
-                "Q_Q 关闭已结束的比赛时发生错误", lang=self.config.language))
+                "关闭已结束的比赛时发生错误", lang=self.config.language))
             self.log.error(format_exc())
 
     def startWatchNewMatches(self, liveMatches, disWatchMatches):
@@ -268,9 +271,9 @@ class Match:
                 if match.find(disMatch) != -1:
                     skipName = getMatchName(match)
                     self.log.info(
-                        f"(╯#-_-)╯ {skipName}{_log('比赛跳过', lang=self.config.language)}")
+                        f"{skipName}{_log('比赛跳过', lang=self.config.language)}")
                     print(
-                        f"(╯#-_-)╯ {skipName}{_('比赛跳过', color='yellow', lang=self.config.language)}")
+                        f"{skipName}{_('比赛跳过', color='yellow', lang=self.config.language)}")
                     flag = False
                     break
             if not flag:
@@ -291,31 +294,31 @@ class Match:
                             """var data=document.querySelector('#video-player').remove()""")
                     except Exception:
                         self.log.error(
-                            _log("°D° 关闭 Twitch 流失败.", lang=self.config.language))
-                        print(_("°D° 关闭 Twitch 流失败.", color="red",
+                            _log("关闭 Twitch 流失败.", lang=self.config.language))
+                        print(_("关闭 Twitch 流失败.", color="red",
                               lang=self.config.language))
                         self.log.error(format_exc())
                     else:
                         self.log.info(
-                            _log(">_< Twitch 流关闭成功", lang=self.config.language))
-                        print(_(">_< Twitch 流关闭成功", color="green",
+                            _log("Twitch 流关闭成功", lang=self.config.language))
+                        print(_("Twitch 流关闭成功", color="green",
                               lang=self.config.language))
                 else:
                     try:
                         if self.twitch.setTwitchQuality():
                             self.log.info(
-                                _log(">_< Twitch 160p清晰度设置成功", lang=self.config.language))
-                            print(_(">_< Twitch 160p清晰度设置成功",
+                                _log("Twitch 160p清晰度设置成功", lang=self.config.language))
+                            print(_("Twitch 160p清晰度设置成功",
                                   color="green", lang=self.config.language))
                         else:
                             self.log.error(
-                                _log("°D° Twitch 清晰度设置失败", lang=self.config.language))
-                            print(_("°D° Twitch 清晰度设置失败", color="red",
+                                _log("Twitch 清晰度设置失败", lang=self.config.language))
+                            print(_("Twitch 清晰度设置失败", color="red",
                                   lang=self.config.language))
                     except Exception:
                         self.log.error(
-                            _log("°D° 无法设置 Twitch 清晰度.", lang=self.config.language))
-                        print(_("°D° 无法设置 Twitch 清晰度.", color="red",
+                            _log("无法设置 Twitch 清晰度.", lang=self.config.language))
+                        print(_("无法设置 Twitch 清晰度.", color="red",
                               lang=self.config.language))
                         self.log.error(format_exc())
             # 判定为Youtube流
@@ -335,31 +338,31 @@ class Match:
                             """var data=document.querySelector('#video-player').remove()""")
                     except Exception:
                         self.log.error(
-                            _log("°D° 关闭 Youtube 流失败.", lang=self.config.language))
-                        print(_("°D° 关闭 Youtube 流失败.", color="red",
+                            _log("关闭 Youtube 流失败.", lang=self.config.language))
+                        print(_("关闭 Youtube 流失败.", color="red",
                               lang=self.config.language))
                         self.log.error(format_exc())
                     else:
-                        self.log.info(_log(">_< Youtube 流关闭成功",
+                        self.log.info(_log("Youtube 流关闭成功",
                                       lang=self.config.language))
-                        print(_(">_< Youtube 流关闭成功", color="green",
+                        print(_("Youtube 流关闭成功", color="green",
                               lang=self.config.language))
                 else:
                     try:
                         if self.youtube.setYoutubeQuality():
                             self.log.info(
-                                _log(">_< Youtube 144p清晰度设置成功", lang=self.config.language))
-                            print(_(">_< Youtube 144p清晰度设置成功",
+                                _log("Youtube 144p清晰度设置成功", lang=self.config.language))
+                            print(_("Youtube 144p清晰度设置成功",
                                   color="green", lang=self.config.language))
                         else:
                             self.log.error(
-                                _log("°D° Youtube 清晰度设置失败", lang=self.config.language))
-                            print(_("°D° Youtube 清晰度设置失败", color="red",
+                                _log("Youtube 清晰度设置失败", lang=self.config.language))
+                            print(_("Youtube 清晰度设置失败", color="red",
                                   lang=self.config.language))
                     except Exception:
                         self.log.error(
-                            _log("°D° 无法设置 Youtube 清晰度.", lang=self.config.language))
-                        print(_("°D° 无法设置 Youtube 清晰度.", color="red",
+                            _log("无法设置 Youtube 清晰度.", lang=self.config.language))
+                        print(_("无法设置 Youtube 清晰度.", color="red",
                               lang=self.config.language))
                         self.log.error(format_exc())
             sleep(5)
@@ -382,9 +385,9 @@ class Match:
             print(
                 f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]DATE {nextMatchDayTime}|TIME {nextMatchAMOrPM} {nextMatchTime} |{nextMatchLeague} {nextMatchBO}[/green]")
         except Exception:
-            self.log.error(_log("Q_Q 获取下一场比赛时间失败", lang=self.config.language))
+            self.log.error(_log("获取下一场比赛时间失败", lang=self.config.language))
             self.log.error(format_exc())
-            print(_("Q_Q 获取下一场比赛时间失败", color="red", lang=self.config.language))
+            print(_("获取下一场比赛时间失败", color="red", lang=self.config.language))
 
     def countDrops(self, isInit=False):
         if self.config.countDrops:
@@ -400,8 +403,8 @@ class Match:
                     by=By.CSS_SELECTOR, value="div.dropCount")
                 sumNumber = 0
             except Exception:
-                print(_("Q_Q 获取掉落数失败", color="red", lang=self.config.language))
-                self.log.error(_log("Q_Q 获取掉落数失败", lang=self.config.language))
+                print(_("获取掉落数失败", color="red", lang=self.config.language))
+                self.log.error(_log("获取掉落数失败", lang=self.config.language))
                 self.log.error(format_exc())
                 return 0
             # 不是第一次运行
@@ -419,14 +422,14 @@ class Match:
                         sumNumber = sumNumber + dropNumberNow
                     if len(dropNumberInfo) != 0:
                         print(
-                            f"{_('$_$ 本次运行掉落详细:', color='green', lang=self.config.language)} {dropNumberInfo}")
+                            f"{_('本次运行掉落详细:', color='green', lang=self.config.language)} {dropNumberInfo}")
                         self.log.info(
-                            f"{_log('$_$ 本次运行掉落详细:', lang=self.config.language)} {dropNumberInfo}")
+                            f"{_log('本次运行掉落详细:', lang=self.config.language)} {dropNumberInfo}")
                     return sumNumber
                 except Exception:
-                    print(_("QAQ 统计掉落失败", color="red", lang=self.config.language))
+                    print(_("统计掉落失败", color="red", lang=self.config.language))
                     self.log.error(
-                        _log("QAQ 统计掉落失败", lang=self.config.language))
+                        _log("统计掉落失败", lang=self.config.language))
                     self.log.error(format_exc())
                     return 0
             # 第一次运行
@@ -438,10 +441,10 @@ class Match:
                         sumNumber = sumNumber + int(dropNumber[i].text[:-6])
                     return sumNumber
                 except Exception:
-                    print(_("QAQ 初始化掉落数失败", color="red",
+                    print(_("初始化掉落数失败", color="red",
                           lang=self.config.language))
                     self.log.error(
-                        _log("QAQ 初始化掉落数失败", lang=self.config.language))
+                        _log("初始化掉落数失败", lang=self.config.language))
                     self.log.error(format_exc())
                     return 0
         else:

@@ -10,7 +10,7 @@ class Webdriver:
 
     def createWebdriver(self):
         options = self.addWebdriverOptions(uc.ChromeOptions())
-        print(_("ㅍ_ㅍ 正在准备中...", color="yellow", lang=self.config.language))
+        print(_("正在准备中...", color="yellow", lang=self.config.language))
         if self.config.platForm == "linux":
             return uc.Chrome(options=options)
         elif self.config.platForm == "windows":
