@@ -199,6 +199,7 @@ class Match:
 
     def closeAllTabs(self):
         try:
+            removeList = []
             self.driver.switch_to.new_window('tab')
             newTab1 = self.driver.current_window_handle
             sleep(1)
@@ -209,7 +210,7 @@ class Match:
                 self.driver.switch_to.window(self.currentWindows[k])
                 sleep(1)
                 self.driver.close()
-                self.currentWindows.pop(k, None)
+                removeList.append(k)
                 sleep(1)
             self.driver.switch_to.window(self.mainWindow)
             sleep(1)
@@ -219,6 +220,8 @@ class Match:
             sleep(1)
             self.driver.close()
             self.rewardWindow = newTab1
+            for k in removeList:
+                self.currentWindows.pop(k, None)
             print(_("Q_Q 所有窗口已关闭", color="green", lang=self.config.language))
             self.log.info(_log("Q_Q 所有窗口已关闭", lang=self.config.language))
         except Exception:
