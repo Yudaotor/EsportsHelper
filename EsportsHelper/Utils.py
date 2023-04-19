@@ -68,7 +68,7 @@ i18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有�
         "Youtube 流关闭成功": "YouTube stream closed successfully.",
         "Youtube 144p清晰度设置成功": "YouTube stream resolution successfully set to 144p.",
         "Youtube 清晰度设置失败": "Failed to set YouTube stream resolution.",
-        "无法设置 Youtube 清晰度.": "Unable to set YouTube stream resolution.",
+        "无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者": "Unable to set YouTube stream resolution. Possible misjudged as youtube. Please contact the programmer.",
         "下一场比赛时间:": "Time of the next broadcast:",
         "获取下一场比赛时间失败": "Failed to get next broadcast time.",
         "获取掉落数失败": "Failed to get drops count.",

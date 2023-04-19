@@ -327,7 +327,6 @@ class Match:
                 self.driver.get(url)
                 # 方便下次添加入overrides中
                 self.log.info(self.driver.current_url)
-
                 self.youtube.playYoutubeStream()
                 if not self.rewards.checkRewards("youtube", url):
                     return
@@ -360,9 +359,10 @@ class Match:
                             print(_("Youtube 清晰度设置失败", color="red",
                                   lang=self.config.language))
                     except Exception:
+                        self.utils.debugScreen(self.driver, "youtube")
                         self.log.error(
-                            _log("无法设置 Youtube 清晰度.", lang=self.config.language))
-                        print(_("无法设置 Youtube 清晰度.", color="red",
+                            _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", lang=self.config.language))
+                        print(_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red",
                               lang=self.config.language))
                         self.log.error(format_exc())
             sleep(5)
