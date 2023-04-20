@@ -8,7 +8,7 @@ from EsportsHelper.VersionManager import VersionManager
 from plyer import notification
 from retrying import retry
 from rich import print
-from urllib3.exceptions import MaxRetryError
+
 
 englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开\n按任意键退出...": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator.\nExit the program by pressing any key...",
         "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试\n按任意键退出...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs Google Chrome currently open? Please close it and try again.\nExit the program by pressing any key...",
@@ -48,8 +48,8 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "开始检查...": "Checking...",
         "本次运行掉落总和:": "Session drops:",
         "生涯总掉落:": "Lifetime drops:",
-        "没有赛区正在直播": "No live broadcasts.",
-        "赛区正在直播中": "The match is currently live.",
+        "没有赛区正在直播": "No live broadcasts now.",
+        "赛区正在直播中": "Broadcast is currently live.",
         "处于休眠时间，检查时间间隔为1小时": "During the sleep period, the check interval is 1 hour.",
         "下一次检查在:": "Next check in:",
         "预计结束程序时间:": "Time left until the program will auto-close:",
@@ -58,17 +58,17 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "获取比赛列表失败": "Failed to get live broadcasts list.",
         "比赛结束": "Broadcast ended.",
         "关闭已结束的比赛时发生错误": "An error occurred while closing finished broadcast.",
-        "比赛跳过": " match skipped.",
+        "比赛跳过": " Broadcast skipped.",
         "关闭 Twitch 流失败.": "Failed to close Twitch stream.",
-        "Twitch 160p清晰度设置成功": "Twitch stream resolution successfully set to 160p.",
+        "Twitch 160p清晰度设置成功": "Twitch stream quality successfully set to 160p.",
         "Twitch 流关闭成功": "Twitch stream closed successfully.",
-        "Twitch 清晰度设置失败": "Failed to set Twitch stream resolution.",
-        "无法设置 Twitch 清晰度.": "Unable to set Twitch stream resolution.",
+        "Twitch 清晰度设置失败": "Failed to set Twitch stream quality.",
+        "无法设置 Twitch 清晰度.": "Unable to set Twitch stream quality.",
         "关闭 Youtube 流失败.": "Failed to close YouTube stream.",
         "Youtube 流关闭成功": "YouTube stream closed successfully.",
-        "Youtube 144p清晰度设置成功": "YouTube stream resolution successfully set to 144p.",
-        "Youtube 清晰度设置失败": "Failed to set YouTube stream resolution.",
-        "无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者": "Unable to set YouTube stream resolution. Possible misjudged as youtube. Please contact the programmer.",
+        "Youtube 144p清晰度设置成功": "YouTube stream quality successfully set to 144p.",
+        "Youtube 清晰度设置失败": "Failed to set YouTube stream quality.",
+        "无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者": "Unable to set YouTube stream quality. Possible misjudged as youtube. Please contact the programmer.",
         "下一场比赛时间:": "Time of the next broadcast:",
         "获取下一场比赛时间失败": "Failed to get next broadcast time.",
         "获取掉落数失败": "Failed to get drops count.",
@@ -84,7 +84,7 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "正在准备中...": "Preparing...",
         "不支持的操作系统": "Unsupported OS.",
         "程序设定运行时长已到，将于60秒后关机,请及时做好准备工作": "The program has reached the set runtime. The system will shut down in 60 seconds. Please prepare accordingly.",
-        "关闭所有窗口时发生异常": "An exception occurred while closing all windows.",
+        "关闭所有窗口时发生异常": "An exception occurred while closing all tabs.",
         "所有窗口已关闭": "All tabs closed.",
         "处于休眠时间...": "Sleeping...",
         "预计休眠状态将持续到": "The sleep period will last until",
