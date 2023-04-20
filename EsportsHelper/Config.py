@@ -111,7 +111,7 @@ class Config:
                             if int(sleepPeriod[0]) > int(sleepPeriod[1]):
                                 print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
                                 afterFormat.append("")
-                            elif sleepPeriod[0] < "0" or sleepPeriod[1] > "24":
+                            elif int(sleepPeriod[0]) < 0 or int(sleepPeriod[1]) > 24:
                                 print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
                                 afterFormat.append("")
                             else:
