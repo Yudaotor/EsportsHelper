@@ -213,7 +213,6 @@ class Utils:
             try:
                 remoteOverrideFile = req.get(
                     "https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
-                print(1 / 0)
             except Exception:
                 log.error(_log("从github获取override文件失败, 将尝试从gitee获取", lang=self.config.language))
                 print(_("从github获取override文件失败, 将尝试从gitee获取", color="red", lang=self.config.language))
