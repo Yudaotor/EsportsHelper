@@ -197,7 +197,7 @@ class Utils:
             print(
                 f"[green]========[/green] Thanks for using [blue]EsportsHelper[/blue] v{VersionManager.getVersion()}!  [green]========[/green]")
             print(
-                "[green]=========[/green]  The program is open source at github [green]=========[/green]")
+                "[green]========[/green]   The program is open source at GitHub  [green]========[/green]")
             print(
                 "[green]====[/green]    https://github.com/Yudaotor/EsportsHelper[green]    ====[/green]")
             print(
