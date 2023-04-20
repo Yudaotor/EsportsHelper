@@ -382,7 +382,7 @@ class Match:
             nextMatchBO = self.driver.find_element(
                 by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.strategy").text
             print(
-                f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]DATE {nextMatchDayTime}|TIME {nextMatchAMOrPM} {nextMatchTime} |{nextMatchLeague} {nextMatchBO}[/green]")
+                f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]{nextMatchDayTime} | {nextMatchTime}{nextMatchAMOrPM} | {nextMatchLeague}, {nextMatchBO}.[/green]")
         except Exception:
             self.log.error(_log("获取下一场比赛时间失败", lang=self.config.language))
             self.log.error(format_exc())

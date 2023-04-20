@@ -3,7 +3,7 @@
 <a href="https://lolesports.com"><img alt="lolesports" src="https://img.shields.io/badge/WebSite-lol%20esports-445fa5.svg?style=plastic"></a>
 <a href="https://github.com/Yudaotor/EsportsHelper/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/Yudaotor/EsportsHelper"></a>
 <a href="https://github.com/Yudaotor/EsportsHelper/pulls"><img alt="PRWelcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat"></a><br/>
-<a href="https://www.cdnjson.com/images/2023/03/13/image-merge-1678713037835.png"><img alt="buymecoffee" src="https://user-images.githubusercontent.com/87225219/228188809-9d136e10-faa1-49b9-a6b7-b969dd1d8c7f.png"></a>
+<a href="https://www.cdnjson.com/images/2023/03/13/image-merge-1678713037835.png">点它-><img alt="buymecoffee" src="https://user-images.githubusercontent.com/87225219/228188809-9d136e10-faa1-49b9-a6b7-b969dd1d8c7f.png"></a>
 </p>
 
 **Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
@@ -36,20 +36,21 @@ python -m pip install -r requirements.txt
 
 
 ## 特性
-1. 自动打开浏览器,进入lolesports.com,查询哪些赛区在进行比赛(在放录播的赛区会被忽视),进入观看并设置为最低清晰度(为了节省流量)
+1. 自动打开浏览器,进入lolesports.com,查询哪些赛区在进行比赛(在放赛前等待的赛区会被忽视,但是可以通过ignoreBroadCast配置从而不忽视),进入观看并设置为最低清晰度(为了节省流量)
 2. 可以自行设置是否选择无头模式(默认关闭)(无头模式即headless,开启后浏览器会不可见,在后台运行,缓解电脑CPU压力)
 3. 可以自行设置不观看哪些赛区的比赛.(默认为空)(注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看)(建议设置,避免观看所有比赛从而被检测)
 4. 可以自行设置多久来查询一次比赛最新信息.(默认600秒)(关闭已经结束的比赛和开启新开始的比赛)
 5. 掉落提醒(支持钉钉,Discord,饭碗警告)(不是所有掉落都会被提醒,拳头的锅,有时候网页上不会出现弹窗)
 6. 软件发生错误时可以发送错误提醒
-7. 可以设置最长运行时间，到达时间后关闭软件  
-8. 可以设置休眠时间段，在时间段内软件会以1小时为间隔来检查
-9. 可以设置桌面提醒（尚未测试,不确定是否生效）
+7. 可以设置最长运行时间，到达时间后自动关机(只有windows会自动关机)  
+8. 可以设置多段休眠时间段，在休眠时间段中会关闭观赛网页,待休眠结束后重新打开.(推荐设置)
+9. 可以设置桌面提醒
 10. 可以手动添加代理(绝大部分用户无需配置)
 11. 可以设置删除视频流元素(节省流量)(风险未知,有兴趣自行尝试) 
 12. 可以查看程序本次运行得到的掉落数以及掉落赛区信息
 13. 可以通过本地浏览器缓存免账密登录
 14. 可以自定义谷歌浏览器的地址(支持绿色版即免安装版)
+15. 可以配置语言,目前支持简体中文和英语
 
 ## 配置信息
 config.yaml
@@ -67,8 +68,8 @@ connectorDropsUrl: "你的webhook链接"           # (支持钉钉,Discord,饭�
 platForm: "windows"                           # 使用平台,默认为Windows,如需使用Linux请在此处进行配置  
 closeStream: "False"                          # 省流模式，默认False，关闭直播间的视频流（未知风险）（有兴趣者自行尝试） 
 desktopNotify: "False"                        # 系统弹窗提示，默认False
-sleepPeriod: "8-13"                           # 休眠时间段，（默认为空）格式为"开始小时-结束小时",在休眠时间段中会以1小时间隔来检查。区间为左闭合右开。
-ignoreBroadCast: True                         # 设置为否会提前进入直播间，以及将支持某些一直处于转播的赛区直播
+sleepPeriod: ["8-13", "20-23"]                # (推荐)休眠时间段，（默认为空）格式为"开始小时-结束小时",在休眠时间段中会关闭观赛网页,待休眠结束后重新打开。区间为左闭合右开。
+ignoreBroadCast: True                         # 设置为False会提前进入直播间，以及将支持某些一直处于转播的赛区直播
 userDataDir: "C:\\Users\\xxxxx\\AppData\\Local\\Google\\Chrome\\User Data"  # 例子,其中xxxxx处改为自己电脑的名字,具体教程见https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E6%9C%AC%E5%9C%B0%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98-%E5%85%8D%E8%B4%A6%E5%AF%86%E7%99%BB%E5%BD%95
 chromePath: "X:\\xxxxx\\xx\\Chrome.exe"       # 谷歌浏览器自订路径
 countDrops: True                              # 是否检查掉落数
