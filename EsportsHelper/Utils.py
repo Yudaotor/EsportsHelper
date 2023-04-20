@@ -39,7 +39,7 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "掉落提醒失败": "Drop alert failed.",
         "无法打开Lolesports网页，网络问题": "Network error. Cannot open LolEsports website.",
         "登录中...": "Logging in...",
-        "账密 提交成功": "Account credentials sent successfully.",
+        "账密 提交成功": "Account credentials inserted...",
         "网络问题 登录超时": "Network error. Login timeout.",
         "请输入二级验证代码:": "Please enter 2FA code:",
         "二级验证代码提交成功": "2FA code submitted successfully.",
