@@ -8,10 +8,9 @@ from traceback import format_exc
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
 from EsportsHelper.Utils import (Utils, _, _log, desktopNotify,
-                                 downloadOverrideFile, getLolesportsWeb,
+                                 getLolesportsWeb,
                                  getMatchName, sysQuit)
 from EsportsHelper.Youtube import Youtube
-from retrying import retry
 from rich import print
 from selenium.common import NoSuchElementException, NoSuchWindowException
 from selenium.webdriver.common.by import By
@@ -32,7 +31,7 @@ class Match:
         self.currentWindows = {}
         self.rewardWindow = None
         self.mainWindow = self.driver.current_window_handle
-        self.OVERRIDES = downloadOverrideFile()
+        self.OVERRIDES = self.utils.getOverrideFile()
         self.historyDrops = 0
         self.dropsDict = {}
         self.sleepBeginList = []

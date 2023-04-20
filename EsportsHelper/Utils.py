@@ -90,6 +90,10 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "预计休眠状态将持续到": "The sleep period will last until",
         "点": "o'clock.",
         "通知类型配置错误,已恢复默认值": "Incorrect notification type configuration. The default setting has been restored.",
+        "从github获取override文件失败, 将尝试从gitee获取": "Failed to get override file from github. Will try to get from gitee.",
+        "获取override文件成功": "Override file successfully imported.",
+        "获取override文件失败": "Failed to import override file.",
+
         }
 
 
@@ -200,6 +204,47 @@ class Utils:
                 "[green]====[/green]      If you like it, please give me a star      [green]====[/green]")
             print("[green]=========================================================")
 
+    def getOverrideFile(self):
+        try:
+            OVERRIDES = {}
+            req = requests.session()
+            headers = {'Content-Type': 'text/plain; charset=utf-8',
+                       'Connection': 'close'}
+            try:
+                remoteOverrideFile = req.get(
+                    "https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
+                print(1 / 0)
+            except Exception:
+                log.error(_log("从github获取override文件失败, 将尝试从gitee获取", lang=self.config.language))
+                print(_("从github获取override文件失败, 将尝试从gitee获取", color="red", lang=self.config.language))
+                remoteOverrideFile = req.get(
+                    "https://gitee.com/yudaotor/EsportsHelper/raw/main/override.txt", headers=headers)
+            if remoteOverrideFile.status_code == 200:
+                override = remoteOverrideFile.text.split(",")
+                first = True
+                for o in override:
+                    temp = o.split("|")
+                    if len(temp) == 2:
+                        if first:
+                            first = False
+                        else:
+                            temp[0] = temp[0][1:]
+                        OVERRIDES[temp[0]] = temp[1]
+                log.info(_log("获取override文件成功", lang=self.config.language))
+                print(_("获取override文件成功", color="green", lang=self.config.language))
+                return OVERRIDES
+            else:
+                print(_("获取override文件失败", color="red", lang=self.config.language))
+                log.error(_log("获取override文件失败", lang=self.config.language))
+                input(_log("按任意键退出", lang=self.config.language))
+                sysQuit(e=_log("获取override文件失败", lang=self.config.language))
+        except Exception as ex:
+            print_exc()
+            log.error(_log("获取override文件失败", lang=self.config.language))
+            print(_("获取override文件失败", color="red", lang=self.config.language))
+            input(_log("按任意键退出", lang=self.config.language))
+            sysQuit(e=_log("获取override文件失败", lang=self.config.language))
+
 
 def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg):
     try:
@@ -221,43 +266,6 @@ def sysQuit(driver=None, e=None):
     log.error(e)
     log.info("------Quit------")
     sys.exit()
-
-
-def downloadOverrideFile():
-    try:
-        OVERRIDES = {}
-        req = requests.session()
-        headers = {'Content-Type': 'text/plain; charset=utf-8',
-                   'Connection': 'close'}
-        remoteOverrideFile = req.get(
-            "https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
-        if remoteOverrideFile.status_code == 200:
-            override = remoteOverrideFile.text.split(",")
-            first = True
-            for o in override:
-                temp = o.split("|")
-                if len(temp) == 2:
-                    if first:
-                        first = False
-                    else:
-                        temp[0] = temp[0][1:]
-                    OVERRIDES[temp[0]] = temp[1]
-            return OVERRIDES
-        else:
-            log.error("get overrides file failed")
-            input("Press any key to exit...")
-            sys.exit()
-    except MaxRetryError:
-        log.error("get overrides file failed")
-        print(f"[red]get overrides file failed, Try later[/red]")
-        input("Press any key to exit...")
-        sysQuit(e="get overrides file failed")
-    except Exception as ex:
-        print_exc()
-        log.error("get overrides file failed")
-        print(f"[red]get overrides file failed, Try later[/red]")
-        input("Press any key to exit...")
-        sysQuit(e="get overrides file failed")
 
 
 # 从url中获取比赛赛区名
