@@ -23,7 +23,7 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "无法登陆，账号密码可能错误或者网络出现问题": "Login failed: wrong credentials or network problem.",
         "开始重试": "Restarting.",
         "配置文件找不到": "Configuration file not found.",
-        "按任意键退出": "Exit the program by pressing any key.",
+        "按回车键退出": "Press Enter to exit.",
         "配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠": "Configuration file format error.\nPlease check if there are Chinese characters and single spaces after colons.\nChange single slash to double in configuration path if there are any.",
         "配置文件中没有账号密码信息": "There are no account credentials in the configuration file.",
         "检查间隔配置错误,已恢复默认值": "Incorrect interval configuration. The default value has been restored.",
@@ -236,13 +236,13 @@ class Utils:
             else:
                 print(_("获取override文件失败", color="red", lang=self.config.language))
                 log.error(_log("获取override文件失败", lang=self.config.language))
-                input(_log("按任意键退出", lang=self.config.language))
+                input(_log("按回车键退出", lang=self.config.language))
                 sysQuit(e=_log("获取override文件失败", lang=self.config.language))
         except Exception as ex:
             print_exc()
             log.error(_log("获取override文件失败", lang=self.config.language))
             print(_("获取override文件失败", color="red", lang=self.config.language))
-            input(_log("按任意键退出", lang=self.config.language))
+            input(_log("按回车键退出", lang=self.config.language))
             sysQuit(e=_log("获取override文件失败", lang=self.config.language))
 
 
