@@ -120,74 +120,75 @@ class Rewards:
             return False, [], [], [], [], [], []
 
     def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg):
-        try:
-            s = requests.session()
-            s.keep_alive = False  # 关闭多余连接
-            if "https://oapi.dingtalk.com" in self.config.connectorDropsUrl:
-                data = {
-                    "msgtype": "link",
-                    "link": {
-                        "text": "Drop掉落提醒",
-                        "title": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
-                        "picUrl": f"{dropItemImg}",
-                        "messageUrl": "https://lolesports.com/rewards"
+        if self.config.notifyType == "all" or self.config.notifyType == "drops":
+            try:
+                s = requests.session()
+                s.keep_alive = False  # 关闭多余连接
+                if "https://oapi.dingtalk.com" in self.config.connectorDropsUrl:
+                    data = {
+                        "msgtype": "link",
+                        "link": {
+                            "text": "Drop掉落提醒",
+                            "title": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                            "picUrl": f"{dropItemImg}",
+                            "messageUrl": "https://lolesports.com/rewards"
+                        }
                     }
-                }
-                s.post(self.config.connectorDropsUrl, json=data)
-                time.sleep(5)
-            elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
-                field1 = {
-                    "name": "Event",
-                    "value": f"{eventTitle}",
-                    "inline": True
-                }
-                field2 = {
-                    "name": "Reward",
-                    "value": f"{dropItem}",
-                    "inline": True
-                }
-                field4 = {
-                    "name": "Unlocked-Date",
-                    "value": f"{unlockedDate}",
-                    "inline": True
-                }
-                fieldNone = {
-                    "name": "",
-                    "value": "",
-                    "inline": True
-                }
-                embed = {
-                    "title": "Drop!",
-                    "description": f"{self.config.username}",
-                    "image": {"url": f"{productImg}"},
-                    "thumbnail": {"url": f"{dropItemImg}"},
-                    "fields": [field1, field2, fieldNone, field4, fieldNone, fieldNone],
-                    "color": 6676471,
-                    "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S+08:00", time.localtime())
-                }
-                params = {
-                    "username": "EsportsHelper",
-                    "embeds": [embed]
-                }
-                s.post(self.config.connectorDropsUrl, headers={
-                       "Content-type": "application/json"}, json=params)
-                time.sleep(5)
-            elif "https://fwalert.com" in self.config.connectorDropsUrl:
-                params = {
-                    "text": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
-                }
-                s.post(self.config.connectorDropsUrl, headers={
-                       "Content-type": "application/json"}, json=params)
-                time.sleep(5)
-            else:
-                params = {
-                    "text": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
-                }
-                s.post(self.config.connectorDropsUrl, headers={
-                       "Content-type": "application/json"}, json=params)
-                time.sleep(5)
-            self.log.info(_log("掉落提醒成功", lang=self.config.language))
-        except Exception:
-            self.log.error(_log("掉落提醒失败", lang=self.config.language))
-            self.log.error(format_exc())
-            print(_("掉落提醒失败", color="red", lang=self.config.language))
+                    s.post(self.config.connectorDropsUrl, json=data)
+                    time.sleep(5)
+                elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
+                    field1 = {
+                        "name": "Event",
+                        "value": f"{eventTitle}",
+                        "inline": True
+                    }
+                    field2 = {
+                        "name": "Reward",
+                        "value": f"{dropItem}",
+                        "inline": True
+                    }
+                    field4 = {
+                        "name": "Unlocked-Date",
+                        "value": f"{unlockedDate}",
+                        "inline": True
+                    }
+                    fieldNone = {
+                        "name": "",
+                        "value": "",
+                        "inline": True
+                    }
+                    embed = {
+                        "title": "Drop!",
+                        "description": f"{self.config.username}",
+                        "image": {"url": f"{productImg}"},
+                        "thumbnail": {"url": f"{dropItemImg}"},
+                        "fields": [field1, field2, fieldNone, field4, fieldNone, fieldNone],
+                        "color": 6676471,
+                        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S+08:00", time.localtime())
+                    }
+                    params = {
+                        "username": "EsportsHelper",
+                        "embeds": [embed]
+                    }
+                    s.post(self.config.connectorDropsUrl, headers={
+                           "Content-type": "application/json"}, json=params)
+                    time.sleep(5)
+                elif "https://fwalert.com" in self.config.connectorDropsUrl:
+                    params = {
+                        "text": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                    }
+                    s.post(self.config.connectorDropsUrl, headers={
+                           "Content-type": "application/json"}, json=params)
+                    time.sleep(5)
+                else:
+                    params = {
+                        "text": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                    }
+                    s.post(self.config.connectorDropsUrl, headers={
+                           "Content-type": "application/json"}, json=params)
+                    time.sleep(5)
+                self.log.info(_log("掉落提醒成功", lang=self.config.language))
+            except Exception:
+                self.log.error(_log("掉落提醒失败", lang=self.config.language))
+                self.log.error(format_exc())
+                print(_("掉落提醒失败", color="red", lang=self.config.language))

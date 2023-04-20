@@ -33,6 +33,7 @@ class Config:
                 self.userDataDir = config.get("userDataDir", "")
                 self.ignoreBroadCast = config.get("ignoreBroadCast", True)
                 self.language = config.get("language", "zh_CN")
+                self.notifyType = config.get("notifyType", "all")
                 self.format()
 
         except FileNotFoundError:
@@ -163,6 +164,13 @@ class Config:
                 self.ignoreBroadCast = False
             else:
                 self.ignoreBroadCast = True
+        if isinstance(self.notifyType, str):
+            if self.notifyType not in ["all", "drops", "error"]:
+                print(_("通知类型配置错误,已恢复默认值", color="red", lang=self.language))
+                self.notifyType = "all"
+        else:
+            print(_("通知类型配置错误,已恢复默认值", color="red", lang=self.language))
+            self.notifyType = "all"
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)

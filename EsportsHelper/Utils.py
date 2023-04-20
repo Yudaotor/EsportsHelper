@@ -10,7 +10,7 @@ from retrying import retry
 from rich import print
 from urllib3.exceptions import MaxRetryError
 
-i18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开\n按任意键退出...": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator.\nExit the program by pressing any key...",
+englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开\n按任意键退出...": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator.\nExit the program by pressing any key...",
         "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试\n按任意键退出...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs Google Chrome currently open? Please close it and try again.\nExit the program by pressing any key...",
         "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用\n按任意键退出...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs there a network problem? Check VPN availability if one connected.\nExit the program by pressing any key...",
         "无法打开Lolesports网页，网络问题，将于3秒后退出...": "Network problem: cannot open LolEsports website. Exiting in 3 seconds...",
@@ -89,6 +89,7 @@ i18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有�
         "处于休眠时间...": "Sleeping...",
         "预计休眠状态将持续到": "The sleep period will last until",
         "点": "o'clock.",
+        "通知类型配置错误,已恢复默认值": "Incorrect notification type configuration. The default setting has been restored.",
         }
 
 
@@ -98,67 +99,67 @@ class Utils:
         pass
 
     def errorNotify(self, error):
-        error = ""
-        if self.config.desktopNotify:
-            try:
-                notification.notify(
-                    title=_log("小傻瓜，出事啦", lang=self.config.language),
-                    message=f"Error Message: {error}",
-                    timeout=30
-                )
-                print(_("错误提醒发送成功", color="green", lang=self.config.language))
-                log.info(_log("错误提醒发送成功", lang=self.config.language))
-            except Exception as e:
-                print(_("错误提醒发送失败", color="red", lang=self.config.language))
-                log.error(_log("错误提醒发送失败", lang=self.config.language))
-                log.error(format_exc())
-        if self.config.connectorDropsUrl != "":
-            s = requests.session()
-            s.keep_alive = False  # 关闭多余连接
-            try:
-                if "https://oapi.dingtalk.com" in self.config.connectorDropsUrl:
-                    data = {
-                        "msgtype": "link",
-                        "link": {
-                            "text": "Stop Farming Drop",
-                            "title": error,
-                            "picUrl": "",
-                            "messageUrl": ""
+        if self.config.notifyType == "all" or self.config.notifyType == "error":
+            if self.config.desktopNotify:
+                try:
+                    notification.notify(
+                        title=_log("小傻瓜，出事啦", lang=self.config.language),
+                        message=f"Error Message: {error}",
+                        timeout=30
+                    )
+                    print(_("错误提醒发送成功", color="green", lang=self.config.language))
+                    log.info(_log("错误提醒发送成功", lang=self.config.language))
+                except Exception as e:
+                    print(_("错误提醒发送失败", color="red", lang=self.config.language))
+                    log.error(_log("错误提醒发送失败", lang=self.config.language))
+                    log.error(format_exc())
+            if self.config.connectorDropsUrl != "":
+                s = requests.session()
+                s.keep_alive = False  # 关闭多余连接
+                try:
+                    if "https://oapi.dingtalk.com" in self.config.connectorDropsUrl:
+                        data = {
+                            "msgtype": "link",
+                            "link": {
+                                "text": "Stop Farming Drop",
+                                "title": error,
+                                "picUrl": "",
+                                "messageUrl": ""
+                            }
                         }
-                    }
-                    s.post(self.config.connectorDropsUrl, json=data)
-                elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
-                    embed = {
-                        "title": "Stop Farming Drop",
-                        "description": f"{error}",
-                        "image": {"url": f""},
-                        "thumbnail": {"url": f""},
-                        "color": 6676471,
-                    }
-                    params = {
-                        "username": "EsportsHelper",
-                        "embeds": [embed]
-                    }
-                    s.post(self.config.connectorDropsUrl, headers={
-                           "Content-type": "application/json"}, json=params)
-                elif "https://fwalert.com" in self.config.connectorDropsUrl:
-                    params = {
-                        "text": f"发生错误停止获取Drop{error}",
-                    }
-                    s.post(self.config.connectorDropsUrl, headers={
-                           "Content-type": "application/json"}, json=params)
-                else:
-                    params = {
-                        "text": f"发生错误停止获取Drop{error}",
-                    }
-                    s.post(self.config.connectorDropsUrl, headers={
-                           "Content-type": "application/json"}, json=params)
-                log.info(_log("异常提醒成功", lang=self.config.language))
-                print(_("异常提醒成功", color="green", lang=self.config.language))
-            except Exception as e:
-                print(_("异常提醒失败", color="red", lang=self.config.language))
-                log.error(_("异常提醒失败", lang=self.config.language))
-                log.error(format_exc())
+                        s.post(self.config.connectorDropsUrl, json=data)
+                    elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
+                        embed = {
+                            "title": "Stop Farming Drop",
+                            "description": f"{error}",
+                            "image": {"url": f""},
+                            "thumbnail": {"url": f""},
+                            "color": 6676471,
+                        }
+                        params = {
+                            "username": "EsportsHelper",
+                            "embeds": [embed]
+                        }
+                        s.post(self.config.connectorDropsUrl, headers={
+                               "Content-type": "application/json"}, json=params)
+                    elif "https://fwalert.com" in self.config.connectorDropsUrl:
+                        params = {
+                            "text": f"发生错误停止获取Drop{error}",
+                        }
+                        s.post(self.config.connectorDropsUrl, headers={
+                               "Content-type": "application/json"}, json=params)
+                    else:
+                        params = {
+                            "text": f"发生错误停止获取Drop{error}",
+                        }
+                        s.post(self.config.connectorDropsUrl, headers={
+                               "Content-type": "application/json"}, json=params)
+                    log.info(_log("异常提醒成功", lang=self.config.language))
+                    print(_("异常提醒成功", color="green", lang=self.config.language))
+                except Exception as e:
+                    print(_("异常提醒失败", color="red", lang=self.config.language))
+                    log.error(_("异常提醒失败", lang=self.config.language))
+                    log.error(format_exc())
 
     def debugScreen(self, driver, lint=""):
         try:
@@ -290,11 +291,11 @@ def _(text, color, lang="zh_CN"):
     if lang == "zh_CN":
         return f"[{color}]{text}"
     elif lang == "en_US":
-        return f"[{color}]{i18n.get(text)}"
+        return f"[{color}]{englishI18n.get(text)}"
 
 
 def _log(text, lang="zh_CN"):
     if lang == "zh_CN":
         return f"{text}"
     elif lang == "en_US":
-        return f"{i18n.get(text)}"
+        return f"{englishI18n.get(text)}"
