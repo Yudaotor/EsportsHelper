@@ -117,9 +117,9 @@ class Match:
                 dropsNumber, watchHours = self.countDrops()
                 if dropsNumber != 0:
                     print(
-                        f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} {_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber} {_('总观看时长:', color='green', lang=self.config.language)}{watchHours}")
+                        f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} | {_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber} | {_('总观看时长:', color='green', lang=self.config.language)}{watchHours}")
                     self.log.info(
-                        f"{_log('本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.historyDrops} {_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} {_log('总观看时长:', lang=self.config.language)}{watchHours}")
+                        f"{_log('本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.historyDrops} | {_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} | {_log('总观看时长:', lang=self.config.language)}{watchHours}")
                 self.driver.switch_to.window(self.mainWindow)
                 isDrop, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
                 if isDrop:
