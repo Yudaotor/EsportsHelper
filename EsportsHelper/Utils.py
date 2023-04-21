@@ -32,7 +32,7 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "用户数据userDataDir路径配置错误,已恢复默认值": "Incorrect UserDataDirectory path configuration. The default setting has been restored.",
         "语言配置错误,已恢复zh_CN默认值": "Incorrect language configuration. The default language zh_CN has been restored.",
         '正常观看 可获取奖励': "is live and being watched. Drops available. Stream title:",
-        "观看异常 重试中...": "Watch system work anomaly. Retrying...",
+        "观看异常 重试中...": "is live, but watch attempt was unsuccessful. Retrying...",
         "观看异常": "Watch system work anomaly.",
         "检查掉落失败": "Drops check failed.",
         "掉落提醒失败": "Drop alert failed.",
