@@ -63,7 +63,7 @@ delay: 600                                    # 每次检查的时间间隔，�
 headless: False                               # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)  
 disWatchMatches: ["lck", "lpl", "lcs"]        # 不想看的赛区名称，可以在这里添加.(注意,是小写)  
 maxRunHours: -1                               # 负值为一直运行，正值为运行小时, 默认-1
-proxy: "你的代理地址" # 代理地址，选填，一般用户不用填。 e.g., "socks://127.0.0.1:20173"
+proxy: "你的代理地址"                          # 代理地址，选填，一般用户不用填。 e.g., "socks://127.0.0.1:20173"
 connectorDropsUrl: "你的webhook链接"           # (支持钉钉,Discord,饭碗警告)具体配置方法见此处https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F(%E5%8A%9F%E8%83%BD%E5%BE%85%E6%B5%8B%E8%AF%95
 platForm: "windows"                           # 使用平台,默认为Windows,如需使用Linux请在此处进行配置  
 closeStream: "False"                          # 省流模式，默认False，关闭直播间的视频流（未知风险）（有兴趣者自行尝试） 
