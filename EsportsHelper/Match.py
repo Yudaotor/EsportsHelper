@@ -135,6 +135,7 @@ class Match:
                 sleep(4)
                 liveMatches = self.getMatchInfo()
                 sleep(3)
+                print(self.driver.find_element(By.XPATH, "//*[text()='Today']/./..").get_attribute("class"))
                 if len(liveMatches) == 0:
                     self.log.info(
                         _log("没有赛区正在直播", lang=self.config.language))
@@ -378,6 +379,8 @@ class Match:
         try:
             nextMatchDayTime = self.driver.find_element(
                 by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate > div.date > span.monthday").text
+            nextMatchMonth = nextMatchDayTime.split(" ")[0]
+            nextMatchDay = int(nextMatchDayTime.split(" ")[1])
             nextMatchTime = self.driver.find_element(
                 by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.EventTime > div > span.hour").text
             try:
@@ -389,6 +392,25 @@ class Match:
                 by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.name").text
             nextMatchBO = self.driver.find_element(
                 by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.strategy").text
+            if nextMatchAMOrPM == "PM" and nextMatchTime != "12":
+                nextMatchStartHour = int(nextMatchTime) + 12
+            elif nextMatchAMOrPM == "AM" and nextMatchTime == "12":
+                nextMatchStartHour = 0
+            else:
+                nextMatchStartHour = int(nextMatchTime)
+            nowHour = int(time.localtime().tm_hour)
+            nowMonth = time.strftime("%b", time.localtime())
+            nowDay = int(time.strftime("%d", time.localtime()))
+            if nowMonth in nextMatchMonth and nowDay == nextMatchDay and nowHour > nextMatchStartHour or nowMonth not in nextMatchMonth and nowDay < nextMatchDay:
+                nextMatchTime = self.driver.find_element(
+                    by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.EventTime > div > span.hour").text
+                nextMatchAMOrPM = self.driver.find_element(
+                    by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.EventTime > div > span.hour ~ span.ampm").text
+                nextMatchLeague = self.driver.find_element(
+                    by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.name").text
+                nextMatchBO = self.driver.find_element(
+                    by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.strategy").text
+                print(_("过滤失效的比赛", color="yellow", lang=self.config.language))
             print(
                 f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]{nextMatchDayTime} | {nextMatchTime}{nextMatchAMOrPM} | {nextMatchLeague}, {nextMatchBO}.[/green]")
         except Exception:
