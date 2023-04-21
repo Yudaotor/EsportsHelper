@@ -92,7 +92,8 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "从github获取override文件失败, 将尝试从gitee获取": "Failed to get override file from github. Will try to get from gitee.",
         "获取override文件成功": "Override file successfully imported.",
         "获取override文件失败": "Failed to import override file.",
-
+        "休眠时间结束": "Wake up.",
+        "进入休眠时间": "Sleep now...",
         }
 
 

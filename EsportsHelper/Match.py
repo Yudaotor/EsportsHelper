@@ -40,6 +40,7 @@ class Match:
     def watchMatches(self, delay, maxRunHours):
         try:
             sleepFlag = False
+            isSleep = False
             self.currentWindows = {}
             self.mainWindow = self.driver.current_window_handle
             maxRunSecond = maxRunHours * 3600
@@ -53,12 +54,12 @@ class Match:
                 self.getSleepPeriod()
             # 循环观赛
             while maxRunHours < 0 or time.time() < endTimePoint:
+                # 随机数，用于随机延迟
+                randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
+                newDelay = randomDelay * 10
                 if self.sleepBeginList == [] and self.sleepEndList == []:
-                    # 随机数，用于随机延迟
-                    randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
-                    newDelay = randomDelay * 10
+                    pass
                 else:
-                    isSleep = False
                     nowTimeHour = int(time.localtime().tm_hour)
                     for sleepBegin, sleepEnd in zip(self.sleepBeginList, self.sleepEndList):
                         if sleepBegin <= nowTimeHour < sleepEnd:
@@ -68,28 +69,35 @@ class Match:
                                 randomDelay = randint(
                                     int(delay * 0.08), int(delay * 0.15))
                                 newDelay = randomDelay * 10
-                            if sleepFlag is False:
-                                self.closeAllTabs()
-                                sleepFlag = True
+                            isSleep = True
+                            sleepEndTime = sleepEnd
+                            break
+                        else:
+                            isSleep = False
+
+                    if isSleep:
+                        if sleepFlag is False:
+                            print(_("进入休眠时间", color="green", lang=self.config.language))
+                            self.log.info(_log("进入休眠时间", lang=self.config.language))
+                            self.closeAllTabs()
+                            sleepFlag = True
+                        else:
                             print(_("处于休眠时间...", color="green", lang=self.config.language))
                             self.log.info(_log("处于休眠时间...", lang=self.config.language))
-                            print(f'{_("预计休眠状态将持续到", color="green", lang=self.config.language)} {sleepEnd} {_("点", color="green", lang=self.config.language)}')
-                            self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEnd} {_log("点", lang=self.config.language)}')
-                            print(
-                                "[green]==================================================[/green]")
-                            self.log.info("==================================================")
-                            isSleep = True
-                            sleep(newDelay)
-                            continue
-                        else:
-                            sleepFlag = False
-                            self.driver.switch_to.window(self.rewardWindow)
-                            self.getRewardPage()
-                            randomDelay = randint(
-                                int(delay * 0.08), int(delay * 0.15))
-                            newDelay = randomDelay * 10
-                    if isSleep:
+                        print(f'{_("预计休眠状态将持续到", color="green", lang=self.config.language)} {sleepEndTime} {_("点", color="green", lang=self.config.language)}')
+                        self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEndTime} {_log("点", lang=self.config.language)}')
+                        print(
+                            "[green]==================================================[/green]")
+                        self.log.info("==================================================")
+                        sleep(newDelay)
                         continue
+                    elif sleepFlag is True:
+                        print(_("休眠时间结束", color="green", lang=self.config.language))
+                        self.log.info(_log("休眠时间结束", lang=self.config.language))
+                        sleepFlag = False
+                        self.driver.switch_to.window(self.rewardWindow)
+                        self.getRewardPage()
+
                 self.log.info(_log("开始检查...", lang=self.config.language))
                 print(_("开始检查...", color="green", lang=self.config.language))
                 dropsNumber = self.countDrops()
