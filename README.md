@@ -8,11 +8,11 @@
 
 **Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
 # 电竞助手 EsportsHelper
-通过selenium模拟浏览器来自动观看电竞比赛,网址: [lolesports](lolesports.com)  
+通过selenium模拟浏览器来自动观看电竞比赛,网址: [LolEsports](lolesports.com)  
 至于会不会被拳头检测到这个问题,目前还没有答案.  
 哦对了,用的是谷歌浏览器哦 （必须要下一个最新版的谷歌浏览器哦）  
 来自中国大陆的需搭配VPN使用  
-**如何下载**:点击右侧的[release](https://github.com/Yudaotor/EsportsHelper/releases)下载
+**如何下载**:点击右侧的[Releases](https://github.com/Yudaotor/EsportsHelper/releases)下载
 ## 联系我
 使用过程中有遇到什么问题或者建议可以在Github上提出issue  
 或者加TG群交流: https://t.me/+0PjLPCy_IIJhNzM1  
