@@ -46,7 +46,7 @@ class LoginHandler:
             time.sleep(1)
             self.driver.execute_script("arguments[0].click();", submitButton)
             self.log.info(_log("账密 提交成功", lang=self.config.language))
-            print(_("账密 提交成功", color="green", lang=self.config.language))
+            print(_("账密 提交成功", color="yellow", lang=self.config.language))
             time.sleep(5)
             if len(self.driver.find_elements(by=By.CSS_SELECTOR, value="div.text__web-code")) > 0:
                 self.insert2FACode()
