@@ -36,6 +36,8 @@ class Match:
         self.dropsDict = {}
         self.sleepBeginList = []
         self.sleepEndList = []
+        self.nextMatchHour = None
+        self.nextMatchDay = None
 
     def watchMatches(self, delay, maxRunHours):
         try:
@@ -57,6 +59,16 @@ class Match:
                 # 随机数，用于随机延迟
                 randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
                 newDelay = randomDelay * 10
+                if self.config.autoSleep:
+                    if self.nextMatchHour is not None and self.nextMatchDay is not None:
+                        nowTimeHour = int(time.localtime().tm_hour)
+                        nowTimeDay = int(time.localtime().tm_mday)
+                        if nowTimeHour < self.nextMatchHour and nowTimeDay == self.nextMatchDay:
+                            isSleep = True
+                            sleepEndTime = self.nextMatchHour
+                        elif nowTimeHour < self.nextMatchHour - 1:
+                            newDelay = 3600
+                            isSleep = True
                 if self.sleepBeginList == [] and self.sleepEndList == []:
                     pass
                 else:
@@ -75,28 +87,28 @@ class Match:
                         else:
                             isSleep = False
 
-                    if isSleep:
-                        if sleepFlag is False:
-                            print(_("进入休眠时间", color="green", lang=self.config.language))
-                            self.log.info(_log("进入休眠时间", lang=self.config.language))
-                            self.closeAllTabs()
-                            sleepFlag = True
-                        else:
-                            print(_("处于休眠时间...", color="green", lang=self.config.language))
-                            self.log.info(_log("处于休眠时间...", lang=self.config.language))
-                        print(f'{_("预计休眠状态将持续到", color="green", lang=self.config.language)} {sleepEndTime} {_("点", color="green", lang=self.config.language)}')
-                        self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEndTime} {_log("点", lang=self.config.language)}')
-                        print(
-                            "[green]==================================================[/green]")
-                        self.log.info("==================================================")
-                        sleep(newDelay)
-                        continue
-                    elif sleepFlag is True:
-                        print(_("休眠时间结束", color="green", lang=self.config.language))
-                        self.log.info(_log("休眠时间结束", lang=self.config.language))
-                        sleepFlag = False
-                        self.driver.switch_to.window(self.rewardWindow)
-                        self.getRewardPage()
+                if isSleep:
+                    if sleepFlag is False:
+                        print(_("进入休眠时间", color="green", lang=self.config.language))
+                        self.log.info(_log("进入休眠时间", lang=self.config.language))
+                        self.closeAllTabs()
+                        sleepFlag = True
+                    else:
+                        print(_("处于休眠时间...", color="green", lang=self.config.language))
+                        self.log.info(_log("处于休眠时间...", lang=self.config.language))
+                    print(f'{_("预计休眠状态将持续到", color="green", lang=self.config.language)} {sleepEndTime} {_("点", color="green", lang=self.config.language)}')
+                    self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEndTime} {_log("点", lang=self.config.language)}')
+                    print(
+                        "[green]==================================================[/green]")
+                    self.log.info("==================================================")
+                    sleep(newDelay)
+                    continue
+                elif sleepFlag is True:
+                    print(_("休眠时间结束", color="green", lang=self.config.language))
+                    self.log.info(_log("休眠时间结束", lang=self.config.language))
+                    sleepFlag = False
+                    self.driver.switch_to.window(self.rewardWindow)
+                    self.getRewardPage()
 
                 self.log.info(_log("开始检查...", lang=self.config.language))
                 print(_("开始检查...", color="green", lang=self.config.language))
@@ -135,7 +147,6 @@ class Match:
                 sleep(4)
                 liveMatches = self.getMatchInfo()
                 sleep(3)
-                print(self.driver.find_element(By.XPATH, "//*[text()='Today']/./..").get_attribute("class"))
                 if len(liveMatches) == 0:
                     self.log.info(
                         _log("没有赛区正在直播", lang=self.config.language))
@@ -398,6 +409,8 @@ class Match:
                 nextMatchStartHour = 0
             else:
                 nextMatchStartHour = int(nextMatchTime)
+            self.nextMatchHour = nextMatchStartHour
+            self.nextMatchDay = nextMatchDay
             nowHour = int(time.localtime().tm_hour)
             nowMonth = time.strftime("%b", time.localtime())
             nowDay = int(time.strftime("%d", time.localtime()))
@@ -411,8 +424,12 @@ class Match:
                 nextMatchBO = self.driver.find_element(
                     by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.strategy").text
                 print(_("过滤失效的比赛", color="yellow", lang=self.config.language))
-            print(
-                f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]{nextMatchDayTime} | {nextMatchTime}{nextMatchAMOrPM} | {nextMatchLeague}, {nextMatchBO}.[/green]")
+                print(
+                    f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]{nextMatchTime}{nextMatchAMOrPM} | {nextMatchLeague}, {nextMatchBO}.[/green]")
+                self.nextMatchDay = None
+            else:
+                print(
+                    f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]{nextMatchDayTime} | {nextMatchTime}{nextMatchAMOrPM} | {nextMatchLeague}, {nextMatchBO}.[/green]")
         except Exception:
             self.log.error(_log("获取下一场比赛时间失败", lang=self.config.language))
             self.log.error(format_exc())

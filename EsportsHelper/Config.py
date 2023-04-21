@@ -34,6 +34,7 @@ class Config:
                 self.ignoreBroadCast = config.get("ignoreBroadCast", True)
                 self.language = config.get("language", "zh_CN")
                 self.notifyType = config.get("notifyType", "all")
+                self.autoSleep = config.get("autoSleep", False)
                 self.format()
 
         except FileNotFoundError:
@@ -171,6 +172,14 @@ class Config:
         else:
             print(_("通知类型配置错误,已恢复默认值", color="red", lang=self.language))
             self.notifyType = "all"
+        if isinstance(self.autoSleep, str):
+            if self.autoSleep == "True" or self.autoSleep == "true":
+                self.autoSleep = True
+            elif self.autoSleep == "False" or self.autoSleep == "false":
+                self.autoSleep = False
+            else:
+                self.autoSleep = False
+
 
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)
