@@ -8,7 +8,6 @@ from EsportsHelper.VersionManager import VersionManager
 from plyer import notification
 from retrying import retry
 from rich import print
-from urllib3.exceptions import MaxRetryError
 
 englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开\n按任意键退出...": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator.\nExit the program by pressing any key...",
         "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试\n按任意键退出...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs Google Chrome currently open? Please close it and try again.\nExit the program by pressing any key...",
@@ -60,15 +59,15 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "关闭已结束的比赛时发生错误": "An error occurred while closing finished broadcast.",
         "比赛跳过": " match skipped.",
         "关闭 Twitch 流失败.": "Failed to close Twitch stream.",
-        "Twitch 160p清晰度设置成功": "Twitch stream resolution successfully set to 160p.",
+        "Twitch 160p清晰度设置成功": "Twitch stream quality successfully set to 160p.",
         "Twitch 流关闭成功": "Twitch stream closed successfully.",
-        "Twitch 清晰度设置失败": "Failed to set Twitch stream resolution.",
-        "无法设置 Twitch 清晰度.": "Unable to set Twitch stream resolution.",
+        "Twitch 清晰度设置失败": "Failed to set Twitch stream quality.",
+        "无法设置 Twitch 清晰度.": "Unable to set Twitch stream quality.",
         "关闭 Youtube 流失败.": "Failed to close YouTube stream.",
         "Youtube 流关闭成功": "YouTube stream closed successfully.",
-        "Youtube 144p清晰度设置成功": "YouTube stream resolution successfully set to 144p.",
-        "Youtube 清晰度设置失败": "Failed to set YouTube stream resolution.",
-        "无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者": "Unable to set YouTube stream resolution. Possible misjudged as youtube. Please contact the programmer.",
+        "Youtube 144p清晰度设置成功": "YouTube stream quality successfully set to 144p.",
+        "Youtube 清晰度设置失败": "Failed to set YouTube stream quality.",
+        "无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者": "Unable to set YouTube stream quality. Possible misjudged as youtube. Please contact the programmer.",
         "下一场比赛时间:": "Time of the next broadcast:",
         "获取下一场比赛时间失败": "Failed to get next broadcast time.",
         "获取掉落数失败": "Failed to get drops count.",

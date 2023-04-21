@@ -91,7 +91,7 @@ class Match:
                     if isSleep:
                         continue
                 self.log.info(_log("开始检查...", lang=self.config.language))
-                print(_("开始检查...", color="yellow", lang=self.config.language))
+                print(_("开始检查...", color="green", lang=self.config.language))
                 dropsNumber = self.countDrops()
                 if dropsNumber != 0:
                     print(f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} {_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber}")
