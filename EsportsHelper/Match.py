@@ -63,12 +63,14 @@ class Match:
                     if self.nextMatchHour is not None and self.nextMatchDay is not None:
                         nowTimeHour = int(time.localtime().tm_hour)
                         nowTimeDay = int(time.localtime().tm_mday)
-                        if nowTimeHour < self.nextMatchHour and nowTimeDay == self.nextMatchDay:
+                        nowTimeMin = int(time.localtime().tm_min)
+                        if nowTimeHour < self.nextMatchHour and nowTimeDay == self.nextMatchDay and self.currentWindows == {}:
                             isSleep = True
                             sleepEndTime = self.nextMatchHour
-                        elif nowTimeHour < self.nextMatchHour - 1:
-                            newDelay = 3600
-                            isSleep = True
+                            if nowTimeHour < self.nextMatchHour - 1 and self.currentWindows == {}:
+                                newDelay = 3600
+                            if nowTimeHour == self.nextMatchHour - 1 and nowTimeMin >= 45:
+                                isSleep = False
                 if self.sleepBeginList == [] and self.sleepEndList == []:
                     pass
                 else:
