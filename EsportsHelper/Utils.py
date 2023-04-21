@@ -95,6 +95,7 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "休眠时间结束": "Wake up.",
         "进入休眠时间": "Sleep now...",
         "过滤失效的比赛": "Filter out invalid matches",
+        "总观看时长:": "Life watched hours:",
         }
 
 
