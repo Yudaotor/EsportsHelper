@@ -127,7 +127,7 @@ class Utils:
                         data = {
                             "msgtype": "link",
                             "link": {
-                                "text": "Alert: farming stopped",
+                                "text": "Alert: Drop farming stopped",
                                 "title": error,
                                 "picUrl": "",
                                 "messageUrl": ""
@@ -136,7 +136,7 @@ class Utils:
                         s.post(self.config.connectorDropsUrl, json=data)
                     elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
                         embed = {
-                            "title": "Alert: farming stopped",
+                            "title": "Alert: Drop farming stopped",
                             "description": f"{error}",
                             "image": {"url": f""},
                             "thumbnail": {"url": f""},
