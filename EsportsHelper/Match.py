@@ -375,9 +375,10 @@ class Match:
                             print(_("Youtube 144p清晰度设置成功",
                                   color="green", lang=self.config.language))
                         else:
+                            self.utils.debugScreen(self.driver, "youtube")
                             self.log.error(
-                                _log("Youtube 清晰度设置失败", lang=self.config.language))
-                            print(_("Youtube 清晰度设置失败", color="red",
+                                _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", lang=self.config.language))
+                            print(_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red",
                                   lang=self.config.language))
                     except Exception:
                         self.utils.debugScreen(self.driver, "youtube")
