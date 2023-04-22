@@ -6,7 +6,7 @@ from rich import print
 
 
 class VersionManager:
-    CURRENT_VERSION = "1.4.0"
+    CURRENT_VERSION = "1.5.0"
 
     @staticmethod
     def getLatestTag():
