@@ -71,6 +71,10 @@ class Match:
                                 newDelay = 3600
                             if nowTimeHour == self.nextMatchHour - 1 and nowTimeMin >= 45:
                                 isSleep = False
+                        if nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour < 23:
+                            isSleep = True
+                            sleepEndTime = _("日期:", color="green", lang=self.config.language) + str(self.nextMatchDay) + "" + str(nowTimeHour)
+                            newDelay = 3600
                 if self.sleepBeginList == [] and self.sleepEndList == []:
                     pass
                 else:
