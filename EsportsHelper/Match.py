@@ -492,6 +492,8 @@ class Match:
             else:
                 try:
                     for i in range(0, len(dropLocale)):
+                        if dropNumber[i].text[:-6] == '':
+                            continue
                         self.dropsDict[dropLocale[i].text] = int(
                             dropNumber[i].text[:-6])
                         sumNumber = sumNumber + int(dropNumber[i].text[:-6])
