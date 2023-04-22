@@ -95,8 +95,12 @@ class Rewards:
                         by=By.CSS_SELECTOR, value="div[class=presented-by] > img[class=img]").get_attribute("src"))
                     productImg.append(self.driver.find_element(
                         by=By.CSS_SELECTOR, value="div[class=product-image] > img[class=img]").get_attribute("src"))
-                    eventTitle.append(self.driver.find_element(
-                        by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.title.short").text)
+                    try:
+                        eventTitle.append(self.driver.find_element(
+                            by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.title.short").text)
+                    except Exception:
+                        eventTitle.append(self.driver.find_element(
+                            by=By.CSS_SELECTOR, value="div.RewardsDropsCard > div > div.title.long").text)
                     dropItem.append(self.driver.find_element(
                         by=By.CSS_SELECTOR, value="div[class=reward] > div[class=wrapper] > div[class=title]").text)
                     unlockedDate.append(self.driver.find_element(
