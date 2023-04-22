@@ -99,6 +99,7 @@ englishI18n = {
         "总观看时长: ": "Overall hours watched: ",
         "日期:": "Date:",
         "下次检查在:": "Next check at:",
+        "人观看": "viewers",
         }
 
 
