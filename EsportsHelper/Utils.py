@@ -32,7 +32,7 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "用户数据userDataDir路径配置错误,已恢复默认值": "Incorrect UserDataDirectory path configuration. The default setting has been restored.",
         "语言配置错误,已恢复zh_CN默认值": "Incorrect language configuration. The default language zh_CN has been restored.",
         '正常观看 可获取奖励': "is live and being watched. Drops available. Stream title:",
-        "观看异常 重试中...": "Watch system work anomaly. Retrying...",
+        "观看异常 重试中...": "is live, but watch attempt was unsuccessful. Retrying...",
         "观看异常": "Watch system work anomaly.",
         "检查掉落失败": "Drops check failed.",
         "掉落提醒失败": "Drop alert failed.",
@@ -89,13 +89,13 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "预计休眠状态将持续到": "The sleep period will last until",
         "点": "o'clock.",
         "通知类型配置错误,已恢复默认值": "Incorrect notification type configuration. The default setting has been restored.",
-        "从github获取override文件失败, 将尝试从gitee获取": "Failed to get override file from github. Will try to get from gitee.",
+        "从github获取override文件失败, 将尝试从gitee获取": "Failed to get override file from Github. Trying to get it from Gitee...",
         "获取override文件成功": "Override file successfully imported.",
         "获取override文件失败": "Failed to import override file.",
-        "休眠时间结束": "Wake up.",
-        "进入休眠时间": "Sleep now...",
-        "过滤失效的比赛": "Filter out invalid matches",
-        "总观看时长:": "Life watched hours:",
+        "休眠时间结束": "Waking up...",
+        "进入休眠时间": "Going to sleep now...",
+        "过滤失效的比赛": "Filtering out invalid matches.",
+        "总观看时长:": "Overall hours watched:",
         }
 
 
@@ -127,7 +127,7 @@ class Utils:
                         data = {
                             "msgtype": "link",
                             "link": {
-                                "text": "Stop Farming Drop",
+                                "text": "Alert: Drop farming stopped",
                                 "title": error,
                                 "picUrl": "",
                                 "messageUrl": ""
@@ -136,7 +136,7 @@ class Utils:
                         s.post(self.config.connectorDropsUrl, json=data)
                     elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
                         embed = {
-                            "title": "Stop Farming Drop",
+                            "title": "Alert: Drop farming stopped",
                             "description": f"{error}",
                             "image": {"url": f""},
                             "thumbnail": {"url": f""},
@@ -250,13 +250,13 @@ class Utils:
 def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg):
     try:
         notification.notify(
-            title="Get Drop!",
+            title="New drop!",
             message=f"BY {eventTitle} GET{dropItem} {unlockedDate}",
             timeout=30
         )
-        log.info("Desktop Notify Successful")
+        log.info("Desktop notification sent successfully")
     except Exception as e:
-        log.error("Desktop Notify Failed")
+        log.error("Desktop notification failed")
         log.error(format_exc())
 
 
@@ -290,8 +290,8 @@ def getLolesportsWeb(driver):
         driver.get(
             "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,emea_masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
     except Exception:
-        print("[red]Get LoLesports Web Page Failed,Retrying...[/red]")
-        log.error("Get LoLesports Web Page Failed,Retrying...")
+        print("[red]Getting to LolEsports website failed, retrying...[/red]")
+        log.error("Getting to LolEsports website failed, retrying...")
         driver.get(
             "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,emea_masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
 
