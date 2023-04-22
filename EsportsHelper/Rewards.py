@@ -44,9 +44,21 @@ class Rewards:
                         teams = self.driver.find_element(
                             By.CSS_SELECTOR, "iframe[id=video-player-youtube]").get_attribute("title")
                     if teams != "" and "|" in teams:
-                        teams = teams.split("|")[0]
+                        words = teams.split("|")
+                        for word in words:
+                            if "vs" in word.lower():
+                                teams = word
+                                break
+                            else:
+                                teams = words[0]
                     elif teams != "" and "-" in teams:
-                        teams = teams.split("-")[0]
+                        words = teams.split("-")
+                        for word in words:
+                            if "vs" in word.lower():
+                                teams = word
+                                break
+                            else:
+                                teams = words[0]
                     else:
                         teams = ""
                 except Exception:
