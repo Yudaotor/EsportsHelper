@@ -177,12 +177,8 @@ class Match:
                     f"{_log('下一次检查在:', lang=self.config.language)} {datetime.now() + timedelta(seconds=newDelay)}")
                 self.log.info(
                     "==================================================")
-                if self.config.language == "zh_CN":
-                    print(
-                        f"[green]下一次检查在: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m{m}%d{d} %H{h}%M{f}%S{s}').format(m='月', d='日', h='时', f='分', s='秒')}")
-                elif self.config.language == "en_US":
-                    print(
-                        f"[green]Next check at: {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
+                print(
+                    f"{_('下次检查在:', color='green', lang=self.config.language)} [green]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                 if maxRunHours != -1:
                     print(
                         f"{_('预计结束程序时间:', color='green', lang=self.config.language)} {time.strftime('%H:%M', time.localtime(endTimePoint))}")

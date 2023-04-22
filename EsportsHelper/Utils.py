@@ -9,7 +9,8 @@ from plyer import notification
 from retrying import retry
 from rich import print
 
-englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开\n按任意键退出...": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator.\nExit the program by pressing any key...",
+englishI18n = {
+        "生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开\n按任意键退出...": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator.\nExit the program by pressing any key...",
         "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试\n按任意键退出...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs Google Chrome currently open? Please close it and try again.\nExit the program by pressing any key...",
         "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用\n按任意键退出...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs there a network problem? Check VPN availability if one connected.\nExit the program by pressing any key...",
         "无法打开Lolesports网页，网络问题，将于3秒后退出...": "Network problem: cannot open LolEsports website. Exiting in 3 seconds...",
@@ -97,6 +98,7 @@ englishI18n = {"生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如
         "过滤失效的比赛": "Filtering out invalid matches.",
         "总观看时长:": "Overall hours watched:",
         "日期:": "Date:",
+        "下次检查在:": "Next check at:",
         }
 
 
