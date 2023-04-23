@@ -166,6 +166,11 @@ class Rewards:
                     s.post(self.config.connectorDropsUrl, json=data)
                     time.sleep(5)
                 elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
+                    field0 = {
+                        "name": "Account",
+                        "value": f"{self.config.username}",
+                        "inline": True
+                    }
                     field1 = {
                         "name": "Event",
                         "value": f"{eventTitle}",
@@ -177,7 +182,7 @@ class Rewards:
                         "inline": True
                     }
                     field4 = {
-                        "name": "Unlocked-Date",
+                        "name": "Date",
                         "value": f"{unlockedDate}",
                         "inline": True
                     }
@@ -188,10 +193,9 @@ class Rewards:
                     }
                     embed = {
                         "title": "Drop!",
-                        "description": f"{self.config.username}",
                         "image": {"url": f"{productImg}"},
                         "thumbnail": {"url": f"{dropItemImg}"},
-                        "fields": [field1, field2, fieldNone, field4, fieldNone, fieldNone],
+                        "fields": [field0, field1, field2, fieldNone, field4, fieldNone, fieldNone],
                         "color": 6676471,
                         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S+08:00", time.localtime())
                     }
