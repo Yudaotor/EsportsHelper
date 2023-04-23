@@ -195,7 +195,7 @@ class Rewards:
                         "title": "Drop!",
                         "image": {"url": f"{productImg}"},
                         "thumbnail": {"url": f"{dropItemImg}"},
-                        "fields": [field0, field1, field2, fieldNone, field4, fieldNone, fieldNone],
+                        "fields": [field0, field1, fieldNone, field2, field4, fieldNone, fieldNone],
                         "color": 6676471,
                         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S+08:00", time.localtime())
                     }
