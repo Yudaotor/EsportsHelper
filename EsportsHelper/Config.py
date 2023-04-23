@@ -1,5 +1,6 @@
+import os
 from pathlib import Path
-from traceback import format_exc, print_exc
+from traceback import format_exc
 
 import yaml
 from EsportsHelper.Utils import _, _log
@@ -13,6 +14,11 @@ class Config:
         self.log = log
         try:
             configPath = self.__findConfigFile(configPath)
+            if configPath is None:
+                log.error("can't find config file")
+                print("can't find config file")
+                input("press enter to exit")
+                os.kill(os.getpid(), 9)
             with open(configPath, "r", encoding='utf-8') as f:
                 config = yaml.safe_load(f)
                 self.headless = config.get("headless", False)
@@ -36,21 +42,18 @@ class Config:
                 self.notifyType = config.get("notifyType", "all")
                 self.autoSleep = config.get("autoSleep", False)
                 self.format()
-
-        except FileNotFoundError:
-            log.error(_log("配置文件找不到", lang=self.language))
-            print(_("配置文件找不到", color="red", lang=self.language))
-            input(_log("按回车键退出", lang=self.language))
         except (ParserError, KeyError, ScannerError):
-            log.error(
-                _log("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", lang=self.language))
+            log.error("config file format error")
             log.error(format_exc())
-            print(_("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠",
-                  color="red", lang=config.language))
-            input(_log("按回车键退出", lang=self.language))
+            print("config file format error")
+            input("press enter to exit")
+            os.kill(os.getpid(), 9)
         except Exception:
-            input(_log("按回车键退出", lang=self.language))
+            log.error("config file error")
             log.error(format_exc())
+            print("config file error")
+            input("press enter to exit")
+            os.kill(os.getpid(), 9)
 
     def format(self):
         if isinstance(self.language, str):
@@ -156,7 +159,7 @@ class Config:
             self.chromePath = ""
         if not isinstance(self.userDataDir, str):
             print(_("用户数据userDataDir路径配置错误,已恢复默认值",
-                  color="red", lang=self.language))
+                    color="red", lang=self.language))
             self.userDataDir = ""
         if isinstance(self.ignoreBroadCast, str):
             if self.ignoreBroadCast == "True" or self.ignoreBroadCast == "true":
@@ -180,8 +183,9 @@ class Config:
             else:
                 self.autoSleep = False
 
-
     def __findConfigFile(self, configPath):
         configPath = Path(configPath)
         if configPath.exists():
             return configPath
+        else:
+            return None
