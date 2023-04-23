@@ -113,6 +113,10 @@ class Match:
                     print(f'{_("预计休眠状态将持续到", color="green", lang=self.config.language)} {sleepEndTime} {_("点", color="green", lang=self.config.language)}')
                     self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEndTime} {_log("点", lang=self.config.language)}')
                     print(
+                        f"{_('下次检查在:', color='green', lang=self.config.language)} [green]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
+                    self.log.info(
+                        f"{_log('下次检查在:', lang=self.config.language)} {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
+                    print(
                         "[green]==================================================[/green]")
                     self.log.info("==================================================")
                     sleep(newDelay)
@@ -122,7 +126,8 @@ class Match:
                     self.log.info(_log("休眠时间结束", lang=self.config.language))
                     sleepFlag = False
                     self.driver.switch_to.window(self.rewardWindow)
-                    self.getRewardPage()
+                    if self.config.countDrops:
+                        self.getRewardPage()
 
                 self.log.info(_log("开始检查...", lang=self.config.language))
                 print(_("开始检查...", color="green", lang=self.config.language))
@@ -153,13 +158,19 @@ class Match:
                 except Exception:
                     self.log.error(format_exc())
                     self.log.error(
-                        _log("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...", lang=self.config.language))
-                    print(_("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...",
+                        _log("无法打开Lolesports网页，网络问题，将于3秒后退出...", lang=self.config.language))
+                    print(_("无法打开Lolesports网页，网络问题，将于3秒后退出...",
                             color="red", lang=self.config.language))
                     sysQuit(self.driver, _log(
-                        "Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出...", lang=self.config.language))
-
-                sleep(4)
+                        "无法打开Lolesports网页，网络问题，将于3秒后退出...", lang=self.config.language))
+                # 是否加载完毕
+                wait = WebDriverWait(self.driver, 15)
+                wait.until(ec.element_to_be_clickable(
+                    (By.CSS_SELECTOR, "div.results-label")))
+                print(_("检查赛区直播状态...", color="green", lang=self.config.language))
+                self.log.info(
+                    _log("检查赛区直播状态...", lang=self.config.language))
+                # 获取正在直播的赛区
                 liveMatches = self.getMatchInfo()
                 sleep(3)
                 if len(liveMatches) == 0:
@@ -167,6 +178,13 @@ class Match:
                         _log("没有赛区正在直播", lang=self.config.language))
                     print(_("没有赛区正在直播", color="green",
                             lang=self.config.language))
+                # 单数
+                elif len(liveMatches) == 1:
+                    self.log.info(
+                        f"{len(liveMatches)} {_log('个赛区正在直播中', lang=self.config.language)}")
+                    print(
+                        f"{len(liveMatches)} {_('个赛区正在直播中', color='green', lang=self.config.language)}")
+                # 复数
                 else:
                     self.log.info(
                         f"{len(liveMatches)} {_log('赛区正在直播中', lang=self.config.language)}")
@@ -182,7 +200,7 @@ class Match:
                 # 检查最近一个比赛的信息
                 self.checkNextMatch()
                 self.log.info(
-                    f"{_log('下一次检查在:', lang=self.config.language)} {datetime.now() + timedelta(seconds=newDelay)}")
+                    f"{_log('下次检查在:', lang=self.config.language)} {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                 self.log.info(
                     "==================================================")
                 print(
@@ -396,7 +414,7 @@ class Match:
                         print(_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red",
                                 lang=self.config.language))
                         self.log.error(format_exc())
-            sleep(5)
+            sleep(4)
 
     def checkNextMatch(self):
         try:
