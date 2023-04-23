@@ -69,8 +69,8 @@ englishI18n = {
         "Youtube 流关闭成功": "YouTube stream closed successfully.",
         "Youtube 144p清晰度设置成功": "YouTube stream quality successfully set to 144p.",
         "Youtube 清晰度设置失败": "Failed to set YouTube stream quality.",
-        "无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者": "Unable to set YouTube stream quality. Possible misjudged as youtube. Please contact the programmer.",
-        "下一场比赛时间:": "Time of the next broadcast:",
+        "无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者": "Unable to set YouTube stream quality. Possible misjudged as youtube. Please contact the developer.",
+        "下一场比赛时间:": "Next broadcast:",
         "获取下一场比赛时间失败": "Failed to get next broadcast time.",
         "获取掉落数失败": "Failed to get drops count.",
         "本次运行掉落详细:": "Details of this session drops:",
@@ -103,6 +103,7 @@ englishI18n = {
         "人观看": "viewers",
         "掉落提醒成功": "Drop alert successful.",
         "检查赛区直播状态...": "Checking live broadcasts...",
+        "识别到距离比赛时间较长 检查间隔为1小时": "Long time until next match. Check interval set to 1 hour.",
         }
 
 
@@ -307,7 +308,7 @@ def _(text, color, lang="zh_CN"):
     if lang == "zh_CN":
         return f"[{color}]{text}"
     elif lang == "en_US":
-        return f"[{color}]{englishI18n.get(text)}"
+        return f"[{color}]{englishI18n.get(text, 'No translation there. Please contact the developer.')}"
 
 
 def _log(text, lang="zh_CN"):

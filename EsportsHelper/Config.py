@@ -43,9 +43,9 @@ class Config:
                 self.autoSleep = config.get("autoSleep", False)
                 self.format()
         except (ParserError, KeyError, ScannerError):
-            log.error("config file format error")
+            log.error("Configuration file format error.\nPlease check if there is single space after colons.\nChange single slash to double in configuration path if there are any.")
             log.error(format_exc())
-            print("config file format error")
+            print("Configuration file format error.\nPlease check if there is single space after colons.\nChange single slash to double in configuration path if there are any.")
             input("press enter to exit")
             os.kill(os.getpid(), 9)
         except Exception:

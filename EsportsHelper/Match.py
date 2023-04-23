@@ -59,18 +59,18 @@ class Match:
                 # 随机数，用于随机延迟
                 randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
                 newDelay = randomDelay * 10
+                nowTimeHour = int(time.localtime().tm_hour)
+                nowTimeDay = int(time.localtime().tm_mday)
+                nowTimeMin = int(time.localtime().tm_min)
                 if self.config.autoSleep:
                     if self.nextMatchHour is not None and self.nextMatchDay is not None:
-                        nowTimeHour = int(time.localtime().tm_hour)
-                        nowTimeDay = int(time.localtime().tm_mday)
-                        nowTimeMin = int(time.localtime().tm_min)
                         # 当现在小时数小于比赛开始时间小时并且在同一天的情况下以及目前没有窗口打开时，进入休眠
                         if nowTimeHour < self.nextMatchHour and nowTimeDay == self.nextMatchDay and self.currentWindows == {}:
                             isSleep = True
                             sleepEndTime = self.nextMatchHour
-                            # 当下场比赛时间距离当前时间大于，检查间隔为一小时
+                            # 当下场比赛时间小时-1大于当前时间小时时，检查间隔为一小时
                             if nowTimeHour < self.nextMatchHour - 1 and self.currentWindows == {}:
-                                newDelay = 3600
+                                newDelay = 3599
                             # 当下场比赛时间小时-1等于当前时间小时时，清醒
                             if nowTimeHour == self.nextMatchHour - 1:
                                 isSleep = False
@@ -81,7 +81,13 @@ class Match:
                         if nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour < 23:
                             isSleep = True
                             sleepEndTime = _("日期:", color="green", lang=self.config.language) + str(self.nextMatchDay) + "|" + str(self.nextMatchHour)
-                            newDelay = 3600
+                            newDelay = 3599
+                else:
+                    if self.nextMatchHour is not None and self.nextMatchDay is not None:
+                        if nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour < 23:
+                            newDelay = 3599
+                        if nowTimeHour < self.nextMatchHour - 1 and self.currentWindows == {}:  # 当下场比赛时间距离当前时间大于，检查间隔为一小时
+                            newDelay = 3599
 
                 if self.sleepBeginList == [] and self.sleepEndList == []:
                     pass
@@ -90,7 +96,7 @@ class Match:
                     for sleepBegin, sleepEnd in zip(self.sleepBeginList, self.sleepEndList):
                         if sleepBegin <= nowTimeHour < sleepEnd:
                             if nowTimeHour < sleepEnd - 1:
-                                newDelay = 3600
+                                newDelay = 3599
                             else:
                                 randomDelay = randint(
                                     int(delay * 0.08), int(delay * 0.15))
@@ -112,6 +118,9 @@ class Match:
                         self.log.info(_log("处于休眠时间...", lang=self.config.language))
                     print(f'{_("预计休眠状态将持续到", color="green", lang=self.config.language)} {sleepEndTime} {_("点", color="green", lang=self.config.language)}')
                     self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEndTime} {_log("点", lang=self.config.language)}')
+                    if delay == 3599:
+                        print(_("识别到距离比赛时间较长 检查间隔为1小时", color="green", lang=self.config.language))
+                        self.log.info(_log("识别到距离比赛时间较长 检查间隔为1小时", lang=self.config.language))
                     print(
                         f"{_('下次检查在:', color='green', lang=self.config.language)} [green]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                     self.log.info(
@@ -199,6 +208,9 @@ class Match:
                 self.driver.switch_to.window(self.mainWindow)
                 # 检查最近一个比赛的信息
                 self.checkNextMatch()
+                if newDelay == 3599:
+                    print(_("识别到距离比赛时间较长 检查间隔为1小时", color="green", lang=self.config.language))
+                    self.log.info(_log("识别到距离比赛时间较长 检查间隔为1小时", lang=self.config.language))
                 self.log.info(
                     f"{_log('下次检查在:', lang=self.config.language)} {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                 self.log.info(
@@ -278,6 +290,8 @@ class Match:
         except Exception:
             self.log.error(_log("关闭所有窗口时发生异常", lang=self.config.language))
             print(_("关闭所有窗口时发生异常", color="red", lang=self.config.language))
+            self.utils.errorNotify(error=_log(
+                "关闭所有窗口时发生异常", lang=self.config.language))
             self.log.error(format_exc())
 
     def closeFinishedTabs(self, liveMatches):
