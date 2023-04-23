@@ -56,14 +56,18 @@ class Match:
                 self.getSleepPeriod()
             # 循环观赛
             while maxRunHours < 0 or time.time() < endTimePoint:
+                self.driver.switch_to.window(self.mainWindow)
                 # 随机数，用于随机延迟
                 randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
                 newDelay = randomDelay * 10
                 nowTimeHour = int(time.localtime().tm_hour)
                 nowTimeDay = int(time.localtime().tm_mday)
                 nowTimeMin = int(time.localtime().tm_min)
+                matches = []
+                if isSleep is False:
+                    matches = self.getMatchInfo(ignoreBroadCast=False)
                 if self.config.autoSleep:
-                    if self.nextMatchHour is not None and self.nextMatchDay is not None:
+                    if self.nextMatchHour is not None and self.nextMatchDay is not None and matches == []:
                         # 当现在小时数小于比赛开始时间小时并且在同一天的情况下以及目前没有窗口打开时，进入休眠
                         if nowTimeHour < self.nextMatchHour and nowTimeDay == self.nextMatchDay and self.currentWindows == {}:
                             isSleep = True
@@ -83,7 +87,7 @@ class Match:
                             sleepEndTime = _("日期:", color="green", lang=self.config.language) + str(self.nextMatchDay) + "|" + str(self.nextMatchHour)
                             newDelay = 3599
                 else:
-                    if self.nextMatchHour is not None and self.nextMatchDay is not None:
+                    if self.nextMatchHour is not None and self.nextMatchDay is not None and matches == []:
                         if nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour < 23:
                             newDelay = 3599
                         if nowTimeHour < self.nextMatchHour - 1 and self.currentWindows == {}:  # 当下场比赛时间距离当前时间大于，检查间隔为一小时
@@ -141,12 +145,12 @@ class Match:
                 self.log.info(_log("开始检查...", lang=self.config.language))
                 print(_("开始检查...", color="green", lang=self.config.language))
                 dropsNumber, watchHours = self.countDrops()
+                self.driver.switch_to.window(self.mainWindow)
                 if dropsNumber != 0:
                     print(
                         f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} | {_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber} | {_('总观看时长: ', color='green', lang=self.config.language)}{watchHours}")
                     self.log.info(
                         f"{_log('本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.historyDrops} | {_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} | {_log('总观看时长: ', lang=self.config.language)}{watchHours}")
-                self.driver.switch_to.window(self.mainWindow)
                 isDrop, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
                 if isDrop:
                     for i in range(len(poweredByImg)):
@@ -180,30 +184,29 @@ class Match:
                 self.log.info(
                     _log("检查赛区直播状态...", lang=self.config.language))
                 # 获取正在直播的赛区
-                liveMatches = self.getMatchInfo()
                 sleep(3)
-                if len(liveMatches) == 0:
+                if len(matches) == 0:
                     self.log.info(
                         _log("没有赛区正在直播", lang=self.config.language))
                     print(_("没有赛区正在直播", color="green",
                             lang=self.config.language))
                 # 单数
-                elif len(liveMatches) == 1:
+                elif len(matches) == 1:
                     self.log.info(
-                        f"{len(liveMatches)} {_log('个赛区正在直播中', lang=self.config.language)}")
+                        f"{len(matches)} {_log('个赛区正在直播中', lang=self.config.language)}")
                     print(
-                        f"{len(liveMatches)} {_('个赛区正在直播中', color='green', lang=self.config.language)}")
+                        f"{len(matches)} {_('个赛区正在直播中', color='green', lang=self.config.language)}")
                 # 复数
                 else:
                     self.log.info(
-                        f"{len(liveMatches)} {_log('赛区正在直播中', lang=self.config.language)}")
+                        f"{len(matches)} {_log('赛区正在直播中', lang=self.config.language)}")
                     print(
-                        f"{len(liveMatches)} {_('赛区正在直播中', color='green', lang=self.config.language)}")
+                        f"{len(matches)} {_('赛区正在直播中', color='green', lang=self.config.language)}")
                 # 关闭已经结束的赛区直播间
-                self.closeFinishedTabs(liveMatches=liveMatches)
+                self.closeFinishedTabs(liveMatches=matches)
                 # 开始观看新开始的直播
                 self.startWatchNewMatches(
-                    liveMatches=liveMatches, disWatchMatches=self.config.disWatchMatches)
+                    liveMatches=matches, disWatchMatches=self.config.disWatchMatches)
                 sleep(3)
                 self.driver.switch_to.window(self.mainWindow)
                 # 检查最近一个比赛的信息
@@ -242,17 +245,19 @@ class Match:
             self.utils.errorNotify(_log("发生错误", lang=self.config.language))
             sysQuit(self.driver, _log("发生错误", lang=self.config.language))
 
-    def getMatchInfo(self):
+    def getMatchInfo(self, ignoreBroadCast=True):
         try:
             matches = []
-            if self.config.ignoreBroadCast:
-                elements = self.driver.find_elements(
-                    by=By.CSS_SELECTOR, value=".EventMatch .event.live")
+            trueMatchElements = self.driver.find_elements(
+                by=By.CSS_SELECTOR, value=".EventMatch .event.live")
+            matchElements = self.driver.find_elements(
+                by=By.CSS_SELECTOR, value=".event.live")
+            if self.config.ignoreBroadCast and ignoreBroadCast:
+                for element in trueMatchElements:
+                    matches.append(element.get_attribute("href"))
             else:
-                elements = self.driver.find_elements(
-                    by=By.CSS_SELECTOR, value=".event.live")
-            for element in elements:
-                matches.append(element.get_attribute("href"))
+                for element in matchElements:
+                    matches.append(element.get_attribute("href"))
             return matches
         except Exception:
             self.log.error(_log("获取比赛列表失败", lang=self.config.language))
