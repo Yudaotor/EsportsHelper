@@ -10,14 +10,14 @@ from retrying import retry
 from rich import print
 
 englishI18n = {
-        "生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开\n按任意键退出...": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator.\nExit the program by pressing any key...",
-        "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试\n按任意键退出...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs Google Chrome currently open? Please close it and try again.\nExit the program by pressing any key...",
-        "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用\n按任意键退出...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs there a network problem? Check VPN availability if one connected.\nExit the program by pressing any key...",
+        "生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开...": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator",
+        "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs Google Chrome currently open? Please close it and try again",
+        "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs there a network problem? Check VPN availability if one connected",
         "无法打开Lolesports网页，网络问题，将于3秒后退出...": "Network problem: cannot open LolEsports website. Exiting in 3 seconds...",
         "自动登录失败,检查网络和账号密码": "Automatic login failed. Please check the network availability and account credentials.",
         "好嘞 登录成功": "Logged in successfully.",
-        "使用系统数据 自动登录成功": "Using browser cookies. Auto-login success.",
-        "观看结束～": "Watch finished.",
+        "使用浏览器缓存 自动登录成功": "Using browser cookies. Auto-login success.",
+        "观看结束": "Watch finished.",
         "切换语言成功": "Language switched successfully.",
         "切换语言失败": "The language switch failed.",
         "无法登陆，账号密码可能错误或者网络出现问题": "Login failed: wrong credentials or network problem.",
@@ -45,13 +45,14 @@ englishI18n = {
         "二级验证代码提交成功": "2FA code submitted successfully.",
         "免密登录失败,请去浏览器手动登录后再行尝试": "Authentication failure. Please log in manually using browser and try again.",
         "检查掉落数失败": "Failed to check drop count.",
-        "开始检查...": "Checking...",
+        "开始检查...": "Start checking...",
         "本次运行掉落总和:": "Session drops: ",
         "生涯总掉落:": "Lifetime drops: ",
         "没有赛区正在直播": "No live broadcasts.",
-        "赛区正在直播中": "match(es) currently live.",
+        "个赛区正在直播中": "match currently live.",
+        "赛区正在直播中": "matches currently live.",
         "处于休眠时间，检查时间间隔为1小时": "During the sleep period, the check interval is 1 hour.",
-        "下一次检查在:": "Next check in:",
+        "下一次检查在:": "Next check at:",
         "预计结束程序时间:": "Time left until the program will auto-close:",
         "对应窗口找不到": "The corresponding window cannot be found.",
         "发生错误": "An error has occurred.",
@@ -68,8 +69,8 @@ englishI18n = {
         "Youtube 流关闭成功": "YouTube stream closed successfully.",
         "Youtube 144p清晰度设置成功": "YouTube stream quality successfully set to 144p.",
         "Youtube 清晰度设置失败": "Failed to set YouTube stream quality.",
-        "无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者": "Unable to set YouTube stream quality. Possible misjudged as youtube. Please contact the programmer.",
-        "下一场比赛时间:": "Time of the next broadcast:",
+        "无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者": "Unable to set YouTube stream quality.Stream possibly was misidentified as YouTube source. Please contact the developer.",
+        "下一场比赛时间:": "Next broadcast at:",
         "获取下一场比赛时间失败": "Failed to get next broadcast time.",
         "获取掉落数失败": "Failed to get drops count.",
         "本次运行掉落详细:": "Details of this session drops:",
@@ -100,6 +101,9 @@ englishI18n = {
         "日期:": "Date:",
         "下次检查在:": "Next check at:",
         "人观看": "viewers",
+        "掉落提醒成功": "Drop alert successful.",
+        "检查赛区直播状态...": "Checking live broadcasts...",
+        "识别到距离比赛时间较长 检查间隔为1小时": "Plenty of time until the next match. Checking interval set to 1 hour.",
         }
 
 
@@ -304,7 +308,7 @@ def _(text, color, lang="zh_CN"):
     if lang == "zh_CN":
         return f"[{color}]{text}"
     elif lang == "en_US":
-        return f"[{color}]{englishI18n.get(text)}"
+        return f"[{color}]{englishI18n.get(text, 'No translation there. Please contact the developer.')}"
 
 
 def _log(text, lang="zh_CN"):

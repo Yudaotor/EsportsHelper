@@ -25,23 +25,23 @@ def init(config):
     except TypeError:
         driver = None
         log.error(format_exc())
-        print(_("生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开\n按任意键退出...",
+        print(_("生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开",
               color="red", lang=config.language))
-        input()
+        input(_log("按回车键退出", lang=config.language))
         sysQuit(driver)
     except WebDriverException:
         driver = None
         log.error(format_exc())
-        print(_("生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试\n按任意键退出...",
+        print(_("生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试",
               color="red", lang=config.language))
-        input()
+        input(_log("按回车键退出", lang=config.language))
         sysQuit(driver)
     except Exception:
         driver = None
         log.error(format_exc())
-        print(_("生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用\n按任意键退出...",
+        print(_("生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用",
               color="red", lang=config.language))
-        input()
+        input(_log("按回车键退出", lang=config.language))
         sysQuit(driver)
     # 设置窗口大小
     driver.set_window_size(960, 768)
@@ -54,7 +54,7 @@ def init(config):
             _log("无法打开Lolesports网页，网络问题，将于3秒后退出...", lang=config.language))
         print(_("无法打开Lolesports网页，网络问题，将于3秒后退出...",
               color="red", lang=config.language))
-        sysQuit(driver, _log("Π——Π 无法打开Lolesports网页，网络问题，将于3秒后退出..."))
+        sysQuit(driver, _log("无法打开Lolesports网页，网络问题，将于3秒后退出..."))
     # 切换语言到英语
     try:
         wait = WebDriverWait(driver, 20)
@@ -95,8 +95,8 @@ def login(config):
         print(_("好嘞 登录成功", color="green", lang=config.language))
     else:
         loginHandler.userDataLogin()
-        log.info(_log("使用系统数据 自动登录成功", lang=config.language))
-        print(_("使用系统数据 自动登录成功", color="green", lang=config.language))
+        log.info(_log("使用浏览器缓存 自动登录成功", lang=config.language))
+        print(_("使用浏览器缓存 自动登录成功", color="green", lang=config.language))
 
 
 def watch(config):
@@ -123,8 +123,8 @@ def main():
     login(config)
     sleep(1)
     watch(config)
-    print(_("观看结束～", color="green", lang=config.language))
-    log.info(_log("观看结束～", lang=config.language))
+    print(_("观看结束", color="green", lang=config.language))
+    log.info(_log("观看结束", lang=config.language))
 
 
 if __name__ == '__main__':
