@@ -64,17 +64,25 @@ class Match:
                         nowTimeHour = int(time.localtime().tm_hour)
                         nowTimeDay = int(time.localtime().tm_mday)
                         nowTimeMin = int(time.localtime().tm_min)
+                        # 当现在小时数小于比赛开始时间小时并且在同一天的情况下以及目前没有窗口打开时，进入休眠
                         if nowTimeHour < self.nextMatchHour and nowTimeDay == self.nextMatchDay and self.currentWindows == {}:
                             isSleep = True
                             sleepEndTime = self.nextMatchHour
+                            # 当下场比赛时间距离当前时间大于，检查间隔为一小时
                             if nowTimeHour < self.nextMatchHour - 1 and self.currentWindows == {}:
                                 newDelay = 3600
-                            if nowTimeHour == self.nextMatchHour - 1 and nowTimeMin >= 45:
+                            # 当下场比赛时间小时-1等于当前时间小时时，清醒
+                            if nowTimeHour == self.nextMatchHour - 1:
                                 isSleep = False
+                            # 当下场比赛时间小时等于当前时间小时时，清醒
+                            if nowTimeHour >= self.nextMatchHour:
+                                isSleep = False
+                        # 当下一场比赛日期大于当前日期,当时小时数小于23并且目前没有窗口打开时，进入休眠,间隔为一小时
                         if nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour < 23:
                             isSleep = True
-                            sleepEndTime = _("日期:", color="green", lang=self.config.language) + str(self.nextMatchDay) + "" + str(nowTimeHour)
+                            sleepEndTime = _("日期:", color="green", lang=self.config.language) + str(self.nextMatchDay) + "|" + str(self.nextMatchHour)
                             newDelay = 3600
+
                 if self.sleepBeginList == [] and self.sleepEndList == []:
                     pass
                 else:
@@ -121,9 +129,9 @@ class Match:
                 dropsNumber, watchHours = self.countDrops()
                 if dropsNumber != 0:
                     print(
-                        f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} | {_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber} | {_('总观看时长:', color='green', lang=self.config.language)}{watchHours}")
+                        f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} | {_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber} | {_('总观看时长: ', color='green', lang=self.config.language)}{watchHours}")
                     self.log.info(
-                        f"{_log('本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.historyDrops} | {_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} | {_log('总观看时长:', lang=self.config.language)}{watchHours}")
+                        f"{_log('本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.historyDrops} | {_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} | {_log('总观看时长: ', lang=self.config.language)}{watchHours}")
                 self.driver.switch_to.window(self.mainWindow)
                 isDrop, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
                 if isDrop:

@@ -30,6 +30,7 @@ class Rewards:
     def checkRewards(self, stream, url, retryTimes=6) -> bool:
         match = getMatchName(url)
         teams = ""
+        peopleNumber = ""
         for i in range(retryTimes):
             if self.isRewardMarkExist():
                 try:
@@ -38,23 +39,47 @@ class Rewards:
                         wait.until(ec.frame_to_be_available_and_switch_to_it(
                             (By.CSS_SELECTOR, "iframe[title=Twitch]")))
                         teams = wait.until(ec.presence_of_element_located(
-                            (By.CSS_SELECTOR, "div.Layout-sc-1xcs6mc-0.bZVrjx.tw-card-body > div > p:nth-child(2)"))).text
+                            (By.CSS_SELECTOR, "p[data-test-selector=stream-info-card-component__subtitle]"))).text
+                        peopleInfo = wait.until(ec.presence_of_element_located(
+                            (By.CSS_SELECTOR, "p[data-test-selector=stream-info-card-component__description]"))).text
+                        for n in range(len(peopleInfo)):
+                            if peopleInfo[n].isdigit():
+                                peopleNumber += peopleInfo[n]
                         self.driver.switch_to.default_content()
                     elif stream == "youtube":
                         teams = self.driver.find_element(
                             By.CSS_SELECTOR, "iframe[id=video-player-youtube]").get_attribute("title")
                     if teams != "" and "|" in teams:
-                        teams = teams.split("|")[0]
+                        words = teams.split("|")
+                        for word in words:
+                            if "vs" in word.lower():
+                                teams = word
+                                break
+                            else:
+                                teams = words[0]
                     elif teams != "" and "-" in teams:
-                        teams = teams.split("-")[0]
+                        words = teams.split("-")
+                        for word in words:
+                            if "vs" in word.lower():
+                                teams = word
+                                break
+                            else:
+                                teams = words[0]
                     else:
                         teams = ""
                 except Exception:
+                    self.driver.switch_to.default_content()
                     self.log.error(format_exc())
-                self.log.info(
-                    f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} {teams}")
-                print(
-                    f"{match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} {teams}")
+                if stream == "twitch":
+                    self.log.info(
+                        f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} {teams} {peopleNumber} {_log('人观看', lang=self.config.language)}")
+                    print(
+                        f"{match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} {teams} {peopleNumber} {_('人观看', color='green', lang=self.config.language)}")
+                elif stream == "youtube":
+                    self.log.info(
+                        f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} {teams}")
+                    print(
+                        f"{match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} {teams}")
 
                 return True
             else:
