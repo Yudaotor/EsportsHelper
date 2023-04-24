@@ -55,42 +55,51 @@ class Match:
             if self.config.sleepPeriod != [""]:
                 self.getSleepPeriod()
             # 循环观赛
+            nowTimeHour = int(time.localtime().tm_hour)
+            nowTimeDay = int(time.localtime().tm_mday)
             while maxRunHours < 0 or time.time() < endTimePoint:
                 self.driver.switch_to.window(self.mainWindow)
                 # 随机数，用于随机延迟
                 randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
                 newDelay = randomDelay * 10
-                nowTimeHour = int(time.localtime().tm_hour)
-                nowTimeDay = int(time.localtime().tm_mday)
+                nowTimeHour=nowTimeHour+1
                 nowTimeMin = int(time.localtime().tm_min)
                 matches = []
+                # 如果当前没在休眠,就获取比赛信息.
                 if isSleep is False:
                     matches = self.getMatchInfo(ignoreBroadCast=False)
                 if self.config.autoSleep:
-                    if self.nextMatchHour is not None and self.nextMatchDay is not None and matches == []:
-                        # 当现在小时数小于比赛开始时间小时并且在同一天的情况下以及目前没有窗口打开时，进入休眠
-                        if nowTimeHour < self.nextMatchHour and nowTimeDay == self.nextMatchDay and self.currentWindows == {}:
+                    # 当下场比赛时间无误,进入休眠判断.
+                    if self.nextMatchHour is not None and self.nextMatchDay is not None:
+                        # 如果下场比赛和现在是同一天,但是当前时间已经超过了比赛时间,就清醒.
+                        if nowTimeDay == self.nextMatchDay and nowTimeHour >= self.nextMatchHour:
+                            isSleep = False
+                        # 如果下场比赛和现在是同一天,且离比赛开始还有一个小时以上,且没有赛区正在直播,就进入一小时的休眠.
+                        elif nowTimeDay == self.nextMatchDay and nowTimeHour < self.nextMatchHour - 1 and self.currentWindows == {} and matches == []:
                             isSleep = True
+                            newDelay = 3599
                             sleepEndTime = self.nextMatchHour
-                            # 当下场比赛时间小时-1大于当前时间小时时，检查间隔为一小时
-                            if nowTimeHour < self.nextMatchHour - 1 and self.currentWindows == {}:
-                                newDelay = 3599
-                            # 当下场比赛时间小时-1等于当前时间小时时，清醒
-                            if nowTimeHour == self.nextMatchHour - 1:
-                                isSleep = False
-                            # 当下场比赛时间小时等于当前时间小时时，清醒
-                            if nowTimeHour >= self.nextMatchHour:
-                                isSleep = False
-                        # 当下一场比赛日期大于当前日期,当时小时数小于23并且目前没有窗口打开时，进入休眠,间隔为一小时
-                        if nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour < 23:
+                        # 如果下场比赛和现在是同一天,但是当前时间已经是比赛前的一个小时,就清醒.
+                        elif nowTimeDay == self.nextMatchDay and nowTimeHour == self.nextMatchHour - 1:
+                            isSleep = False
+                        # 如果下场比赛日期大于现在日期,并且现在没有比赛直播,并且现在时间小时数小于23,就进入休眠,间隔为一小时
+                        elif nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour < 23 and matches == []:
                             isSleep = True
-                            sleepEndTime = _("日期:", color="green", lang=self.config.language) + str(self.nextMatchDay) + "|" + str(self.nextMatchHour)
+                            sleepEndTime = _log("日期: ", lang=self.config.language) + str(self.nextMatchDay) + "|" + str(self.nextMatchHour)
                             newDelay = 3599
+                        elif nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour >= 23 and matches == []:
+                            isSleep = False
+                        else:
+                            isSleep = False
+                    # 当下场比赛时间有误时,保持清醒.
+                    else:
+                        isSleep = False
                 else:
-                    if self.nextMatchHour is not None and self.nextMatchDay is not None and matches == []:
-                        if nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour < 23:
+                    if self.nextMatchHour is not None and self.nextMatchDay is not None:
+                        if nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour < 23 and matches == []:
                             newDelay = 3599
-                        if nowTimeHour < self.nextMatchHour - 1 and self.currentWindows == {}:  # 当下场比赛时间距离当前时间大于，检查间隔为一小时
+                        # 当下场比赛时间距离当前时间大于1小时，检查间隔为一小时
+                        elif nowTimeHour < self.nextMatchHour - 1 and self.currentWindows == {} and matches == []:
                             newDelay = 3599
 
                 if self.sleepBeginList == [] and self.sleepEndList == []:
@@ -122,9 +131,6 @@ class Match:
                         self.log.info(_log("处于休眠时间...", lang=self.config.language))
                     print(f'{_("预计休眠状态将持续到", color="green", lang=self.config.language)} {sleepEndTime} {_("点", color="green", lang=self.config.language)}')
                     self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEndTime} {_log("点", lang=self.config.language)}')
-                    if delay == 3599:
-                        print(_("识别到距离比赛时间较长 检查间隔为1小时", color="green", lang=self.config.language))
-                        self.log.info(_log("识别到距离比赛时间较长 检查间隔为1小时", lang=self.config.language))
                     print(
                         f"{_('下次检查在:', color='green', lang=self.config.language)} [green]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                     self.log.info(
@@ -248,6 +254,8 @@ class Match:
     def getMatchInfo(self, ignoreBroadCast=True):
         try:
             matches = []
+            self.driver.refresh()
+            sleep(2)
             trueMatchElements = self.driver.find_elements(
                 by=By.CSS_SELECTOR, value=".EventMatch .event.live")
             matchElements = self.driver.find_elements(

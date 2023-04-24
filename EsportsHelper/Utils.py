@@ -98,7 +98,7 @@ englishI18n = {
         "进入休眠时间": "Going to sleep now...",
         "过滤失效的比赛": "Filtering out invalid matches.",
         "总观看时长: ": "Overall hours watched: ",
-        "日期:": "Date:",
+        "日期: ": "Date: ",
         "下次检查在:": "Next check at:",
         "人观看": "viewers",
         "掉落提醒成功": "Drop alert successful.",
