@@ -32,7 +32,7 @@ https://lolesports.com/live/liga_master_flo|https://lolesports.com/live/liga_mas
 https://lolesports.com/live/primeleague|https://lolesports.com/live/primeleague/primeleague,
 https://lolesports.com/live/greek_legends|https://lolesports.com/live/greek_legends/gamersloungegr,
 https://lolesports.com/live/superliga|https://lolesports.com/live/superliga/lvpes,
-https://lolesports.com/live/emea_masters|https://lolesports.com/live/emea_masters/EUniverse_TV,
+https://lolesports.com/live/emea_masters|https://lolesports.com/live/emea_masters/emeamasters,
 https://lolesports.com/live/tft_esports|https://lolesports.com/live/tft_esports/teamfighttactics,
 https://lolesports.com/live/lcs_challengers_qualifiers|https://lolesports.com/live/lcs_challengers_qualifiers/challengersleague,
 
