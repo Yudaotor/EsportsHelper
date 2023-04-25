@@ -55,14 +55,13 @@ class Match:
             if self.config.sleepPeriod != [""]:
                 self.getSleepPeriod()
             # 循环观赛
-            nowTimeHour = int(time.localtime().tm_hour)
-            nowTimeDay = int(time.localtime().tm_mday)
             while maxRunHours < 0 or time.time() < endTimePoint:
                 self.driver.switch_to.window(self.mainWindow)
                 # 随机数，用于随机延迟
                 randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
                 newDelay = randomDelay * 10
-                nowTimeHour=nowTimeHour+1
+                nowTimeHour = int(time.localtime().tm_hour)
+                nowTimeDay = int(time.localtime().tm_mday)
                 nowTimeMin = int(time.localtime().tm_min)
                 matches = []
                 # 如果当前没在休眠,就获取比赛信息.
@@ -87,7 +86,7 @@ class Match:
                             isSleep = True
                             sleepEndTime = _log("日期: ", lang=self.config.language) + str(self.nextMatchDay) + "|" + str(self.nextMatchHour)
                             newDelay = 3599
-                        elif nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour >= 23 and matches == []:
+                        elif nowTimeDay < self.nextMatchDay and nowTimeHour >= 23:
                             isSleep = False
                         else:
                             isSleep = False
