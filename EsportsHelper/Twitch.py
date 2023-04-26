@@ -19,12 +19,16 @@ class Twitch:
             wait.until(ec.frame_to_be_available_and_switch_to_it(
                 (By.CSS_SELECTOR, "iframe[title=Twitch]")))
             sleep(3)
+            self.driver.implicitly_wait(15)
+            isMute = self.driver.find_elements(By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button] > div > div > div > svg > g")
             muteButton = wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button]")))
-            try:
-                muteButton.click()
-            except Exception:
-                self.driver.execute_script("arguments[0].click();", muteButton)
+            if len(isMute) <= 0:
+                try:
+                    muteButton.click()
+                    self.log.info("Twitch: UnMute")
+                except Exception:
+                    self.driver.execute_script("arguments[0].click();", muteButton)
             sleep(1)
             settingsButton = wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button[data-a-target=player-settings-button]")))
@@ -40,9 +44,9 @@ class Twitch:
             sleep(1)
             self.driver.switch_to.default_content()
             return True
-        except TimeoutException as e:
+        except TimeoutException:
             self.log.error(format_exc())
             return False
-        except Exception as e:
+        except Exception:
             self.log.error(format_exc())
             return False
