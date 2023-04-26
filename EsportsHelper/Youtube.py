@@ -28,6 +28,15 @@ class Youtube:
                 except Exception:
                     self.driver.execute_script(
                         "arguments[0].click();", playButton)
+            # 当检测到视频静音时，点击静音按钮,打开声音
+            muteButton = wait.until(ec.presence_of_element_located(
+                (By.CSS_SELECTOR, "button.ytp-mute-button.ytp-button")))
+            if muteButton.get_attribute("data-title-no-tooltip") == "Unmute":
+                try:
+                    muteButton.click()
+                except Exception:
+                    self.driver.execute_script(
+                        "arguments[0].click();", muteButton)
             # 离开播放器iframe
             self.driver.switch_to.default_content()
             return True
