@@ -8,6 +8,7 @@ from EsportsHelper.VersionManager import VersionManager
 from plyer import notification
 from retrying import retry
 from rich import print
+import opencc
 
 englishI18n = {
         "生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator",
@@ -109,18 +110,22 @@ englishI18n = {
 
 def _(text, color, lang="zh_CN"):
     rawText = text
+    convert = opencc.OpenCC('s2twp.json')
     language_map = {
         "zh_CN": f"[{color}]{text}",
-        "en_US": f"[{color}]{englishI18n.get(text, f'{rawText} No translation there. Please contact the developer.')}"
+        "en_US": f"[{color}]{englishI18n.get(text, f'{rawText} No translation there. Please contact the developer.')}",
+        "zh_TW": f"[{color}]{convert.convert(text)}"
     }
-    return language_map.get(lang, f"[{color}]{text}")
+    return language_map.get(lang, text)
 
 
 def _log(text, lang="zh_CN"):
     rawText = text
+    convert = opencc.OpenCC('s2twp.json')
     language_map = {
         "zh_CN": text,
-        "en_US": englishI18n.get(text, f"{rawText} No translation there. Please contact the developer.")
+        "en_US": englishI18n.get(text, f"{rawText} No translation there. Please contact the developer."),
+        "zh_TW": convert.convert(text)
     }
     return language_map.get(lang, text)
 
@@ -225,6 +230,17 @@ class Utils:
             print(f"[green]{'=' * 8}[/green]   The program is open source at GitHub  [green]{'=' * 8}")
             print(f"[green]{'=' * 4}[/green]    {githubUrl}    [green]{'=' * 4}")
             print(f"[green]{'=' * 4}[/green]      If you like it, please give me a star      [green]{'=' * 4}")
+            print(f"[green]{'=' * 57}")
+            print()
+        elif self.config.language == "zh_TW":
+            convert = opencc.OpenCC('s2twp.json')
+            print(f"[green]{'=' * 57}")
+            print(f"[green]{'=' * 8}[/green]        {convert.convert('感谢使用')} [blue]{convert.convert('电竞助手')}[/blue] v{version}!        [green]{'=' * 8}")
+            print(f"[green]{'=' * 12}[/green] {convert.convert('本程序开源于github链接地址如下:')} [green]{'=' * 12}")
+            print(f"[green]{'=' * 4}[/green]   {githubUrl}     [green]{'=' * 4}")
+            print(f"[green]{'=' * 4}[/green] {convert.convert('如觉得不错的话可以进上面链接请我喝杯咖啡支持下.')} [green]{'=' * 4}")
+            print(f"[green]{'=' * 4}[/green] {convert.convert('请在使用前')}[red]{convert.convert('阅读教程文件')}[/red]{convert.convert(', 以确保你的配置符合要求!')} [green]{'=' * 4}")
+            print(f"[green]{'=' * 4}[/green]  {convert.convert('如需关闭请勿直接右上角X关闭，请按Ctrl+C来关闭.')} [green]{'=' * 4}")
             print(f"[green]{'=' * 57}")
             print()
 

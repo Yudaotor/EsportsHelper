@@ -57,7 +57,7 @@ class Config:
 
     def format(self):
         if isinstance(self.language, str):
-            if self.language not in ["zh_CN", "en_US"]:
+            if self.language not in ["zh_CN", "en_US", "zh_TW"]:
                 self.language = "zh_CN"
                 print(_("语言配置错误,已恢复zh_CN默认值", color="red", lang=self.language))
         self.disWatchMatches = [match for match in self.disWatchMatches if match != ""]
