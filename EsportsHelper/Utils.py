@@ -1,6 +1,6 @@
 import sys
 from time import sleep, strftime
-from traceback import format_exc, print_exc
+from traceback import format_exc
 
 import requests
 from EsportsHelper.Logger import log
@@ -10,9 +10,9 @@ from retrying import retry
 from rich import print
 
 englishI18n = {
-        "生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开...": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator",
-        "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs Google Chrome currently open? Please close it and try again",
-        "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用...": "WebDriver generation failure!\nIs Google Chrome installed?\nIs there a network problem? Check VPN availability if one connected",
+        "生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator",
+        "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试": "WebDriver generation failure!\nIs Google Chrome installed?\nIs Google Chrome currently open? Please close it and try again",
+        "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用": "WebDriver generation failure!\nIs Google Chrome installed?\nIs there a network problem? Check VPN availability if one connected",
         "无法打开Lolesports网页，网络问题，将于3秒后退出...": "Network problem: cannot open LolEsports website. Exiting in 3 seconds...",
         "自动登录失败,检查网络和账号密码": "Automatic login failed. Please check the network availability and account credentials.",
         "好嘞 登录成功": "Logged in successfully.",
@@ -107,31 +107,54 @@ englishI18n = {
         }
 
 
+def _(text, color, lang="zh_CN"):
+    rawText = text
+    language_map = {
+        "zh_CN": f"[{color}]{text}",
+        "en_US": f"[{color}]{englishI18n.get(text, f'{rawText} No translation there. Please contact the developer.')}"
+    }
+    return language_map.get(lang, f"[{color}]{text}")
+
+
+def _log(text, lang="zh_CN"):
+    rawText = text
+    language_map = {
+        "zh_CN": text,
+        "en_US": englishI18n.get(text, f"{rawText} No translation there. Please contact the developer.")
+    }
+    return language_map.get(lang, text)
+
+
 class Utils:
     def __init__(self, config):
         self.config = config
         pass
 
     def errorNotify(self, error):
-        if self.config.notifyType == "all" or self.config.notifyType == "error":
-            if self.config.desktopNotify:
+        notifyType = self.config.notifyType
+        needDesktopNotify = self.config.desktopNotify
+        connectorUrl = self.config.connectorDropsUrl
+        language = self.config.language
+        if notifyType in ["all", "error"]:
+            if needDesktopNotify:
                 try:
                     notification.notify(
-                        title=_log("小傻瓜，出事啦", lang=self.config.language),
+                        title=_log("小傻瓜，出事啦", lang=language),
                         message=f"Error Message: {error}",
                         timeout=30
                     )
-                    print(_("错误提醒发送成功", color="green", lang=self.config.language))
-                    log.info(_log("错误提醒发送成功", lang=self.config.language))
+                    print(_("错误提醒发送成功", color="green", lang=language))
+                    log.info(_log("错误提醒发送成功", lang=language))
                 except Exception as e:
-                    print(_("错误提醒发送失败", color="red", lang=self.config.language))
-                    log.error(_log("错误提醒发送失败", lang=self.config.language))
+                    print(_("错误提醒发送失败", color="red", lang=language))
+                    log.error(_log("错误提醒发送失败", lang=language))
                     log.error(format_exc())
-            if self.config.connectorDropsUrl != "":
+
+            if connectorUrl != "":
                 s = requests.session()
                 s.keep_alive = False  # 关闭多余连接
                 try:
-                    if "https://oapi.dingtalk.com" in self.config.connectorDropsUrl:
+                    if "https://oapi.dingtalk.com" in connectorUrl:
                         data = {
                             "msgtype": "link",
                             "link": {
@@ -141,8 +164,9 @@ class Utils:
                                 "messageUrl": ""
                             }
                         }
-                        s.post(self.config.connectorDropsUrl, json=data)
-                    elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
+                        s.post(connectorUrl, json=data)
+
+                    elif "https://discord.com/api/webhooks" in connectorUrl:
                         embed = {
                             "title": "Alert: Drop farming stopped",
                             "description": f"{error}",
@@ -154,25 +178,21 @@ class Utils:
                             "username": "EsportsHelper",
                             "embeds": [embed]
                         }
-                        s.post(self.config.connectorDropsUrl, headers={
-                               "Content-type": "application/json"}, json=params)
-                    elif "https://fwalert.com" in self.config.connectorDropsUrl:
-                        params = {
-                            "text": f"发生错误停止获取Drop{error}",
-                        }
-                        s.post(self.config.connectorDropsUrl, headers={
-                               "Content-type": "application/json"}, json=params)
+                        s.post(connectorUrl, headers={
+                            "Content-type": "application/json"}, json=params)
+
                     else:
                         params = {
                             "text": f"发生错误停止获取Drop{error}",
                         }
-                        s.post(self.config.connectorDropsUrl, headers={
-                               "Content-type": "application/json"}, json=params)
-                    log.info(_log("异常提醒成功", lang=self.config.language))
-                    print(_("异常提醒成功", color="green", lang=self.config.language))
+                        s.post(connectorUrl, headers={
+                            "Content-type": "application/json"}, json=params)
+
+                    log.info(_log("异常提醒成功", lang=language))
+                    print(_("异常提醒成功", color="green", lang=language))
                 except Exception as e:
-                    print(_("异常提醒失败", color="red", lang=self.config.language))
-                    log.error(_("异常提醒失败", lang=self.config.language))
+                    print(_("异常提醒失败", color="red", lang=language))
+                    log.error(_log("异常提醒失败", lang=language))
                     log.error(format_exc())
 
     def debugScreen(self, driver, lint=""):
@@ -186,33 +206,27 @@ class Utils:
             log.error(format_exc())
 
     def info(self):
+        version = VersionManager.getVersion()
+        githubUrl = "https://github.com/Yudaotor/EsportsHelper"
+        VersionManager.checkVersion()
         if self.config.language == "zh_CN":
-            print("[green]=========================================================")
-            print(
-                f"[green]========[/green]        感谢使用 [blue]电竞助手[/blue] v{VersionManager.getVersion()}!        [green]========[/green]")
-            print(
-                "[green]============[/green] 本程序开源于github链接地址如下: [green]============[/green]")
-            print(
-                "[green]====[/green]   https://github.com/Yudaotor/EsportsHelper     [green]====[/green]")
-            print("[green]====[/green] 如觉得不错的话可以进上面链接请我喝杯咖啡支持下. [green]====[/green]")
-            print(
-                "[green]====[/green] 请在使用前[red]阅读教程文件[/red], 以确保你的配置符合要求! [green]====[/green]")
-            print(
-                "[green]====[/green]  如需关闭请勿直接右上角X关闭，请按Ctrl+C来关闭. [green]====[/green]")
-            print("[green]=========================================================")
+            print(f"[green]{'=' * 57}")
+            print(f"[green]{'=' * 8}[/green]        感谢使用 [blue]电竞助手[/blue] v{version}!        [green]{'=' * 8}")
+            print(f"[green]{'=' * 12}[/green] 本程序开源于github链接地址如下: [green]{'=' * 12}")
+            print(f"[green]{'=' * 4}[/green]   {githubUrl}     [green]{'=' * 4}")
+            print(f"[green]{'=' * 4}[/green] 如觉得不错的话可以进上面链接请我喝杯咖啡支持下. [green]{'=' * 4}")
+            print(f"[green]{'=' * 4}[/green] 请在使用前[red]阅读教程文件[/red], 以确保你的配置符合要求! [green]{'=' * 4}")
+            print(f"[green]{'=' * 4}[/green]  如需关闭请勿直接右上角X关闭，请按Ctrl+C来关闭. [green]{'=' * 4}")
+            print(f"[green]{'=' * 57}")
             print()
-            VersionManager.checkVersion()
         elif self.config.language == "en_US":
-            print("[green]=========================================================")
-            print(
-                f"[green]========[/green] Thanks for using [blue]EsportsHelper[/blue] v{VersionManager.getVersion()}!  [green]========[/green]")
-            print(
-                "[green]========[/green]   The program is open source at GitHub  [green]========[/green]")
-            print(
-                "[green]====[/green]    https://github.com/Yudaotor/EsportsHelper[green]    ====[/green]")
-            print(
-                "[green]====[/green]      If you like it, please give me a star      [green]====[/green]")
-            print("[green]=========================================================")
+            print(f"[green]{'=' * 57}[/green]")
+            print(f"[green]{'=' * 8}[/green] Thanks for using [blue]EsportsHelper[/blue] v{version}!  [green]{'=' * 8}")
+            print(f"[green]{'=' * 8}[/green]   The program is open source at GitHub  [green]{'=' * 8}")
+            print(f"[green]{'=' * 4}[/green]    {githubUrl}    [green]{'=' * 4}")
+            print(f"[green]{'=' * 4}[/green]      If you like it, please give me a star      [green]{'=' * 4}")
+            print(f"[green]{'=' * 57}")
+            print()
 
     def getOverrideFile(self):
         try:
@@ -248,7 +262,6 @@ class Utils:
                 input(_log("按回车键退出", lang=self.config.language))
                 sysQuit(e=_log("获取override文件失败", lang=self.config.language))
         except Exception as ex:
-            print_exc()
             log.error(_log("获取override文件失败", lang=self.config.language))
             print(_("获取override文件失败", color="red", lang=self.config.language))
             input(_log("按回车键退出", lang=self.config.language))
@@ -259,7 +272,7 @@ def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, 
     try:
         notification.notify(
             title="New drop!",
-            message=f"BY {eventTitle} GET{dropItem} {unlockedDate}",
+            message=f"BY {eventTitle} GET{dropItem} ON {unlockedDate}",
             timeout=30
         )
         log.info("Desktop notification sent successfully")
@@ -278,16 +291,10 @@ def sysQuit(driver=None, e=None):
 
 
 # 从url中获取比赛赛区名
-def getMatchName(url) -> str:
-    splitUrl = url.split('/')
-    if splitUrl[-2] != "live":
-        match = splitUrl[-2]
-    else:
-        match = splitUrl[-1]
-    if "cblol-brazil" == match:
-        match = "cblol"
-    elif "ljl-japan" == match:
-        match = "ljl"
+def getMatchName(url: str) -> str:
+    match = url.split('/')[-2] if url.split('/')[-2] != "live" else url.split('/')[-1]
+    match = "cblol" if match == "cblol-brazil" else match
+    match = "ljl" if match == "ljl-japan" else match
     return match
 
 
@@ -304,15 +311,4 @@ def getLolesportsWeb(driver):
             "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,emea_masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
 
 
-def _(text, color, lang="zh_CN"):
-    if lang == "zh_CN":
-        return f"[{color}]{text}"
-    elif lang == "en_US":
-        return f"[{color}]{englishI18n.get(text, 'No translation there. Please contact the developer.')}"
 
-
-def _log(text, lang="zh_CN"):
-    if lang == "zh_CN":
-        return f"{text}"
-    elif lang == "en_US":
-        return f"{englishI18n.get(text)}"
