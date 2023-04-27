@@ -56,6 +56,8 @@ class Match:
                 self.getSleepPeriod()
             # 循环观赛
             while maxRunHours < 0 or time.time() < endTimePoint:
+                self.log.info(_log("开始检查...", lang=self.config.language))
+                print(_("开始检查...", color="green", lang=self.config.language))
                 self.driver.switch_to.window(self.mainWindow)
                 # 随机数，用于随机延迟
                 randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
@@ -64,8 +66,11 @@ class Match:
                 nowTimeDay = int(time.localtime().tm_mday)
                 nowTimeMin = int(time.localtime().tm_min)
                 matches = []
-                # 如果当前没在休眠,就获取比赛信息.
+                # 如果当前没在休眠,就获取比赛信息(包括还在倒计时的比赛).
                 if isSleep is False:
+                    print(_("检查赛区直播状态...", color="green", lang=self.config.language))
+                    self.log.info(
+                        _log("检查赛区直播状态...", lang=self.config.language))
                     matches = self.getMatchInfo(ignoreBroadCast=False)
                 if self.config.autoSleep:
                     # 当下场比赛时间无误,进入休眠判断.
@@ -100,7 +105,7 @@ class Match:
                         # 当下场比赛时间距离当前时间大于1小时，检查间隔为一小时
                         elif nowTimeHour < self.nextMatchHour - 1 and self.currentWindows == {} and matches == []:
                             newDelay = 3599
-
+                # 设置的休眠时间段的优先级比较高
                 if self.sleepBeginList == [] and self.sleepEndList == []:
                     pass
                 else:
@@ -134,9 +139,8 @@ class Match:
                         f"{_('下次检查在:', color='green', lang=self.config.language)} [green]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                     self.log.info(
                         f"{_log('下次检查在:', lang=self.config.language)} {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
-                    print(
-                        "[green]==================================================[/green]")
-                    self.log.info("==================================================")
+                    print(f"[green]{'='*50}")
+                    self.log.info(f"{'='*50}")
                     sleep(newDelay)
                     continue
                 elif sleepFlag is True:
@@ -146,9 +150,7 @@ class Match:
                     self.driver.switch_to.window(self.rewardWindow)
                     if self.config.countDrops:
                         self.getRewardPage()
-
-                self.log.info(_log("开始检查...", lang=self.config.language))
-                print(_("开始检查...", color="green", lang=self.config.language))
+                # 获取掉落数和观看总时间
                 dropsNumber, watchHours = self.countDrops()
                 self.driver.switch_to.window(self.mainWindow)
                 if dropsNumber != 0:
@@ -160,9 +162,9 @@ class Match:
                 if isDrop:
                     for i in range(len(poweredByImg)):
                         self.log.info(
-                            f"[{self.config.username}] BY {eventTitle[i]} GET {dropItem[i]} {unlockedDate[i]}")
+                            f"[{self.config.username}] BY {eventTitle[i]} GET {dropItem[i]} ON {unlockedDate[i]}")
                         print(
-                            f"[{self.config.username}] BY {eventTitle[i]} GET {dropItem[i]} {unlockedDate[i]}")
+                            f"[{self.config.username}] BY {eventTitle[i]} GET {dropItem[i]} ON {unlockedDate[i]}")
                         if self.config.desktopNotify:
                             desktopNotify(
                                 poweredByImg[i], productImg[i], unlockedDate[i], eventTitle[i], dropItem[i], dropItemImg[i])
@@ -170,7 +172,7 @@ class Match:
                             self.rewards.notifyDrops(
                                 poweredByImg[i], productImg[i], eventTitle[i], unlockedDate[i], dropItem[i], dropItemImg[i])
                 sleep(3)
-                # 来到lolesports网页首页
+                # 确保来到lolesports网页首页
                 try:
                     getLolesportsWeb(self.driver)
                 except Exception:
@@ -185,11 +187,7 @@ class Match:
                 wait = WebDriverWait(self.driver, 15)
                 wait.until(ec.element_to_be_clickable(
                     (By.CSS_SELECTOR, "div.results-label")))
-                print(_("检查赛区直播状态...", color="green", lang=self.config.language))
-                self.log.info(
-                    _log("检查赛区直播状态...", lang=self.config.language))
-                # 获取正在直播的赛区
-                sleep(3)
+                sleep(1)
                 if len(matches) == 0:
                     self.log.info(
                         _log("没有赛区正在直播", lang=self.config.language))
@@ -213,6 +211,7 @@ class Match:
                 self.startWatchNewMatches(
                     liveMatches=matches, disWatchMatches=self.config.disWatchMatches)
                 sleep(3)
+                # 从比赛页面切换回来
                 self.driver.switch_to.window(self.mainWindow)
                 # 检查最近一个比赛的信息
                 self.checkNextMatch()
@@ -221,29 +220,26 @@ class Match:
                     self.log.info(_log("识别到距离比赛时间较长 检查间隔为1小时", lang=self.config.language))
                 self.log.info(
                     f"{_log('下次检查在:', lang=self.config.language)} {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
-                self.log.info(
-                    "==================================================")
+                self.log.info(f"{'='*50}")
                 print(
                     f"{_('下次检查在:', color='green', lang=self.config.language)} [green]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                 if maxRunHours != -1:
                     print(
                         f"{_('预计结束程序时间:', color='green', lang=self.config.language)} {time.strftime('%H:%M', time.localtime(endTimePoint))}")
-                print(
-                    "[green]==================================================[/green]")
+                print(f"[green]{'='*50}")
                 sleep(newDelay)
             if time.time() >= endTimePoint and maxRunHours != -1 and self.config.platForm == "windows":
                 self.log.info(_log("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作", lang=self.config.language))
                 print(_("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作", color="yellow", lang=self.config.language))
                 os.system("shutdown -s -t 60")
 
-        except NoSuchWindowException as e:
+        except NoSuchWindowException:
             self.log.error(_log("对应窗口找不到", lang=self.config.language))
             print(_("对应窗口找不到", color="red", lang=self.config.language))
             self.log.error(format_exc())
-            self.utils.errorNotify(
-                _log("对应窗口找不到", lang=self.config.language))
+            self.utils.errorNotify(_log("对应窗口找不到", lang=self.config.language))
             sysQuit(self.driver, _log("对应窗口找不到", lang=self.config.language))
-        except Exception as e:
+        except Exception:
             self.log.error(_log("发生错误", lang=self.config.language))
             print(_("发生错误", color="red", lang=self.config.language))
             self.log.error(format_exc())
@@ -253,6 +249,7 @@ class Match:
     def getMatchInfo(self, ignoreBroadCast=True):
         try:
             matches = []
+            # 确保是最新页面信息
             self.driver.refresh()
             sleep(2)
             trueMatchElements = self.driver.find_elements(
@@ -495,7 +492,8 @@ class Match:
         if self.config.countDrops:
             try:
                 self.driver.switch_to.window(self.rewardWindow)
-                self.driver.refresh()
+                if isInit is False:
+                    self.driver.refresh()
                 wait = WebDriverWait(self.driver, 10)
                 wait.until(ec.presence_of_element_located(
                     (By.CSS_SELECTOR, "div.name")))
