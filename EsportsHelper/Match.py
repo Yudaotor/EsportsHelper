@@ -467,7 +467,7 @@ class Match:
                     by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.name").text
                 nextMatchBO = self.driver.find_element(
                     by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.strategy").text
-                print(_("过滤失效的比赛", color="yellow", lang=self.config.language))
+                print(_("检查下一场比赛时 过滤失效的比赛", color="yellow", lang=self.config.language))
                 print(
                     f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]{nextMatchTime}{nextMatchAMOrPM} | {nextMatchLeague}, {nextMatchBO}.[/green]")
                 self.nextMatchDay = None

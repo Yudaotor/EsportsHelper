@@ -97,7 +97,7 @@ englishI18n = {
         "获取override文件失败": "Failed to import override file.",
         "休眠时间结束": "Waking up...",
         "进入休眠时间": "Going to sleep now...",
-        "过滤失效的比赛": "Filtering out invalid matches.",
+        "检查下一场比赛时 过滤失效的比赛": "Filtering invalid broadcasts when checking next broadcast.",
         "总观看时长: ": "Overall hours watched: ",
         "日期: ": "Date: ",
         "下次检查在:": "Next check at:",
