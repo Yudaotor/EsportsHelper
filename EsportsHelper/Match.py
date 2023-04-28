@@ -525,9 +525,9 @@ class Match:
                                     poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
                                     if poweredByImg is not None:
                                         self.log.info(
-                                            f"[{self.config.username}] BY {eventTitle} GET {dropItem} {unlockedDate}")
+                                            f"[{self.config.nickName}] BY {eventTitle} GET {dropItem} {unlockedDate}")
                                         print(
-                                            f"[{self.config.username}] BY {eventTitle} GET {dropItem} {unlockedDate}")
+                                            f"[{self.config.nickName}] BY {eventTitle} GET {dropItem} {unlockedDate}")
                                         if self.config.desktopNotify:
                                             desktopNotify(
                                                 poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg)

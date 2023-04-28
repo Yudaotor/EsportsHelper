@@ -41,6 +41,7 @@ class Config:
             self.language = config.get("language", "zh_CN")
             self.notifyType = config.get("notifyType", "all")
             self.autoSleep = config.get("autoSleep", False)
+            self.nickName = config.get("nickName", self.username)
             self.format()
         except (ParserError, KeyError, ScannerError):
             log.error("Configuration file format error.\nPlease check if there is single space after colons.\nChange single slash to double in configuration path if there are any.")

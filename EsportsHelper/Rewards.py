@@ -144,7 +144,7 @@ class Rewards:
                         "msgtype": "link",
                         "link": {
                             "text": "Drop掉落提醒",
-                            "title": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                            "title": f"[{self.config.nickName}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                             "picUrl": f"{dropItemImg}",
                             "messageUrl": "https://lolesports.com/rewards"
                         }
@@ -194,14 +194,14 @@ class Rewards:
                     time.sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
-                        "text": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                        "text": f"[{self.config.nickName}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
                            "Content-type": "application/json"}, json=params)
                     time.sleep(5)
                 else:
                     params = {
-                        "text": f"[{self.config.username}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                        "text": f"[{self.config.nickName}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
                            "Content-type": "application/json"}, json=params)
