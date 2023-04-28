@@ -458,7 +458,7 @@ class Match:
             nowHour = int(time.localtime().tm_hour)
             nowMonth = time.strftime("%b", time.localtime())
             nowDay = int(time.strftime("%d", time.localtime()))
-            if nowMonth in nextMatchMonth and nowDay == nextMatchDay and nowHour > nextMatchStartHour or nowMonth not in nextMatchMonth and nowDay < nextMatchDay:
+            if nowMonth in nextMatchMonth and nowDay == nextMatchDay and nowHour > nextMatchStartHour or nowMonth not in nextMatchMonth and nowDay < nextMatchDay or nowMonth in nextMatchMonth and nowDay > nextMatchDay:
                 nextMatchTime = self.driver.find_element(
                     by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.EventTime > div > span.hour").text
                 nextMatchAMOrPM = self.driver.find_element(
