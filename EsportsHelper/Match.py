@@ -38,6 +38,7 @@ class Match:
         self.sleepEndList = []
         self.nextMatchHour = None
         self.nextMatchDay = None
+        self.isNotified = {}
 
     def watchMatches(self, delay, maxRunHours):
         try:
@@ -155,23 +156,13 @@ class Match:
                 self.driver.switch_to.window(self.mainWindow)
                 if dropsNumber != 0:
                     print(
-                        f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} | {_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber} | {_('总观看时长: ', color='green', lang=self.config.language)}{watchHours}")
+                        f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} | "
+                        f"{_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber} | "
+                        f"{_('总观看时长: ', color='green', lang=self.config.language)}{watchHours}")
                     self.log.info(
-                        f"{_log('本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.historyDrops} | {_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} | {_log('总观看时长: ', lang=self.config.language)}{watchHours}")
-                isDrop, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
-                if isDrop:
-                    for i in range(len(poweredByImg)):
-                        self.log.info(
-                            f"[{self.config.username}] BY {eventTitle[i]} GET {dropItem[i]} ON {unlockedDate[i]}")
-                        print(
-                            f"[{self.config.username}] BY {eventTitle[i]} GET {dropItem[i]} ON {unlockedDate[i]}")
-                        if self.config.desktopNotify:
-                            desktopNotify(
-                                poweredByImg[i], productImg[i], unlockedDate[i], eventTitle[i], dropItem[i], dropItemImg[i])
-                        if self.config.connectorDropsUrl != "":
-                            self.rewards.notifyDrops(
-                                poweredByImg[i], productImg[i], eventTitle[i], unlockedDate[i], dropItem[i], dropItemImg[i])
-                sleep(3)
+                        f"{_log('本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.historyDrops} | "
+                        f"{_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} | "
+                        f"{_log('总观看时长: ', lang=self.config.language)}{watchHours}")
                 # 确保来到lolesports网页首页
                 try:
                     getLolesportsWeb(self.driver)
@@ -492,6 +483,7 @@ class Match:
         if self.config.countDrops:
             try:
                 self.driver.switch_to.window(self.rewardWindow)
+                # 第一次进入界面无需刷新
                 if isInit is False:
                     self.driver.refresh()
                 wait = WebDriverWait(self.driver, 10)
@@ -514,13 +506,36 @@ class Match:
                 try:
                     dropNumberInfo = []
                     for i in range(0, len(dropLocale)):
+                        # 防止不知为何有时候会出现空的情况
                         if dropNumber[i].text[:-6] == '':
                             continue
                         dropNumberNow = int(dropNumber[i].text[:-6])
                         dropLocaleNow = dropLocale[i].text
-                        if self.dropsDict.get(dropLocaleNow, 0) != dropNumberNow:
+                        drops = dropNumberNow - int(self.dropsDict.get(dropLocaleNow, 0))
+                        if drops > 0:
                             dropNumberInfo.append(
                                 dropLocaleNow + ":" + str(dropNumberNow - self.dropsDict.get(dropLocaleNow, 0)))
+                            dropsNeedNotify = drops - self.isNotified.get(dropLocaleNow, 0)
+                            if dropsNeedNotify > 0:
+                                self.driver.find_element(
+                                    by=By.XPATH, value=f"//div[text()='{dropLocaleNow}']").click()
+                                for j in range(1, dropsNeedNotify + 1):
+                                    self.driver.find_element(
+                                        by=By.CSS_SELECTOR, value=f"div.accordion-body > div > div:nth-child({j})").click()
+                                    poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
+                                    if poweredByImg is not None:
+                                        self.log.info(
+                                            f"[{self.config.username}] BY {eventTitle} GET {dropItem} {unlockedDate}")
+                                        print(
+                                            f"[{self.config.username}] BY {eventTitle} GET {dropItem} {unlockedDate}")
+                                        if self.config.desktopNotify:
+                                            desktopNotify(
+                                                poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg)
+                                        if self.config.connectorDropsUrl != "":
+                                            self.rewards.notifyDrops(
+                                                poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg)
+                                    sleep(3)
+                                self.isNotified[dropLocaleNow] = self.isNotified.get(dropLocaleNow, 0) + dropsNeedNotify
                         sumNumber = sumNumber + dropNumberNow
                     if len(dropNumberInfo) != 0:
                         print(
