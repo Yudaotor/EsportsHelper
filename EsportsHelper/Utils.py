@@ -105,6 +105,7 @@ englishI18n = {
         "掉落提醒成功": "Drop alert successful.",
         "检查赛区直播状态...": "Checking live broadcasts...",
         "识别到距离比赛时间较长 检查间隔为1小时": "Plenty of time until the next match. Checking interval set to 1 hour.",
+        "提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭": "Tip: The drop count function has been disabled, the drop notification function will also be disabled.",
         }
 
 
@@ -277,7 +278,7 @@ class Utils:
                 log.error(_log("获取override文件失败", lang=self.config.language))
                 input(_log("按回车键退出", lang=self.config.language))
                 sysQuit(e=_log("获取override文件失败", lang=self.config.language))
-        except Exception as ex:
+        except Exception:
             log.error(_log("获取override文件失败", lang=self.config.language))
             print(_("获取override文件失败", color="red", lang=self.config.language))
             input(_log("按回车键退出", lang=self.config.language))
@@ -288,11 +289,11 @@ def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, 
     try:
         notification.notify(
             title="New drop!",
-            message=f"BY {eventTitle} GET{dropItem} ON {unlockedDate}",
+            message=f"BY {eventTitle} GET{dropItem} {unlockedDate}",
             timeout=30
         )
         log.info("Desktop notification sent successfully")
-    except Exception as e:
+    except Exception:
         log.error("Desktop notification failed")
         log.error(format_exc())
 
