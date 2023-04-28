@@ -9,7 +9,7 @@ class Webdriver:
         self.config = config
 
     def createWebdriver(self):
-        chromeDriverManager = None
+        chromeDriverManager = ChromeDriverManager(path=".\\driver")
         options = self.addWebdriverOptions(uc.ChromeOptions())
         print(_("正在准备中...", color="yellow", lang=self.config.language))
         if self.config.platForm == "linux":
@@ -18,9 +18,12 @@ class Webdriver:
             chromeDriverManager = ChromeDriverManager(path=".\\driver")
         else:
             print(_("不支持的操作系统", color="red", lang=self.config.language))
-        version = int(
-            chromeDriverManager.driver.get_version().split(".")[0])
         driverPath = chromeDriverManager.install()
+        try:
+            version = int(
+                chromeDriverManager.driver.get_version().split(".")[0])
+        except Exception:
+            version = 108
         if self.config.chromePath != "" and self.config.userDataDir != "":
             return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version, browser_executable_path=self.config.chromePath,
                              user_data_dir=self.config.userDataDir)
@@ -44,7 +47,7 @@ class Webdriver:
         if self.config.proxy != "":
             options.add_argument(f"--proxy-server={self.config.proxy}")
         if self.config.headless:
-            options.add_argument("--headless")
+            options.add_argument("--headless=new")
             windows_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.44"
             mac_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
             user_agent = windows_agent if self.config.platForm == "windows" else mac_agent
