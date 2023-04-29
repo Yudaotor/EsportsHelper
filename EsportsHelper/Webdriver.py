@@ -12,27 +12,25 @@ class Webdriver:
         chromeDriverManager = ChromeDriverManager(path=".\\driver")
         options = self.addWebdriverOptions(uc.ChromeOptions())
         print(_("正在准备中...", color="yellow", lang=self.config.language))
-        if self.config.platForm == "linux":
-            chromeDriverManager = ChromeDriverManager(path="driver")
-        elif self.config.platForm == "windows":
-            chromeDriverManager = ChromeDriverManager(path=".\\driver")
-        else:
-            print(_("不支持的操作系统", color="red", lang=self.config.language))
+
         driverPath = chromeDriverManager.install()
+        version = self.getDriverVersion(chromeDriverManager)
+
+        kwargs = {
+            "options": options,
+            "driver_executable_path": driverPath,
+            "version_main": version,
+            "browser_executable_path": self.config.chromePath if self.config.chromePath else None,
+            "user_data_dir": self.config.userDataDir if self.config.userDataDir else None,
+        }
+        return uc.Chrome(**{k: v for k, v in kwargs.items() if v})
+
+    def getDriverVersion(self, chromeDriverManager):
         try:
-            version = int(
-                chromeDriverManager.driver.get_version().split(".")[0])
+            version = int(chromeDriverManager.driver.get_version().split(".")[0])
         except Exception:
             version = 108
-        if self.config.chromePath != "" and self.config.userDataDir != "":
-            return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version, browser_executable_path=self.config.chromePath,
-                             user_data_dir=self.config.userDataDir)
-        elif self.config.chromePath != "" and self.config.userDataDir == "":
-            return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version, browser_executable_path=self.config.chromePath)
-        elif self.config.chromePath == "" and self.config.userDataDir != "":
-            return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version, user_data_dir=self.config.userDataDir)
-        else:
-            return uc.Chrome(options=options, driver_executable_path=driverPath, version_main=version)
+        return version
 
     def addWebdriverOptions(self, options):
         options.add_argument("--disable-extensions")
@@ -44,7 +42,7 @@ class Webdriver:
             "credentials_enable_service": False,
         }
         options.add_experimental_option('prefs', prefs)
-        if self.config.proxy != "":
+        if self.config.proxy:
             options.add_argument(f"--proxy-server={self.config.proxy}")
         if self.config.headless:
             options.add_argument("--headless=new")
