@@ -502,10 +502,6 @@ class Match:
                             continue
                         dropNumberNow = int(dropNumber[i].text[:-6])
                         dropLocaleNow = dropLocale[i].text
-                        if dropLocaleNow == "LCK":
-                            dropNumberNow = 17
-                        if dropLocaleNow == "LCS":
-                            dropNumberNow = 21
                         drops = dropNumberNow - int(self.dropsDict.get(dropLocaleNow, 0))
                         if drops > 0:
                             dropNumberInfo.append(
@@ -525,7 +521,7 @@ class Match:
                                             f"[blue][{self.config.nickName}][/blue] "
                                             f"[blue]BY[/blue] {eventTitle} "
                                             f"[blue]GET[/blue] {dropItem} "
-                                            f"[blue]ON[blue] {dropLocaleNow}"
+                                            f"[blue]ON[/blue] {dropLocaleNow} "
                                             f"[blue]{unlockedDate}")
                                         if self.config.desktopNotify:
                                             desktopNotify(
