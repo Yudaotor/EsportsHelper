@@ -154,7 +154,7 @@ class Rewards:
                 elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
                     field0 = {
                         "name": "Account",
-                        "value": f"{self.config.username}",
+                        "value": f"{self.config.nickName}",
                         "inline": True
                     }
                     field1 = {
