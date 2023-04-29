@@ -17,11 +17,11 @@ class Rewards:
         self.config = config
         self.youtube = youtube
         self.utils = utils
+        self.wait = WebDriverWait(self.driver, 25)
 
     def isRewardMarkExist(self):
-        wait = WebDriverWait(self.driver, 25)
         try:
-            wait.until(ec.presence_of_element_located(
+            self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "div[class=status-summary] g")))
         except TimeoutException:
             return False
@@ -35,30 +35,27 @@ class Rewards:
             if self.isRewardMarkExist():
                 try:
                     if stream == "twitch":
-                        wait = WebDriverWait(self.driver, 15)
-                        wait.until(ec.frame_to_be_available_and_switch_to_it(
-                            (By.CSS_SELECTOR, "iframe[title=Twitch]")))
-                        teams = wait.until(ec.presence_of_element_located(
-                            (By.CSS_SELECTOR, "p[data-test-selector=stream-info-card-component__subtitle]"))).text
-                        peopleInfo = wait.until(ec.presence_of_element_located(
-                            (By.CSS_SELECTOR, "p[data-test-selector=stream-info-card-component__description]"))).text
-                        for n in range(len(peopleInfo)):
-                            if peopleInfo[n].isdigit():
-                                peopleNumber += peopleInfo[n]
+                        frameLocator = (By.CSS_SELECTOR, "iframe[title=Twitch]")
+                        self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
+
+                        teamLocator = (By.CSS_SELECTOR, "p[data-test-selector=stream-info-card-component__subtitle]")
+                        teams = self.wait.until(ec.presence_of_element_located(teamLocator)).text
+
+                        peopleLocator = (By.CSS_SELECTOR, "p[data-test-selector=stream-info-card-component__description]")
+                        peopleInfo = self.wait.until(ec.presence_of_element_located(peopleLocator)).text
+                        for num in peopleInfo:
+                            if num.isdigit():
+                                peopleNumber += num
                         self.driver.switch_to.default_content()
                     elif stream == "youtube":
-                        teams = self.driver.find_element(
-                            By.CSS_SELECTOR, "iframe[id=video-player-youtube]").get_attribute("title")
-                    if teams != "" and "|" in teams:
-                        words = teams.split("|")
-                        for word in words:
-                            if "vs" in word.lower():
-                                teams = word
-                                break
-                            else:
-                                teams = words[0]
-                    elif teams != "" and "-" in teams:
-                        words = teams.split("-")
+                        frameLocator = (By.ID, "video-player-youtube")
+                        self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
+                        iframeTitle = self.driver.execute_script("return document.title;")
+                        teams = iframeTitle.strip() if iframeTitle else ""
+                        self.driver.switch_to.default_content()
+                    if teams and ("|" in teams or "-" in teams):
+                        delimiter = "|" if "|" in teams else "-"
+                        words = teams.split(delimiter)
                         for word in words:
                             if "vs" in word.lower():
                                 teams = word
@@ -72,14 +69,18 @@ class Rewards:
                     self.log.error(format_exc())
                 if stream == "twitch":
                     self.log.info(
-                        f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} {teams} {peopleNumber} {_log('人观看', lang=self.config.language)}")
+                        f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} "
+                        f"{teams} {peopleNumber} {_log('人观看', lang=self.config.language)}")
                     print(
-                        f"{match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} {teams} {peopleNumber} {_('人观看', color='green', lang=self.config.language)}")
+                        f"{match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} "
+                        f"{teams} {peopleNumber} {_('人观看', color='green', lang=self.config.language)}")
                 elif stream == "youtube":
                     self.log.info(
-                        f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} {teams}")
+                        f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} "
+                        f"{teams}")
                     print(
-                        f"{match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} {teams}")
+                        f"{match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} "
+                        f"{teams}")
 
                 return True
             else:
@@ -90,7 +91,7 @@ class Rewards:
                         f"{match} {_('观看异常 重试中...', color='yellow', lang=self.config.language)}")
                     self.driver.refresh()
                     if stream == "youtube":
-                        self.youtube.playYoutubeStream()
+                        self.youtube.checkYoutubeStream()
                 else:
                     self.log.error(
                         f"{match} {_log('观看异常', lang=self.config.language)}")
@@ -134,7 +135,7 @@ class Rewards:
             print(_("检查掉落失败", color="red", lang=self.config.language))
             return None, None, None, None, None, None
 
-    def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg):
+    def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropLocale):
         if self.config.notifyType == "all" or self.config.notifyType == "drops":
             try:
                 s = requests.session()
@@ -144,7 +145,7 @@ class Rewards:
                         "msgtype": "link",
                         "link": {
                             "text": "Drop掉落提醒",
-                            "title": f"[{self.config.nickName}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                            "title": f"[{self.config.nickName}]在{dropLocale} 通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                             "picUrl": f"{dropItemImg}",
                             "messageUrl": "https://lolesports.com/rewards"
                         }
@@ -172,6 +173,11 @@ class Rewards:
                         "value": f"{unlockedDate}",
                         "inline": True
                     }
+                    field5 = {
+                        "name": "Locale",
+                        "value": f"{dropLocale}",
+                        "inline": True
+                    }
                     fieldNone = {
                         "name": "",
                         "value": "",
@@ -181,7 +187,7 @@ class Rewards:
                         "title": "Drop!",
                         "image": {"url": f"{productImg}"},
                         "thumbnail": {"url": f"{dropItemImg}"},
-                        "fields": [field0, field1, fieldNone, field2, field4, fieldNone, fieldNone],
+                        "fields": [field0, field1, fieldNone, field2, field4, field5, fieldNone],
                         "color": 6676471,
                         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S+08:00", time.localtime())
                     }
@@ -194,14 +200,14 @@ class Rewards:
                     time.sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
-                        "text": f"[{self.config.nickName}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                        "text": f"[{self.config.nickName}]在{dropLocale} 通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
                            "Content-type": "application/json"}, json=params)
                     time.sleep(5)
                 else:
                     params = {
-                        "text": f"[{self.config.nickName}]通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                        "text": f"[{self.config.nickName}]在{dropLocale} 通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
                            "Content-type": "application/json"}, json=params)
