@@ -8,7 +8,6 @@ from EsportsHelper.VersionManager import VersionManager
 from plyer import notification
 from retrying import retry
 from rich import print
-import opencc
 
 englishI18n = {
         "生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator",
@@ -105,26 +104,120 @@ englishI18n = {
         "识别到距离比赛时间较长 检查间隔为1小时": "Plenty of time until the next match. Checking interval set to 1 hour.",
         "提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭": "Tip: The drop count function has been disabled, the drop notification function will also be disabled.",
         }
+zhTWI18n = {
+    '生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开': '生成WEBDRIVER失敗!\n無法找到最新版谷歌瀏覽器!如沒有下載或不是最新版請檢查好再次嘗試\n或可以嘗試用管理員方式開啟',
+    '生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试': '生成WEBDRIVER失敗!\n是否有谷歌瀏覽器?\n是否開啟著谷歌瀏覽器?請關閉後再次嘗試',
+    '生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用': '生成WEBDRIVER失敗!\n是否有谷歌瀏覽器?\n是不是網路問題?請檢查VPN節點是否可用',
+    '无法打开Lolesports网页，网络问题，将于3秒后退出...': '無法開啟Lolesports網頁，網路問題，將於3秒後退出...',
+    '自动登录失败,检查网络和账号密码': '自動登入失敗,檢查網路和賬號密碼',
+    '好嘞 登录成功': '好嘞 登入成功',
+    '使用浏览器缓存 自动登录成功': '使用瀏覽器快取 自動登入成功',
+    '观看结束': '觀看結束',
+    '切换语言成功': '切換語言成功',
+    '切换语言失败': '切換語言失敗',
+    '无法登陆，账号密码可能错误或者网络出现问题': '無法登陸，賬號密碼可能錯誤或者網路出現問題',
+    '开始重试': '開始重試',
+    '配置文件找不到': '配置檔案找不到',
+    '按回车键退出': '按回車鍵退出',
+    '配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠': '配置檔案格式錯誤,請檢查是否存在中文字元以及冒號後面應該有一個空格,配置路徑如有單斜槓請改為雙斜槓',
+    '配置文件中没有账号密码信息': '配置檔案中沒有賬號密碼資訊',
+    '检查间隔配置错误,已恢复默认值': '檢查間隔配置錯誤,已恢復預設值',
+    '睡眠时间段配置错误,已恢复默认值': '睡眠時間段配置錯誤,已恢復預設值',
+    '最大运行时间配置错误,已恢复默认值': '最大執行時間配置錯誤,已恢復預設值',
+    '代理配置错误,已恢复默认值': '代理配置錯誤,已恢復預設值',
+    '用户数据userDataDir路径配置错误,已恢复默认值': '使用者資料userDataDir路徑配置錯誤,已恢復預設值',
+    '语言配置错误,已恢复zh_CN默认值': '語言配置錯誤,已恢復zh_CN預設值',
+    '正常观看 可获取奖励': '正常觀看 可獲取獎勵',
+    '观看异常 重试中...': '觀看異常 重試中...',
+    '观看异常': '觀看異常',
+    '检查掉落失败': '檢查掉落失敗',
+    '掉落提醒失败': '掉落提醒失敗',
+    '无法打开Lolesports网页，网络问题': '無法開啟Lolesports網頁，網路問題',
+    '登录中...': '登入中...',
+    '账密 提交成功': '賬密 提交成功',
+    '网络问题 登录超时': '網路問題 登入超時',
+    '请输入二级验证代码:': '請輸入二級驗證程式碼:',
+    '二级验证代码提交成功': '二級驗證程式碼提交成功',
+    '免密登录失败,请去浏览器手动登录后再行尝试': '免密登入失敗,請去瀏覽器手動登入後再行嘗試',
+    '检查掉落数失败': '檢查掉落數失敗',
+    '开始检查...': '開始檢查...',
+    '本次运行掉落总和:': '本次執行掉落總和:',
+    '生涯总掉落:': '生涯總掉落:',
+    '没有赛区正在直播': '沒有賽區正在直播',
+    '个赛区正在直播中': '個賽區正在直播中',
+    '赛区正在直播中': '賽區正在直播中',
+    '处于休眠时间，检查时间间隔为1小时': '處於休眠時間，檢查時間間隔為1小時',
+    '下一次检查在:': '下一次檢查在:',
+    '预计结束程序时间:': '預計結束程式時間:',
+    '对应窗口找不到': '對應視窗找不到',
+    '发生错误': '發生錯誤',
+    '获取比赛列表失败': '獲取比賽列表失敗',
+    '比赛结束': '比賽結束',
+    '关闭已结束的比赛时发生错误': '關閉已結束的比賽時發生錯誤',
+    '比赛跳过': '比賽跳過',
+    '关闭视频流失败.': '關閉影片流失敗.',
+    '视频流关闭成功.': '影片流關閉成功.',
+    'Twitch 160p清晰度设置成功': 'Twitch 160p清晰度設定成功',
+    'Twitch 清晰度设置失败': 'Twitch 清晰度設定失敗',
+    '无法设置 Twitch 清晰度.': '無法設定 Twitch 清晰度.',
+    'Youtube 144p清晰度设置成功': 'Youtube 144p清晰度設定成功',
+    'Youtube 清晰度设置失败': 'Youtube 清晰度設定失敗',
+    '无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者': '無法設定 Youtube 清晰度.可能是誤判成youtube源,請聯絡作者',
+    '下一场比赛时间:': '下一場比賽時間:',
+    '获取下一场比赛时间失败': '獲取下一場比賽時間失敗',
+    '获取掉落数失败': '獲取掉落數失敗',
+    '本次运行掉落详细:': '本次執行掉落詳細:',
+    '统计掉落失败': '統計掉落失敗',
+    '初始化掉落数失败': '初始化掉落數失敗',
+    '小傻瓜，出事啦': '小傻瓜，出事啦',
+    '错误提醒发送成功': '錯誤提醒傳送成功',
+    '错误提醒发送失败': '錯誤提醒傳送失敗',
+    '异常提醒成功': '異常提醒成功',
+    '异常提醒失败': '異常提醒失敗',
+    '下载override文件失败': '下載override檔案失敗',
+    '正在准备中...': '正在準備中...',
+    '不支持的操作系统': '不支援的作業系統',
+    '程序设定运行时长已到，将于60秒后关机,请及时做好准备工作': '程式設定執行時長已到，將於60秒後關機,請及時做好準備工作',
+    '关闭所有窗口时发生异常': '關閉所有視窗時發生異常',
+    '所有窗口已关闭': '所有視窗已關閉',
+    '处于休眠时间...': '處於休眠時間...',
+    '预计休眠状态将持续到': '預計休眠狀態將持續到',
+    '点': '點',
+    '通知类型配置错误,已恢复默认值': '通知型別配置錯誤,已恢復預設值',
+    '从github获取override文件失败, 将尝试从gitee获取': '從github獲取override檔案失敗, 將嘗試從gitee獲取',
+    '获取override文件成功': '獲取override檔案成功',
+    '获取override文件失败': '獲取override檔案失敗',
+    '休眠时间结束': '休眠時間結束',
+    '进入休眠时间': '進入休眠時間',
+    '检查下一场比赛时 过滤失效的比赛': '檢查下一場比賽時 過濾失效的比賽',
+    '总观看时长: ': '總觀看時長: ',
+    '日期: ': '日期: ',
+    '下次检查在:': '下次檢查在:',
+    '人观看': '人觀看',
+    '掉落提醒成功': '掉落提醒成功',
+    '检查赛区直播状态...': '檢查賽區直播狀態...',
+    '识别到距离比赛时间较长 检查间隔为1小时': '識別到距離比賽時間較長 檢查間隔為1小時',
+    '提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭': '提醒: 由於已關閉統計掉落功能,webhook提示掉落功能也將關閉',
+
+}
 
 
 def _(text, color, lang="zh_CN"):
     rawText = text
-    convert = opencc.OpenCC('s2twp.json')
     language_map = {
         "zh_CN": f"[{color}]{text}",
         "en_US": f"[{color}]{englishI18n.get(text, f'{rawText} No translation there. Please contact the developer.')}",
-        "zh_TW": f"[{color}]{convert.convert(text)}"
+        "zh_TW": f"[{color}]{zhTWI18n.get(text, rawText)}"
     }
     return language_map.get(lang, text)
 
 
 def _log(text, lang="zh_CN"):
     rawText = text
-    convert = opencc.OpenCC('s2twp.json')
     language_map = {
         "zh_CN": text,
         "en_US": englishI18n.get(text, f"{rawText} No translation there. Please contact the developer."),
-        "zh_TW": convert.convert(text)
+        "zh_TW": zhTWI18n.get(text, rawText)
     }
     return language_map.get(lang, text)
 
@@ -232,14 +325,13 @@ class Utils:
             print(f"[green]{'=' * 57}")
             print()
         elif self.config.language == "zh_TW":
-            convert = opencc.OpenCC('s2twp.json')
             print(f"[green]{'=' * 57}")
-            print(f"[green]{'=' * 8}[/green]        {convert.convert('感谢使用')} [blue]{convert.convert('电竞助手')}[/blue] v{version}!        [green]{'=' * 8}")
-            print(f"[green]{'=' * 12}[/green] {convert.convert('本程序开源于github链接地址如下:')} [green]{'=' * 12}")
+            print(f"[green]{'=' * 8}[/green]        感謝使用 [blue]電競助手[/blue] v{version}!        [green]{'=' * 8}")
+            print(f"[green]{'=' * 12}[/green] 本程式開源於github連結地址如下: [green]{'=' * 12}")
             print(f"[green]{'=' * 4}[/green]   {githubUrl}     [green]{'=' * 4}")
-            print(f"[green]{'=' * 4}[/green] {convert.convert('如觉得不错的话可以进上面链接请我喝杯咖啡支持下.')} [green]{'=' * 4}")
-            print(f"[green]{'=' * 4}[/green] {convert.convert('请在使用前')}[red]{convert.convert('阅读教程文件')}[/red]{convert.convert(', 以确保你的配置符合要求!')} [green]{'=' * 4}")
-            print(f"[green]{'=' * 4}[/green]  {convert.convert('如需关闭请勿直接右上角X关闭，请按Ctrl+C来关闭.')} [green]{'=' * 4}")
+            print(f"[green]{'=' * 4}[/green] 如覺得不錯的話可以進上面連結請我喝杯咖啡支援下. [green]{'=' * 4}")
+            print(f"[green]{'=' * 4}[/green] 請在使用前[red]閱讀教程檔案[/red], 以確保你的配置符合要求! [green]{'=' * 4}")
+            print(f"[green]{'=' * 4}[/green]  如需關閉請勿直接右上角X關閉，請按Ctrl+C來關閉. [green]{'=' * 4}")
             print(f"[green]{'=' * 57}")
             print()
 
