@@ -61,13 +61,11 @@ englishI18n = {
         "比赛结束": "Broadcast ended.",
         "关闭已结束的比赛时发生错误": "An error occurred while closing finished broadcast.",
         "比赛跳过": " match skipped.",
-        "关闭 Twitch 流失败.": "Failed to close Twitch stream.",
+        "关闭视频流失败.": "Failed to close stream.",
+        "视频流关闭成功.": "Stream closed successfully.",
         "Twitch 160p清晰度设置成功": "Twitch stream quality successfully set to 160p.",
-        "Twitch 流关闭成功": "Twitch stream closed successfully.",
         "Twitch 清晰度设置失败": "Failed to set Twitch stream quality.",
         "无法设置 Twitch 清晰度.": "Unable to set Twitch stream quality.",
-        "关闭 Youtube 流失败.": "Failed to close YouTube stream.",
-        "Youtube 流关闭成功": "YouTube stream closed successfully.",
         "Youtube 144p清晰度设置成功": "YouTube stream quality successfully set to 144p.",
         "Youtube 清晰度设置失败": "Failed to set YouTube stream quality.",
         "无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者": "Unable to set YouTube stream quality.Stream possibly was misidentified as YouTube source. Please contact the developer.",
@@ -285,11 +283,11 @@ class Utils:
             sysQuit(e=_log("获取override文件失败", lang=self.config.language))
 
 
-def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg):
+def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropLocale):
     try:
         notification.notify(
             title="New drop!",
-            message=f"BY {eventTitle} GET{dropItem} {unlockedDate}",
+            message=f"BY {eventTitle} GET{dropItem} ON{dropLocale} {unlockedDate}",
             timeout=30
         )
         log.info("Desktop notification sent successfully")
