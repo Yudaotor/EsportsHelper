@@ -10,6 +10,12 @@ class Webdriver:
 
     def createWebdriver(self):
         chromeDriverManager = ChromeDriverManager(path=".\\driver")
+        if self.config.platForm == "linux":
+            chromeDriverManager = ChromeDriverManager(path="driver")
+        elif self.config.platForm == "windows":
+            chromeDriverManager = ChromeDriverManager(path=".\\driver")
+        else:
+            print(_("不支持的操作系统", color="red", lang=self.config.language))
         options = self.addWebdriverOptions(uc.ChromeOptions())
         print(_("正在准备中...", color="yellow", lang=self.config.language))
 
