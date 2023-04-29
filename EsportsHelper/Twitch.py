@@ -27,8 +27,11 @@ class Twitch:
                 try:
                     muteButton.click()
                     self.log.info("Twitch: UnMute")
+                    print("Twitch: UnMute")
                 except Exception:
                     self.driver.execute_script("arguments[0].click();", muteButton)
+                    print("Twitch: UnMute")
+                    self.log.info("Twitch: UnMute")
             sleep(1)
             settingsButton = wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button[data-a-target=player-settings-button]")))

@@ -1,5 +1,5 @@
 from time import sleep
-from traceback import format_exc, print_exc
+from traceback import format_exc
 
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
@@ -34,9 +34,13 @@ class Youtube:
             if muteButton.get_attribute("data-title-no-tooltip") == "Unmute":
                 try:
                     muteButton.click()
+                    print("Youtube: UnMute")
+                    self.log.info("Youtube: UnMute")
                 except Exception:
                     self.driver.execute_script(
                         "arguments[0].click();", muteButton)
+                    print("Youtube: UnMute")
+                    self.log.info("Youtube: UnMute")
             # 离开播放器iframe
             self.driver.switch_to.default_content()
             return True
