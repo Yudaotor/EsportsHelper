@@ -140,8 +140,8 @@ class Match:
                         f"{_('下次检查在:', color='green', lang=self.config.language)} [green]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                     self.log.info(
                         f"{_log('下次检查在:', lang=self.config.language)} {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
-                    print(f"[green]{'='*50}")
-                    self.log.info(f"{'='*50}")
+                    print(f"[green]{'=' * 50}")
+                    self.log.info(f"{'=' * 50}")
                     sleep(newDelay)
                     continue
                 elif sleepFlag is True:
@@ -211,13 +211,13 @@ class Match:
                     self.log.info(_log("识别到距离比赛时间较长 检查间隔为1小时", lang=self.config.language))
                 self.log.info(
                     f"{_log('下次检查在:', lang=self.config.language)} {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
-                self.log.info(f"{'='*50}")
+                self.log.info(f"{'=' * 50}")
                 print(
                     f"{_('下次检查在:', color='green', lang=self.config.language)} [green]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                 if maxRunHours != -1:
                     print(
                         f"{_('预计结束程序时间:', color='green', lang=self.config.language)} {time.strftime('%H:%M', time.localtime(endTimePoint))}")
-                print(f"[green]{'='*50}")
+                print(f"[green]{'=' * 50}")
                 sleep(newDelay)
             if time.time() >= endTimePoint and maxRunHours != -1 and self.config.platForm == "windows":
                 self.log.info(_log("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作", lang=self.config.language))
@@ -473,7 +473,9 @@ class Match:
                 self.nextMatchDay = None
             else:
                 print(
-                    f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]{nextMatchDayTime} | {nextMatchTime}{nextMatchAMOrPM} | {nextMatchLeague}, {nextMatchBO}.[/green]")
+                    f"{_('下一场比赛时间:', color='green', lang=self.config.language)} [green]{nextMatchDayTime} | "
+                    f"{nextMatchTime}{nextMatchAMOrPM} | "
+                    f"{nextMatchLeague}, {nextMatchBO}.[/green]")
         except Exception:
             self.log.error(_log("获取下一场比赛时间失败", lang=self.config.language))
             self.log.error(format_exc())
@@ -527,7 +529,7 @@ class Match:
                                         self.log.info(
                                             f"[{self.config.nickName}] BY {eventTitle} GET {dropItem} {unlockedDate}")
                                         print(
-                                            f"[{self.config.nickName}] BY {eventTitle} GET {dropItem} {unlockedDate}")
+                                            f"[blue][{self.config.nickName}][/blue] [blue]BY[/blue] {eventTitle} [blue]GET[/blue] {dropItem} {unlockedDate}")
                                         if self.config.desktopNotify:
                                             desktopNotify(
                                                 poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg)
