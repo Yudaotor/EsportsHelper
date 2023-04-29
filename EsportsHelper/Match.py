@@ -12,7 +12,7 @@ from EsportsHelper.Utils import (Utils, _, _log, desktopNotify,
                                  getMatchName, sysQuit)
 from EsportsHelper.Youtube import Youtube
 from rich import print
-from selenium.common import NoSuchElementException, NoSuchWindowException
+from selenium.common import NoSuchElementException, NoSuchWindowException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
@@ -154,7 +154,7 @@ class Match:
                 # 获取掉落数和观看总时间
                 dropsNumber, watchHours = self.countDrops()
                 self.driver.switch_to.window(self.mainWindow)
-                if dropsNumber != 0:
+                if dropsNumber != -1:
                     print(
                         f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} | "
                         f"{_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber} | "
@@ -283,8 +283,8 @@ class Match:
             sleep(1)
             self.driver.close()
             self.rewardWindow = newTab1
-            for k in removeList:
-                self.currentWindows.pop(k, None)
+            for handle in removeList:
+                self.currentWindows.pop(handle, None)
             print(_("所有窗口已关闭", color="green", lang=self.config.language))
             self.log.info(_log("所有窗口已关闭", lang=self.config.language))
         except Exception:
@@ -327,18 +327,12 @@ class Match:
 
     def startWatchNewMatches(self, liveMatches, disWatchMatches):
         newLiveMatches = set(liveMatches) - set(self.currentWindows.keys())
+        disWatchMatchesSet = set(disWatchMatches)
         for match in newLiveMatches:
-            flag = True
-            for disMatch in disWatchMatches:
-                if match.find(disMatch) != -1:
-                    skipName = getMatchName(match)
-                    self.log.info(
-                        f"{skipName}{_log('比赛跳过', lang=self.config.language)}")
-                    print(
-                        f"{skipName}{_('比赛跳过', color='yellow', lang=self.config.language)}")
-                    flag = False
-                    break
-            if not flag:
+            if any(disMatch in match for disMatch in disWatchMatchesSet):
+                skipName = getMatchName(match)
+                self.log.info(f"{skipName}{_log('比赛跳过', lang=self.config.language)}")
+                print(f"{skipName}{_('比赛跳过', color='yellow', lang=self.config.language)}")
                 continue
 
             self.driver.switch_to.new_window('tab')
@@ -351,20 +345,7 @@ class Match:
                 if not self.rewards.checkRewards("twitch", url):
                     return
                 if self.config.closeStream:
-                    try:
-                        self.driver.execute_script(
-                            """var data=document.querySelector('#video-player').remove()""")
-                    except Exception:
-                        self.log.error(
-                            _log("关闭 Twitch 流失败.", lang=self.config.language))
-                        print(_("关闭 Twitch 流失败.", color="red",
-                                lang=self.config.language))
-                        self.log.error(format_exc())
-                    else:
-                        self.log.info(
-                            _log("Twitch 流关闭成功", lang=self.config.language))
-                        print(_("Twitch 流关闭成功", color="green",
-                                lang=self.config.language))
+                    self.closeStream()
                 else:
                     try:
                         if self.twitch.setTwitchQuality():
@@ -389,25 +370,13 @@ class Match:
                 self.driver.get(url)
                 # 方便下次添加入overrides中
                 self.log.info(self.driver.current_url)
-                self.youtube.playYoutubeStream()
+                self.youtube.checkYoutubeStream()
+                # 当前不可获取奖励时,不进行清晰度调整
                 if not self.rewards.checkRewards("youtube", url):
                     return
                 # 关闭 Youtube 流
                 if self.config.closeStream:
-                    try:
-                        self.driver.execute_script(
-                            """var data=document.querySelector('#video-player').remove()""")
-                    except Exception:
-                        self.log.error(
-                            _log("关闭 Youtube 流失败.", lang=self.config.language))
-                        print(_("关闭 Youtube 流失败.", color="red",
-                                lang=self.config.language))
-                        self.log.error(format_exc())
-                    else:
-                        self.log.info(_log("Youtube 流关闭成功",
-                                           lang=self.config.language))
-                        print(_("Youtube 流关闭成功", color="green",
-                                lang=self.config.language))
+                    self.closeStream()
                 else:
                     try:
                         if self.youtube.setYoutubeQuality():
@@ -429,6 +398,17 @@ class Match:
                                 lang=self.config.language))
                         self.log.error(format_exc())
             sleep(4)
+
+    def closeStream(self):
+        try:
+            self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
+        except Exception:
+            self.log.error(_log("关闭视频流失败.", lang=self.config.language))
+            print(_("关闭视频流失败.", color='red', lang=self.config.language))
+            self.log.error(format_exc())
+        else:
+            self.log.info(_log("视频流关闭成功.", lang=self.config.language))
+            print(_("视频流关闭成功.", color='green', lang=self.config.language))
 
     def checkNextMatch(self):
         try:
@@ -488,9 +468,18 @@ class Match:
                 # 第一次进入界面无需刷新
                 if isInit is False:
                     self.driver.refresh()
-                wait = WebDriverWait(self.driver, 10)
-                wait.until(ec.presence_of_element_located(
-                    (By.CSS_SELECTOR, "div.name")))
+                wait = WebDriverWait(self.driver, 15)
+                # 等待掉落列表加载完成
+                try:
+                    wait.until(ec.presence_of_element_located(
+                        (By.CSS_SELECTOR, "div.name")))
+                except TimeoutException:
+                    # 一次掉落都没有的特殊情况----新号
+                    wait.until(ec.presence_of_element_located(
+                        (By.XPATH, "//div[text()='NO DROPS YET']")))
+                    watchHours = self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div.stats > div:nth-child(2) > div.number").text
+                    return 0, watchHours
                 dropLocale = self.driver.find_elements(
                     by=By.CSS_SELECTOR, value="div.name")
                 dropNumber = self.driver.find_elements(
@@ -502,7 +491,7 @@ class Match:
                 print(_("获取掉落数失败", color="red", lang=self.config.language))
                 self.log.error(_log("获取掉落数失败", lang=self.config.language))
                 self.log.error(format_exc())
-                return 0, 0
+                return -1, 0
             # 不是第一次运行
             if not isInit:
                 try:
@@ -513,6 +502,10 @@ class Match:
                             continue
                         dropNumberNow = int(dropNumber[i].text[:-6])
                         dropLocaleNow = dropLocale[i].text
+                        if dropLocaleNow == "LCK":
+                            dropNumberNow = 17
+                        if dropLocaleNow == "LCS":
+                            dropNumberNow = 21
                         drops = dropNumberNow - int(self.dropsDict.get(dropLocaleNow, 0))
                         if drops > 0:
                             dropNumberInfo.append(
@@ -527,15 +520,19 @@ class Match:
                                     poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.checkNewDrops()
                                     if poweredByImg is not None:
                                         self.log.info(
-                                            f"[{self.config.nickName}] BY {eventTitle} GET {dropItem} {unlockedDate}")
+                                            f"[{self.config.nickName}] BY {eventTitle} GET {dropItem} ON {dropLocaleNow} {unlockedDate}")
                                         print(
-                                            f"[blue][{self.config.nickName}][/blue] [blue]BY[/blue] {eventTitle} [blue]GET[/blue] {dropItem} {unlockedDate}")
+                                            f"[blue][{self.config.nickName}][/blue] "
+                                            f"[blue]BY[/blue] {eventTitle} "
+                                            f"[blue]GET[/blue] {dropItem} "
+                                            f"[blue]ON[blue] {dropLocaleNow}"
+                                            f"[blue]{unlockedDate}")
                                         if self.config.desktopNotify:
                                             desktopNotify(
-                                                poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg)
+                                                poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropLocaleNow)
                                         if self.config.connectorDropsUrl != "":
                                             self.rewards.notifyDrops(
-                                                poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg)
+                                                poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropLocaleNow)
                                     sleep(3)
                                 self.isNotified[dropLocaleNow] = self.isNotified.get(dropLocaleNow, 0) + dropsNeedNotify
                         sumNumber = sumNumber + dropNumberNow
@@ -550,7 +547,7 @@ class Match:
                     self.log.error(
                         _log("统计掉落失败", lang=self.config.language))
                     self.log.error(format_exc())
-                    return 0, 0
+                    return -1, 0
             # 第一次运行
             else:
                 try:
@@ -560,16 +557,16 @@ class Match:
                         self.dropsDict[dropLocale[i].text] = int(
                             dropNumber[i].text[:-6])
                         sumNumber = sumNumber + int(dropNumber[i].text[:-6])
-                    return sumNumber
+                    return sumNumber, watchHours
                 except Exception:
                     print(_("初始化掉落数失败", color="red",
                             lang=self.config.language))
                     self.log.error(
                         _log("初始化掉落数失败", lang=self.config.language))
                     self.log.error(format_exc())
-                    return 0
+                    return -1, 0
         else:
-            return 0, 0
+            return -1, 0
 
     def getRewardPage(self, newTab=False):
         try:
@@ -578,7 +575,7 @@ class Match:
             self.driver.get("https://lolesports.com/rewards")
             self.rewardWindow = self.driver.current_window_handle
             # 初始化掉落计数
-            self.historyDrops = self.countDrops(isInit=True)
+            self.historyDrops, temp = self.countDrops(isInit=True)
         except Exception:
             print(_("检查掉落数失败", color="red", lang=self.config.language))
             self.log.error(_log("检查掉落数失败", lang=self.config.language))
