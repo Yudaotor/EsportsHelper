@@ -11,37 +11,23 @@ class Youtube:
     def __init__(self, driver, log) -> None:
         self.driver = driver
         self.log = log
+        self.wait = WebDriverWait(self.driver, 20)
 
-    def playYoutubeStream(self):
+    def checkYoutubeStream(self):
         try:
-            wait = WebDriverWait(self.driver, 15)
-            wait.until(ec.frame_to_be_available_and_switch_to_it(
+            self.wait.until(ec.frame_to_be_available_and_switch_to_it(
                 (By.CSS_SELECTOR, "iframe[id=video-player-youtube]")))
-            playButton = wait.until(ec.presence_of_element_located(
-                (By.XPATH, "/html/body/div/div/div[27]/div[2]/div[1]/button")))
-            # 当检测到视频暂停时，点击播放按钮
-            streamStatus = wait.until(ec.presence_of_element_located(
-                (By.CSS_SELECTOR, "button.ytp-play-button.ytp-button > svg > use")))
-            if streamStatus.get_attribute("href") == "#ytp-id-44":
-                try:
-                    playButton.click()
-                except Exception:
-                    self.driver.execute_script(
-                        "arguments[0].click();", playButton)
-            # 当检测到视频静音时，点击静音按钮,打开声音
-            muteButton = wait.until(ec.presence_of_element_located(
+            # 如果检测到视频暂停则播放
+            playButton = self.wait.until(ec.presence_of_element_located(
+                (By.CSS_SELECTOR, "button.ytp-play-button.ytp-button")))
+            if playButton.get_attribute("data-title-no-tooltip") == "Play":
+                self.playStream(playButton)
+            # 如果检测到视频静音则取消静音
+            muteButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button.ytp-mute-button.ytp-button")))
             if muteButton.get_attribute("data-title-no-tooltip") == "Unmute":
-                try:
-                    muteButton.click()
-                    print("Youtube: UnMute")
-                    self.log.info("Youtube: UnMute")
-                except Exception:
-                    self.driver.execute_script(
-                        "arguments[0].click();", muteButton)
-                    print("Youtube: UnMute")
-                    self.log.info("Youtube: UnMute")
-            # 离开播放器iframe
+                self.unmuteStream(muteButton)
+
             self.driver.switch_to.default_content()
             return True
         except TimeoutException:
@@ -51,21 +37,37 @@ class Youtube:
             self.log.error(format_exc())
             return False
 
+    def playStream(self, playButton):
+        try:
+            playButton.click()
+        except Exception:
+            self.log.error(format_exc())
+            self.driver.execute_script("arguments[0].click();", playButton)
+
+    def unmuteStream(self, muteButton):
+        try:
+            muteButton.click()
+            print("Youtube: UnMute")
+            self.log.info("Youtube: UnMute")
+        except Exception:
+            self.driver.execute_script("arguments[0].click();", muteButton)
+            print("Youtube: UnMute")
+            self.log.info("Youtube: UnMute")
+
     def setYoutubeQuality(self) -> bool:
         try:
-            wait = WebDriverWait(self.driver, 15)
-            wait.until(ec.frame_to_be_available_and_switch_to_it(
+            self.wait.until(ec.frame_to_be_available_and_switch_to_it(
                 (By.CSS_SELECTOR, "iframe[id=video-player-youtube]")))
-            settingsButton = wait.until(ec.presence_of_element_located(
-                (By.CSS_SELECTOR, "button[data-tooltip-target-id=ytp-settings-button]")))
+            settingsButton = self.wait.until(ec.presence_of_element_located(
+                (By.CSS_SELECTOR, "button.ytp-button.ytp-settings-button")))
             self.driver.execute_script("arguments[0].click();", settingsButton)
             sleep(1)
-            qualityButton = wait.until(ec.presence_of_element_located(
-                (By.XPATH, "/html/body/div[1]/div/div[25]/div/div/div[2]/div[3]")))
+            qualityButton = self.wait.until(ec.presence_of_element_located(
+                (By.CSS_SELECTOR, "div.ytp-panel > div.ytp-panel-menu > div:nth-child(3)")))
             self.driver.execute_script("arguments[0].click();", qualityButton)
             sleep(1)
-            option = wait.until(ec.presence_of_element_located(
-                (By.XPATH, "/html/body/div[1]/div/div[25]/div/div[2]/div[6]/div")))
+            option = self.wait.until(ec.presence_of_element_located(
+                (By.CSS_SELECTOR, "div.ytp-panel.ytp-quality-menu > div.ytp-panel-menu > div:nth-last-child(2)")))
             self.driver.execute_script("arguments[0].click();", option)
             self.driver.switch_to.default_content()
             return True
