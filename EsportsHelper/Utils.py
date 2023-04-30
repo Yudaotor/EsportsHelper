@@ -205,9 +205,9 @@ zhTWI18n = {
 def _(text, color, lang="zh_CN"):
     rawText = text
     language_map = {
-        "zh_CN": f"[{color}]{text}",
-        "en_US": f"[{color}]{englishI18n.get(text, f'{rawText} No translation there. Please contact the developer.')}",
-        "zh_TW": f"[{color}]{zhTWI18n.get(text, rawText)}"
+        "zh_CN": f"[{color}]{text}[/{color}]",
+        "en_US": f"[{color}]{englishI18n.get(text, f'{rawText} No translation there. Please contact the developer.')}[/{color}]",
+        "zh_TW": f"[{color}]{zhTWI18n.get(text, rawText)}[/{color}]"
     }
     return language_map.get(lang, text)
 
