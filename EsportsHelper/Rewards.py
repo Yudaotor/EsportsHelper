@@ -174,7 +174,7 @@ class Rewards:
                         "inline": True
                     }
                     field5 = {
-                        "name": "Locale",
+                        "name": "Region",
                         "value": f"{dropLocale}",
                         "inline": True
                     }
