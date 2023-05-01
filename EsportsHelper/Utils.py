@@ -9,7 +9,7 @@ from plyer import notification
 from retrying import retry
 from rich import print
 
-englishI18n = {
+enUSI18n = {
         "生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开": "WebDriver generation failure!\nThe latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator",
         "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试": "WebDriver generation failure!\nIs Google Chrome installed?\nIs Google Chrome currently open? Please close it and try again",
         "生成WEBDRIVER失败!\n是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用": "WebDriver generation failure!\nIs Google Chrome installed?\nIs there a network problem? Check VPN availability if one connected",
@@ -32,7 +32,7 @@ englishI18n = {
         "代理配置错误,已恢复默认值": "Incorrect proxy configuration. The default setting has been restored.",
         "用户数据userDataDir路径配置错误,已恢复默认值": "Incorrect UserDataDirectory path configuration. The default setting has been restored.",
         "语言配置错误,已恢复zh_CN默认值": "Incorrect language configuration. The default language zh_CN has been restored.",
-        '正常观看 可获取奖励': "is live and being watched. Drops available. Stream title:",
+        '正常观看 可获取奖励': "is live and being watched. Stream title:",
         "观看异常 重试中...": "is live, but watch attempt was unsuccessful. Retrying...",
         "观看异常": "Watch system work anomaly.",
         "检查掉落失败": "Drops check failed.",
@@ -203,20 +203,41 @@ zhTWI18n = {
 
 
 def _(text, color, lang="zh_CN"):
+    """
+    A function that formats text with a specified color based on the given language.
+
+    Args:
+        text (str): The text to be formatted.
+        color (str): The color to format the text with, specified using BBCode format.
+        lang (str): The language of the text. Defaults to "zh_CN".
+
+    Returns:
+        str: The formatted text with the specified color and language.
+    """
     rawText = text
     language_map = {
         "zh_CN": f"[{color}]{text}[/{color}]",
-        "en_US": f"[{color}]{englishI18n.get(text, f'{rawText} No translation there. Please contact the developer.')}[/{color}]",
+        "en_US": f"[{color}]{enUSI18n.get(text, f'{rawText} No translation there. Please contact the developer.')}[/{color}]",
         "zh_TW": f"[{color}]{zhTWI18n.get(text, rawText)}[/{color}]"
     }
     return language_map.get(lang, text)
 
 
 def _log(text, lang="zh_CN"):
+    """
+    Logs the given text with language support.
+
+    Args:
+        text (str): The text to be logged.
+        lang (str, optional): The language of the text. Defaults to "zh_CN".
+
+    Returns:
+        str: The logged text in the specified language, or the original text if translation is not available.
+    """
     rawText = text
     language_map = {
         "zh_CN": text,
-        "en_US": englishI18n.get(text, f"{rawText} No translation there. Please contact the developer."),
+        "en_US": enUSI18n.get(text, f"{rawText} No translation there. Please contact the developer."),
         "zh_TW": zhTWI18n.get(text, rawText)
     }
     return language_map.get(lang, text)
@@ -228,6 +249,13 @@ class Utils:
         pass
 
     def errorNotify(self, error):
+        """
+        Sends error notifications to selected channels based on the user's configuration settings.
+
+        Args:
+            error (str): The error message to be included in the notification.
+
+        """
         notifyType = self.config.notifyType
         needDesktopNotify = self.config.desktopNotify
         connectorUrl = self.config.connectorDropsUrl
@@ -293,6 +321,16 @@ class Utils:
                     log.error(format_exc())
 
     def debugScreen(self, driver, lint=""):
+        """
+        Function Name: debugScreen
+        Input:
+            - driver: webdriver object
+            - lint: string (default: "")
+        Output: None
+        Purpose: Saves a screenshot of the current webpage for debugging purposes.
+                 The screenshot is saved to ./logs/pics/ directory with a timestamp and a lint identifier.
+                 If the lint parameter is not specified, an empty string will be used as the identifier.
+        """
         try:
             if self.config.debug:
                 log.info(f"DebugScreen: {lint} Successful")
@@ -307,35 +345,108 @@ class Utils:
         githubUrl = "https://github.com/Yudaotor/EsportsHelper"
         VersionManager.checkVersion()
         if self.config.language == "zh_CN":
-            print(f"[green]{'=' * 57}")
-            print(f"[green]{'=' * 8}[/green]        感谢使用 [blue]电竞助手[/blue] v{version}!        [green]{'=' * 8}")
-            print(f"[green]{'=' * 12}[/green] 本程序开源于github链接地址如下: [green]{'=' * 12}")
-            print(f"[green]{'=' * 4}[/green]   {githubUrl}     [green]{'=' * 4}")
-            print(f"[green]{'=' * 4}[/green] 如觉得不错的话可以进上面链接请我喝杯咖啡支持下. [green]{'=' * 4}")
-            print(f"[green]{'=' * 4}[/green] 请在使用前[red]阅读教程文件[/red], 以确保你的配置符合要求! [green]{'=' * 4}")
-            print(f"[green]{'=' * 4}[/green]  如需关闭请勿直接右上角X关闭，请按Ctrl+C来关闭. [green]{'=' * 4}")
-            print(f"[green]{'=' * 57}")
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * 27}"
+                f">_<"
+                f"{'=' * 27}"
+                f">_<[/bold yellow]"
+            )
+            print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]        "
+                  f"感谢使用 [cyan]电竞助手[/cyan] v{version}!        "
+                  f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 12}[/bold yellow] "
+                  f"本程序开源于github链接地址如下: "
+                  f"[bold yellow]{'=' * 12}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]   "
+                  f"{githubUrl}     "
+                  f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow] "
+                  f"如觉得不错的话可以进上面链接请我喝杯咖啡支持下. "
+                  f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow] "
+                  f"请在使用前[red]阅读教程文件[/red], 以确保你的配置符合要求! "
+                  f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]  "
+                  f"如需关闭请勿直接右上角X关闭，请按Ctrl+C来关闭. "
+                  f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * 27}"
+                f">_<"
+                f"{'=' * 27}"
+                f">_<[/bold yellow]"
+            )
             print()
         elif self.config.language == "en_US":
-            print(f"[green]{'=' * 57}[/green]")
-            print(f"[green]{'=' * 8}[/green] Thanks for using [blue]EsportsHelper[/blue] v{version}!  [green]{'=' * 8}")
-            print(f"[green]{'=' * 8}[/green]   The program is open source at GitHub  [green]{'=' * 8}")
-            print(f"[green]{'=' * 4}[/green]    {githubUrl}    [green]{'=' * 4}")
-            print(f"[green]{'=' * 4}[/green]      If you like it, please give me a star      [green]{'=' * 4}")
-            print(f"[green]{'=' * 57}")
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * 27}"
+                f">_<"
+                f"{'=' * 27}"
+                f">_<[/bold yellow]"
+            )
+            print(f"[bold yellow]>_<{'=' * 8}[/bold yellow] "
+                  f"Thanks for using [cyan]EsportsHelper[/cyan] v{version}!  "
+                  f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]   "
+                  f"The program is open source at GitHub  "
+                  f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]    "
+                  f"{githubUrl}    [bold yellow]{'=' * 4}"
+                  f">_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]      "
+                  f"If you like it, please give me a star      "
+                  f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * 27}"
+                f">_<"
+                f"{'=' * 27}"
+                f">_<[/bold yellow]"
+            )
             print()
         elif self.config.language == "zh_TW":
-            print(f"[green]{'=' * 57}")
-            print(f"[green]{'=' * 8}[/green]        感謝使用 [blue]電競助手[/blue] v{version}!        [green]{'=' * 8}")
-            print(f"[green]{'=' * 12}[/green] 本程式開源於github連結地址如下: [green]{'=' * 12}")
-            print(f"[green]{'=' * 4}[/green]   {githubUrl}     [green]{'=' * 4}")
-            print(f"[green]{'=' * 4}[/green] 如覺得不錯的話可以進上面連結請我喝杯咖啡支援下. [green]{'=' * 4}")
-            print(f"[green]{'=' * 4}[/green] 請在使用前[red]閱讀教程檔案[/red], 以確保你的配置符合要求! [green]{'=' * 4}")
-            print(f"[green]{'=' * 4}[/green]  如需關閉請勿直接右上角X關閉，請按Ctrl+C來關閉. [green]{'=' * 4}")
-            print(f"[green]{'=' * 57}")
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * 27}"
+                f">_<"
+                f"{'=' * 27}"
+                f">_<[/bold yellow]"
+            )
+            print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]        "
+                  f"感謝使用 [cyan]電競助手[/cyan] v{version}!        "
+                  f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 12}[/bold yellow] "
+                  f"本程式開源於github連結地址如下: "
+                  f"[bold yellow]{'=' * 12}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]   "
+                  f"{githubUrl}     "
+                  f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow] "
+                  f"如覺得不錯的話可以進上面連結請我喝杯咖啡支援下. "
+                  f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow] "
+                  f"請在使用前[red]閱讀教程檔案[/red], 以確保你的配置符合要求! "
+                  f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]  "
+                  f"如需關閉請勿直接右上角X關閉，請按Ctrl+C來關閉. "
+                  f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * 27}"
+                f">_<"
+                f"{'=' * 27}"
+                f">_<[/bold yellow]"
+            )
             print()
 
     def getOverrideFile(self):
+        """
+        Function Name: getOverrideFile
+        Output: Dictionary containing overrides from a remote file
+        Purpose: Retrieve overrides from a remote file and return them as a dictionary
+        """
         try:
             OVERRIDES = {}
             req = requests.session()
@@ -376,6 +487,19 @@ class Utils:
 
 
 def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropLocale):
+    """
+    Desktop notification function that sends a notification to the user's desktop.
+
+    Args:
+    poweredByImg (str): The image URL of the company that powers the event.
+    productImg (str): The image URL of the product being dropped.
+    unlockedDate (str): The date and time when the drop will be unlocked.
+    eventTitle (str): The title of the event.
+    dropItem (str): The name of the dropped item.
+    dropItemImg (str): The image URL of the dropped item.
+    dropLocale (str): The location where the drop will occur.
+
+    """
     try:
         notification.notify(
             title="New drop!",
@@ -389,6 +513,14 @@ def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, 
 
 
 def sysQuit(driver=None, e=None):
+    """
+    Function: sysQuit
+    Description: Safely quits the webdriver and exits the program.
+    Input:
+        - driver: Webdriver instance to be quit
+        - e: Exception that occurred (optional)
+    Output: None
+    """
     sleep(3)
     if driver:
         driver.quit()
@@ -397,8 +529,16 @@ def sysQuit(driver=None, e=None):
     sys.exit()
 
 
-# 从url中获取比赛赛区名
 def getMatchName(url: str) -> str:
+    """
+    Returns the name of the match corresponding to the given URL.
+
+    Args:
+        url (str): A string that represents a URL.
+
+    Returns:
+        str: A string that represents the name of the match.
+    """
     match = url.split('/')[-2] if url.split('/')[-2] != "live" else url.split('/')[-1]
     match = "cblol" if match == "cblol-brazil" else match
     match = "ljl" if match == "ljl-japan" else match
@@ -406,17 +546,45 @@ def getMatchName(url: str) -> str:
     return match
 
 
-# 重复尝试获取网页最多4次，等待时间以2分钟为基数，每次递增2分钟
+# Repeat the attempt to fetch the page up to 4 times,
+# and the wait time is based on 2 minutes, each time incremented by 2 minutes
 @retry(stop_max_attempt_number=4, wait_incrementing_increment=120000, wait_incrementing_start=120000)
 def getLolesportsWeb(driver):
+    """
+    Retrieves the Lolesports website using the provided driver. If an exception occurs while accessing the website,
+    it retries for a maximum of four times, incrementing the wait time between each attempt by two minutes.
+
+    Args:
+    - driver (selenium.webdriver.remote.webdriver.WebDriver): The driver to use for accessing the Lolesports website
+
+    """
     try:
         driver.get(
-            "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,emea_masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
+            "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,"
+            "lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,"
+            "lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,"
+            "emea_masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,"
+            "superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,"
+            "arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,"
+            "liga_master_flo,movistar_fiber_golden_league,elements_league,"
+            "claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,"
+            "msi,tft_esports"
+        )
+
     except Exception:
-        print("[red]Getting to LolEsports website failed, retrying...[/red]")
-        log.error("Getting to LolEsports website failed, retrying...")
+        print("[red]Getting to LoLEsports website failed, retrying...[/red]")
+        log.error("Getting to LoLEsports website failed, retrying...")
         driver.get(
-            "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,emea_masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,liga_master_flo,movistar_fiber_golden_league,elements_league,claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,msi,tft_esports")
+            "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,"
+            "lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,"
+            "lec,ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,"
+            "emea_masters,lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,"
+            "superliga,primeleague,hitpoint_masters,esports_balkan_league,greek_legends,"
+            "arabian_league,lck_academy,ljl_academy,lck_challengers_league,cblol_academy,"
+            "liga_master_flo,movistar_fiber_golden_league,elements_league,"
+            "claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,"
+            "msi,tft_esports"
+        )
 
 
 

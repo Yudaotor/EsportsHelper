@@ -15,6 +15,12 @@ class Twitch:
         self.wait = WebDriverWait(self.driver, 20)
 
     def setTwitchQuality(self) -> bool:
+        """
+        Sets the quality of the Twitch video player to the lowest available option and unmute the audio.
+
+        Returns:
+            True if the operation is successful, False otherwise.
+        """
         try:
             self.wait.until(ec.frame_to_be_available_and_switch_to_it(
                 (By.CSS_SELECTOR, "iframe[title=Twitch]")))

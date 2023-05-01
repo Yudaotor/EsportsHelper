@@ -18,8 +18,15 @@ global driver
 
 
 def init(config):
+    """
+    Initialize the program by creating a webdriver, setting the window size, opening the Lolesports webpage, and switching the language to English.
+
+    Args:
+        config: A Config object that contains program configuration settings.
+
+    """
     global driver
-    # 生成webdriver
+    # Generate webdriver
     try:
         driver = Webdriver(config).createWebdriver()
     except TypeError:
@@ -43,9 +50,9 @@ def init(config):
               color="red", lang=config.language))
         input(_log("按回车键退出", lang=config.language))
         sysQuit(driver)
-    # 设置窗口大小
+    # Set the window size
     driver.set_window_size(960, 768)
-    # 打开观赛页面
+    # Open lolesports page
     try:
         getLolesportsWeb(driver)
     except Exception:
@@ -55,7 +62,7 @@ def init(config):
         print(_("无法打开Lolesports网页，网络问题，将于3秒后退出...",
               color="red", lang=config.language))
         sysQuit(driver, _log("无法打开Lolesports网页，网络问题，将于3秒后退出..."))
-    # 切换语言到英语
+    # Switch web language to English
     try:
         wait = WebDriverWait(driver, 20)
         languageButton = wait.until(ec.presence_of_element_located(
@@ -73,6 +80,12 @@ def init(config):
 
 
 def login(config):
+    """
+    The login function, which logs in with the given configuration information and outputs the login result.
+
+    Args:
+        config: A Config object that contains the configuration information required for login.
+    """
     loginHandler = LoginHandler(log=log, driver=driver, config=config)
     if config.userDataDir == "":
         tryLoginTimes = 4
@@ -105,6 +118,13 @@ def watch(config):
 
 
 def main():
+    """
+    Main function to run the EsportsHelper program.
+
+    Parses command line arguments, initializes the configuration and utility objects,
+    initializes the webdriver, logs in, watches the match and prints the completion message.
+
+    """
     global driver
     # 解析配置参数
     parser = argparse.ArgumentParser(

@@ -57,6 +57,12 @@ class Config:
             os.kill(os.getpid(), 9)
 
     def format(self):
+        """
+        Formats the instance variables according to certain rules.
+
+        Raises:
+        - ValueError: If an invalid format is given for certain variables.
+        """
         if isinstance(self.language, str):
             if self.language not in ["zh_CN", "en_US", "zh_TW"]:
                 self.language = "zh_CN"
@@ -186,6 +192,14 @@ class Config:
             print(_("提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭", color="yellow", lang=self.language))
 
     def __findConfigFile(self, configPath):
+        """Find the configuration file at the given path.
+
+        Args:
+            configPath (str): The path to the configuration file.
+
+        Returns:
+            Optional[Path]: The path to the configuration file if it exists, else None.
+        """
         configPath = Path(configPath)
         if configPath.exists():
             return configPath

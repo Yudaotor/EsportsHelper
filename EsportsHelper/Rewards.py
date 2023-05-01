@@ -20,6 +20,13 @@ class Rewards:
         self.wait = WebDriverWait(self.driver, 25)
 
     def isRewardMarkExist(self):
+        """
+        Checks if the reward mark exists on the current page.
+
+        Returns:
+        - True if the reward mark exists.
+        - False otherwise.
+        """
         try:
             self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "div[class=status-summary] g")))
@@ -28,6 +35,17 @@ class Rewards:
         return True
 
     def checkRewards(self, stream, url, retryTimes=6) -> bool:
+        """
+        Checks if rewards are available to be obtained from the given stream and URL.
+
+        Args:
+            stream (str): The name of the stream platform ("twitch" or "youtube").
+            url (str): The URL of the stream.
+            retryTimes (int, optional): The number of times to retry checking for rewards if the initial attempt fails. Default is 6.
+
+        Returns:
+            bool: True if rewards are available, False otherwise.
+        """
         match = getMatchName(url)
         teams = ""
         peopleNumber = ""
@@ -101,11 +119,21 @@ class Rewards:
                         f"{match} {_log('观看异常', lang=self.config.language)}")
                     return False
 
-    def checkNewDrops(self):
+    def getNewDropInfo(self):
+        """
+        Gets the information of the new drop.
+        Returns a tuple containing the following elements:
+            poweredByImg (str or None): The URL of the image of the sponsor of the drop, or None if not found.
+            productImg (str or None): The URL of the image of the product being dropped, or None if not found.
+            eventTitle (str or None): The title of the event associated with the drop, or None if not found.
+            unlockedDate (str or None): The date and time when the drop will be unlocked, or None if not found.
+            dropItem (str or None): The name of the item being dropped, or None if not found.
+            dropItemImg (str or None): The URL of the image of the item being dropped, or None if not found.
+
+        """
         try:
-            self.driver.implicitly_wait(5)
-            wait = WebDriverWait(self.driver, 10)
-            wait.until(ec.presence_of_element_located(
+            # Wait for the drop info to be available
+            self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div[class=product-image] > img[class=img]")))
             poweredByImg = self.driver.find_element(
                 by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div[class=sponsor-image] > img[class=img]").get_attribute("src")
@@ -126,17 +154,33 @@ class Rewards:
             closeButton = self.driver.find_element(
                 by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.close")
             closeButton.click()
-            self.driver.implicitly_wait(15)
             return poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg
         except Exception:
-            self.driver.implicitly_wait(15)
             self.log.error(_log("检查掉落失败", lang=self.config.language))
             self.log.error(format_exc())
             print(_("检查掉落失败", color="red", lang=self.config.language))
             return None, None, None, None, None, None
 
     def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropLocale):
-        if self.config.notifyType == "all" or self.config.notifyType == "drops":
+        """
+            Sends a notification message about a drop obtained through a certain event to a configured webhook.
+
+            Args:
+                poweredByImg (str): The URL of the image of the platform logo that powered the drop.
+                productImg (str): The URL of the image of the product that was dropped.
+                eventTitle (str): The title of the event that the drop was obtained through.
+                unlockedDate (str): The date and time at which the drop was unlocked.
+                dropItem (str): The name of the item that was dropped.
+                dropItemImg (str): The URL of the image of the item that was dropped.
+                dropLocale (str): The locale where the event took place.
+
+            Returns:
+                None. This function only sends a notification message.
+
+            Raises:
+                Exception: If there was an error sending the notification message.
+            """
+        if self.config.notifyType in ["all", "drops"]:
             try:
                 s = requests.session()
                 s.keep_alive = False  # 关闭多余连接

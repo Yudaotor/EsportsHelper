@@ -15,7 +15,14 @@ class LoginHandler:
         self.driver = driver
         self.config = config
 
-    def automaticLogIn(self, username, password):
+    def automaticLogIn(self, username: str, password: str) -> None:
+        """
+        An automatic login function that logs in with a given username and password.
+
+        :param username: str，username
+        :param password: str，password
+        :return: None
+        """
         try:
             try:
                 getLolesportsWeb(self.driver)
@@ -24,7 +31,7 @@ class LoginHandler:
                 self.log.error(_log("无法打开Lolesports网页，网络问题"),
                                lang=self.config.language)
                 print(_("无法打开Lolesports网页，网络问题",
-                      color="red", lang=self.config.language))
+                        color="red", lang=self.config.language))
             time.sleep(2)
             wait = WebDriverWait(self.driver, 11)
             loginButton = wait.until(ec.presence_of_element_located(
@@ -58,6 +65,10 @@ class LoginHandler:
             self.log.error(format_exc())
 
     def insert2FACode(self):
+        """
+        Prompts the user to enter their two-factor authentication code, enters the code into the appropriate field,
+        and submits the code.
+        """
         wait = WebDriverWait(self.driver, 20)
         authText = wait.until(ec.presence_of_element_located(
             (By.CSS_SELECTOR, "h5.grid-panel__subtitle")))
@@ -73,6 +84,12 @@ class LoginHandler:
         self.log.info(_log("二级验证代码提交成功", lang=self.config.language))
 
     def userDataLogin(self):
+        """
+        Attempt to log in using the user's stored credentials. If successful, return None.
+        If unsuccessful, prompt the user to log in manually.
+
+        :return: None
+        """
         try:
             wait = WebDriverWait(self.driver, 10)
             loginButton = wait.until(ec.presence_of_element_located(
@@ -83,7 +100,7 @@ class LoginHandler:
                 return
             print(_("免密登录失败,请去浏览器手动登录后再行尝试", color="red", lang=self.config.language))
             self.log.error(_log("免密登录失败,请去浏览器手动登录后再行尝试",
-                           lang=self.config.language))
+                                lang=self.config.language))
             self.log.error(format_exc())
             sysQuit(self.driver, _("免密登录失败,请去浏览器手动登录后再行尝试",
-                    color="red", lang=self.config.language))
+                                   color="red", lang=self.config.language))
