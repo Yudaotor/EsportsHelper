@@ -2,5 +2,7 @@ delay: 600                # 每次检查的时间间隔，单位为秒(默认为
 headless: False           # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False) / # When set to True, the program will run in the background; otherwise it will open a browser window (set False by default)
 username: "账号用户名"     # 必填，账号 / Required field, username
 password: "密码"          # 必填，密码 / Required field, passward
-language: "en_US"         # 语言选择，zh_CN是中文，en_US是英文 / Language selection, zh_CN for Chinese (Simplified), en_US for English
-# 更多配置请参考readme中的配置说明 / Refer to the Readme file for more configuration options
+nickName: ""              # 绰号, 不填即为用户名. / NickName. default is username.
+language: "en_US"         # 语言选择，zh_CN是简体中文，en_US是英文, zh_TW是繁体中文 / Language selection, zh_CN for Chinese (Simplified), en_US for English,zh_TW for Chinese (Traditional)
+autoSleep: False          # 是否自动休眠,即没比赛时自动休眠，有比赛时自动唤醒(默认为False) / Whether to sleep automatically, that is, to sleep automatically when there is no match, and to wake up automatically when there is a match (default is False)
+# 更多配置请参考readme中的配置说明 / Refer to the Readme file for more configuration options.
