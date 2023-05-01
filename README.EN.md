@@ -40,6 +40,9 @@ Temporary operation method：
 python -m pip install -r requirements.txt
 ./run_job.sh 0
 ```
+## Multiple Account  
+Unzip multiple folders, and then each different configuration files.Open all instances to achieve multiple account.
+
 ## Want Use Chromium on ARM64?
 Read This!  -->[Guide](https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64)
 ## Features
