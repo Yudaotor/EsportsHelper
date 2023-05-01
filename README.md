@@ -34,6 +34,9 @@ python -m pip install -r requirements.txt
 ./run_job.sh 0
 ```
 
+## 关于多开  
+~~压缩包解压多个文件夹,然后各自不同的配置文件多开即可实现(bushi)~~
+
 
 ## 特性
 1. 自动打开浏览器,进入lolesports.com,查询哪些赛区在进行比赛(在放赛前等待的赛区会被忽视,但是可以通过ignoreBroadCast配置从而不忽视),进入观看并设置为最低清晰度(为了节省流量)
