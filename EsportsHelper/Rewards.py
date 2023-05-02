@@ -135,22 +135,40 @@ class Rewards:
             # Wait for the drop info to be available
             self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div[class=product-image] > img[class=img]")))
-            poweredByImg = self.driver.find_element(
-                by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div[class=sponsor-image] > img[class=img]").get_attribute("src")
-            productImg = self.driver.find_element(
-                by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div[class=product-image] > img[class=img]").get_attribute("src")
+            try:
+                poweredByImg = self.driver.find_element(
+                    by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div[class=sponsor-image] > img[class=img]").get_attribute("src")
+            except Exception:
+                poweredByImg = ""
+            try:
+                productImg = self.driver.find_element(
+                    by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div[class=product-image] > img[class=img]").get_attribute("src")
+            except Exception:
+                productImg = ""
             try:
                 eventTitle = self.driver.find_element(
                     by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div.title.short").text
             except Exception:
-                eventTitle = self.driver.find_element(
-                    by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div.title.long").text
-            dropItem = self.driver.find_element(
-                by=By.CSS_SELECTOR, value="div[class=reward] > div[class=wrapper] > div[class=title]").text
-            unlockedDate = self.driver.find_element(
-                by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div.unlocked-date").text
-            dropItemImg = self.driver.find_element(
-                by=By.CSS_SELECTOR, value="div[class=reward] > div[class=image] > img[class=img]").get_attribute("src")
+                try:
+                    eventTitle = self.driver.find_element(
+                        by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div.title.long").text
+                except Exception:
+                    eventTitle = ""
+            try:
+                dropItem = self.driver.find_element(
+                    by=By.CSS_SELECTOR, value="div[class=reward] > div[class=wrapper] > div[class=title]").text
+            except Exception:
+                dropItem = ""
+            try:
+                unlockedDate = self.driver.find_element(
+                    by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.content > div.RewardsDropsCard > div > div.unlocked-date").text
+            except Exception:
+                unlockedDate = ""
+            try:
+                dropItemImg = self.driver.find_element(
+                    by=By.CSS_SELECTOR, value="div[class=reward] > div[class=image] > img[class=img]").get_attribute("src")
+            except Exception:
+                dropItemImg = ""
             closeButton = self.driver.find_element(
                 by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.close")
             closeButton.click()
