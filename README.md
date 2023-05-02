@@ -20,7 +20,7 @@
 Discord: Khalil#7843  
 可以给我点个小星星吗(*^_^*)⭐  
 ## 界面
-![image](https://user-images.githubusercontent.com/87225219/228434642-6b7317e5-1c0a-4931-b358-f6e2b304429b.png)
+![image](https://user-images.githubusercontent.com/87225219/235648829-55f4af6d-97f5-4157-a66f-6963d63e44aa.png)
 
 ## 运行平台  
 Windows, Linux  
