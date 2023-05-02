@@ -595,7 +595,7 @@ class Match:
                             if dropsNeedNotify > 0:
                                 self.driver.find_element(
                                     by=By.XPATH, value=f"//div[text()='{dropLocaleNow}']").click()
-                                for j in range(1, dropsNeedNotify + 1):
+                                for j in range(dropsNeedNotify, 0, -1):
                                     self.driver.find_element(
                                         by=By.CSS_SELECTOR, value=f"div.accordion-body > div > div:nth-child({j})").click()
                                     poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.rewards.getNewDropInfo()
