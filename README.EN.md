@@ -29,7 +29,8 @@ Telegram: https://t.me/Yudaotor, Discord username: Khalil#7843
 Can you please give me a little star?(*^_^*)⭐  
 
 ## GUI
-![image](https://user-images.githubusercontent.com/87225219/232998520-a71680e5-1124-4bb2-acc8-582c5feb8382.png)
+![image](https://user-images.githubusercontent.com/87225219/235648316-50dea673-9a72-4fca-9917-f89b28ee4ed7.png)
+
 
 ## OS  
 Windows, Linux  
