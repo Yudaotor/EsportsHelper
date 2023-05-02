@@ -1,4 +1,4 @@
-from traceback import format_exc, print_exc
+from traceback import format_exc
 
 import requests as req
 from EsportsHelper.Logger import log
@@ -6,7 +6,7 @@ from rich import print
 
 
 class VersionManager:
-    CURRENT_VERSION = "1.6.0"
+    CURRENT_VERSION = "1.6.1"
 
     @staticmethod
     def getLatestTag():
