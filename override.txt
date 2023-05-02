@@ -35,4 +35,4 @@ https://lolesports.com/live/superliga|https://lolesports.com/live/superliga/lvpe
 https://lolesports.com/live/emea_masters|https://lolesports.com/live/emea_masters/emeamasters,
 https://lolesports.com/live/tft_esports|https://lolesports.com/live/tft_esports/teamfighttactics,
 https://lolesports.com/live/lcs_challengers_qualifiers|https://lolesports.com/live/lcs_challengers_qualifiers/challengersleague,
-
+https://lolesports.com/live/msi|https://lolesports.com/live/msi/riotgames,
