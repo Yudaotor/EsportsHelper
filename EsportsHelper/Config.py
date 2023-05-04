@@ -191,6 +191,9 @@ class Config:
         if self.countDrops is False and self.connectorDropsUrl != "":
             print(_("提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭", color="yellow", lang=self.language))
 
+        if self.nickName == "":
+            self.nickName = self.username
+
     def __findConfigFile(self, configPath):
         """Find the configuration file at the given path.
 
