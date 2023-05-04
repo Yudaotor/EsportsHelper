@@ -3,6 +3,9 @@ from time import sleep, strftime
 from traceback import format_exc
 
 import requests
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
 from EsportsHelper.Logger import log
 from EsportsHelper.VersionManager import VersionManager
 from plyer import notification
@@ -103,6 +106,7 @@ enUSI18n = {
         "检查赛区直播状态...": "Checking live broadcasts...",
         "识别到距离比赛时间较长 检查间隔为1小时": "Plenty of time until the next match. Checking interval set to 1 hour.",
         "提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭": "Tip: The drop count function has been disabled, the drop notification function will also be disabled.",
+        "获取LoLEsports网站失败，正在重试...": "Getting to LoLEsports website failed, retrying...",
         }
 zhTWI18n = {
     '生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开': '生成WEBDRIVER失敗!\n無法找到最新版谷歌瀏覽器!如沒有下載或不是最新版請檢查好再次嘗試\n或可以嘗試用管理員方式開啟',
@@ -198,7 +202,7 @@ zhTWI18n = {
     '检查赛区直播状态...': '檢查賽區直播狀態...',
     '识别到距离比赛时间较长 检查间隔为1小时': '識別到距離比賽時間較長 檢查間隔為1小時',
     '提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭': '提醒: 由於已關閉統計掉落功能,webhook提示掉落功能也將關閉',
-
+    "获取LoLEsports网站失败，正在重试...": "獲取LoLEsports網站失敗，正在重試...",
 }
 
 
@@ -549,14 +553,14 @@ def getMatchName(url: str) -> str:
 # Repeat the attempt to fetch the page up to 4 times,
 # and the wait time is based on 2 minutes, each time incremented by 2 minutes
 @retry(stop_max_attempt_number=4, wait_incrementing_increment=120000, wait_incrementing_start=120000)
-def getLolesportsWeb(driver):
+def getLolesportsWeb(driver, language):
     """
     Retrieves the Lolesports website using the provided driver. If an exception occurs while accessing the website,
     it retries for a maximum of four times, incrementing the wait time between each attempt by two minutes.
 
     Args:
     - driver (selenium.webdriver.remote.webdriver.WebDriver): The driver to use for accessing the Lolesports website
-
+    - language (str): The language to use for log
     """
     try:
         driver.get(
@@ -570,10 +574,13 @@ def getLolesportsWeb(driver):
             "claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,"
             "msi,tft_esports"
         )
+        # Whether the load is complete
+        wait = WebDriverWait(driver, 20)
+        wait.until(ec.element_to_be_clickable((By.CSS_SELECTOR, "div.results-label")))
 
     except Exception:
-        print("[red]Getting to LoLEsports website failed, retrying...[/red]")
-        log.error("Getting to LoLEsports website failed, retrying...")
+        print(_("获取LoLEsports网站失败，正在重试...", color="red", lang=language))
+        log.error(_log("获取LoLEsports网站失败，正在重试...", lang=language))
         driver.get(
             "https://lolesports.com/schedule?leagues=lcs,north_american_challenger_league,"
             "lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,"
@@ -585,6 +592,9 @@ def getLolesportsWeb(driver):
             "claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,"
             "msi,tft_esports"
         )
+        # Whether the load is complete
+        wait = WebDriverWait(driver, 20)
+        wait.until(ec.element_to_be_clickable((By.CSS_SELECTOR, "div.results-label")))
 
 
 

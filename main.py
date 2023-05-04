@@ -54,7 +54,7 @@ def init(config):
     driver.set_window_size(960, 768)
     # Open lolesports page
     try:
-        getLolesportsWeb(driver)
+        getLolesportsWeb(driver, config.language)
     except Exception:
         log.error(format_exc())
         log.error(

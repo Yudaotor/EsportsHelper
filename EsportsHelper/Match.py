@@ -189,7 +189,7 @@ class Match:
                         f"{_log('总观看时长: ', lang=self.config.language)}{watchHours}")
                 # Make sure to come to the lolesports schedule page
                 try:
-                    getLolesportsWeb(self.driver)
+                    getLolesportsWeb(self.driver, self.config.language)
                 except Exception:
                     self.log.error(format_exc())
                     self.log.error(
@@ -198,11 +198,6 @@ class Match:
                             color="red", lang=self.config.language))
                     sysQuit(self.driver, _log(
                         "无法打开Lolesports网页，网络问题，将于3秒后退出...", lang=self.config.language))
-                # Whether the load is complete
-                wait = WebDriverWait(self.driver, 20)
-                wait.until(ec.element_to_be_clickable(
-                    (By.CSS_SELECTOR, "div.results-label")))
-                sleep(1)
                 if len(matches) == 0:
                     self.log.info(_log("没有赛区正在直播", lang=self.config.language))
                     print(_("没有赛区正在直播", color="green", lang=self.config.language))

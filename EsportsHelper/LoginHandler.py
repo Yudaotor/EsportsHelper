@@ -25,7 +25,7 @@ class LoginHandler:
         """
         try:
             try:
-                getLolesportsWeb(self.driver)
+                getLolesportsWeb(self.driver, self.config.language)
             except Exception:
                 self.log.error(format_exc())
                 self.log.error(_log("无法打开Lolesports网页，网络问题"),
