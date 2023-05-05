@@ -574,9 +574,6 @@ def getLolesportsWeb(driver, language):
             "claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,"
             "msi,tft_esports"
         )
-        # Whether the load is complete
-        wait = WebDriverWait(driver, 20)
-        wait.until(ec.element_to_be_clickable((By.CSS_SELECTOR, "div.results-label")))
 
     except Exception:
         print(_("获取LoLEsports网站失败，正在重试...", color="red", lang=language))
@@ -592,9 +589,6 @@ def getLolesportsWeb(driver, language):
             "claro_gaming_stars_league,honor_division,volcano_discover_league,honor_league,"
             "msi,tft_esports"
         )
-        # Whether the load is complete
-        wait = WebDriverWait(driver, 20)
-        wait.until(ec.element_to_be_clickable((By.CSS_SELECTOR, "div.results-label")))
 
 
 
