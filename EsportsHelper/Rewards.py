@@ -11,15 +11,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 class Rewards:
-    def __init__(self, log, driver, config, youtube, utils) -> None:
+    def __init__(self, log, driver, config, youtube, utils, twitch) -> None:
         self.log = log
         self.driver = driver
         self.config = config
         self.youtube = youtube
         self.utils = utils
+        self.twitch = twitch
         self.wait = WebDriverWait(self.driver, 25)
 
-    def isRewardMarkExist(self):
+    def checkRewards(self, stream: str) -> bool:
         """
         Checks if the reward mark exists on the current page.
 
@@ -28,13 +29,23 @@ class Rewards:
         - False otherwise.
         """
         try:
-            self.wait.until(ec.presence_of_element_located(
-                (By.CSS_SELECTOR, "div[class=status-summary] g")))
-        except TimeoutException:
+            # Reward whether it is ticked
+            self.wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div[class=status-summary] g")))
+            # check stream
+            if stream == "youtube":
+                if self.youtube.checkYoutubeStream() is False:
+                    return False
+            if stream == "twitch":
+                if self.twitch.checkTwitchStream() is False:
+                    return False
+                pass
+
+        except Exception:
+            self.log.error(format_exc())
             return False
         return True
 
-    def checkRewards(self, stream, url, retryTimes=6) -> bool:
+    def checkMatches(self, stream, url, retryTimes=6) -> bool:
         """
         Checks if rewards are available to be obtained from the given stream and URL.
 
@@ -50,7 +61,7 @@ class Rewards:
         teams = ""
         peopleNumber = ""
         for i in range(retryTimes):
-            if self.isRewardMarkExist():
+            if self.checkRewards(stream=stream):
                 try:
                     if stream == "twitch":
                         frameLocator = (By.CSS_SELECTOR, "iframe[title=Twitch]")
@@ -103,13 +114,13 @@ class Rewards:
                 return True
             else:
                 if i != retryTimes - 1:
-                    self.log.warning(
-                        f"{match} {_log('观看异常 重试中...', self.config.language)}")
-                    print(
-                        f"{match} {_('观看异常 重试中...', color='yellow', lang=self.config.language)}")
+                    self.log.warning(f"{match} {_log('观看异常 重试中...', self.config.language)}")
+                    print(f"{match} {_('观看异常 重试中...', color='yellow', lang=self.config.language)}")
                     self.driver.refresh()
                     if stream == "youtube":
                         self.youtube.checkYoutubeStream()
+                    if stream == "twitch":
+                        self.twitch.checkTwitchStream()
                 else:
                     self.log.error(
                         f"{match} {_log('观看异常', lang=self.config.language)}")

@@ -25,8 +25,9 @@ class Match:
         self.config = config
         self.utils = Utils(config=config)
         self.youtube = YouTube(driver=driver, log=log)
+        self.twitch = Twitch(driver=driver, log=log)
         self.rewards = Rewards(
-            log=log, driver=driver, config=config, youtube=self.youtube, utils=self.utils)
+            log=log, driver=driver, config=config, youtube=self.youtube, utils=self.utils, twitch=self.twitch)
         self.twitch = Twitch(driver=driver, log=log)
         self.currentWindows = {}
         self.rewardWindow = None
@@ -81,7 +82,6 @@ class Match:
                 newDelay = randomDelay * 10
                 nowTimeHour = int(time.localtime().tm_hour)
                 nowTimeDay = int(time.localtime().tm_mday)
-                nowTimeMin = int(time.localtime().tm_min)
                 matches = []
                 # If you are not currently sleeping,
                 # get match information (including races that are still counting down).
@@ -172,21 +172,23 @@ class Match:
                     print(_("休眠时间结束", color="green", lang=self.config.language))
                     self.log.info(_log("休眠时间结束", lang=self.config.language))
                     sleepFlag = False
-                    self.driver.switch_to.window(self.rewardWindow)
                     if self.config.countDrops:
+                        self.driver.switch_to.window(self.rewardWindow)
                         self.getRewardPage()
+
                 # Get the number of drops and total hours watched
-                dropsNumber, watchHours = self.countDrops()
-                self.driver.switch_to.window(self.mainWindow)
-                if dropsNumber != -1:
-                    print(
-                        f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} | "
-                        f"{_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber} | "
-                        f"{_('总观看时长: ', color='green', lang=self.config.language)}{watchHours}")
-                    self.log.info(
-                        f"{_log('本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.historyDrops} | "
-                        f"{_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} | "
-                        f"{_log('总观看时长: ', lang=self.config.language)}{watchHours}")
+                if self.config.countDrops:
+                    dropsNumber, watchHours = self.countDrops()
+                    self.driver.switch_to.window(self.mainWindow)
+                    if dropsNumber != -1:
+                        print(
+                            f"{_('本次运行掉落总和:', color='green', lang=self.config.language)}{dropsNumber - self.historyDrops} | "
+                            f"{_('生涯总掉落:', color='green', lang=self.config.language)}{dropsNumber} | "
+                            f"{_('总观看时长: ', color='green', lang=self.config.language)}{watchHours}")
+                        self.log.info(
+                            f"{_log('本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.historyDrops} | "
+                            f"{_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} | "
+                            f"{_log('总观看时长: ', lang=self.config.language)}{watchHours}")
                 # Make sure to come to the lolesports schedule page
                 try:
                     getLolesportsWeb(self.driver, self.config.language)
@@ -198,6 +200,9 @@ class Match:
                             color="red", lang=self.config.language))
                     sysQuit(self.driver, _log(
                         "无法打开Lolesports网页，网络问题，将于3秒后退出...", lang=self.config.language))
+
+                matches = self.getMatchInfo()
+                sleep(2)
                 if len(matches) == 0:
                     self.log.info(_log("没有赛区正在直播", lang=self.config.language))
                     print(_("没有赛区正在直播", color="green", lang=self.config.language))
@@ -302,17 +307,18 @@ class Match:
         """
         try:
             removeList = []
-            self.driver.switch_to.new_window('tab')
-            newTab1 = self.driver.current_window_handle
-            sleep(1)
+            if self.config.countDrops:
+                self.driver.switch_to.new_window('tab')
+                newTab1 = self.driver.current_window_handle
+                sleep(1)
             self.driver.switch_to.new_window('tab')
             newTab2 = self.driver.current_window_handle
             sleep(1)
-            for k in self.currentWindows.keys():
-                self.driver.switch_to.window(self.currentWindows[k])
+            for keys in self.currentWindows.keys():
+                self.driver.switch_to.window(self.currentWindows[keys])
                 sleep(1)
                 self.driver.close()
-                removeList.append(k)
+                removeList.append(keys)
                 sleep(1)
             self.driver.switch_to.window(self.mainWindow)
             sleep(1)
@@ -321,7 +327,8 @@ class Match:
             self.driver.switch_to.window(self.rewardWindow)
             sleep(1)
             self.driver.close()
-            self.rewardWindow = newTab1
+            if self.config.countDrops:
+                self.rewardWindow = newTab1
             for handle in removeList:
                 self.currentWindows.pop(handle, None)
             print(_("所有窗口已关闭", color="green", lang=self.config.language))
@@ -359,9 +366,9 @@ class Match:
                     sleep(3)
                 else:
                     if keys in self.OVERRIDES:
-                        self.rewards.checkRewards("twitch", keys)
+                        self.rewards.checkMatches("twitch", keys)
                     else:
-                        self.rewards.checkRewards("youtube", keys)
+                        self.rewards.checkMatches("youtube", keys)
             for keys in removeList:
                 self.currentWindows.pop(keys, None)
             self.driver.switch_to.window(self.mainWindow)
@@ -398,7 +405,7 @@ class Match:
             if match in self.OVERRIDES:
                 url = self.OVERRIDES[match]
                 self.driver.get(url)
-                if not self.rewards.checkRewards("twitch", url):
+                if not self.rewards.checkMatches("twitch", url):
                     return
                 if self.config.closeStream:
                     self.closeStream()
@@ -428,7 +435,7 @@ class Match:
                 self.log.info(self.driver.current_url)
                 self.youtube.checkYoutubeStream()
                 # When rewards are not currently available, no need to set the quality
-                if not self.rewards.checkRewards("youtube", url):
+                if not self.rewards.checkMatches("youtube", url):
                     return
                 # remove the YouTube stream
                 if self.config.closeStream:
@@ -548,7 +555,7 @@ class Match:
                 # The first time you enter the page, you do not need to refresh
                 if isInit is False:
                     self.driver.refresh()
-                wait = WebDriverWait(self.driver, 15)
+                wait = WebDriverWait(self.driver, 25)
                 # Wait for the drop list to finish loading
                 try:
                     wait.until(ec.presence_of_element_located(

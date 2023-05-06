@@ -12,7 +12,7 @@ class Twitch:
     def __init__(self, driver, log) -> None:
         self.driver = driver
         self.log = log
-        self.wait = WebDriverWait(self.driver, 20)
+        self.wait = WebDriverWait(self.driver, 25)
 
     def setTwitchQuality(self) -> bool:
         """
@@ -24,21 +24,7 @@ class Twitch:
         try:
             self.wait.until(ec.frame_to_be_available_and_switch_to_it(
                 (By.CSS_SELECTOR, "iframe[title=Twitch]")))
-            sleep(3)
-            self.driver.implicitly_wait(15)
-            isMute = self.driver.find_elements(By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button] > div > div > div > svg > g")
-            muteButton = self.wait.until(ec.presence_of_element_located(
-                (By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button]")))
-            if len(isMute) <= 0:
-                try:
-                    muteButton.click()
-                    self.log.info("Twitch: UnMute")
-                    print("Twitch: UnMute")
-                except Exception:
-                    self.driver.execute_script("arguments[0].click();", muteButton)
-                    print("Twitch: UnMute")
-                    self.log.info("Twitch: UnMute")
-            sleep(1)
+            sleep(2)
             settingsButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button[data-a-target=player-settings-button]")))
             self.driver.execute_script("arguments[0].click();", settingsButton)
@@ -59,3 +45,69 @@ class Twitch:
         except Exception:
             self.log.error(format_exc())
             return False
+
+    def checkTwitchStream(self) -> bool:
+        try:
+            self.wait.until(ec.frame_to_be_available_and_switch_to_it(
+                (By.CSS_SELECTOR, "iframe[title=Twitch]")))
+            sleep(3)
+            self.driver.implicitly_wait(15)
+            isMute = self.driver.find_elements(By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button] > div > div > div > svg > g")
+            muteButton = self.wait.until(ec.presence_of_element_located(
+                (By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button]")))
+            if len(isMute) <= 0:
+                self.unmuteStream(muteButton)
+            playButton = self.wait.until(ec.presence_of_element_located(
+                (By.CSS_SELECTOR, "button[data-a-target=player-play-pause-button]")))
+            if playButton.get_attribute("data-a-player-state") == "paused":
+                self.playStream(playButton)
+            self.driver.switch_to.default_content()
+            return True
+        except TimeoutException:
+            self.log.error(format_exc())
+            self.driver.switch_to.default_content()
+            return False
+        except Exception:
+            self.log.error(format_exc())
+            self.driver.switch_to.default_content()
+            return False
+
+    def unmuteStream(self, muteButton):
+        """
+        Unmute the stream by clicking the given mute button. If the click fails,
+        executes a JavaScript click to try again. Also prints a message to the console
+        and logs the action to the application log.
+
+        Args:
+            muteButton (WebElement): The mute button element to click.
+
+        Returns:
+            None
+        """
+        try:
+            muteButton.click()
+            print("Twitch: UnMute")
+            self.log.info("Twitch: UnMute")
+        except Exception:
+            self.driver.execute_script("arguments[0].click();", muteButton)
+            print("Twitch: UnMute")
+            self.log.info("Twitch: UnMute")
+
+    def playStream(self, playButton) -> None:
+        """
+        Clicks on the play button of a stream.
+
+        Args:
+            playButton: WebElement - The WebElement corresponding to the play button of the stream.
+
+        Returns:
+            None
+        """
+        try:
+            playButton.click()
+            self.log.info("Twitch: Play")
+            print("Twitch: Play")
+        except Exception:
+            self.driver.execute_script("arguments[0].click();", playButton)
+            print("Twitch: Play")
+            self.log.info("Twitch: Play")

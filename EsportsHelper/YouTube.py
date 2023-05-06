@@ -23,12 +23,12 @@ class YouTube:
         try:
             self.wait.until(ec.frame_to_be_available_and_switch_to_it(
                 (By.CSS_SELECTOR, "iframe[id=video-player-youtube]")))
-            # 如果检测到视频暂停则播放
+            # Play if a video pause is detected
             playButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button.ytp-play-button.ytp-button")))
             if playButton.get_attribute("data-title-no-tooltip") == "Play":
                 self.playStream(playButton)
-            # 如果检测到视频静音则取消静音
+            # If a video mute is detected, unmute it
             muteButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button.ytp-mute-button.ytp-button")))
             if muteButton.get_attribute("data-title-no-tooltip") == "Unmute":
@@ -38,9 +38,11 @@ class YouTube:
             return True
         except TimeoutException:
             self.log.error(format_exc())
+            self.driver.switch_to.default_content()
             return False
         except Exception:
             self.log.error(format_exc())
+            self.driver.switch_to.default_content()
             return False
 
     def playStream(self, playButton) -> None:
