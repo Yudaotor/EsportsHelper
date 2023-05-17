@@ -21,8 +21,8 @@ enUSI18n = {
         "好嘞 登录成功": "Logged in successfully.",
         "使用浏览器缓存 自动登录成功": "Using browser cookies. Auto-login success.",
         "观看结束": "Watch finished.",
-        "切换语言成功": "Language switched successfully.",
-        "切换语言失败": "The language switch failed.",
+        "切换网页语言成功": "Web language switched successfully.",
+        "切换网页语言失败": "Web language switch failed.",
         "无法登陆，账号密码可能错误或者网络出现问题": "Login failed: wrong credentials or network problem.",
         "开始重试": "Restarting.",
         "配置文件找不到": "Configuration file not found.",
@@ -35,7 +35,7 @@ enUSI18n = {
         "代理配置错误,已恢复默认值": "Incorrect proxy configuration. The default setting has been restored.",
         "用户数据userDataDir路径配置错误,已恢复默认值": "Incorrect UserDataDirectory path configuration. The default setting has been restored.",
         "语言配置错误,已恢复zh_CN默认值": "Incorrect language configuration. The default language zh_CN has been restored.",
-        '正常观看 可获取奖励': "is live and being watched. Stream title:",
+        '正常观看 可获取奖励': "is live and being watched.",
         "观看异常 重试中...": "is live, but watch attempt was unsuccessful. Retrying...",
         "观看异常": "Watch system work anomaly.",
         "检查掉落失败": "Drops check failed.",
@@ -49,7 +49,7 @@ enUSI18n = {
         "免密登录失败,请去浏览器手动登录后再行尝试": "Authentication failure. Please log in manually using browser and try again.",
         "检查掉落数失败": "Failed to check drop count.",
         "开始检查...": "Start checking...",
-        "本次运行掉落总和:": "Session drops: ",
+        "本次运行掉落总和:": "Session  drops: ",
         "生涯总掉落:": "Lifetime drops: ",
         "没有赛区正在直播": "No live broadcasts.",
         "个赛区正在直播中": "match currently live.",
@@ -97,7 +97,7 @@ enUSI18n = {
         "获取override文件失败": "Failed to import override file.",
         "休眠时间结束": "Waking up...",
         "进入休眠时间": "Going to sleep now...",
-        "检查下一场比赛时 过滤失效的比赛": "Filtering invalid broadcasts when checking next broadcast.",
+        "检查下一场比赛时 过滤失效的比赛->": "Filtering invalid broadcasts when checking next broadcast ->",
         "总观看时长: ": "Overall hours watched: ",
         "日期: ": "Date: ",
         "下次检查在:": "Next check at:",
@@ -107,6 +107,27 @@ enUSI18n = {
         "识别到距离比赛时间较长 检查间隔为1小时": "Plenty of time until the next match. Checking interval set to 1 hour.",
         "提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭": "Tip: The drop count function has been disabled, the drop notification function will also be disabled.",
         "获取LoLEsports网站失败，正在重试...": "Getting to LoLEsports website failed, retrying...",
+        "获取reward网站失败，正在重试...": "Getting to reward website failed, retrying...",
+        "标题: ": "Stream Title: ",
+        "Twitch: 刷新": "Twitch: Refresh",
+        "检查掉落数...": "Checking drops number...",
+        "出错, 未知": "Error, unknown",
+        "Youtube: 刷新": "Youtube: Refresh",
+        "检测奖励标识失败": "Failed to detect reward img.",
+        "Twitch: 解除静音成功": "Twitch: Unmute successfully.",
+        "Twitch: 解除静音失败": "Twitch: Failed to unmute.",
+        "Twitch: 解除暂停成功": "Twitch: Unpause successfully.",
+        "Twitch: 解除暂停失败": "Twitch: Failed to unpause.",
+        "Youtube: 解除静音成功": "Youtube: Unmute successfully.",
+        "Youtube: 解除静音失败": "Youtube: Failed to unmute.",
+        "Youtube: 解除暂停成功": "Youtube: Unpause successfully.",
+        "Youtube: 解除暂停失败": "Youtube: Failed to unpause.",
+        "初始化掉落数": "Initializing drops number",
+        "获取队伍信息重试中...": "Retrying to get team info...",
+        "获取观看人数信息重试中...": "Retrying to get viewers info...",
+        '比赛结束 等待关闭': 'Match ended. Waiting to close.',
+        "调试截图成功": "Debug screenshot successful.",
+        "调试截图失败": "Debug screenshot failed.",
         }
 zhTWI18n = {
     '生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开': '生成WEBDRIVER失敗!\n無法找到最新版谷歌瀏覽器!如沒有下載或不是最新版請檢查好再次嘗試\n或可以嘗試用管理員方式開啟',
@@ -117,8 +138,8 @@ zhTWI18n = {
     '好嘞 登录成功': '好嘞 登入成功',
     '使用浏览器缓存 自动登录成功': '使用瀏覽器快取 自動登入成功',
     '观看结束': '觀看結束',
-    '切换语言成功': '切換語言成功',
-    '切换语言失败': '切換語言失敗',
+    "切换网页语言成功": '切換網頁語言成功',
+    '切换网页语言失败': '切換網頁語言失敗',
     '无法登陆，账号密码可能错误或者网络出现问题': '無法登陸，帳號密碼可能錯誤或者網路出現問題',
     '开始重试': '開始重試',
     '配置文件找不到': '配置檔案找不到',
@@ -193,7 +214,7 @@ zhTWI18n = {
     '获取override文件失败': '獲取override檔案失敗',
     '休眠时间结束': '休眠時間結束',
     '进入休眠时间': '進入休眠時間',
-    '检查下一场比赛时 过滤失效的比赛': '檢查下一場比賽時 過濾失效的比賽',
+    '检查下一场比赛时 过滤失效的比赛->': '檢查下一場比賽時 過濾失效的比賽->',
     '总观看时长: ': '總觀看時長: ',
     '日期: ': '日期: ',
     '下次检查在:': '下次檢查在:',
@@ -203,6 +224,27 @@ zhTWI18n = {
     '识别到距离比赛时间较长 检查间隔为1小时': '識別到距離比賽時間較長 檢查間隔為1小時',
     '提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭': '提醒: 由於已關閉統計掉落功能,webhook提示掉落功能也將關閉',
     "获取LoLEsports网站失败，正在重试...": "獲取LoLEsports網站失敗，正在重試...",
+    "获取reward网站失败，正在重试...": "獲取reward網站失敗，正在重試...",
+    "标题: ": "標題: ",
+    "Twitch: 刷新": "Twitch: 刷新",
+    "检查掉落数...": "檢查掉落數...",
+    "出错, 未知": "出錯, 未知",
+    "Youtube: 刷新": "Youtube: 刷新",
+    "检测奖励标识失败": "檢測獎勵標識失敗",
+    "Twitch: 解除静音成功": "Twitch: 解除靜音成功",
+    "Twitch: 解除静音失败": "Twitch: 解除靜音失敗",
+    "Twitch: 解除暂停成功": "Twitch: 解除暫停成功",
+    "Twitch: 解除暂停失败": "Twitch: 解除暫停失敗",
+    "Youtube: 解除暂停失败": "Youtube: 解除暫停失敗",
+    "Youtube: 解除暂停成功": "Youtube: 解除暫停成功",
+    "Youtube: 解除静音失败": "Youtube: 解除靜音失敗",
+    "Youtube: 解除静音成功": "Youtube: 解除靜音成功",
+    "初始化掉落数": "初始化掉落數",
+    "获取队伍信息重试中...": "獲取隊伍資訊重試中...",
+    "获取观看人数信息重试中...": "獲取觀看人數資訊重試中...",
+    '比赛结束 等待关闭': '比賽結束 等待關閉',
+    "调试截图成功": "調試截圖成功",
+    "调试截图失败": "調試截圖失敗",
 }
 
 
@@ -240,7 +282,7 @@ def _log(text, lang="zh_CN"):
     """
     rawText = text
     language_map = {
-        "zh_CN": text,
+        "zh_CN": rawText,
         "en_US": enUSI18n.get(text, f"{rawText} No translation there. Please contact the developer."),
         "zh_TW": zhTWI18n.get(text, rawText)
     }
@@ -324,7 +366,7 @@ class Utils:
                     log.error(_log("异常提醒失败", lang=language))
                     log.error(format_exc())
 
-    def debugScreen(self, driver, lint=""):
+    def debugScreen(self, driver, lint="normal"):
         """
         Function Name: debugScreen
         Input:
@@ -337,11 +379,11 @@ class Utils:
         """
         try:
             if self.config.debug:
-                log.info(f"DebugScreen: {lint} Successful")
-                driver.save_screenshot(
-                    f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
+                sleep(3)
+                driver.save_screenshot(f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
+                log.info(f'{lint}-{_log("调试截图成功", lang=self.config.language)}')
         except Exception:
-            log.error("DebugScreen: Failed")
+            log.error(f'{lint}-{_log("调试截图失败", lang=self.config.language)}')
             log.error(format_exc())
 
     def info(self):
@@ -525,7 +567,7 @@ def sysQuit(driver=None, e=None):
         - e: Exception that occurred (optional)
     Output: None
     """
-    sleep(3)
+    sleep(1)
     if driver:
         driver.quit()
     log.error(e)
@@ -547,13 +589,14 @@ def getMatchName(url: str) -> str:
     match = "cblol" if match == "cblol-brazil" else match
     match = "ljl" if match == "ljl-japan" else match
     match = "tft_rising_legends" if match == "tft_esports" else match
+    match = match.upper()
     return match
 
 
 # Repeat the attempt to fetch the page up to 4 times,
 # and the wait time is based on 2 minutes, each time incremented by 2 minutes
 @retry(stop_max_attempt_number=4, wait_incrementing_increment=120000, wait_incrementing_start=120000)
-def getLolesportsWeb(driver, language):
+def getLolesportsWeb(driver, language) -> None:
     """
     Retrieves the Lolesports website using the provided driver. If an exception occurs while accessing the website,
     it retries for a maximum of four times, incrementing the wait time between each attempt by two minutes.
@@ -591,4 +634,48 @@ def getLolesportsWeb(driver, language):
         )
 
 
+def getSleepPeriod(config):
+    """
+    Get sleep period from config file
+    """
+    return [int(period.split("-")[0]) for period in config.sleepPeriod if period], \
+           [int(period.split("-")[1]) for period in config.sleepPeriod if period]
 
+
+@retry(stop_max_attempt_number=4, wait_incrementing_increment=10000, wait_incrementing_start=10000)
+def checkRewardPage(driver, language):
+    wait = WebDriverWait(driver, 20)
+    try:
+        wait.until(ec.presence_of_element_located(
+            (By.CSS_SELECTOR, "div.name")))
+    except Exception:
+        try:
+            # Special cases where there is no drop ---- new account
+            wait.until(ec.presence_of_element_located(
+                (By.XPATH, "//div[text()='NO DROPS YET']")))
+        except Exception:
+            driver.refresh()
+            print(_("获取reward网站失败，正在重试...", color="red", lang=language))
+            log.error(_log("获取reward网站失败，正在重试...", lang=language))
+            wait.until(ec.presence_of_element_located(
+                (By.CSS_SELECTOR, "div.name")))
+        else:
+            return
+
+
+def getMatchTeams(teams, language):
+    """
+    Get match teams from stream title
+    """
+    if teams and ("|" in teams or "-" in teams):
+        delimiter = "|" if "|" in teams else "-"
+        words = teams.split(delimiter)
+        for word in words:
+            if "vs" in word.lower():
+                teams = word
+                break
+            else:
+                teams = words[0]
+    else:
+        teams = _log("出错, 未知", lang=language)
+    return teams

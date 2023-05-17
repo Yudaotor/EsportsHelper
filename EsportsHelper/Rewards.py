@@ -1,10 +1,9 @@
-import time
+from time import sleep
 from traceback import format_exc
-
+from selenium import webdriver
 import requests
-from EsportsHelper.Utils import _, _log, getMatchName
+from EsportsHelper.Utils import _, _log, getMatchName, desktopNotify, checkRewardPage, getMatchTeams
 from rich import print
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -18,32 +17,38 @@ class Rewards:
         self.youtube = youtube
         self.utils = utils
         self.twitch = twitch
-        self.wait = WebDriverWait(self.driver, 25)
+        self.dropsDict = {}
+        self.isNotified = {}
+        self.historyDrops = -1
+        self.totalWatchHours = -1
+        self.wait = WebDriverWait(self.driver, 30)
 
-    def checkRewards(self, stream: str) -> bool:
+    def checkRewards(self, stream: str):
         """
         Checks if the reward mark exists on the current page.
-
-        Returns:
-        - True if the reward mark exists.
-        - False otherwise.
         """
         try:
-            # Reward whether it is ticked
-            self.wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div[class=status-summary] g")))
-            # check stream
-            if stream == "youtube":
-                if self.youtube.checkYoutubeStream() is False:
-                    return False
-            if stream == "twitch":
-                if self.twitch.checkTwitchStream() is False:
-                    return False
-                pass
+            # Check if the reward mark exists
+            rewardImg = self.driver.find_elements(By.CSS_SELECTOR, "div[class=status-summary] g")
+            if len(rewardImg) > 0:
+                # Check stream
+                if stream == "youtube":
+                    if self.youtube.checkYoutubeStream():
+                        return 1
+                elif stream == "twitch":
+                    if self.twitch.checkTwitchStream():
+                        return 1
+
+            # Check for VODs
+            if len(self.driver.find_elements(By.CSS_SELECTOR, "main.Vods")) > 0:
+                return 0
 
         except Exception:
+            self.log.error(_log("检测奖励标识失败", lang=self.config.language))
             self.log.error(format_exc())
-            return False
-        return True
+            self.utils.debugScreen(self.driver, "reward")
+
+        return -1
 
     def checkMatches(self, stream, url, retryTimes=6) -> bool:
         """
@@ -58,74 +63,132 @@ class Rewards:
             bool: True if rewards are available, False otherwise.
         """
         match = getMatchName(url)
-        teams = ""
-        peopleNumber = ""
+        teams = _log("出错, 未知", lang=self.config.language)
+        viewerNumber = _log("出错, 未知", lang=self.config.language)
         for i in range(retryTimes):
-            if self.checkRewards(stream=stream):
+            flag = self.checkRewards(stream=stream)
+            if flag == 1 and self.config.closeStream is False:
                 try:
                     if stream == "twitch":
                         frameLocator = (By.CSS_SELECTOR, "iframe[title=Twitch]")
                         self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
-
                         teamLocator = (By.CSS_SELECTOR, "p[data-test-selector=stream-info-card-component__subtitle]")
-                        teams = self.wait.until(ec.presence_of_element_located(teamLocator)).text
+                        teamsElement = self.wait.until(ec.presence_of_element_located(teamLocator))
+                        teams = teamsElement.text
+                        retryTeamsTimes = 6
+                        while not teams and retryTeamsTimes > 0:
+                            retryTeamsTimes -= 1
+                            self.utils.debugScreen(self.driver, "teams")
+                            self.driver.switch_to.default_content()
+                            self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
+                            webdriver.ActionChains(self.driver).move_to_element(teamsElement).perform()
+                            teams = self.wait.until(ec.presence_of_element_located(teamLocator)).text
+                            self.log.warning(_log("获取队伍信息重试中...", lang=self.config.language))
+                            sleep(5)
 
                         peopleLocator = (By.CSS_SELECTOR, "p[data-test-selector=stream-info-card-component__description]")
-                        peopleInfo = self.wait.until(ec.presence_of_element_located(peopleLocator)).text
-                        for num in peopleInfo:
+                        viewerInfoElement = self.wait.until(ec.presence_of_element_located(peopleLocator))
+                        viewerInfo = viewerInfoElement.text
+                        retryViewerTimes = 6
+                        while not viewerInfo and retryViewerTimes > 0:
+                            retryViewerTimes -= 1
+                            self.utils.debugScreen(self.driver, "viewerNumber")
+                            self.driver.switch_to.default_content()
+                            self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
+                            webdriver.ActionChains(self.driver).move_to_element(viewerInfoElement).perform()
+                            viewerInfo = self.wait.until(ec.presence_of_element_located(peopleLocator)).text
+                            self.log.warning(_log("获取观看人数信息重试中...", lang=self.config.language))
+                            sleep(5)
+
+                        viewerNumberFlag = True
+                        for num in viewerInfo:
+                            if num.isdigit() and viewerNumberFlag:
+                                viewerNumber = "" + num
+                                viewerNumberFlag = False
+                                continue
                             if num.isdigit():
-                                peopleNumber += num
+                                viewerNumber += num
                         self.driver.switch_to.default_content()
+
                     elif stream == "youtube":
                         frameLocator = (By.ID, "video-player-youtube")
                         self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
                         iframeTitle = self.driver.execute_script("return document.title;")
-                        teams = iframeTitle.strip() if iframeTitle else ""
+                        teams = iframeTitle.strip() if iframeTitle else _log("出错, 未知", lang=self.config.language)
                         self.driver.switch_to.default_content()
-                    if teams and ("|" in teams or "-" in teams):
-                        delimiter = "|" if "|" in teams else "-"
-                        words = teams.split(delimiter)
-                        for word in words:
-                            if "vs" in word.lower():
-                                teams = word
-                                break
-                            else:
-                                teams = words[0]
-                    else:
-                        teams = ""
+                    teams = getMatchTeams(teams, language=self.config.language)
+
                 except Exception:
                     self.driver.switch_to.default_content()
                     self.log.error(format_exc())
                 if stream == "twitch":
+                    if self.twitch.checkTwitchStream() is False:
+                        self.driver.refresh()
+                        self.twitch.setTwitchQuality()
+                        self.twitch.checkTwitchStream()
                     self.log.info(
                         f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} "
-                        f"{teams} {peopleNumber} {_log('人观看', lang=self.config.language)}")
+                        f"{_log('标题: ', lang=self.config.language)}"
+                        f"{teams} "
+                        f"{viewerNumber} {_log('人观看', lang=self.config.language)}")
                     print(
-                        f"{match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} "
-                        f"{teams} {peopleNumber} {_('人观看', color='green', lang=self.config.language)}")
+                        f"[bold magenta]{match}[/bold magenta] {_('正常观看 可获取奖励', color='green', lang=self.config.language)} ")
+                    print(
+                        f"--{_('标题: ', color='bold yellow', lang=self.config.language)}"
+                        f"[bold green]{teams}[/bold green] | "
+                        f"{viewerNumber} {_('人观看', color='bold yellow', lang=self.config.language)}")
                 elif stream == "youtube":
+                    if self.youtube.checkYoutubeStream() is False:
+                        self.driver.refresh()
+                        self.youtube.setYoutubeQuality()
+                        self.youtube.checkYoutubeStream()
                     self.log.info(
                         f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} "
+                        f"{_log('标题: ', lang=self.config.language)}"
                         f"{teams}")
                     print(
-                        f"{match} {_('正常观看 可获取奖励', color='green', lang=self.config.language)} "
-                        f"{teams}")
+                        f"[bold magenta]{match}[/bold magenta] "
+                        f"{_('正常观看 可获取奖励', color='green', lang=self.config.language)} ")
+                    print(
+                        f"--{_('标题: ', color='bold yellow', lang=self.config.language)}"
+                        f"[bold green]{teams}[/bold green]")
 
                 return True
-            else:
+            elif flag == 1 and self.config.closeStream is True:
+                self.log.info(
+                    f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} ")
+                print(f"[bold magenta]{match}[/bold magenta] "
+                      f"{_('正常观看 可获取奖励', color='green', lang=self.config.language)} ")
+                return True
+            elif flag == 0:
+                self.log.info(
+                    f"{match} {_log('比赛结束 等待关闭', lang=self.config.language)} ")
+                print(f"[bold magenta]{match}[/bold magenta] "
+                      f"{_('比赛结束 等待关闭', color='yellow', lang=self.config.language)} ")
+                return True
+            elif flag == -1:
                 if i != retryTimes - 1:
                     self.log.warning(f"{match} {_log('观看异常 重试中...', self.config.language)}")
-                    print(f"{match} {_('观看异常 重试中...', color='yellow', lang=self.config.language)}")
+                    print(f"[bold magenta]{match}[/bold magenta] "
+                          f"{_('观看异常 重试中...', color='yellow', lang=self.config.language)}")
+                    sleep((retryTimes + 1) * 30)
                     self.driver.refresh()
                     if stream == "youtube":
-                        self.youtube.checkYoutubeStream()
+                        if self.youtube.checkYoutubeStream() is False:
+                            self.driver.refresh()
+                            self.youtube.setYoutubeQuality()
+                            self.youtube.checkYoutubeStream()
                     if stream == "twitch":
-                        self.twitch.checkTwitchStream()
+                        if self.twitch.checkTwitchStream() is False:
+                            self.driver.refresh()
+                            self.twitch.setTwitchQuality()
+                            self.twitch.checkTwitchStream()
                 else:
                     self.log.error(
                         f"{match} {_log('观看异常', lang=self.config.language)}")
                     print(
-                        f"{match} {_('观看异常', color='red', lang=self.config.language)}")
+                        f"[bold magenta]{match}[/bold magenta] "
+                        f"{_('观看异常', color='red', lang=self.config.language)}")
                     self.utils.errorNotify(
                         f"{match} {_log('观看异常', lang=self.config.language)}")
                     return False
@@ -190,7 +253,7 @@ class Rewards:
             print(_("检查掉落失败", color="red", lang=self.config.language))
             return None, None, None, None, None, None
 
-    def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropLocale):
+    def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropLocale) -> None:
         """
             Sends a notification message about a drop obtained through a certain event to a configured webhook.
 
@@ -224,7 +287,7 @@ class Rewards:
                         }
                     }
                     s.post(self.config.connectorDropsUrl, json=data)
-                    time.sleep(5)
+                    sleep(5)
                 elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
                     field0 = {
                         "name": "Account",
@@ -262,31 +325,174 @@ class Rewards:
                         "thumbnail": {"url": f"{dropItemImg}"},
                         "fields": [field0, field1, fieldNone, field2, field4, field5, fieldNone],
                         "color": 6676471,
-                        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S+08:00", time.localtime())
                     }
                     params = {
                         "username": "EsportsHelper",
                         "embeds": [embed]
                     }
                     s.post(self.config.connectorDropsUrl, headers={
-                           "Content-type": "application/json"}, json=params)
-                    time.sleep(5)
+                        "Content-type": "application/json"}, json=params)
+                    sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
                         "text": f"[{self.config.nickName}]在{dropLocale} 通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
-                           "Content-type": "application/json"}, json=params)
-                    time.sleep(5)
+                        "Content-type": "application/json"}, json=params)
+                    sleep(5)
                 else:
                     params = {
                         "text": f"[{self.config.nickName}]在{dropLocale} 通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
-                           "Content-type": "application/json"}, json=params)
-                    time.sleep(5)
+                        "Content-type": "application/json"}, json=params)
+                    sleep(5)
                 self.log.info(_log("掉落提醒成功", lang=self.config.language))
             except Exception:
                 self.log.error(_log("掉落提醒失败", lang=self.config.language))
                 self.log.error(format_exc())
                 print(_("掉落提醒失败", color="red", lang=self.config.language))
+
+    def countDrops(self, rewardWindow, isInit=False):
+        """
+        Counts the number of drops and the total watch hours.
+
+        :param rewardWindow:
+        :param isInit: Whether it is the first time to enter the page
+        """
+        if self.config.countDrops:
+            try:
+                if isInit is True:
+                    print(f'{_("初始化掉落数", color="green", lang=self.config.language)}')
+                    self.log.info(_log("初始化掉落数", lang=self.config.language))
+                else:
+                    print(f'--{_("检查掉落数...", color="green", lang=self.config.language)}')
+                    self.log.info(_log("检查掉落数...", lang=self.config.language))
+                self.driver.switch_to.window(rewardWindow)
+                # The first time you enter the page, you do not need to refresh
+                if isInit is False:
+                    self.driver.refresh()
+                # Wait for the drop list to finish loading
+                try:
+                    checkRewardPage(self.driver, self.config.language)
+                except Exception:
+                    return -1
+                dropRegion = self.driver.find_elements(
+                    by=By.CSS_SELECTOR, value="div.name")
+                dropNumber = self.driver.find_elements(
+                    by=By.CSS_SELECTOR, value="div.dropCount")
+                totalWatchHours = self.wait.until(ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, "div.stats > div:nth-child(2) > div.number"))).text
+                totalDropsNumber = 0
+            except Exception:
+                print(_("获取掉落数失败", color="red", lang=self.config.language))
+                self.log.error(_log("获取掉落数失败", lang=self.config.language))
+                self.log.error(format_exc())
+                return -1
+            # Not the first run
+            if not isInit:
+                try:
+                    dropNumberInfo = []
+
+                    for i in range(0, len(dropRegion)):
+                        # Prevent empty situations that sometimes appear for some reason
+                        if dropNumber[i].text[:-6] == '':
+                            continue
+                        dropNumberNow = int(dropNumber[i].text[:-6])
+                        dropRegionNow = dropRegion[i].text
+                        drops = dropNumberNow - int(self.dropsDict.get(dropRegionNow, 0))
+                        if drops > 0 and totalWatchHours != -1:
+                            dropNumberInfo.append(
+                                dropRegionNow + ":" + str(dropNumberNow - self.dropsDict.get(dropRegionNow, 0)))
+                            dropsNeedNotify = drops - self.isNotified.get(dropRegionNow, 0)
+                            if dropsNeedNotify > 0:
+                                regionName = self.wait.until(ec.presence_of_element_located(
+                                    (By.XPATH, f"//div[text()='{dropRegionNow}']")))
+                                self.driver.execute_script("arguments[0].click();", regionName)
+                                for j in range(dropsNeedNotify, 0, -1):
+                                    dropItem = self.wait.until(ec.presence_of_element_located(
+                                        (By.CSS_SELECTOR, f"div.accordion-body > div > div:nth-child({j})")))
+                                    webdriver.ActionChains(self.driver).move_to_element(dropItem).click(dropItem).perform()
+                                    poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.getNewDropInfo()
+                                    if poweredByImg is not None:
+                                        self.log.info(
+                                            f"<{self.config.nickName}> BY|{eventTitle}|GET|{dropItem}|ON|{dropRegionNow}|{unlockedDate}")
+                                        print(
+                                            f"[cyan]<{self.config.nickName}>[/cyan]|"
+                                            f"[bold blue]BY[/bold blue]| {eventTitle}|"
+                                            f"[bold blue]GET[/bold blue]| {dropItem}|"
+                                            f"[bold blue]ON[/bold blue]| {dropRegionNow}|"
+                                            f"[bold blue]{unlockedDate}")
+                                        if self.config.desktopNotify:
+                                            desktopNotify(
+                                                poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropRegionNow)
+                                        if self.config.connectorDropsUrl != "":
+                                            self.notifyDrops(
+                                                poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropRegionNow)
+                                    sleep(3)
+                                self.isNotified[dropRegionNow] = self.isNotified.get(dropRegionNow, 0) + dropsNeedNotify
+                        totalDropsNumber = totalDropsNumber + dropNumberNow
+                    if len(dropNumberInfo) != 0:
+                        print(
+                            f"{_('本次运行掉落详细:', color='bold yellow', lang=self.config.language)} [bold cyan]{dropNumberInfo}[/bold cyan]")
+                        self.log.info(
+                            f"{_log('本次运行掉落详细:', lang=self.config.language)} {dropNumberInfo}")
+                    self.totalWatchHours = totalWatchHours
+                    return totalDropsNumber
+                except Exception:
+                    print(_("统计掉落失败", color="red", lang=self.config.language))
+                    self.log.error(
+                        _log("统计掉落失败", lang=self.config.language))
+                    self.log.error(format_exc())
+                    self.totalWatchHours = -1
+                    return -1
+
+            # First run
+            else:
+                try:
+                    for i in range(0, len(dropRegion)):
+                        if dropNumber[i].text[:-6] == '':
+                            continue
+                        self.dropsDict[dropRegion[i].text] = int(
+                            dropNumber[i].text[:-6])
+                        totalDropsNumber = totalDropsNumber + int(dropNumber[i].text[:-6])
+                    self.historyDrops = totalDropsNumber
+                    self.totalWatchHours = totalWatchHours
+                    return totalDropsNumber
+                except Exception:
+                    print(_("初始化掉落数失败", color="red",
+                            lang=self.config.language))
+                    self.log.error(
+                        _log("初始化掉落数失败", lang=self.config.language))
+                    self.log.error(format_exc())
+                    self.historyDrops = -1
+                    self.totalWatchHours = -1
+                    return -1
+        else:
+            self.historyDrops = -1
+            self.totalWatchHours = -1
+            return -1
+
+    def getRewardPage(self, newTab=False):
+        """
+        Get the rewards page in the browser and initialize the drop count.
+
+        Args:
+        - newTab (bool): A boolean flag to indicate whether to open the rewards page in a new tab (default: False).
+
+        Raises:
+        - Exception: If the function fails to get the rewards page or count the drops.
+        """
+        try:
+            if newTab:
+                self.driver.switch_to.new_window("tab")
+            self.driver.get("https://lolesports.com/rewards")
+            rewardWindow = self.driver.current_window_handle
+            # Initialize drop count
+            if newTab:
+                self.countDrops(rewardWindow=rewardWindow, isInit=newTab)
+            return rewardWindow
+        except Exception:
+            print(_("检查掉落数失败", color="red", lang=self.config.language))
+            self.log.error(_log("检查掉落数失败", lang=self.config.language))
+            self.log.error(format_exc())

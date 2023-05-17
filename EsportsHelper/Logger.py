@@ -24,7 +24,7 @@ class Logger:
         Path("./logs/pics").mkdir(parents=True, exist_ok=True)
         level = logging.INFO
         fileHandler = RotatingFileHandler(
-            log_path / f"{PROGRAM_NAME}{time.strftime('%b-%d-%H-%M')}.log",
+            log_path / f"{PROGRAM_NAME}-{time.strftime('%b-%d-%H-%M')}.log",
             mode="a+",
             maxBytes=FILE_SIZE,
             backupCount=BACKUP_COUNT,

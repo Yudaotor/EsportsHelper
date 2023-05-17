@@ -61,3 +61,6 @@ class VersionManager:
             log.warning(
                 f"\n==!!! NEW VERSION AVAILABLE !!!==\n ==DownLoad: https://github.com/Yudaotor/EsportsHelper/releases/latest")
             print("[yellow]\n==!!! NEW VERSION AVAILABLE !!!==\n ==DownLoad: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
+            log.warning(
+                f"\n==!!! 新版本可用 !!!==\n ==下载: https://github.com/Yudaotor/EsportsHelper/releases/latest")
+            print("[yellow]\n==!!! 新版本可用 !!!==\n ==下载: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")

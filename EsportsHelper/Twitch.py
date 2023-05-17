@@ -1,18 +1,19 @@
 from time import sleep
 from traceback import format_exc
-
 from rich import print
-from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
+from EsportsHelper.Utils import _, _log
 
 
 class Twitch:
-    def __init__(self, driver, log) -> None:
+    def __init__(self, driver, log, config, utils) -> None:
         self.driver = driver
         self.log = log
         self.wait = WebDriverWait(self.driver, 25)
+        self.config = config
+        self.utils = utils
 
     def setTwitchQuality(self) -> bool:
         """
@@ -24,7 +25,7 @@ class Twitch:
         try:
             self.wait.until(ec.frame_to_be_available_and_switch_to_it(
                 (By.CSS_SELECTOR, "iframe[title=Twitch]")))
-            sleep(2)
+            sleep(1)
             settingsButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button[data-a-target=player-settings-button]")))
             self.driver.execute_script("arguments[0].click();", settingsButton)
@@ -39,40 +40,43 @@ class Twitch:
             sleep(1)
             self.driver.switch_to.default_content()
             return True
-        except TimeoutException:
-            self.log.error(format_exc())
-            return False
         except Exception:
             self.log.error(format_exc())
-            return False
+        self.driver.switch_to.default_content()
+        return False
 
     def checkTwitchStream(self) -> bool:
+        if self.config.closeStream:
+            return True
         try:
             self.wait.until(ec.frame_to_be_available_and_switch_to_it(
                 (By.CSS_SELECTOR, "iframe[title=Twitch]")))
-            sleep(3)
+            self.driver.implicitly_wait(5)
+            errorInfo = self.driver.find_elements(By.CSS_SELECTOR, "div[data-a-target=player-overlay-content-gate]")
+            if len(errorInfo) > 0:
+                self.utils.debugScreen(lint="streamError")
+                self.driver.switch_to.default_content()
+                return False
             self.driver.implicitly_wait(15)
             isMute = self.driver.find_elements(By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button] > div > div > div > svg > g")
             muteButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button]")))
             if len(isMute) <= 0:
+                self.utils.debugScreen(lint="unmute")
                 self.unmuteStream(muteButton)
             playButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button[data-a-target=player-play-pause-button]")))
             if playButton.get_attribute("data-a-player-state") == "paused":
+                self.utils.debugScreen(lint="play")
                 self.playStream(playButton)
             self.driver.switch_to.default_content()
             return True
-        except TimeoutException:
-            self.log.error(format_exc())
-            self.driver.switch_to.default_content()
-            return False
         except Exception:
             self.log.error(format_exc())
-            self.driver.switch_to.default_content()
-            return False
+        self.driver.switch_to.default_content()
+        return False
 
-    def unmuteStream(self, muteButton):
+    def unmuteStream(self, muteButton) -> None:
         """
         Unmute the stream by clicking the given mute button. If the click fails,
         executes a JavaScript click to try again. Also prints a message to the console
@@ -86,12 +90,11 @@ class Twitch:
         """
         try:
             muteButton.click()
-            print("Twitch: UnMute")
-            self.log.info("Twitch: UnMute")
+            print(_("Twitch: 解除静音成功", color="green", lang=self.config.language))
+            self.log.info(_log("Twitch: 解除静音成功", lang=self.config.language))
         except Exception:
-            self.driver.execute_script("arguments[0].click();", muteButton)
-            print("Twitch: UnMute")
-            self.log.info("Twitch: UnMute")
+            print(_("Twitch: 解除静音失败", color="red", lang=self.config.language))
+            self.log.info(_log("Twitch: 解除静音失败", lang=self.config.language))
 
     def playStream(self, playButton) -> None:
         """
@@ -105,9 +108,8 @@ class Twitch:
         """
         try:
             playButton.click()
-            self.log.info("Twitch: Play")
-            print("Twitch: Play")
+            self.log.info(_log("Twitch: 解除暂停成功", lang=self.config.language))
+            print(_("Twitch: 解除暂停成功", color="green", lang=self.config.language))
         except Exception:
-            self.driver.execute_script("arguments[0].click();", playButton)
-            print("Twitch: Play")
-            self.log.info("Twitch: Play")
+            print(_("Twitch: 解除暂停失败", color="red", lang=self.config.language))
+            self.log.info(_log("Twitch: 解除暂停失败", lang=self.config.language))

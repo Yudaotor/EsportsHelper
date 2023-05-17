@@ -67,7 +67,7 @@ class Config:
             if self.language not in ["zh_CN", "en_US", "zh_TW"]:
                 self.language = "zh_CN"
                 print(_("语言配置错误,已恢复zh_CN默认值", color="red", lang=self.language))
-        self.disWatchMatches = [match for match in self.disWatchMatches if match != ""]
+        self.disWatchMatches = [match.lower() for match in self.disWatchMatches if match != ""]
 
         if self.userDataDir == "" and self.username == "账号用户名" or self.password == "密码":
             self.log.error(_log("配置文件中没有账号密码信息", lang=self.language))
