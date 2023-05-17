@@ -180,14 +180,15 @@ class Match:
                     dropsNumber = self.rewards.countDrops(rewardWindow=self.rewardWindow)
                     self.driver.switch_to.window(self.mainWindow)
                     watchHours = self.rewards.totalWatchHours
-                    if dropsNumber != -1:
+                    sessionDrops = dropsNumber - self.rewards.historyDrops
+                    if dropsNumber != -1 and sessionDrops >= 0:
                         print(
                             f"{_('生涯总掉落:', color='bold yellow', lang=self.config.language)}{dropsNumber} | "
                             f"{_('总观看时长: ', color='bold yellow', lang=self.config.language)}{watchHours}")
                         print(
-                            f"{_('本次运行掉落总和:', color='bold yellow', lang=self.config.language)}{dropsNumber - self.rewards.historyDrops}")
+                            f"{_('本次运行掉落总和:', color='bold yellow', lang=self.config.language)}{sessionDrops}")
                         self.log.info(
-                            f"{_log('本次运行掉落总和:', lang=self.config.language)}{dropsNumber - self.rewards.historyDrops} | "
+                            f"{_log('本次运行掉落总和:', lang=self.config.language)}{sessionDrops} | "
                             f"{_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} | "
                             f"{_log('总观看时长: ', lang=self.config.language)}{watchHours}")
                 # Make sure to come to the lolesports schedule page
@@ -204,21 +205,22 @@ class Match:
 
                 matches = self.getMatchInfo()
                 sleep(2)
-                if len(matches) == 0:
+                matchesLen = len(matches)
+                if matchesLen == 0:
                     self.log.info(_log("没有赛区正在直播", lang=self.config.language))
                     print(_("没有赛区正在直播", color="green", lang=self.config.language))
                 # 1 match
-                elif len(matches) == 1:
+                elif matchesLen == 1:
                     self.log.info(
-                        f"{len(matches)} {_log('个赛区正在直播中', lang=self.config.language)}")
+                        f"{matchesLen} {_log('个赛区正在直播中', lang=self.config.language)}")
                     print(
-                        f"{len(matches)} {_('个赛区正在直播中', color='green', lang=self.config.language)}")
+                        f"{matchesLen} {_('个赛区正在直播中', color='green', lang=self.config.language)}")
                 # multiple matches
                 else:
                     self.log.info(
-                        f"{len(matches)} {_log('赛区正在直播中', lang=self.config.language)}")
+                        f"{matchesLen} {_log('赛区正在直播中', lang=self.config.language)}")
                     print(
-                        f"{len(matches)} {_('赛区正在直播中', color='green', lang=self.config.language)}")
+                        f"{matchesLen} {_('赛区正在直播中', color='green', lang=self.config.language)}")
                 # Close the live streams of the regions that have already ended.
                 self.closeFinishedTabs(liveMatches=matches)
                 # Start watching the new live broadcast.

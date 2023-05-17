@@ -29,6 +29,10 @@ class Rewards:
         """
         try:
             # Check if the reward mark exists
+            try:
+                self.wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div[class=status-summary] g")))
+            except Exception:
+                pass
             rewardImg = self.driver.find_elements(By.CSS_SELECTOR, "div[class=status-summary] g")
             if len(rewardImg) > 0:
                 # Check stream
@@ -171,7 +175,7 @@ class Rewards:
                     self.log.warning(f"{match} {_log('观看异常 重试中...', self.config.language)}")
                     print(f"[bold magenta]{match}[/bold magenta] "
                           f"{_('观看异常 重试中...', color='yellow', lang=self.config.language)}")
-                    sleep((retryTimes + 1) * 30)
+                    sleep((i + 1) * 30)
                     self.driver.refresh()
                     if stream == "youtube":
                         if self.youtube.checkYoutubeStream() is False:
@@ -253,7 +257,7 @@ class Rewards:
             print(_("检查掉落失败", color="red", lang=self.config.language))
             return None, None, None, None, None, None
 
-    def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropLocale) -> None:
+    def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropRegion) -> None:
         """
             Sends a notification message about a drop obtained through a certain event to a configured webhook.
 
@@ -264,7 +268,7 @@ class Rewards:
                 unlockedDate (str): The date and time at which the drop was unlocked.
                 dropItem (str): The name of the item that was dropped.
                 dropItemImg (str): The URL of the image of the item that was dropped.
-                dropLocale (str): The locale where the event took place.
+                dropRegion (str): The locale where the event took place.
 
             Returns:
                 None. This function only sends a notification message.
@@ -281,7 +285,7 @@ class Rewards:
                         "msgtype": "link",
                         "link": {
                             "text": "Drop掉落提醒",
-                            "title": f"[{self.config.nickName}]在{dropLocale} 通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                            "title": f"[{self.config.nickName}]在{dropRegion} 通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                             "picUrl": f"{dropItemImg}",
                             "messageUrl": "https://lolesports.com/rewards"
                         }
@@ -311,7 +315,7 @@ class Rewards:
                     }
                     field5 = {
                         "name": "Region",
-                        "value": f"{dropLocale}",
+                        "value": f"{dropRegion}",
                         "inline": True
                     }
                     fieldNone = {
@@ -335,14 +339,16 @@ class Rewards:
                     sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
-                        "text": f"[{self.config.nickName}]在{dropLocale} 通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                        "text": f"[{self.config.nickName}]在{dropRegion} "
+                                f"通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
                         "Content-type": "application/json"}, json=params)
                     sleep(5)
                 else:
                     params = {
-                        "text": f"[{self.config.nickName}]在{dropLocale} 通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                        "text": f"[{self.config.nickName}]在{dropRegion} "
+                                f"通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
                         "Content-type": "application/json"}, json=params)
@@ -416,7 +422,7 @@ class Rewards:
                                     poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.getNewDropInfo()
                                     if poweredByImg is not None:
                                         self.log.info(
-                                            f"<{self.config.nickName}> BY|{eventTitle}|GET|{dropItem}|ON|{dropRegionNow}|{unlockedDate}")
+                                            f"<{self.config.nickName}>|BY|{eventTitle}|GET|{dropItem}|ON|{dropRegionNow}|{unlockedDate}")
                                         print(
                                             f"[cyan]<{self.config.nickName}>[/cyan]|"
                                             f"[bold blue]BY[/bold blue]| {eventTitle}|"

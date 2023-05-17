@@ -638,6 +638,17 @@ def getSleepPeriod(config):
 
 @retry(stop_max_attempt_number=4, wait_incrementing_increment=10000, wait_incrementing_start=10000)
 def checkRewardPage(driver, language):
+    """
+    Check if the reward page exists.
+
+    Args:
+        driver: Selenium WebDriver instance.
+        language: The language used for logging.
+
+    Returns:
+        - None if the reward page does not exist.
+        - Returns without any value if the reward page exists.
+    """
     wait = WebDriverWait(driver, 20)
     try:
         wait.until(ec.presence_of_element_located(
