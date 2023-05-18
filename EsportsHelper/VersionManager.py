@@ -1,15 +1,15 @@
 from traceback import format_exc
-
 import requests as req
 from EsportsHelper.Logger import log
 from rich import print
+from EsportsHelper.I18n import _, _log
 
 
 class VersionManager:
-    CURRENT_VERSION = "1.6.1"
+    def __init__(self, config) -> None:
+        self.language = config.language
 
-    @staticmethod
-    def getLatestTag():
+    def getLatestVersion(self):
         """
         Get the latest version number of the EsportsHelper project on GitHub.
 
@@ -23,24 +23,13 @@ class VersionManager:
                 latestTagJson = latestTagResponse.json()
                 if "tag_name" in latestTagJson:
                     return str(latestTagJson["tag_name"][1:])
+                print(_("获取最新版本过于频繁, 请过段时间再试", color="red", lang=self.language))
+                log.error(latestTagJson["message"])
                 return "0.0.0"
         except Exception:
-            print("[red]Get Newest Version Failed")
+            print(_("获取最新版本失败", color="red", lang=self.language))
             log.error(format_exc())
             return "0.0.0"
-
-    @staticmethod
-    def isLatestVersion(currentVersion):
-        """
-        Checks if the current version is the latest available version.
-
-        Args:
-        - currentVersion (str): The current version to compare with the latest available version.
-
-        Returns:
-        - bool: True if the current version is the latest, False otherwise.
-        """
-        return currentVersion >= VersionManager.getLatestTag()
 
     @staticmethod
     def getVersion():
@@ -48,19 +37,22 @@ class VersionManager:
         Gets the current version number
         :return: str，version number
         """
-        return VersionManager.CURRENT_VERSION
+        return "1.6.1"
 
-    @staticmethod
-    def checkVersion():
+    def checkVersion(self):
         """
         Check whether there is a new version available for EsportsHelper.
 
         :return: None
         """
-        if not VersionManager.isLatestVersion(VersionManager.getVersion()):
-            log.warning(
-                f"\n==!!! NEW VERSION AVAILABLE !!!==\n ==DownLoad: https://github.com/Yudaotor/EsportsHelper/releases/latest")
-            print("[yellow]\n==!!! NEW VERSION AVAILABLE !!!==\n ==DownLoad: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
-            log.warning(
-                f"\n==!!! 新版本可用 !!!==\n ==下载: https://github.com/Yudaotor/EsportsHelper/releases/latest")
-            print("[yellow]\n==!!! 新版本可用 !!!==\n ==下载: https://github.com/Yudaotor/EsportsHelper/releases/latest ==[/yellow]")
+        versionNow = VersionManager.getVersion()
+        versionLatest = VersionManager.getLatestVersion(self)
+        if versionNow < versionLatest:
+            print(_("当前版本: ", color="yellow", lang=self.language), end="")
+            print(versionNow, end="")
+            print(_("最新版本: ", color="yellow", lang=self.language), end="")
+            print(versionLatest)
+            print(_("\n==!!! 新版本可用 !!!==\n ===下载:", color="yellow", lang=self.language), end="")
+            print("https://github.com/Yudaotor/EsportsHelper/releases/latest ==\n")
+            log.warning(_log("\n==!!! 新版本可用 !!!==\n ===下载:", lang=self.language), end="")
+            log.warning("https://github.com/Yudaotor/EsportsHelper/releases/latest ==\n")

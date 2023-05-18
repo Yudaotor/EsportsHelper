@@ -86,7 +86,7 @@ class Utils:
 
                     log.info(_log("异常提醒成功", lang=language))
                     print(_("异常提醒成功", color="green", lang=language))
-                except Exception as e:
+                except Exception:
                     print(_("异常提醒失败", color="red", lang=language))
                     log.error(_log("异常提醒失败", lang=language))
                     log.error(format_exc())
@@ -114,7 +114,7 @@ class Utils:
     def info(self):
         version = VersionManager.getVersion()
         githubUrl = "https://github.com/Yudaotor/EsportsHelper"
-        VersionManager.checkVersion()
+        VersionManager(self.config).checkVersion()
         if self.config.language == "zh_CN":
             print(
                 f"[bold yellow]>_<"

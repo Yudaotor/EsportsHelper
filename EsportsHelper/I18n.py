@@ -114,6 +114,11 @@ enUSI18n = {
     '比赛结束 等待关闭': 'Match ended. Waiting to close.',
     "调试截图成功": "Debug screenshot successful.",
     "调试截图失败": "Debug screenshot failed.",
+    "\n==!!! 新版本可用 !!!==\n ===下载:": "\n==!!! New version available !!!==\n ===Download:",
+    "获取最新版本失败": "Failed to get latest version.",
+    "获取最新版本过于频繁, 请过段时间再试": "Getting latest version too frequently. Please try again later.",
+    "当前版本: ": "Current version: ",
+    "最新版本: ": "Latest version: ",
 }
 zhTWI18n = {
     '生成WEBDRIVER失败!\n无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开': '生成WEBDRIVER失敗!\n無法找到最新版谷歌瀏覽器!如沒有下載或不是最新版請檢查好再次嘗試\n或可以嘗試用管理員方式開啟',
@@ -231,6 +236,11 @@ zhTWI18n = {
     '比赛结束 等待关闭': '比賽結束 等待關閉',
     "调试截图成功": "調試截圖成功",
     "调试截图失败": "調試截圖失敗",
+    "\n==!!! 新版本可用 !!!==\n ===下载:": "\n==!!! 新版本可用 !!!==\n ===下載:",
+    "获取最新版本失败": "獲取最新版本失敗",
+    "获取最新版本过于频繁, 请过段时间再试": "獲取最新版本過於頻繁, 請過段時間再試",
+    "最新版本: ": "最新版本: ",
+    "当前版本: ": "當前版本: ",
 }
 
 
