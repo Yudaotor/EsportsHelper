@@ -7,10 +7,11 @@ from traceback import format_exc
 
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
-from EsportsHelper.Utils import (Utils, _, _log,
+from EsportsHelper.Utils import (Utils,
                                  getLolesportsWeb,
                                  getMatchName, sysQuit,
                                  getSleepPeriod)
+from EsportsHelper.I18n import _, _log
 from EsportsHelper.YouTube import YouTube
 from rich import print
 from selenium.common import NoSuchElementException, NoSuchWindowException

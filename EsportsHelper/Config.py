@@ -7,6 +7,7 @@ from EsportsHelper.Utils import _, _log
 from rich import print
 from yaml.parser import ParserError
 from yaml.scanner import ScannerError
+from EsportsHelper.I18n import _, _log
 
 
 class Config:

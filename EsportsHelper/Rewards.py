@@ -2,11 +2,12 @@ from time import sleep
 from traceback import format_exc
 from selenium import webdriver
 import requests
-from EsportsHelper.Utils import _, _log, getMatchName, desktopNotify, checkRewardPage, getMatchTeams
+from EsportsHelper.Utils import getMatchName, desktopNotify, checkRewardPage, getMatchTeams
 from rich import print
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
+from EsportsHelper.I18n import _, _log
 
 
 class Rewards:

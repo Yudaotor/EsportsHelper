@@ -1,12 +1,13 @@
 from time import sleep
 from traceback import format_exc
 
-from EsportsHelper.Utils import _, _log, getLolesportsWeb, sysQuit
+from EsportsHelper.Utils import getLolesportsWeb, sysQuit
 from rich import print
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
+from EsportsHelper.I18n import _, _log
 
 
 class LoginHandler:

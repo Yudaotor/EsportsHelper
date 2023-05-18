@@ -4,7 +4,7 @@ from traceback import format_exc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
-from EsportsHelper.Utils import _, _log
+from EsportsHelper.I18n import _, _log
 
 
 class YouTube:
