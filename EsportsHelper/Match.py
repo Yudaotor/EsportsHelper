@@ -149,12 +149,12 @@ class Match:
                     else:
                         print(_("处于休眠时间...", color="green", lang=self.config.language))
                         self.log.info(_log("处于休眠时间...", lang=self.config.language))
-                    print(f'{_("预计休眠状态将持续到", color="green", lang=self.config.language)} {sleepEndTime} {_("点", color="green", lang=self.config.language)}')
+                    print(f'--{_("预计休眠状态将持续到", color="bold yellow", lang=self.config.language)} {sleepEndTime} {_("点", color="bold yellow", lang=self.config.language)}')
                     if isinstance(sleepEndTime, str):
                         sleepEndTime = sleepEndTime[6:-7]
                     self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEndTime} {_log("点", lang=self.config.language)}')
                     print(
-                        f"{_('下次检查在:', color='green', lang=self.config.language)} [cyan]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
+                        f"{_('下次检查在:', color='bold yellow', lang=self.config.language)} [cyan]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                     self.log.info(
                         f"{_log('下次检查在:', lang=self.config.language)} {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                     print(
@@ -331,20 +331,20 @@ class Match:
             sleep(1)
             self.driver.close()
             self.mainWindow = newTab2
-            self.driver.switch_to.window(self.rewardWindow)
             sleep(1)
-            self.driver.close()
             if self.config.countDrops:
+                self.driver.switch_to.window(self.rewardWindow)
+                sleep(1)
+                self.driver.close()
                 self.rewardWindow = newTab1
             for handle in removeList:
                 self.currentWindows.pop(handle, None)
-            print(_("所有窗口已关闭", color="green", lang=self.config.language))
+            print(f'--{_("所有窗口已关闭", color="green", lang=self.config.language)}')
             self.log.info(_log("所有窗口已关闭", lang=self.config.language))
         except Exception:
             self.log.error(_log("关闭所有窗口时发生异常", lang=self.config.language))
-            print(_("关闭所有窗口时发生异常", color="red", lang=self.config.language))
-            self.utils.errorNotify(error=_log(
-                "关闭所有窗口时发生异常", lang=self.config.language))
+            print(f'--{_("关闭所有窗口时发生异常", color="red", lang=self.config.language)}')
+            self.utils.errorNotify(error=_log("关闭所有窗口时发生异常", lang=self.config.language))
             self.log.error(format_exc())
 
     def closeFinishedTabs(self, liveMatches):
@@ -544,7 +544,7 @@ class Match:
                     f"[cyan]{nextMatchDayTime}[/cyan] | "
                     f"[cyan]{nextMatchTime}{nextMatchAMOrPM}[/cyan] | "
                     f"[magenta]{nextMatchLeague}[/magenta] | "
-                    f"[blue]{nextMatchBO}[/blue]")
+                    f"[bold blue]{nextMatchBO}[/bold blue]")
         except Exception:
             self.log.error(_log("获取下一场比赛时间失败", lang=self.config.language))
             self.log.error(format_exc())
