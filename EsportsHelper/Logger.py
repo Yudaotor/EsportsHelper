@@ -2,6 +2,7 @@ import logging
 import time
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from rich import print
 
 FILE_SIZE = 1024 * 1024 * 100
 BACKUP_COUNT = 5
@@ -47,3 +48,16 @@ class Logger:
 
 
 log = Logger().createLogger()
+
+
+def delimiterLine(color="bold yellow"):
+    """
+    Print delimiter line
+    """
+    print(
+        f"[{color}]>_<"
+        f"{'=' * 27}"
+        f">_<"
+        f"{'=' * 27}"
+        f">_<[/{color}]"
+    )

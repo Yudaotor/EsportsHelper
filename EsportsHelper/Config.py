@@ -1,13 +1,12 @@
 import os
 from pathlib import Path
 from traceback import format_exc
-
 import yaml
-from EsportsHelper.Utils import _, _log
 from rich import print
 from yaml.parser import ParserError
 from yaml.scanner import ScannerError
 from EsportsHelper.I18n import _, _log
+from EsportsHelper.Logger import delimiterLine
 
 
 class Config:
@@ -45,9 +44,11 @@ class Config:
             self.nickName = config.get("nickName", self.username)
             self.format()
         except (ParserError, KeyError, ScannerError):
-            log.error("Configuration file format error.\nPlease check if there is single space after colons.\nChange single slash to double in configuration path if there are any.")
+            log.error(
+                "Configuration file format error.\nPlease check if there is single space after colons.\nChange single slash to double in configuration path if there are any.")
             log.error(format_exc())
-            print("Configuration file format error.\nPlease check if there is single space after colons.\nChange single slash to double in configuration path if there are any.")
+            print(
+                "Configuration file format error.\nPlease check if there is single space after colons.\nChange single slash to double in configuration path if there are any.")
             input("Press Enter to exit")
             os.kill(os.getpid(), 9)
         except Exception:
@@ -68,11 +69,13 @@ class Config:
             if self.language not in ["zh_CN", "en_US", "zh_TW"]:
                 self.language = "zh_CN"
                 print(_("语言配置错误,已恢复zh_CN默认值", color="red", lang=self.language))
+                delimiterLine(color="red")
         self.disWatchMatches = [match.lower() for match in self.disWatchMatches if match != ""]
 
         if self.userDataDir == "" and self.username == "账号用户名" or self.password == "密码":
             self.log.error(_log("配置文件中没有账号密码信息", lang=self.language))
             print(_("配置文件中没有账号密码信息", color="red", lang=self.language))
+            delimiterLine(color="red")
 
         if isinstance(self.headless, str):
             if self.headless == "True" or self.headless == "true":
@@ -87,6 +90,7 @@ class Config:
                 self.delay = int(self.delay)
             except ValueError:
                 print(_("检查间隔配置错误,已恢复默认值", color="red", lang=self.language))
+                delimiterLine(color="red")
                 self.delay = 600
 
         if not isinstance(self.platForm, str):
@@ -117,23 +121,28 @@ class Config:
                     sleepPeriod = period.split("-")
                     if len(sleepPeriod) != 2:
                         print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                        delimiterLine(color="red")
                         afterFormat.append("")
                     else:
                         try:
                             if int(sleepPeriod[0]) > int(sleepPeriod[1]):
                                 print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                                delimiterLine(color="red")
                                 afterFormat.append("")
                             elif int(sleepPeriod[0]) < 0 or int(sleepPeriod[1]) > 24:
                                 print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                                delimiterLine(color="red")
                                 afterFormat.append("")
                             else:
                                 afterFormat.append(period)
                         except ValueError:
                             print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                            delimiterLine(color="red")
                             afterFormat.append("")
                 self.sleepPeriod = afterFormat
             else:
                 print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
+                delimiterLine(color="red")
                 self.sleepPeriod = [""]
         if isinstance(self.maxRunHours, str):
             if self.maxRunHours == "":
@@ -143,6 +152,7 @@ class Config:
                     self.maxRunHours = int(self.maxRunHours)
                 except ValueError:
                     print(_("最大运行时间配置错误,已恢复默认值", color="red", lang=self.language))
+                    delimiterLine(color="red")
                     self.maxRunHours = -1
         if isinstance(self.debug, str):
             if self.debug == "True" or self.debug == "true":
@@ -153,6 +163,7 @@ class Config:
                 self.debug = False
         if not isinstance(self.proxy, str):
             print(_("代理配置错误,已恢复默认值", color="red", lang=self.language))
+            delimiterLine(color="red")
             self.proxy = ""
         if isinstance(self.countDrops, str):
             if self.countDrops == "True" or self.countDrops == "true":
@@ -163,10 +174,11 @@ class Config:
                 self.countDrops = False
         if not isinstance(self.chromePath, str):
             print(_("chrome路径配置错误,已恢复默认值", color="red", lang=self.language))
+            delimiterLine(color="red")
             self.chromePath = ""
         if not isinstance(self.userDataDir, str):
-            print(_("用户数据userDataDir路径配置错误,已恢复默认值",
-                    color="red", lang=self.language))
+            print(_("用户数据userDataDir路径配置错误,已恢复默认值", color="red", lang=self.language))
+            delimiterLine(color="red")
             self.userDataDir = ""
         if isinstance(self.ignoreBroadCast, str):
             if self.ignoreBroadCast == "True" or self.ignoreBroadCast == "true":
@@ -178,9 +190,11 @@ class Config:
         if isinstance(self.notifyType, str):
             if self.notifyType not in ["all", "drops", "error"]:
                 print(_("通知类型配置错误,已恢复默认值", color="red", lang=self.language))
+                delimiterLine(color="red")
                 self.notifyType = "all"
         else:
             print(_("通知类型配置错误,已恢复默认值", color="red", lang=self.language))
+            delimiterLine(color="red")
             self.notifyType = "all"
         if isinstance(self.autoSleep, str):
             if self.autoSleep == "True" or self.autoSleep == "true":
@@ -191,6 +205,7 @@ class Config:
                 self.autoSleep = False
         if self.countDrops is False and self.connectorDropsUrl != "":
             print(_("提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭", color="yellow", lang=self.language))
+            delimiterLine(color="red")
 
         if self.nickName == "":
             self.nickName = self.username

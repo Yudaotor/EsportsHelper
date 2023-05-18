@@ -12,6 +12,7 @@ from plyer import notification
 from retrying import retry
 from rich import print
 from EsportsHelper.I18n import _, _log
+from EsportsHelper.Logger import delimiterLine
 
 
 class Utils:
@@ -116,13 +117,7 @@ class Utils:
         githubUrl = "https://github.com/Yudaotor/EsportsHelper"
         VersionManager(self.config).checkVersion()
         if self.config.language == "zh_CN":
-            print(
-                f"[bold yellow]>_<"
-                f"{'=' * 27}"
-                f">_<"
-                f"{'=' * 27}"
-                f">_<[/bold yellow]"
-            )
+            delimiterLine()
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]        "
                   f"感谢使用 [cyan]电竞助手[/cyan] v{version}!        "
                   f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
@@ -141,22 +136,10 @@ class Utils:
             print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]  "
                   f"如需关闭请勿直接右上角X关闭，请按Ctrl+C来关闭. "
                   f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
-            print(
-                f"[bold yellow]>_<"
-                f"{'=' * 27}"
-                f">_<"
-                f"{'=' * 27}"
-                f">_<[/bold yellow]"
-            )
+            delimiterLine()
             print()
         elif self.config.language == "en_US":
-            print(
-                f"[bold yellow]>_<"
-                f"{'=' * 27}"
-                f">_<"
-                f"{'=' * 27}"
-                f">_<[/bold yellow]"
-            )
+            delimiterLine()
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow] "
                   f"Thanks for using [cyan]EsportsHelper[/cyan] v{version}!  "
                   f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
@@ -169,22 +152,10 @@ class Utils:
             print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]      "
                   f"If you like it, please give me a star      "
                   f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
-            print(
-                f"[bold yellow]>_<"
-                f"{'=' * 27}"
-                f">_<"
-                f"{'=' * 27}"
-                f">_<[/bold yellow]"
-            )
+            delimiterLine()
             print()
         elif self.config.language == "zh_TW":
-            print(
-                f"[bold yellow]>_<"
-                f"{'=' * 27}"
-                f">_<"
-                f"{'=' * 27}"
-                f">_<[/bold yellow]"
-            )
+            delimiterLine()
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]        "
                   f"感謝使用 [cyan]電競助手[/cyan] v{version}!        "
                   f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
@@ -203,13 +174,7 @@ class Utils:
             print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]  "
                   f"如需關閉請勿直接右上角X關閉，請按Ctrl+C來關閉. "
                   f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
-            print(
-                f"[bold yellow]>_<"
-                f"{'=' * 27}"
-                f">_<"
-                f"{'=' * 27}"
-                f">_<[/bold yellow]"
-            )
+            delimiterLine()
             print()
 
     def getOverrideFile(self):
@@ -409,3 +374,5 @@ def getMatchTeams(teams, language):
     else:
         teams = _log("出错, 未知", lang=language)
     return teams
+
+

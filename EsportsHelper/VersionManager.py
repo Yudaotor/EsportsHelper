@@ -3,6 +3,7 @@ import requests as req
 from EsportsHelper.Logger import log
 from rich import print
 from EsportsHelper.I18n import _, _log
+from EsportsHelper.Logger import delimiterLine
 
 
 class VersionManager:
@@ -24,10 +25,12 @@ class VersionManager:
                 if "tag_name" in latestTagJson:
                     return str(latestTagJson["tag_name"][1:])
                 print(_("获取最新版本过于频繁, 请过段时间再试", color="red", lang=self.language))
+                delimiterLine(color="red")
                 log.error(latestTagJson["message"])
                 return "0.0.0"
         except Exception:
             print(_("获取最新版本失败", color="red", lang=self.language))
+            delimiterLine(color="red")
             log.error(format_exc())
             return "0.0.0"
 
@@ -56,3 +59,4 @@ class VersionManager:
             print("https://github.com/Yudaotor/EsportsHelper/releases/latest ==\n")
             log.warning(_log("\n==!!! 新版本可用 !!!==\n ===下载:", lang=self.language), end="")
             log.warning("https://github.com/Yudaotor/EsportsHelper/releases/latest ==\n")
+            delimiterLine()

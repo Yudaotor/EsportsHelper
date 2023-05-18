@@ -11,6 +11,7 @@ from EsportsHelper.Utils import (Utils,
                                  getLolesportsWeb,
                                  getMatchName, sysQuit,
                                  getSleepPeriod)
+from EsportsHelper.Logger import delimiterLine
 from EsportsHelper.I18n import _, _log
 from EsportsHelper.YouTube import YouTube
 from rich import print
@@ -60,13 +61,7 @@ class Match:
             # Gets the sleep period
             if self.config.sleepPeriod != [""]:
                 self.sleepBeginList, self.sleepEndList = getSleepPeriod(config=self.config)
-            print(
-                f"[bold yellow]>_<"
-                f"{'=' * 27}"
-                f">_<"
-                f"{'=' * 27}"
-                f">_<[/bold yellow]"
-            )
+            delimiterLine()
             # 循环观赛
             while maxRunHours < 0 or time.time() < endTimePoint:
                 sleep(1)
@@ -158,13 +153,7 @@ class Match:
                         f"{_('下次检查在:', color='bold yellow', lang=self.config.language)} [cyan]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                     self.log.info(
                         f"{_log('下次检查在:', lang=self.config.language)} {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
-                    print(
-                        f"[bold yellow]>_<"
-                        f"{'=' * 27}"
-                        f">_<"
-                        f"{'=' * 27}"
-                        f">_<[/bold yellow]"
-                    )
+                    delimiterLine()
                     self.log.info(f"{'=' * 50}")
                     sleep(newDelay)
                     continue
@@ -246,13 +235,7 @@ class Match:
                     print(
                         f"{_('预计结束程序时间:', color='green', lang=self.config.language)} [cyan]"
                         f"{time.strftime('%H:%M', time.localtime(endTimePoint))}")
-                print(
-                    f"[bold yellow]>_<"
-                    f"{'=' * 27}"
-                    f">_<"
-                    f"{'=' * 27}"
-                    f">_<[/bold yellow]"
-                )
+                delimiterLine()
                 sleep(newDelay)
             if time.time() >= endTimePoint and maxRunHours != -1 and self.config.platForm == "windows":
                 self.log.info(_log("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作", lang=self.config.language))
