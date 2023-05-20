@@ -167,7 +167,7 @@ class Match:
 
                 # Get the number of drops and total hours watched
                 if self.config.countDrops:
-                    dropsNumber = self.rewards.countDrops(rewardWindow=self.rewardWindow)
+                    dropsNumber, dropsSessionInfo = self.rewards.countDrops(rewardWindow=self.rewardWindow)
                     self.driver.switch_to.window(self.mainWindow)
                     watchHours = self.rewards.totalWatchHours
                     sessionDrops = dropsNumber - self.rewards.historyDrops
@@ -181,6 +181,11 @@ class Match:
                             f"{_log('本次运行掉落总和:', lang=self.config.language)}{sessionDrops} | "
                             f"{_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} | "
                             f"{_log('总观看时长: ', lang=self.config.language)}{watchHours}")
+                        if len(dropsSessionInfo) != 0:
+                            print(
+                                f"{_('本次运行掉落详细:', color='bold yellow', lang=self.config.language)} [bold cyan]{dropsSessionInfo}[/bold cyan]")
+                            self.log.info(
+                                f"{_log('本次运行掉落详细:', lang=self.config.language)} {dropsSessionInfo}")
                 # Make sure to come to the lolesports schedule page
                 try:
                     getLolesportsWeb(self.driver, self.config.language)

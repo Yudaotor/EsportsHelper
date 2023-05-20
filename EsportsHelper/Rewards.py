@@ -383,7 +383,7 @@ class Rewards:
                 try:
                     checkRewardPage(self.driver, self.config.language)
                 except Exception:
-                    return -1
+                    return -1, ""
                 dropRegion = self.driver.find_elements(
                     by=By.CSS_SELECTOR, value="div.name")
                 dropNumber = self.driver.find_elements(
@@ -395,7 +395,7 @@ class Rewards:
                 print(_("获取掉落数失败", color="red", lang=self.config.language))
                 self.log.error(_log("获取掉落数失败", lang=self.config.language))
                 self.log.error(format_exc())
-                return -1
+                return -1, ""
             # Not the first run
             if not isInit:
                 try:
@@ -439,20 +439,15 @@ class Rewards:
                                     sleep(3)
                                 self.isNotified[dropRegionNow] = self.isNotified.get(dropRegionNow, 0) + dropsNeedNotify
                         totalDropsNumber = totalDropsNumber + dropNumberNow
-                    if len(dropNumberInfo) != 0:
-                        print(
-                            f"{_('本次运行掉落详细:', color='bold yellow', lang=self.config.language)} [bold cyan]{dropNumberInfo}[/bold cyan]")
-                        self.log.info(
-                            f"{_log('本次运行掉落详细:', lang=self.config.language)} {dropNumberInfo}")
                     self.totalWatchHours = totalWatchHours
-                    return totalDropsNumber
+                    return totalDropsNumber, dropNumberInfo
                 except Exception:
                     print(_("统计掉落失败", color="red", lang=self.config.language))
                     self.log.error(
                         _log("统计掉落失败", lang=self.config.language))
                     self.log.error(format_exc())
                     self.totalWatchHours = -1
-                    return -1
+                    return -1, ""
 
             # First run
             else:
@@ -465,7 +460,7 @@ class Rewards:
                         totalDropsNumber = totalDropsNumber + int(dropNumber[i].text[:-6])
                     self.historyDrops = totalDropsNumber
                     self.totalWatchHours = totalWatchHours
-                    return totalDropsNumber
+                    return totalDropsNumber, ""
                 except Exception:
                     print(_("初始化掉落数失败", color="red",
                             lang=self.config.language))
@@ -474,11 +469,11 @@ class Rewards:
                     self.log.error(format_exc())
                     self.historyDrops = -1
                     self.totalWatchHours = -1
-                    return -1
+                    return -1, ""
         else:
             self.historyDrops = -1
             self.totalWatchHours = -1
-            return -1
+            return -1, ""
 
     def getRewardPage(self, newTab=False):
         """
