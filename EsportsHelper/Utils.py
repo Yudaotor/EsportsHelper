@@ -113,6 +113,9 @@ class Utils:
             log.error(format_exc())
 
     def info(self):
+        """
+        Print program information based on the selected language.
+        """
         version = VersionManager.getVersion()
         githubUrl = "https://github.com/Yudaotor/EsportsHelper"
         VersionManager(self.config).checkVersion()

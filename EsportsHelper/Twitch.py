@@ -46,6 +46,12 @@ class Twitch:
         return False
 
     def checkTwitchStream(self) -> bool:
+        """
+        Checks the status of the Twitch stream.
+
+        Returns:
+            bool: True if the stream is active and playable, False otherwise.
+        """
         if self.config.closeStream:
             return True
         try:
