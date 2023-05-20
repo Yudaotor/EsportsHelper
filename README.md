@@ -20,7 +20,7 @@
 Discord: Khalil#7843  
 可以给我点个小星星吗(*^_^*)⭐  
 ## 界面
-![image](https://user-images.githubusercontent.com/87225219/235648829-55f4af6d-97f5-4157-a66f-6963d63e44aa.png)
+![image](https://github.com/Yudaotor/EsportsHelper/assets/87225219/22429210-8e7c-4f3a-a11b-b2319ed357b3)
 
 ## 运行平台  
 Windows, Linux  
@@ -41,7 +41,7 @@ python -m pip install -r requirements.txt
 ## 特性
 1. 自动打开浏览器,进入lolesports.com,查询哪些赛区在进行比赛(在放赛前等待的赛区会被忽视,但是可以通过ignoreBroadCast配置从而不忽视),进入观看并设置为最低清晰度(为了节省流量)
 2. 可以自行设置是否选择无头模式(默认关闭)(无头模式即headless,开启后浏览器会不可见,在后台运行,缓解电脑CPU压力)
-3. 可以自行设置不观看哪些赛区的比赛.(默认为空)(注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看)(建议设置,避免观看所有比赛从而被检测)
+3. 可以自行设置**不观看哪些赛区**的比赛.(默认为空)(注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看)(建议设置,避免观看所有比赛从而被检测)
 4. 可以自行设置多久来查询一次比赛最新信息.(默认600秒)(关闭已经结束的比赛和开启新开始的比赛)
 5. **掉落提醒**(支持钉钉,Discord,饭碗警告)
 6. 软件发生错误时可以发送错误提醒(推送信息类型支持筛选)
@@ -74,8 +74,8 @@ maxRunHours: -1                               # 负值为一直运行，正值�
 proxy: "你的代理地址"                          # 代理地址，选填，一般用户不用填。 例子, "socks://127.0.0.1:20173"
 connectorDropsUrl: "你的webhook链接"           # (支持钉钉,Discord,饭碗警告)具体配置方法见此处https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F(%E5%8A%9F%E8%83%BD%E5%BE%85%E6%B5%8B%E8%AF%95
 platForm: "windows"                           # 使用平台,默认为Windows,如需使用Linux请在此处进行配置  
-closeStream: "False"                          # 省流模式，默认False，关闭直播间的视频流（未知风险）（有兴趣者自行尝试） 
-desktopNotify: "False"                        # 系统弹窗提示，默认False
+closeStream: False                          # 省流模式，默认False，关闭直播间的视频流（未知风险）（有兴趣者自行尝试） 
+desktopNotify: False                        # 系统弹窗提示，默认False
 sleepPeriod: ["8-13", "20-23"]                # 休眠时间段，（默认为空）格式为"开始小时-结束小时",在休眠时间段中会关闭观赛网页,待休眠结束后重新打开。区间为左闭合右开。
 ignoreBroadCast: True                         # 设置为False会提前进入直播间，以及将支持某些一直处于转播的赛区直播
 userDataDir: "C:\\Users\\xxxxx\\AppData\\Local\\Google\\Chrome\\User Data"  # 例子,其中xxxxx处改为自己电脑的名字,具体教程见https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E6%9C%AC%E5%9C%B0%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98-%E5%85%8D%E8%B4%A6%E5%AF%86%E7%99%BB%E5%BD%95
