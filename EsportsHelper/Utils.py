@@ -281,7 +281,7 @@ def getMatchName(url: str) -> str:
     match = url.split('/')[-2] if url.split('/')[-2] != "live" else url.split('/')[-1]
     match = "cblol" if match == "cblol-brazil" else match
     match = "ljl" if match == "ljl-japan" else match
-    match = "tft_rising_legends" if match == "tft_esports" else match
+    match = "tft" if match == "tft_esports" else match
     match = match.upper()
     return match
 
