@@ -25,7 +25,7 @@ class Logger:
         Path("./logs/pics").mkdir(parents=True, exist_ok=True)
         level = logging.INFO
         fileHandler = RotatingFileHandler(
-            log_path / f"{PROGRAM_NAME}-{time.strftime('%b-%d-%H-%M')}.log",
+            log_path / f"{PROGRAM_NAME}V{version}_{time.strftime('%m.%d_%H-%M')}.log",
             mode="a+",
             maxBytes=FILE_SIZE,
             backupCount=BACKUP_COUNT,
@@ -38,12 +38,12 @@ class Logger:
             handlers=[fileHandler],
         )
         logg = logging.getLogger(PROGRAM_NAME)
-        logg.info("-" * 50)
+        logg.info("-" * 71)
         logg.info(f"{'-' * 22} Program started {version}   {'-' * 23}")
         logg.info(f"{'-' * 22} Open Source on github  {'-' * 22}")
         logg.info(f"{'-' * 7} Address: {GITHUB_ADDRESS} {'-' * 6}")
         logg.info(f"{'-' * 16} Please give me a star,Thanks(*^_^*)  {'-' * 15}")
-        logg.info("-" * 50)
+        logg.info("-" * 71)
         return logg
 
 
