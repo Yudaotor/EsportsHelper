@@ -111,4 +111,5 @@ class YouTube:
             return True
         except Exception:
             self.log.error(format_exc())
+            self.utils.debugScreen(lint="youtubeQuality")
             return False

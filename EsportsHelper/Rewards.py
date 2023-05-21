@@ -423,13 +423,13 @@ class Rewards:
                                     poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.getNewDropInfo()
                                     if poweredByImg is not None:
                                         self.log.info(
-                                            f"<{self.config.nickName}>|BY|{eventTitle}|GET|{dropItem}|ON|{dropRegionNow}|{unlockedDate}")
+                                            f"<{self.config.nickName}>|BY| {eventTitle} |GET| {dropItem} |ON| {dropRegionNow} | {unlockedDate}")
                                         print(
                                             f"[cyan]<{self.config.nickName}>[/cyan]|"
-                                            f"[bold blue]BY[/bold blue]| {eventTitle}|"
-                                            f"[bold blue]GET[/bold blue]| {dropItem}|"
-                                            f"[bold blue]ON[/bold blue]| {dropRegionNow}|"
-                                            f"[bold blue]{unlockedDate}")
+                                            f"[bold blue]BY[/bold blue]| {eventTitle} |"
+                                            f"[bold blue]GET[/bold blue]| {dropItem} |"
+                                            f"[bold blue]ON[/bold blue]| {dropRegionNow} |"
+                                            f"[bold blue] {unlockedDate}")
                                         if self.config.desktopNotify:
                                             desktopNotify(
                                                 poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropRegionNow)
