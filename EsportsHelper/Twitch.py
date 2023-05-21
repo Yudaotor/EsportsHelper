@@ -60,7 +60,7 @@ class Twitch:
             self.driver.implicitly_wait(5)
             errorInfo = self.driver.find_elements(By.CSS_SELECTOR, "div[data-a-target=player-overlay-content-gate]")
             if len(errorInfo) > 0:
-                self.utils.debugScreen(lint="streamError")
+                self.utils.debugScreen(self.driver, lint="streamError")
                 self.driver.switch_to.default_content()
                 return False
             self.driver.implicitly_wait(15)
@@ -68,12 +68,12 @@ class Twitch:
             muteButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button]")))
             if len(isMute) <= 0:
-                self.utils.debugScreen(lint="unmute")
+                self.utils.debugScreen(self.driver, lint="unmute")
                 self.unmuteStream(muteButton)
             playButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button[data-a-target=player-play-pause-button]")))
             if playButton.get_attribute("data-a-player-state") == "paused":
-                self.utils.debugScreen(lint="play")
+                self.utils.debugScreen(self.driver, lint="play")
                 self.playStream(playButton)
             self.driver.switch_to.default_content()
             return True

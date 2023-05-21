@@ -31,13 +31,13 @@ class YouTube:
             muteButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button.ytp-mute-button.ytp-button")))
             if muteButton.get_attribute("data-title-no-tooltip") == "Unmute":
-                self.utils.debugScreen(lint="Unmute")
+                self.utils.debugScreen(self.driver, lint="Unmute")
                 self.unmuteStream(muteButton)
             # Play if a video pause is detected
             playButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button.ytp-play-button.ytp-button")))
             if playButton.get_attribute("data-title-no-tooltip") == "Play":
-                self.utils.debugScreen(lint="Play")
+                self.utils.debugScreen(self.driver, lint="Play")
                 self.playStream(playButton)
             self.driver.switch_to.default_content()
             return True
@@ -111,5 +111,5 @@ class YouTube:
             return True
         except Exception:
             self.log.error(format_exc())
-            self.utils.debugScreen(lint="youtubeQuality")
+            self.utils.debugScreen(self.driver, lint="youtubeQuality")
             return False
