@@ -525,8 +525,8 @@ class Match:
                     by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.name").text
                 nextMatchBO = self.driver.find_element(
                     by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.strategy").text
-                print(f'{_("检查下一场比赛时 过滤失效的比赛->", color="yellow", lang=self.config.language)} '
-                      f'[yellow]{invalidMatch}')
+                print(f'{_("(检查下一场比赛时 过滤失效的比赛 ->", color="yellow", lang=self.config.language)} '
+                      f'[yellow]{invalidMatch})')
                 print(
                     f"{_('下一场比赛时间:', color='bold yellow', lang=self.config.language)} "
                     f"[cyan]{nextMatchTime}{nextMatchAMOrPM}[/cyan] | "
