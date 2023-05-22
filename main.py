@@ -54,6 +54,7 @@ def init():
         sysQuit(driver)
     # Set the window size
     driver.set_window_size(960, 768)
+    driver.set_window_position(0, 0)
     # Open lolesports page
     try:
         getLolesportsWeb(driver)
