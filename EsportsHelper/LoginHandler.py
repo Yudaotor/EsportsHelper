@@ -17,13 +17,13 @@ class LoginHandler:
         self.config = config
         self.wait = WebDriverWait(self.driver, 20)
 
-    def automaticLogIn(self, username: str, password: str) -> None:
+    def automaticLogIn(self, username: str, password: str) -> bool:
         """
         An automatic login function that logs in with a given username and password.
 
         :param username: str，username
         :param password: str，password
-        :return: None
+        :return: bool True if login is successful, False if login is unsuccessful
         """
         try:
             try:
@@ -60,10 +60,19 @@ class LoginHandler:
                 self.insert2FACode()
             self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "div.riotbar-summoner-name")))
+            return True
         except TimeoutException:
-            print(f'--{_("网络问题 登录超时", color="red", lang=self.config.language)}')
-            self.log.error(_log("网络问题 登录超时", lang=self.config.language))
+            wait = WebDriverWait(self.driver, 7)
+            errorInfo = wait.until(ec.presence_of_element_located(
+                (By.CSS_SELECTOR, "span.status-message.text__web-error > a")))
+            if errorInfo.text == "can't sign in":
+                self.log.error(_log("登录失败,检查账号密码是否正确", lang=self.config.language))
+                print(f'--{_("登录失败,检查账号密码是否正确", color="red", lang=self.config.language)}')
+            else:
+                print(f'--{_("登录超时,检查网络或窗口是否被覆盖", color="red", lang=self.config.language)}')
+                self.log.error(_log("登录超时,检查网络或窗口是否被覆盖", lang=self.config.language))
             self.log.error(format_exc())
+            return False
 
     def insert2FACode(self) -> None:
         """
