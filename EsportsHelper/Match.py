@@ -85,23 +85,28 @@ class Match:
                     # When the next game time is correct, go into sleep judgment.
                     if self.nextMatchHour is not None and self.nextMatchDay is not None:
                         # If the next match is on the same day as now, but the current time has exceeded the match time, sober up.
-                        if nowTimeDay == self.nextMatchDay and nowTimeHour >= self.nextMatchHour:
+                        if nowTimeDay == self.nextMatchDay and \
+                                nowTimeHour >= self.nextMatchHour:
                             isSleep = False
                         # If the next match is on the same day as the current day,
                         # and there is still over an hour before the match starts,
                         # and no regions are currently live-streaming, then enter a one-hour sleep mode.
-                        elif nowTimeDay == self.nextMatchDay and nowTimeHour < self.nextMatchHour - 1 and self.currentWindows == {} and matches == []:
+                        elif nowTimeDay == self.nextMatchDay and \
+                                nowTimeHour < self.nextMatchHour - 1 and \
+                                self.currentWindows == {} and matches == []:
                             isSleep = True
                             newDelay = 3599
                             sleepEndTime = self.nextMatchHour
                         # If the next game is the same day as now, but the current time is already an hour before the game, sober up.
-                        elif nowTimeDay == self.nextMatchDay and nowTimeHour == self.nextMatchHour - 1:
+                        elif nowTimeDay == self.nextMatchDay and \
+                                nowTimeHour == self.nextMatchHour - 1:
                             isSleep = False
                         # If the next game date is greater than the current date, and there is no live game now,
                         # and the current time hours are less than 23, sleep is entered with an interval of one hour.
-                        elif nowTimeDay < self.nextMatchDay and self.currentWindows == {} and nowTimeHour < 23 and matches == []:
+                        elif nowTimeDay < self.nextMatchDay and self.currentWindows == {} \
+                                and nowTimeHour < 23 and matches == []:
                             isSleep = True
-                            sleepEndTime = _("日期: ", color="cyan", lang=self.config.language) + str(self.nextMatchDay) + " | " + str(self.nextMatchHour)
+                            sleepEndTime = _log("日期: ", lang=self.config.language) + str(self.nextMatchDay) + " | " + str(self.nextMatchHour)
                             newDelay = 3599
                         elif nowTimeDay < self.nextMatchDay and nowTimeHour >= 23:
                             isSleep = False
@@ -145,14 +150,18 @@ class Match:
                     else:
                         print(_("处于休眠时间...", color="green", lang=self.config.language))
                         self.log.info(_log("处于休眠时间...", lang=self.config.language))
-                    print(f'--{_("预计休眠状态将持续到", color="bold yellow", lang=self.config.language)} {sleepEndTime} {_("点", color="bold yellow", lang=self.config.language)}')
-                    if isinstance(sleepEndTime, str):
-                        sleepEndTime = sleepEndTime[6:-7]
-                    self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} {sleepEndTime} {_log("点", lang=self.config.language)}')
+                    print(f'--{_("预计休眠状态将持续到", color="bold yellow", lang=self.config.language)} '
+                          f'[cyan]{sleepEndTime}[/cyan] '
+                          f'{_("点", color="bold yellow", lang=self.config.language)}')
+                    self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} '
+                                  f'{sleepEndTime} '
+                                  f'{_log("点", lang=self.config.language)}')
                     print(
-                        f"{_('下次检查在:', color='bold yellow', lang=self.config.language)} [cyan]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
+                        f"{_('下次检查在:', color='bold yellow', lang=self.config.language)} "
+                        f"[cyan]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                     self.log.info(
-                        f"{_log('下次检查在:', lang=self.config.language)} {(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
+                        f"{_log('下次检查在:', lang=self.config.language)} "
+                        f"{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                     delimiterLine()
                     self.log.info(f"{'=' * 50}")
                     sleep(newDelay)
@@ -178,14 +187,21 @@ class Match:
                         print(
                             f"{_('本次运行掉落总和:', color='bold yellow', lang=self.config.language)}{sessionDrops}")
                         self.log.info(
-                            f"{_log('本次运行掉落总和:', lang=self.config.language)}{sessionDrops} | "
-                            f"{_log('生涯总掉落:', lang=self.config.language)}{dropsNumber} | "
-                            f"{_log('总观看时长: ', lang=self.config.language)}{watchHours}")
+                            f"{_log('本次运行掉落总和:', lang=self.config.language)}"
+                            f"{sessionDrops} | "
+                            f"{_log('生涯总掉落:', lang=self.config.language)}"
+                            f"{dropsNumber} | "
+                            f"{_log('总观看时长: ', lang=self.config.language)}"
+                            f"{watchHours}")
                         if len(dropsSessionInfo) != 0:
                             print(
-                                f"{_('本次运行掉落详细:', color='bold yellow', lang=self.config.language)} [bold cyan]{dropsSessionInfo}[/bold cyan]")
+                                f"{_('本次运行掉落详细:', color='bold yellow', lang=self.config.language)} "
+                                f"[bold cyan]{dropsSessionInfo}[/bold cyan]")
                             self.log.info(
-                                f"{_log('本次运行掉落详细:', lang=self.config.language)} {dropsSessionInfo}")
+                                f"{_log('本次运行掉落详细:', lang=self.config.language)} "
+                                f"{dropsSessionInfo}")
+                    elif sessionDrops < 0:
+                        self.log.error(_log("统计掉落数出错,掉落数小于0", lang=self.config.language))
                 # Make sure to come to the lolesports schedule page
                 try:
                     getLolesportsWeb(self.driver, self.config.language)
@@ -354,7 +370,8 @@ class Match:
                     self.log.info(
                         f"{match} {_log('比赛结束', lang=self.config.language)}")
                     print(
-                        f"[bold magenta]{match}[/bold magenta] {_('比赛结束', color='green', lang=self.config.language)}")
+                        f"[bold magenta]{match}[/bold magenta] "
+                        f"{_('比赛结束', color='green', lang=self.config.language)}")
                     self.driver.close()
                     removeList.append(keys)
                     sleep(2)
@@ -391,7 +408,8 @@ class Match:
             if any(disMatch in match for disMatch in disWatchMatchesSet):
                 skipName = getMatchName(match)
                 self.log.info(f"{skipName} {_log('比赛跳过', lang=self.config.language)}")
-                print(f"[bold magenta]{skipName}[/bold magenta] {_('比赛跳过', color='yellow', lang=self.config.language)}")
+                print(f"[bold magenta]{skipName}[/bold magenta] "
+                      f"{_('比赛跳过', color='yellow', lang=self.config.language)}")
                 continue
 
             self.driver.switch_to.new_window('tab')
@@ -434,17 +452,20 @@ class Match:
                     try:
                         if self.youtube.setYoutubeQuality():
                             self.log.info(_log("Youtube 144p清晰度设置成功", lang=self.config.language))
-                            print(f'--{_("Youtube 144p清晰度设置成功", color="green", lang=self.config.language)}')
+                            print(f'--'
+                                  f'{_("Youtube 144p清晰度设置成功", color="green", lang=self.config.language)}')
                         else:
                             self.utils.debugScreen(self.driver, "youtube")
                             self.log.error(
                                 _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", lang=self.config.language))
-                            print(f'--{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red", lang=self.config.language)}')
+                            print(f'--'
+                                  f'{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red", lang=self.config.language)}')
                     except Exception:
                         self.utils.debugScreen(self.driver, "youtube")
                         self.log.error(
                             _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", lang=self.config.language))
-                        print(f'--{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red", lang=self.config.language)}')
+                        print(f'--'
+                              f'{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red", lang=self.config.language)}')
                         self.log.error(format_exc())
             sleep(4)
 
@@ -492,16 +513,20 @@ class Match:
             nextMatchMonth = timeList[0]
             nextMatchDay = int(timeList[1])
             nextMatchTime = self.driver.find_element(
-                by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.EventTime > div > span.hour").text
+                by=By.CSS_SELECTOR,
+                value="div.divider.future + div.EventDate + div.EventMatch > div > div.EventTime > div > span.hour").text
             try:
                 nextMatchAMOrPM = self.driver.find_element(
-                    by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.EventTime > div > span.hour ~ span.ampm").text
+                    by=By.CSS_SELECTOR,
+                    value="div.divider.future + div.EventDate + div.EventMatch > div > div.EventTime > div > span.hour ~ span.ampm").text
             except NoSuchElementException:
                 nextMatchAMOrPM = ""
             nextMatchLeague = self.driver.find_element(
-                by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.name").text
+                by=By.CSS_SELECTOR,
+                value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.name").text
             nextMatchBO = self.driver.find_element(
-                by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.strategy").text
+                by=By.CSS_SELECTOR,
+                value="div.divider.future + div.EventDate + div.EventMatch > div > div.league > div.strategy").text
             if nextMatchAMOrPM == "PM" and nextMatchTime != "12":
                 nextMatchStartHour = int(nextMatchTime) + 12
             elif nextMatchAMOrPM == "AM" and nextMatchTime == "12":
@@ -518,13 +543,17 @@ class Match:
                     (nowMonth not in nextMatchMonth and nowDay < nextMatchDay) or \
                     (nowMonth in nextMatchMonth and nowDay > nextMatchDay):
                 nextMatchTime = self.driver.find_element(
-                    by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.EventTime > div > span.hour").text
+                    by=By.CSS_SELECTOR,
+                    value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.EventTime > div > span.hour").text
                 nextMatchAMOrPM = self.driver.find_element(
-                    by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.EventTime > div > span.hour ~ span.ampm").text
+                    by=By.CSS_SELECTOR,
+                    value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.EventTime > div > span.hour ~ span.ampm").text
                 nextMatchLeague = self.driver.find_element(
-                    by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.name").text
+                    by=By.CSS_SELECTOR,
+                    value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.name").text
                 nextMatchBO = self.driver.find_element(
-                    by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.strategy").text
+                    by=By.CSS_SELECTOR,
+                    value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.strategy").text
                 print(f'{_("(检查下一场比赛时 过滤失效的比赛 ->", color="yellow", lang=self.config.language)} '
                       f'[yellow]{invalidMatch})')
                 print(
