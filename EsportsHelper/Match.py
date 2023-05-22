@@ -477,6 +477,7 @@ class Match:
             getNextMatchRetryTimes = 4
             while len(timeList) != 2 and getNextMatchRetryTimes > 0:
                 getNextMatchRetryTimes -= 1
+                self.utils.debugScreen(self.driver, "nextMatch")
                 self.driver.refresh()
                 sleep(5)
                 nextMatchDayTime = self.driver.find_element(
@@ -484,7 +485,6 @@ class Match:
                 timeList = nextMatchDayTime.split(" ")
             if len(timeList) != 2:
                 self.log.error(_log("获取下一场比赛时间失败", lang=self.config.language))
-                self.log.error(format_exc())
                 print(_("获取下一场比赛时间失败", color="red", lang=self.config.language))
                 self.nextMatchDay = None
                 return
