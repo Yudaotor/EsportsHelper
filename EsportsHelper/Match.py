@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 from random import randint
 from time import sleep
 from traceback import format_exc
-
+from EsportsHelper.Logger import log
+from EsportsHelper.Config import config
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
 from EsportsHelper.Utils import (Utils,
@@ -12,23 +13,25 @@ from EsportsHelper.Utils import (Utils,
                                  getMatchName, sysQuit,
                                  getSleepPeriod)
 from EsportsHelper.Logger import delimiterLine
-from EsportsHelper.I18n import _, _log
 from EsportsHelper.YouTube import YouTube
 from rich import print
 from selenium.common import NoSuchElementException, NoSuchWindowException
 from selenium.webdriver.common.by import By
+from EsportsHelper.I18n import i18n
+_ = i18n.getText
+_log = i18n.getLog
 
 
 class Match:
-    def __init__(self, log, driver, config) -> None:
+    def __init__(self, driver) -> None:
         self.log = log
         self.driver = driver
         self.config = config
-        self.utils = Utils(config=config)
-        self.youtube = YouTube(driver=driver, log=log, config=config, utils=self.utils)
-        self.twitch = Twitch(driver=driver, log=log, config=self.config, utils=self.utils)
+        self.utils = Utils()
+        self.youtube = YouTube(driver=driver, utils=self.utils)
+        self.twitch = Twitch(driver=driver, utils=self.utils)
         self.rewards = Rewards(
-            log=log, driver=driver, config=config, youtube=self.youtube, utils=self.utils, twitch=self.twitch)
+            driver=driver, youtube=self.youtube, utils=self.utils, twitch=self.twitch)
         self.currentWindows = {}
         self.rewardWindow = None
         self.mainWindow = self.driver.current_window_handle
@@ -60,13 +63,13 @@ class Match:
                 self.rewardWindow = self.rewards.getRewardPage(newTab=True)
             # Gets the sleep period
             if self.config.sleepPeriod != [""]:
-                self.sleepBeginList, self.sleepEndList = getSleepPeriod(config=self.config)
+                self.sleepBeginList, self.sleepEndList = getSleepPeriod()
             delimiterLine()
             # 循环观赛
             while maxRunHours < 0 or time.time() < endTimePoint:
                 sleep(1)
-                self.log.info(_log("开始检查...", lang=self.config.language))
-                print(_("开始检查...", color="green", lang=self.config.language))
+                self.log.info(_log("开始检查..."))
+                print(_("开始检查...", color="green"))
                 self.driver.switch_to.window(self.mainWindow)
                 # Random numbers, used for random delay
                 randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
@@ -78,8 +81,8 @@ class Match:
                 # If you are not currently sleeping,
                 # get match information (including matches that are still counting down).
                 if isSleep is False:
-                    print(f'--{_("检查赛区直播状态...", color="green", lang=self.config.language)}')
-                    self.log.info(_log("检查赛区直播状态...", lang=self.config.language))
+                    print(f'--{_("检查赛区直播状态...", color="green")}')
+                    self.log.info(_log("检查赛区直播状态..."))
                     matches = self.getMatchInfo(ignoreBroadCast=False)
                 if self.config.autoSleep:
                     # When the next game time is correct, go into sleep judgment.
@@ -106,7 +109,7 @@ class Match:
                         elif nowTimeDay < self.nextMatchDay and self.currentWindows == {} \
                                 and nowTimeHour < 23 and matches == []:
                             isSleep = True
-                            sleepEndTime = _log("日期: ", lang=self.config.language) + str(self.nextMatchDay) + " | " + str(self.nextMatchHour)
+                            sleepEndTime = _log("日期: ") + str(self.nextMatchDay) + " | " + str(self.nextMatchHour)
                             newDelay = 3599
                         elif nowTimeDay < self.nextMatchDay and nowTimeHour >= 23:
                             isSleep = False
@@ -143,32 +146,32 @@ class Match:
 
                 if isSleep:
                     if sleepFlag is False:
-                        print(_("进入休眠时间", color="green", lang=self.config.language))
-                        self.log.info(_log("进入休眠时间", lang=self.config.language))
+                        print(_("进入休眠时间", color="green"))
+                        self.log.info(_log("进入休眠时间"))
                         self.closeAllTabs()
                         sleepFlag = True
                     else:
-                        print(_("处于休眠时间...", color="green", lang=self.config.language))
-                        self.log.info(_log("处于休眠时间...", lang=self.config.language))
-                    print(f'--{_("预计休眠状态将持续到", color="bold yellow", lang=self.config.language)} '
+                        print(_("处于休眠时间...", color="green"))
+                        self.log.info(_log("处于休眠时间..."))
+                    print(f'--{_("预计休眠状态将持续到", color="bold yellow")} '
                           f'[cyan]{sleepEndTime}[/cyan] '
-                          f'{_("点", color="bold yellow", lang=self.config.language)}')
-                    self.log.info(f'{_log("预计休眠状态将持续到", lang=self.config.language)} '
+                          f'{_("点", color="bold yellow")}')
+                    self.log.info(f'{_log("预计休眠状态将持续到")} '
                                   f'{sleepEndTime} '
-                                  f'{_log("点", lang=self.config.language)}')
+                                  f'{_log("点")}')
                     print(
-                        f"{_('下次检查在:', color='bold yellow', lang=self.config.language)} "
+                        f"{_('下次检查在:', color='bold yellow')} "
                         f"[cyan]{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                     self.log.info(
-                        f"{_log('下次检查在:', lang=self.config.language)} "
+                        f"{_log('下次检查在:')} "
                         f"{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                     delimiterLine()
                     self.log.info(f"{'=' * 50}")
                     sleep(newDelay)
                     continue
                 elif sleepFlag is True:
-                    print(_("休眠时间结束", color="green", lang=self.config.language))
-                    self.log.info(_log("休眠时间结束", lang=self.config.language))
+                    print(_("休眠时间结束", color="green"))
+                    self.log.info(_log("休眠时间结束"))
                     sleepFlag = False
                     if self.config.countDrops:
                         self.driver.switch_to.window(self.rewardWindow)
@@ -182,56 +185,54 @@ class Match:
                     sessionDrops = dropsNumber - self.rewards.historyDrops
                     if dropsNumber != -1 and sessionDrops >= 0:
                         print(
-                            f"{_('生涯总掉落:', color='bold yellow', lang=self.config.language)}{dropsNumber} | "
-                            f"{_('总观看时长: ', color='bold yellow', lang=self.config.language)}{watchHours}")
+                            f"{_('生涯总掉落:', color='bold yellow')}{dropsNumber} | "
+                            f"{_('总观看时长: ', color='bold yellow')}{watchHours}")
                         print(
-                            f"{_('本次运行掉落总和:', color='bold yellow', lang=self.config.language)}{sessionDrops}")
+                            f"{_('本次运行掉落总和:', color='bold yellow')}{sessionDrops}")
                         self.log.info(
-                            f"{_log('本次运行掉落总和:', lang=self.config.language)}"
+                            f"{_log('本次运行掉落总和:')}"
                             f"{sessionDrops} | "
-                            f"{_log('生涯总掉落:', lang=self.config.language)}"
+                            f"{_log('生涯总掉落:')}"
                             f"{dropsNumber} | "
-                            f"{_log('总观看时长: ', lang=self.config.language)}"
+                            f"{_log('总观看时长: ')}"
                             f"{watchHours}")
                         if len(dropsSessionInfo) != 0:
                             print(
-                                f"{_('本次运行掉落详细:', color='bold yellow', lang=self.config.language)} "
+                                f"{_('本次运行掉落详细:', color='bold yellow')} "
                                 f"[bold cyan]{dropsSessionInfo}[/bold cyan]")
                             self.log.info(
-                                f"{_log('本次运行掉落详细:', lang=self.config.language)} "
+                                f"{_log('本次运行掉落详细:')} "
                                 f"{dropsSessionInfo}")
                     elif sessionDrops < 0:
-                        self.log.error(_log("统计掉落数出错,掉落数小于0", lang=self.config.language))
+                        self.log.error(_log("统计掉落数出错,掉落数小于0"))
                 # Make sure to come to the lolesports schedule page
                 try:
-                    getLolesportsWeb(self.driver, self.config.language)
+                    getLolesportsWeb(self.driver)
                 except Exception:
                     self.log.error(format_exc())
-                    self.log.error(
-                        _log("无法打开Lolesports网页，网络问题，将于3秒后退出...", lang=self.config.language))
-                    print(_("无法打开Lolesports网页，网络问题，将于3秒后退出...",
-                            color="red", lang=self.config.language))
+                    self.log.error(_log("无法打开Lolesports网页，网络问题，将于3秒后退出..."))
+                    print(_("无法打开Lolesports网页，网络问题，将于3秒后退出...", color="red"))
                     sysQuit(self.driver, _log(
-                        "无法打开Lolesports网页，网络问题，将于3秒后退出...", lang=self.config.language))
+                        "无法打开Lolesports网页，网络问题，将于3秒后退出..."))
 
                 matches = self.getMatchInfo()
                 sleep(2)
                 matchesLen = len(matches)
                 if matchesLen == 0:
-                    self.log.info(_log("没有赛区正在直播", lang=self.config.language))
-                    print(_("没有赛区正在直播", color="green", lang=self.config.language))
+                    self.log.info(_log("没有赛区正在直播"))
+                    print(_("没有赛区正在直播", color="green"))
                 # 1 match
                 elif matchesLen == 1:
                     self.log.info(
-                        f"{matchesLen} {_log('个赛区正在直播中', lang=self.config.language)}")
+                        f"{matchesLen} {_log('个赛区正在直播中')}")
                     print(
-                        f"{matchesLen} {_('个赛区正在直播中', color='green', lang=self.config.language)}")
+                        f"{matchesLen} {_('个赛区正在直播中', color='green')}")
                 # multiple matches
                 else:
                     self.log.info(
-                        f"{matchesLen} {_log('赛区正在直播中', lang=self.config.language)}")
+                        f"{matchesLen} {_log('赛区正在直播中')}")
                     print(
-                        f"{matchesLen} {_('赛区正在直播中', color='green', lang=self.config.language)}")
+                        f"{matchesLen} {_('赛区正在直播中', color='green')}")
                 # Close the live streams of the regions that have already ended.
                 self.closeFinishedTabs(liveMatches=matches)
                 # Start watching the new live broadcast.
@@ -243,38 +244,38 @@ class Match:
                 # Check information of the most recent match.
                 self.checkNextMatch()
                 if newDelay == 3599:
-                    print(_("识别到距离比赛时间较长 检查间隔为1小时", color="green", lang=self.config.language))
-                    self.log.info(_log("识别到距离比赛时间较长 检查间隔为1小时", lang=self.config.language))
+                    print(_("识别到距离比赛时间较长 检查间隔为1小时", color="green"))
+                    self.log.info(_log("识别到距离比赛时间较长 检查间隔为1小时"))
                 self.log.info(
-                    f"{_log('下次检查在:', lang=self.config.language)} "
+                    f"{_log('下次检查在:')} "
                     f"{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                 self.log.info(f"{'=' * 50}")
                 print(
-                    f"{_('下次检查在:', color='bold yellow', lang=self.config.language)} [cyan]"
+                    f"{_('下次检查在:', color='bold yellow')} [cyan]"
                     f"{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                 if maxRunHours != -1:
                     print(
-                        f"{_('预计结束程序时间:', color='green', lang=self.config.language)} [cyan]"
+                        f"{_('预计结束程序时间:', color='green')} [cyan]"
                         f"{time.strftime('%H:%M', time.localtime(endTimePoint))}")
                 delimiterLine()
                 sleep(newDelay)
             if time.time() >= endTimePoint and maxRunHours != -1 and self.config.platForm == "windows":
-                self.log.info(_log("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作", lang=self.config.language))
-                print(_("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作", color="yellow", lang=self.config.language))
+                self.log.info(_log("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作"))
+                print(_("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作", color="yellow"))
                 os.system("shutdown -s -t 60")
 
         except NoSuchWindowException:
-            self.log.error(_log("对应窗口找不到", lang=self.config.language))
-            print(_("对应窗口找不到", color="red", lang=self.config.language))
+            self.log.error(_log("对应窗口找不到"))
+            print(_("对应窗口找不到", color="red"))
             self.log.error(format_exc())
-            self.utils.errorNotify(_log("对应窗口找不到", lang=self.config.language))
-            sysQuit(self.driver, _log("对应窗口找不到", lang=self.config.language))
+            self.utils.errorNotify(_log("对应窗口找不到"))
+            sysQuit(self.driver, _log("对应窗口找不到"))
         except Exception:
-            self.log.error(_log("发生错误", lang=self.config.language))
-            print(_("发生错误", color="red", lang=self.config.language))
+            self.log.error(_log("发生错误"))
+            print(_("发生错误", color="red"))
             self.log.error(format_exc())
-            self.utils.errorNotify(_log("发生错误", lang=self.config.language))
-            sysQuit(self.driver, _log("发生错误", lang=self.config.language))
+            self.utils.errorNotify(_log("发生错误"))
+            sysQuit(self.driver, _log("发生错误"))
 
     def getMatchInfo(self, ignoreBroadCast=True):
         """
@@ -307,8 +308,8 @@ class Match:
                     matches.append(element.get_attribute("href"))
             return matches
         except Exception:
-            self.log.error(_log("获取比赛列表失败", lang=self.config.language))
-            print(_("获取比赛列表失败", color="red", lang=self.config.language))
+            self.log.error(_log("获取比赛列表失败"))
+            print(_("获取比赛列表失败", color="red"))
             self.log.error(format_exc())
             return []
 
@@ -344,12 +345,12 @@ class Match:
                 self.rewardWindow = newTab1
             for handle in removeList:
                 self.currentWindows.pop(handle, None)
-            print(f'--{_("所有窗口已关闭", color="green", lang=self.config.language)}')
-            self.log.info(_log("所有窗口已关闭", lang=self.config.language))
+            print(f'--{_("所有窗口已关闭", color="green")}')
+            self.log.info(_log("所有窗口已关闭"))
         except Exception:
-            self.log.error(_log("关闭所有窗口时发生异常", lang=self.config.language))
-            print(f'--{_("关闭所有窗口时发生异常", color="red", lang=self.config.language)}')
-            self.utils.errorNotify(error=_log("关闭所有窗口时发生异常", lang=self.config.language))
+            self.log.error(_log("关闭所有窗口时发生异常"))
+            print(f'--{_("关闭所有窗口时发生异常", color="red")}')
+            self.utils.errorNotify(error=_log("关闭所有窗口时发生异常"))
             self.log.error(format_exc())
 
     def closeFinishedTabs(self, liveMatches):
@@ -368,10 +369,10 @@ class Match:
                 if keys not in liveMatches:
                     match = getMatchName(keys)
                     self.log.info(
-                        f"{match} {_log('比赛结束', lang=self.config.language)}")
+                        f"{match} {_log('比赛结束')}")
                     print(
                         f"[bold magenta]{match}[/bold magenta] "
-                        f"{_('比赛结束', color='green', lang=self.config.language)}")
+                        f"{_('比赛结束', color='green')}")
                     self.driver.close()
                     removeList.append(keys)
                     sleep(2)
@@ -386,9 +387,8 @@ class Match:
                 self.currentWindows.pop(keys, None)
             self.driver.switch_to.window(self.mainWindow)
         except Exception:
-            print(_("关闭已结束的比赛时发生错误", color="red", lang=self.config.language))
-            self.utils.errorNotify(error=_log(
-                "关闭已结束的比赛时发生错误", lang=self.config.language))
+            print(_("关闭已结束的比赛时发生错误", color="red"))
+            self.utils.errorNotify(error=_log("关闭已结束的比赛时发生错误"))
             self.log.error(format_exc())
 
     def startWatchNewMatches(self, liveMatches, disWatchMatches):
@@ -407,9 +407,9 @@ class Match:
         for match in newLiveMatches:
             if any(disMatch in match for disMatch in disWatchMatchesSet):
                 skipName = getMatchName(match)
-                self.log.info(f"{skipName} {_log('比赛跳过', lang=self.config.language)}")
+                self.log.info(f"{skipName} {_log('比赛跳过')}")
                 print(f"[bold magenta]{skipName}[/bold magenta] "
-                      f"{_('比赛跳过', color='yellow', lang=self.config.language)}")
+                      f"{_('比赛跳过', color='yellow')}")
                 continue
 
             self.driver.switch_to.new_window('tab')
@@ -426,14 +426,14 @@ class Match:
                 else:
                     try:
                         if self.twitch.setTwitchQuality():
-                            self.log.info(_log("Twitch 160p清晰度设置成功", lang=self.config.language))
-                            print(f'--{_("Twitch 160p清晰度设置成功", color="green", lang=self.config.language)}')
+                            self.log.info(_log("Twitch 160p清晰度设置成功"))
+                            print(f'--{_("Twitch 160p清晰度设置成功", color="green")}')
                         else:
-                            self.log.error(_log("Twitch 清晰度设置失败", lang=self.config.language))
-                            print(f'--{_("Twitch 160p清晰度设置失败", color="red", lang=self.config.language)}')
+                            self.log.error(_log("Twitch 清晰度设置失败"))
+                            print(f'--{_("Twitch 160p清晰度设置失败", color="red")}')
                     except Exception:
-                        self.log.error(_log("无法设置 Twitch 清晰度.", lang=self.config.language))
-                        print(f'--{_("无法设置 Twitch 清晰度.", color="red", lang=self.config.language)}')
+                        self.log.error(_log("无法设置 Twitch 清晰度."))
+                        print(f'--{_("无法设置 Twitch 清晰度.", color="red")}')
                         self.log.error(format_exc())
             # Identified as a YouTube stream.
             else:
@@ -451,21 +451,21 @@ class Match:
                 else:
                     try:
                         if self.youtube.setYoutubeQuality():
-                            self.log.info(_log("Youtube 144p清晰度设置成功", lang=self.config.language))
+                            self.log.info(_log("Youtube 144p清晰度设置成功"))
                             print(f'--'
-                                  f'{_("Youtube 144p清晰度设置成功", color="green", lang=self.config.language)}')
+                                  f'{_("Youtube 144p清晰度设置成功", color="green")}')
                         else:
                             self.utils.debugScreen(self.driver, "youtube")
                             self.log.error(
-                                _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", lang=self.config.language))
+                                _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者"))
                             print(f'--'
-                                  f'{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red", lang=self.config.language)}')
+                                  f'{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red")}')
                     except Exception:
                         self.utils.debugScreen(self.driver, "youtube")
                         self.log.error(
-                            _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", lang=self.config.language))
+                            _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者"))
                         print(f'--'
-                              f'{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red", lang=self.config.language)}')
+                              f'{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red")}')
                         self.log.error(format_exc())
             sleep(4)
 
@@ -476,12 +476,12 @@ class Match:
         try:
             self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
         except Exception:
-            self.log.error(_log("关闭视频流失败.", lang=self.config.language))
-            print(f'--{_("关闭视频流失败.", color="red", lang=self.config.language)}')
+            self.log.error(_log("关闭视频流失败."))
+            print(f'--{_("关闭视频流失败.", color="red")}')
             self.log.error(format_exc())
         else:
-            self.log.info(_log("视频流关闭成功.", lang=self.config.language))
-            print(f'--{_("视频流关闭成功.", color="red", lang=self.config.language)}')
+            self.log.info(_log("视频流关闭成功."))
+            print(f'--{_("视频流关闭成功.", color="red")}')
 
     def checkNextMatch(self):
         """
@@ -505,8 +505,8 @@ class Match:
                     by=By.CSS_SELECTOR, value="div.divider.future + div.EventDate > div.date > span.monthday").text
                 timeList = nextMatchDayTime.split(" ")
             if len(timeList) != 2:
-                self.log.error(_log("获取下一场比赛时间失败", lang=self.config.language))
-                print(_("获取下一场比赛时间失败", color="red", lang=self.config.language))
+                self.log.error(_log("获取下一场比赛时间失败"))
+                print(_("获取下一场比赛时间失败", color="red"))
                 self.nextMatchDay = None
                 return
 
@@ -554,22 +554,22 @@ class Match:
                 nextMatchBO = self.driver.find_element(
                     by=By.CSS_SELECTOR,
                     value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.strategy").text
-                print(f'{_("(检查下一场比赛时 过滤失效的比赛 ->", color="yellow", lang=self.config.language)} '
+                print(f'{_("(检查下一场比赛时 过滤失效的比赛 ->", color="yellow")} '
                       f'[yellow]{invalidMatch})')
                 print(
-                    f"{_('下一场比赛时间:', color='bold yellow', lang=self.config.language)} "
+                    f"{_('下一场比赛时间:', color='bold yellow')} "
                     f"[cyan]{nextMatchTime}{nextMatchAMOrPM}[/cyan] | "
                     f"[magenta]{nextMatchLeague}[/magenta] | "
                     f"[blue]{nextMatchBO}[/blue]")
                 self.nextMatchDay = None
             else:
                 print(
-                    f"{_('下一场比赛时间:', color='bold yellow', lang=self.config.language)} "
+                    f"{_('下一场比赛时间:', color='bold yellow')} "
                     f"[cyan]{nextMatchDayTime}[/cyan] | "
                     f"[cyan]{nextMatchTime}{nextMatchAMOrPM}[/cyan] | "
                     f"[magenta]{nextMatchLeague}[/magenta] | "
                     f"[bold blue]{nextMatchBO}[/bold blue]")
         except Exception:
-            self.log.error(_log("获取下一场比赛时间失败", lang=self.config.language))
+            self.log.error(_log("获取下一场比赛时间失败"))
             self.log.error(format_exc())
-            print(_("获取下一场比赛时间失败", color="red", lang=self.config.language))
+            print(_("获取下一场比赛时间失败", color="red"))

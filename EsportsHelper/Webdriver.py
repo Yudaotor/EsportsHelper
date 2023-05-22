@@ -1,12 +1,35 @@
 import undetected_chromedriver as uc
 from rich import print
 from webdriver_manager.chrome import ChromeDriverManager
-from EsportsHelper.I18n import _, _log
+from EsportsHelper.Config import config
+from EsportsHelper.Logger import log
+from EsportsHelper.I18n import i18n
+_ = i18n.getText
+_log = i18n.getLog
+
+
+def getDriverVersion(chromeDriverManager):
+    """
+    Get the version number of the ChromeDriver being used by the driver instance.
+
+    Args:
+        chromeDriverManager (ChromeDriverManager): An instance of the ChromeDriverManager class.
+
+    Returns:
+        int: The version number of the ChromeDriver being used by the driver instance,
+         or a default version of 108 if it is unable to retrieve the version number.
+    """
+    try:
+        version = int(chromeDriverManager.driver.get_version().split(".")[0])
+    except Exception:
+        version = 108
+    return version
 
 
 class Webdriver:
-    def __init__(self, config) -> None:
+    def __init__(self) -> None:
         self.config = config
+        self.log = log
 
     def createWebdriver(self):
         """
@@ -21,12 +44,13 @@ class Webdriver:
         elif self.config.platForm == "windows":
             chromeDriverManager = ChromeDriverManager(path=".\\driver")
         else:
-            print(_("不支持的操作系统", color="red", lang=self.config.language))
+            print(_("不支持的操作系统", color="red"))
+            self.log.error(_("不支持的操作系统"))
         options = self.addWebdriverOptions(uc.ChromeOptions())
-        print(_("正在准备中...", color="yellow", lang=self.config.language))
-
+        print(_("正在准备中...", color="yellow"))
+        log.info(_log("正在准备中..."))
         driverPath = chromeDriverManager.install()
-        version = self.getDriverVersion(chromeDriverManager)
+        version = getDriverVersion(chromeDriverManager)
 
         kwargs = {
             "options": options,
@@ -36,23 +60,6 @@ class Webdriver:
             "user_data_dir": self.config.userDataDir if self.config.userDataDir else None,
         }
         return uc.Chrome(**{k: v for k, v in kwargs.items() if v})
-
-    def getDriverVersion(self, chromeDriverManager):
-        """
-        Get the version number of the ChromeDriver being used by the driver instance.
-
-        Args:
-            chromeDriverManager (ChromeDriverManager): An instance of the ChromeDriverManager class.
-
-        Returns:
-            int: The version number of the ChromeDriver being used by the driver instance,
-             or a default version of 108 if it is unable to retrieve the version number.
-        """
-        try:
-            version = int(chromeDriverManager.driver.get_version().split(".")[0])
-        except Exception:
-            version = 108
-        return version
 
     def addWebdriverOptions(self, options):
         """

@@ -7,11 +7,15 @@ from rich import print
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
-from EsportsHelper.I18n import _, _log
+from EsportsHelper.Config import config
+from EsportsHelper.Logger import log
+from EsportsHelper.I18n import i18n
+_ = i18n.getText
+_log = i18n.getLog
 
 
 class Rewards:
-    def __init__(self, log, driver, config, youtube, utils, twitch) -> None:
+    def __init__(self, driver, youtube, utils, twitch) -> None:
         self.log = log
         self.driver = driver
         self.config = config
@@ -49,7 +53,7 @@ class Rewards:
                 return 0
 
         except Exception:
-            self.log.error(_log("检测奖励标识失败", lang=self.config.language))
+            self.log.error(_log("检测奖励标识失败"))
             self.log.error(format_exc())
             self.utils.debugScreen(self.driver, "reward")
 
@@ -68,8 +72,8 @@ class Rewards:
             bool: True if rewards are available, False otherwise.
         """
         match = getMatchName(url)
-        teams = _log("出错, 未知", lang=self.config.language)
-        viewerNumber = _log("出错, 未知", lang=self.config.language)
+        teams = _log("出错, 未知")
+        viewerNumber = _log("出错, 未知")
         for i in range(retryTimes):
             flag = self.checkRewards(stream=stream)
             if flag == 1 and self.config.closeStream is False:
@@ -88,7 +92,7 @@ class Rewards:
                             self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
                             webdriver.ActionChains(self.driver).move_to_element(teamsElement).perform()
                             teams = self.wait.until(ec.presence_of_element_located(teamLocator)).text
-                            self.log.warning(_log("获取队伍信息重试中...", lang=self.config.language))
+                            self.log.warning(_log("获取队伍信息重试中..."))
                             sleep(5)
 
                         peopleLocator = (By.CSS_SELECTOR, "p[data-test-selector=stream-info-card-component__description]")
@@ -102,7 +106,7 @@ class Rewards:
                             self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
                             webdriver.ActionChains(self.driver).move_to_element(viewerInfoElement).perform()
                             viewerInfo = self.wait.until(ec.presence_of_element_located(peopleLocator)).text
-                            self.log.warning(_log("获取观看人数信息重试中...", lang=self.config.language))
+                            self.log.warning(_log("获取观看人数信息重试中..."))
                             sleep(5)
 
                         viewerNumberFlag = True
@@ -119,9 +123,9 @@ class Rewards:
                         frameLocator = (By.ID, "video-player-youtube")
                         self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
                         iframeTitle = self.driver.execute_script("return document.title;")
-                        teams = iframeTitle.strip() if iframeTitle else _log("出错, 未知", lang=self.config.language)
+                        teams = iframeTitle.strip() if iframeTitle else _log("出错, 未知")
                         self.driver.switch_to.default_content()
-                    teams = getMatchTeams(teams, language=self.config.language)
+                    teams = getMatchTeams(teams)
 
                 except Exception:
                     self.driver.switch_to.default_content()
@@ -132,50 +136,50 @@ class Rewards:
                         self.twitch.setTwitchQuality()
                         self.twitch.checkTwitchStream()
                     self.log.info(
-                        f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} "
-                        f"{_log('标题: ', lang=self.config.language)}"
+                        f"{match} {_log('正常观看 可获取奖励')} "
+                        f"{_log('标题: ')}"
                         f"{teams} "
-                        f"{viewerNumber} {_log('人观看', lang=self.config.language)}")
+                        f"{viewerNumber} {_log('人观看')}")
                     print(
-                        f"[bold magenta]{match}[/bold magenta] {_('正常观看 可获取奖励', color='green', lang=self.config.language)} ")
+                        f"[bold magenta]{match}[/bold magenta] {_('正常观看 可获取奖励', color='green')} ")
                     print(
-                        f"--{_('标题: ', color='bold yellow', lang=self.config.language)}"
+                        f"--{_('标题: ', color='bold yellow')}"
                         f"[bold green]{teams}[/bold green] | "
-                        f"{viewerNumber} {_('人观看', color='bold yellow', lang=self.config.language)}")
+                        f"{viewerNumber} {_('人观看', color='bold yellow')}")
                 elif stream == "youtube":
                     if self.youtube.checkYoutubeStream() is False:
                         self.driver.refresh()
                         self.youtube.setYoutubeQuality()
                         self.youtube.checkYoutubeStream()
                     self.log.info(
-                        f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} "
-                        f"{_log('标题: ', lang=self.config.language)}"
+                        f"{match} {_log('正常观看 可获取奖励')} "
+                        f"{_log('标题: ')}"
                         f"{teams}")
                     print(
                         f"[bold magenta]{match}[/bold magenta] "
-                        f"{_('正常观看 可获取奖励', color='green', lang=self.config.language)} ")
+                        f"{_('正常观看 可获取奖励', color='green')} ")
                     print(
-                        f"--{_('标题: ', color='bold yellow', lang=self.config.language)}"
+                        f"--{_('标题: ', color='bold yellow')}"
                         f"[bold green]{teams}[/bold green]")
 
                 return True
             elif flag == 1 and self.config.closeStream is True:
                 self.log.info(
-                    f"{match} {_log('正常观看 可获取奖励', lang=self.config.language)} ")
+                    f"{match} {_log('正常观看 可获取奖励')} ")
                 print(f"[bold magenta]{match}[/bold magenta] "
-                      f"{_('正常观看 可获取奖励', color='green', lang=self.config.language)} ")
+                      f"{_('正常观看 可获取奖励', color='green')} ")
                 return True
             elif flag == 0:
                 self.log.info(
-                    f"{match} {_log('比赛结束 等待关闭', lang=self.config.language)} ")
+                    f"{match} {_log('比赛结束 等待关闭')} ")
                 print(f"[bold magenta]{match}[/bold magenta] "
-                      f"{_('比赛结束 等待关闭', color='yellow', lang=self.config.language)} ")
+                      f"{_('比赛结束 等待关闭', color='yellow')} ")
                 return True
             elif flag == -1:
                 if i != retryTimes - 1:
-                    self.log.warning(f"{match} {_log('观看异常 重试中...', self.config.language)}")
+                    self.log.warning(f"{match} {_log('观看异常 重试中...')}")
                     print(f"[bold magenta]{match}[/bold magenta] "
-                          f"{_('观看异常 重试中...', color='yellow', lang=self.config.language)}")
+                          f"{_('观看异常 重试中...', color='yellow')}")
                     sleep((i + 1) * 30)
                     self.driver.refresh()
                     if stream == "youtube":
@@ -190,12 +194,12 @@ class Rewards:
                             self.twitch.checkTwitchStream()
                 else:
                     self.log.error(
-                        f"{match} {_log('观看异常', lang=self.config.language)}")
+                        f"{match} {_log('观看异常')}")
                     print(
                         f"[bold magenta]{match}[/bold magenta] "
-                        f"{_('观看异常', color='red', lang=self.config.language)}")
+                        f"{_('观看异常', color='red')}")
                     self.utils.errorNotify(
-                        f"{match} {_log('观看异常', lang=self.config.language)}")
+                        f"{match} {_log('观看异常')}")
                     return False
 
     def getNewDropInfo(self):
@@ -257,9 +261,9 @@ class Rewards:
             closeButton.click()
             return poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg
         except Exception:
-            self.log.error(_log("检查掉落失败", lang=self.config.language))
+            self.log.error(_log("检查掉落失败"))
             self.log.error(format_exc())
-            print(_("检查掉落失败", color="red", lang=self.config.language))
+            print(_("检查掉落失败", color="red"))
             return None, None, None, None, None, None
 
     def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropRegion) -> None:
@@ -358,11 +362,11 @@ class Rewards:
                     s.post(self.config.connectorDropsUrl, headers={
                         "Content-type": "application/json"}, json=params)
                     sleep(5)
-                self.log.info(_log("掉落提醒成功", lang=self.config.language))
+                self.log.info(_log("掉落提醒成功"))
             except Exception:
-                self.log.error(_log("掉落提醒失败", lang=self.config.language))
+                self.log.error(_log("掉落提醒失败"))
                 self.log.error(format_exc())
-                print(_("掉落提醒失败", color="red", lang=self.config.language))
+                print(_("掉落提醒失败", color="red"))
 
     def countDrops(self, rewardWindow, isInit=False):
         """
@@ -374,18 +378,18 @@ class Rewards:
         if self.config.countDrops:
             try:
                 if isInit is True:
-                    print(f'{_("初始化掉落数", color="green", lang=self.config.language)}')
-                    self.log.info(_log("初始化掉落数", lang=self.config.language))
+                    print(f'{_("初始化掉落数", color="green")}')
+                    self.log.info(_log("初始化掉落数"))
                 else:
-                    print(f'--{_("检查掉落数...", color="green", lang=self.config.language)}')
-                    self.log.info(_log("检查掉落数...", lang=self.config.language))
+                    print(f'--{_("检查掉落数...", color="green")}')
+                    self.log.info(_log("检查掉落数..."))
                 self.driver.switch_to.window(rewardWindow)
                 # The first time you enter the page, you do not need to refresh
                 if isInit is False:
                     self.driver.refresh()
                 # Wait for the drop list to finish loading
                 try:
-                    checkRewardPage(self.driver, self.config.language)
+                    checkRewardPage(self.driver)
                 except Exception:
                     return -1, ""
                 dropRegion = self.driver.find_elements(
@@ -396,8 +400,8 @@ class Rewards:
                     (By.CSS_SELECTOR, "div.stats > div:nth-child(2) > div.number"))).text
                 totalDropsNumber = 0
             except Exception:
-                print(_("获取掉落数失败", color="red", lang=self.config.language))
-                self.log.error(_log("获取掉落数失败", lang=self.config.language))
+                print(_("获取掉落数失败", color="red"))
+                self.log.error(_log("获取掉落数失败"))
                 self.log.error(format_exc())
                 return -1, ""
             # Not the first run
@@ -446,9 +450,8 @@ class Rewards:
                     self.totalWatchHours = totalWatchHours
                     return totalDropsNumber, dropNumberInfo
                 except Exception:
-                    print(_("统计掉落失败", color="red", lang=self.config.language))
-                    self.log.error(
-                        _log("统计掉落失败", lang=self.config.language))
+                    print(_("统计掉落失败", color="red"))
+                    self.log.error(_log("统计掉落失败"))
                     self.log.error(format_exc())
                     self.totalWatchHours = -1
                     return -1, ""
@@ -466,10 +469,8 @@ class Rewards:
                     self.totalWatchHours = totalWatchHours
                     return totalDropsNumber, ""
                 except Exception:
-                    print(_("初始化掉落数失败", color="red",
-                            lang=self.config.language))
-                    self.log.error(
-                        _log("初始化掉落数失败", lang=self.config.language))
+                    print(_("初始化掉落数失败", color="red"))
+                    self.log.error(_log("初始化掉落数失败"))
                     self.log.error(format_exc())
                     self.historyDrops = -1
                     self.totalWatchHours = -1
@@ -499,6 +500,6 @@ class Rewards:
                 self.countDrops(rewardWindow=rewardWindow, isInit=newTab)
             return rewardWindow
         except Exception:
-            print(_("检查掉落数失败", color="red", lang=self.config.language))
-            self.log.error(_log("检查掉落数失败", lang=self.config.language))
+            print(_("检查掉落数失败", color="red"))
+            self.log.error(_log("检查掉落数失败"))
             self.log.error(format_exc())

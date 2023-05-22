@@ -4,11 +4,15 @@ from traceback import format_exc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
-from EsportsHelper.I18n import _, _log
+from EsportsHelper.Logger import log
+from EsportsHelper.Config import config
+from EsportsHelper.I18n import i18n
+_ = i18n.getText
+_log = i18n.getLog
 
 
 class YouTube:
-    def __init__(self, driver, log, config, utils) -> None:
+    def __init__(self, driver, utils) -> None:
         self.driver = driver
         self.log = log
         self.config = config
@@ -58,11 +62,11 @@ class YouTube:
         """
         try:
             playButton.click()
-            print(_("Youtube: 解除暂停成功", color="green", lang=self.config.language))
-            self.log.info(_log("Youtube: 解除暂停成功", lang=self.config.language))
+            print(_("Youtube: 解除暂停成功", color="green"))
+            self.log.info(_log("Youtube: 解除暂停成功"))
         except Exception:
-            print(_("Youtube: 解除暂停失败", color="red", lang=self.config.language))
-            self.log.error(_log("Youtube: 解除暂停失败", lang=self.config.language))
+            print(_("Youtube: 解除暂停失败", color="red"))
+            self.log.error(_log("Youtube: 解除暂停失败"))
             self.log.error(format_exc())
 
     def unmuteStream(self, muteButton) -> None:
@@ -79,11 +83,11 @@ class YouTube:
         """
         try:
             muteButton.click()
-            print(_("Youtube: 解除静音成功", color="green", lang=self.config.language))
-            self.log.info(_log("Youtube: 解除静音成功", lang=self.config.language))
+            print(_("Youtube: 解除静音成功", color="green"))
+            self.log.info(_log("Youtube: 解除静音成功"))
         except Exception:
-            print(_("Youtube: 解除静音失败", color="red", lang=self.config.language))
-            self.log.error(_log("Youtube: 解除静音失败", lang=self.config.language))
+            print(_("Youtube: 解除静音失败", color="red"))
+            self.log.error(_log("Youtube: 解除静音失败"))
             self.log.error(format_exc())
 
     def setYoutubeQuality(self) -> bool:

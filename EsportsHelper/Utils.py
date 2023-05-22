@@ -1,24 +1,25 @@
 import os
 from time import sleep, strftime
 from traceback import format_exc
-
 import requests
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-from EsportsHelper.Logger import log
-from EsportsHelper.VersionManager import VersionManager
+from EsportsHelper.Config import config
+from EsportsHelper.VersionManager import VersionManager, checkVersion
 from plyer import notification
 from retrying import retry
 from rich import print
-from EsportsHelper.I18n import _, _log
 from EsportsHelper.Logger import delimiterLine
+from EsportsHelper.Logger import log
+from EsportsHelper.I18n import i18n
+_ = i18n.getText
+_log = i18n.getLog
 
 
 class Utils:
-    def __init__(self, config):
+    def __init__(self):
         self.config = config
-        pass
 
     def errorNotify(self, error):
         """
@@ -31,20 +32,19 @@ class Utils:
         notifyType = self.config.notifyType
         needDesktopNotify = self.config.desktopNotify
         connectorUrl = self.config.connectorDropsUrl
-        language = self.config.language
         if notifyType in ["all", "error"]:
             if needDesktopNotify:
                 try:
                     notification.notify(
-                        title=_log("小傻瓜，出事啦", lang=language),
+                        title=_log("小傻瓜，出事啦"),
                         message=f"Error Message: {error}",
                         timeout=30
                     )
-                    print(_("错误提醒发送成功", color="green", lang=language))
-                    log.info(_log("错误提醒发送成功", lang=language))
-                except Exception as e:
-                    print(_("错误提醒发送失败", color="red", lang=language))
-                    log.error(_log("错误提醒发送失败", lang=language))
+                    print(_("错误提醒发送成功", color="green"))
+                    log.info(_log("错误提醒发送成功"))
+                except Exception:
+                    print(_("错误提醒发送失败", color="red"))
+                    log.error(_log("错误提醒发送失败"))
                     log.error(format_exc())
 
             if connectorUrl != "":
@@ -85,11 +85,11 @@ class Utils:
                         s.post(connectorUrl, headers={
                             "Content-type": "application/json"}, json=params)
 
-                    log.info(_log("异常提醒成功", lang=language))
-                    print(_("异常提醒成功", color="green", lang=language))
+                    log.info(_log("异常提醒成功"))
+                    print(_("异常提醒成功", color="green"))
                 except Exception:
-                    print(_("异常提醒失败", color="red", lang=language))
-                    log.error(_log("异常提醒失败", lang=language))
+                    print(_("异常提醒失败", color="red"))
+                    log.error(_log("异常提醒失败"))
                     log.error(format_exc())
 
     def debugScreen(self, driver, lint="normal"):
@@ -107,9 +107,9 @@ class Utils:
             if self.config.debug:
                 sleep(3)
                 driver.save_screenshot(f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
-                log.info(f'{lint}-{_log("调试截图成功", lang=self.config.language)}')
+                log.info(f'{lint}-{_log("调试截图成功")}')
         except Exception:
-            log.error(f'{lint}-{_log("调试截图失败", lang=self.config.language)}')
+            log.error(f'{lint}-{_log("调试截图失败")}')
             log.error(format_exc())
 
     def info(self):
@@ -118,7 +118,7 @@ class Utils:
         """
         version = VersionManager.getVersion()
         githubUrl = "https://github.com/Yudaotor/EsportsHelper"
-        VersionManager(self.config).checkVersion()
+        checkVersion()
         if self.config.language == "zh_CN":
             delimiterLine()
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]        "
@@ -195,8 +195,8 @@ class Utils:
                 remoteOverrideFile = req.get(
                     "https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
             except Exception:
-                log.error(_log("从github获取override文件失败, 将尝试从gitee获取", lang=self.config.language))
-                print(_("从github获取override文件失败, 将尝试从gitee获取", color="red", lang=self.config.language))
+                log.error(_log("从github获取override文件失败, 将尝试从gitee获取"))
+                print(_("从github获取override文件失败, 将尝试从gitee获取", color="red"))
                 remoteOverrideFile = req.get(
                     "https://gitee.com/yudaotor/EsportsHelper/raw/main/override.txt", headers=headers)
             if remoteOverrideFile.status_code == 200:
@@ -210,19 +210,19 @@ class Utils:
                         else:
                             temp[0] = temp[0][1:]
                         OVERRIDES[temp[0]] = temp[1]
-                log.info(_log("获取override文件成功", lang=self.config.language))
-                print(_("获取override文件成功", color="green", lang=self.config.language))
+                log.info(_log("获取override文件成功"))
+                print(_("获取override文件成功", color="green"))
                 return OVERRIDES
             else:
-                print(_("获取override文件失败", color="red", lang=self.config.language))
-                log.error(_log("获取override文件失败", lang=self.config.language))
-                input(_log("按回车键退出", lang=self.config.language))
-                sysQuit(e=_log("获取override文件失败", lang=self.config.language))
+                print(_("获取override文件失败", color="red"))
+                log.error(_log("获取override文件失败"))
+                input(_log("按回车键退出"))
+                sysQuit(e=_log("获取override文件失败"))
         except Exception:
-            log.error(_log("获取override文件失败", lang=self.config.language))
-            print(_("获取override文件失败", color="red", lang=self.config.language))
-            input(_log("按回车键退出", lang=self.config.language))
-            sysQuit(e=_log("获取override文件失败", lang=self.config.language))
+            log.error(_log("获取override文件失败"))
+            print(_("获取override文件失败", color="red"))
+            input(_log("按回车键退出"))
+            sysQuit(e=_log("获取override文件失败"))
 
 
 def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropLocale):
@@ -290,14 +290,13 @@ def getMatchName(url: str) -> str:
 # Repeat the attempt to fetch the page up to 4 times,
 # and the wait time is based on 2 minutes, each time incremented by 2 minutes
 @retry(stop_max_attempt_number=4, wait_incrementing_increment=120000, wait_incrementing_start=120000)
-def getLolesportsWeb(driver, language) -> None:
+def getLolesportsWeb(driver) -> None:
     """
     Retrieves the Lolesports website using the provided driver. If an exception occurs while accessing the website,
     it retries for a maximum of four times, incrementing the wait time between each attempt by two minutes.
 
     Args:
     - driver (selenium.webdriver.remote.webdriver.WebDriver): The driver to use for accessing the Lolesports website
-    - language (str): The language to use for log
     """
     try:
         driver.get(
@@ -310,8 +309,9 @@ def getLolesportsWeb(driver, language) -> None:
             "south_regional_league,tft_esports")
 
     except Exception:
-        print(_("获取LoLEsports网站失败，正在重试...", color="red", lang=language))
-        log.error(_log("获取LoLEsports网站失败，正在重试...", lang=language))
+        print(_("获取LoLEsports网站失败，正在重试...", color="red"))
+        log.error(_log("获取LoLEsports网站失败，正在重试..."))
+        log.error(format_exc())
         driver.get(
             "https://lolesports.com/schedule?leagues=msi,lcs,north_american_challenger_league,"
             "lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,"
@@ -322,7 +322,7 @@ def getLolesportsWeb(driver, language) -> None:
             "south_regional_league,tft_esports")
 
 
-def getSleepPeriod(config):
+def getSleepPeriod():
     """
     Get sleep period from config file
     """
@@ -331,13 +331,12 @@ def getSleepPeriod(config):
 
 
 @retry(stop_max_attempt_number=4, wait_incrementing_increment=10000, wait_incrementing_start=10000)
-def checkRewardPage(driver, language):
+def checkRewardPage(driver):
     """
     Check if the reward page exists.
 
     Args:
         driver: Selenium WebDriver instance.
-        language: The language used for logging.
 
     Returns:
         - None if the reward page does not exist.
@@ -354,15 +353,16 @@ def checkRewardPage(driver, language):
                 (By.XPATH, "//div[text()='NO DROPS YET']")))
         except Exception:
             driver.refresh()
-            print(_("获取reward网站失败，正在重试...", color="red", lang=language))
-            log.error(_log("获取reward网站失败，正在重试...", lang=language))
+            print(_("获取reward网站失败，正在重试...", color="red"))
+            log.error(_log("获取reward网站失败，正在重试..."))
+            log.error(format_exc())
             wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "div.name")))
         else:
             return
 
 
-def getMatchTeams(teams, language):
+def getMatchTeams(teams):
     """
     Get match teams from stream title
     """
@@ -376,7 +376,5 @@ def getMatchTeams(teams, language):
             else:
                 teams = words[0]
     else:
-        teams = _log("出错, 未知", lang=language)
+        teams = _log("出错, 未知")
     return teams
-
-

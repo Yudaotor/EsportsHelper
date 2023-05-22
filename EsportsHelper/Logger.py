@@ -8,7 +8,7 @@ FILE_SIZE = 1024 * 1024 * 100
 BACKUP_COUNT = 5
 PROGRAM_NAME = "EsportsHelper"
 GITHUB_ADDRESS = "https://github.com/Yudaotor/EsportsHelper"
-version = "1.6.1"
+VERSION = "1.6.2"
 
 
 class Logger:
@@ -25,7 +25,7 @@ class Logger:
         Path("./logs/pics").mkdir(parents=True, exist_ok=True)
         level = logging.INFO
         fileHandler = RotatingFileHandler(
-            log_path / f"{PROGRAM_NAME}V{version}_{time.strftime('%m.%d_%H-%M')}.log",
+            log_path / f"{PROGRAM_NAME}V{VERSION}_{time.strftime('%m.%d_%H-%M')}.log",
             mode="a+",
             maxBytes=FILE_SIZE,
             backupCount=BACKUP_COUNT,
@@ -39,7 +39,7 @@ class Logger:
         )
         logg = logging.getLogger(PROGRAM_NAME)
         logg.info("-" * 71)
-        logg.info(f"{'-' * 22} Program started {version}   {'-' * 23}")
+        logg.info(f"{'-' * 22} Program started {VERSION}   {'-' * 23}")
         logg.info(f"{'-' * 22} Open Source on github  {'-' * 22}")
         logg.info(f"{'-' * 7} Address: {GITHUB_ADDRESS} {'-' * 6}")
         logg.info(f"{'-' * 16} Please give me a star,Thanks(*^_^*)  {'-' * 15}")

@@ -4,11 +4,15 @@ from rich import print
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
-from EsportsHelper.I18n import _, _log
+from EsportsHelper.Logger import log
+from EsportsHelper.Config import config
+from EsportsHelper.I18n import i18n
+_ = i18n.getText
+_log = i18n.getLog
 
 
 class Twitch:
-    def __init__(self, driver, log, config, utils) -> None:
+    def __init__(self, driver, utils) -> None:
         self.driver = driver
         self.log = log
         self.wait = WebDriverWait(self.driver, 25)
@@ -96,11 +100,11 @@ class Twitch:
         """
         try:
             muteButton.click()
-            print(_("Twitch: 解除静音成功", color="green", lang=self.config.language))
-            self.log.info(_log("Twitch: 解除静音成功", lang=self.config.language))
+            print(_("Twitch: 解除静音成功", color="green"))
+            self.log.info(_log("Twitch: 解除静音成功"))
         except Exception:
-            print(_("Twitch: 解除静音失败", color="red", lang=self.config.language))
-            self.log.info(_log("Twitch: 解除静音失败", lang=self.config.language))
+            print(_("Twitch: 解除静音失败", color="red"))
+            self.log.info(_log("Twitch: 解除静音失败"))
 
     def playStream(self, playButton) -> None:
         """
@@ -114,8 +118,8 @@ class Twitch:
         """
         try:
             playButton.click()
-            self.log.info(_log("Twitch: 解除暂停成功", lang=self.config.language))
-            print(_("Twitch: 解除暂停成功", color="green", lang=self.config.language))
+            self.log.info(_log("Twitch: 解除暂停成功"))
+            print(_("Twitch: 解除暂停成功", color="green"))
         except Exception:
-            print(_("Twitch: 解除暂停失败", color="red", lang=self.config.language))
-            self.log.info(_log("Twitch: 解除暂停失败", lang=self.config.language))
+            print(_("Twitch: 解除暂停失败", color="red"))
+            self.log.info(_log("Twitch: 解除暂停失败"))

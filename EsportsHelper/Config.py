@@ -1,3 +1,4 @@
+import argparse
 import os
 from pathlib import Path
 from traceback import format_exc
@@ -5,57 +6,74 @@ import yaml
 from rich import print
 from yaml.parser import ParserError
 from yaml.scanner import ScannerError
-from EsportsHelper.I18n import _, _log
+from EsportsHelper.I18n import i18n
 from EsportsHelper.Logger import delimiterLine
+from EsportsHelper.Logger import log
+_ = i18n.getText
+_log = i18n.getLog
+
+
+def findConfigFile(configPath):
+    """Find the configuration file at the given path.
+
+    Args:
+        configPath (str): The path to the configuration file.
+
+    Returns:
+        Optional[Path]: The path to the configuration file if it exists, else None.
+    """
+    configPath = Path(configPath)
+    if configPath.exists():
+        return configPath
+    else:
+        return None
 
 
 class Config:
-    def __init__(self, log, configPath: str) -> None:
-        self.log = log
+    def __init__(self, configPath: str) -> None:
         try:
-            configPath = self.__findConfigFile(configPath)
+            configPath = findConfigFile(configPath)
             if configPath is None:
-                log.error("Can't find config file")
-                print("Can't find config file")
-                input("Press Enter to exit")
+                log.error(_log("找不到配置文件"))
+                print(_("找不到配置文件", color="red"))
+                input(_log("按回车键退出"))
                 os.kill(os.getpid(), 9)
             with open(configPath, "r", encoding='utf-8') as f:
-                config = yaml.safe_load(f)
-            self.headless = config.get("headless", False)
-            self.username = config.get("username", "账号用户名")
-            self.password = config.get("password", "密码")
-            self.delay = config.get("delay", 600)
-            self.maxRunHours = config.get("maxRunHours", -1)
-            self.disWatchMatches = config.get("disWatchMatches", [])
-            self.connectorDropsUrl = config.get("connectorDropsUrl", "")
-            self.platForm = config.get("platForm", "windows")
-            self.debug = config.get("debug", False)
-            self.proxy = config.get("proxy", "")
-            self.desktopNotify = config.get("desktopNotify", False)
-            self.closeStream = config.get("closeStream", False)
-            self.sleepPeriod = config.get("sleepPeriod", [""])
-            self.countDrops = config.get("countDrops", True)
-            self.chromePath = config.get("chromePath", "")
-            self.userDataDir = config.get("userDataDir", "")
-            self.ignoreBroadCast = config.get("ignoreBroadCast", True)
-            self.language = config.get("language", "zh_CN")
-            self.notifyType = config.get("notifyType", "all")
-            self.autoSleep = config.get("autoSleep", False)
-            self.nickName = config.get("nickName", self.username)
+                configFile = yaml.safe_load(f)
+            self.version = "1.6.2"
+            self.headless = configFile.get("headless", False)
+            self.username = configFile.get("username", "账号用户名")
+            self.password = configFile.get("password", "密码")
+            self.delay = configFile.get("delay", 600)
+            self.maxRunHours = configFile.get("maxRunHours", -1)
+            self.disWatchMatches = configFile.get("disWatchMatches", [])
+            self.connectorDropsUrl = configFile.get("connectorDropsUrl", "")
+            self.platForm = configFile.get("platForm", "windows")
+            self.debug = configFile.get("debug", False)
+            self.proxy = configFile.get("proxy", "")
+            self.desktopNotify = configFile.get("desktopNotify", False)
+            self.closeStream = configFile.get("closeStream", False)
+            self.sleepPeriod = configFile.get("sleepPeriod", [""])
+            self.countDrops = configFile.get("countDrops", True)
+            self.chromePath = configFile.get("chromePath", "")
+            self.userDataDir = configFile.get("userDataDir", "")
+            self.ignoreBroadCast = configFile.get("ignoreBroadCast", True)
+            self.language = configFile.get("language", "zh_CN")
+            self.notifyType = configFile.get("notifyType", "all")
+            self.autoSleep = configFile.get("autoSleep", False)
+            self.nickName = configFile.get("nickName", self.username)
             self.format()
         except (ParserError, KeyError, ScannerError):
-            log.error(
-                "Configuration file format error.\nPlease check if there is single space after colons.\nChange single slash to double in configuration path if there are any.")
+            log.error(_log('配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠'))
             log.error(format_exc())
-            print(
-                "Configuration file format error.\nPlease check if there is single space after colons.\nChange single slash to double in configuration path if there are any.")
-            input("Press Enter to exit")
+            print(_("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", color="red"))
+            input(_log("按回车键退出"))
             os.kill(os.getpid(), 9)
         except Exception:
-            log.error("Config file error")
+            log.error(_log("配置文件错误"))
             log.error(format_exc())
-            print("Config file error")
-            input("Press Enter to exit")
+            print(_("配置文件错误", color="red"))
+            input(_log("按回车键退出"))
             os.kill(os.getpid(), 9)
 
     def format(self):
@@ -68,13 +86,14 @@ class Config:
         if isinstance(self.language, str):
             if self.language not in ["zh_CN", "en_US", "zh_TW"]:
                 self.language = "zh_CN"
-                print(_("语言配置错误,已恢复zh_CN默认值", color="red", lang=self.language))
+                print(_("语言配置错误,已恢复zh_CN默认值", color="red"))
+                log(_log("语言配置错误,已恢复zh_CN默认值"))
                 delimiterLine(color="red")
         self.disWatchMatches = [match.lower() for match in self.disWatchMatches if match != ""]
 
         if self.userDataDir == "" and self.username == "账号用户名" or self.password == "密码":
-            self.log.error(_log("配置文件中没有账号密码信息", lang=self.language))
-            print(_("配置文件中没有账号密码信息", color="red", lang=self.language))
+            log.error(_log("配置文件中没有账号密码信息"))
+            print(_("配置文件中没有账号密码信息", color="red"))
             delimiterLine(color="red")
 
         if isinstance(self.headless, str):
@@ -89,7 +108,8 @@ class Config:
             try:
                 self.delay = int(self.delay)
             except ValueError:
-                print(_("检查间隔配置错误,已恢复默认值", color="red", lang=self.language))
+                print(_("检查间隔配置错误,已恢复默认值", color="red"))
+                log(_log("检查间隔配置错误,已恢复默认值"))
                 delimiterLine(color="red")
                 self.delay = 600
 
@@ -120,28 +140,33 @@ class Config:
                 for period in self.sleepPeriod:
                     sleepPeriod = period.split("-")
                     if len(sleepPeriod) != 2:
-                        print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                        print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red")}')
+                        log(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
                         delimiterLine(color="red")
                         afterFormat.append("")
                     else:
                         try:
                             if int(sleepPeriod[0]) > int(sleepPeriod[1]):
-                                print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                                print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red")}')
+                                log(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
                                 delimiterLine(color="red")
                                 afterFormat.append("")
                             elif int(sleepPeriod[0]) < 0 or int(sleepPeriod[1]) > 24:
-                                print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                                print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red")}')
+                                log(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
                                 delimiterLine(color="red")
                                 afterFormat.append("")
                             else:
                                 afterFormat.append(period)
                         except ValueError:
-                            print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language)}')
+                            print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red")}')
+                            log(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
                             delimiterLine(color="red")
                             afterFormat.append("")
                 self.sleepPeriod = afterFormat
             else:
-                print(_("睡眠时间段配置错误,已恢复默认值", color="red", lang=self.language))
+                print(_("睡眠时间段配置错误,已恢复默认值", color="red"))
+                log(_log("睡眠时间段配置错误,已恢复默认值"))
                 delimiterLine(color="red")
                 self.sleepPeriod = [""]
         if isinstance(self.maxRunHours, str):
@@ -151,7 +176,8 @@ class Config:
                 try:
                     self.maxRunHours = int(self.maxRunHours)
                 except ValueError:
-                    print(_("最大运行时间配置错误,已恢复默认值", color="red", lang=self.language))
+                    print(_("最大运行时间配置错误,已恢复默认值", color="red"))
+                    log(_log("最大运行时间配置错误,已恢复默认值"))
                     delimiterLine(color="red")
                     self.maxRunHours = -1
         if isinstance(self.debug, str):
@@ -162,7 +188,8 @@ class Config:
             else:
                 self.debug = False
         if not isinstance(self.proxy, str):
-            print(_("代理配置错误,已恢复默认值", color="red", lang=self.language))
+            print(_("代理配置错误,已恢复默认值", color="red"))
+            log(_log("代理配置错误,已恢复默认值"))
             delimiterLine(color="red")
             self.proxy = ""
         if isinstance(self.countDrops, str):
@@ -173,11 +200,13 @@ class Config:
             else:
                 self.countDrops = False
         if not isinstance(self.chromePath, str):
-            print(_("chrome路径配置错误,已恢复默认值", color="red", lang=self.language))
+            print(_("chrome路径配置错误,已恢复默认值", color="red"))
+            log(_log("chrome路径配置错误,已恢复默认值"))
             delimiterLine(color="red")
             self.chromePath = ""
         if not isinstance(self.userDataDir, str):
-            print(_("用户数据userDataDir路径配置错误,已恢复默认值", color="red", lang=self.language))
+            print(_("用户数据userDataDir路径配置错误,已恢复默认值", color="red"))
+            log(_log("用户数据userDataDir路径配置错误,已恢复默认值"))
             delimiterLine(color="red")
             self.userDataDir = ""
         if isinstance(self.ignoreBroadCast, str):
@@ -189,11 +218,13 @@ class Config:
                 self.ignoreBroadCast = True
         if isinstance(self.notifyType, str):
             if self.notifyType not in ["all", "drops", "error"]:
-                print(_("通知类型配置错误,已恢复默认值", color="red", lang=self.language))
+                print(_("通知类型配置错误,已恢复默认值", color="red"))
+                log(_log("通知类型配置错误,已恢复默认值"))
                 delimiterLine(color="red")
                 self.notifyType = "all"
         else:
-            print(_("通知类型配置错误,已恢复默认值", color="red", lang=self.language))
+            print(_("通知类型配置错误,已恢复默认值", color="red"))
+            log(_log("通知类型配置错误,已恢复默认值"))
             delimiterLine(color="red")
             self.notifyType = "all"
         if isinstance(self.autoSleep, str):
@@ -204,23 +235,17 @@ class Config:
             else:
                 self.autoSleep = False
         if self.countDrops is False and self.connectorDropsUrl != "":
-            print(_("提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭", color="yellow", lang=self.language))
+            print(_("提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭", color="yellow"))
+            log(_log("提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭"))
             delimiterLine(color="red")
 
         if self.nickName == "":
             self.nickName = self.username
 
-    def __findConfigFile(self, configPath):
-        """Find the configuration file at the given path.
 
-        Args:
-            configPath (str): The path to the configuration file.
-
-        Returns:
-            Optional[Path]: The path to the configuration file if it exists, else None.
-        """
-        configPath = Path(configPath)
-        if configPath.exists():
-            return configPath
-        else:
-            return None
+parser = argparse.ArgumentParser(
+    prog='EsportsHelper.exe', description='EsportsHelper help you to watch matches')
+parser.add_argument('-c', '--config', dest="configPath", default="./config.yaml",
+                    help='config file path')
+args = parser.parse_args()
+config = Config(args.configPath)
