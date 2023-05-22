@@ -248,8 +248,12 @@ class Rewards:
                     by=By.CSS_SELECTOR, value="div[class=reward] > div[class=image] > img[class=img]").get_attribute("src")
             except Exception:
                 dropItemImg = ""
-            closeButton = self.driver.find_element(
-                by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.close")
+            try:
+                closeButton = self.wait.until(ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, "div.RewardsDropsOverlay > div.close")))
+            except Exception:
+                closeButton = self.wait.until(ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, "div.stats > div:nth-child(2) > div.number")))
             closeButton.click()
             return poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg
         except Exception:
