@@ -23,7 +23,9 @@ def init():
     """
     Initialize the program by creating a webdriver, setting the window size, opening the Lolesports webpage, and switching the language to English.
     """
+
     global driver
+
     # Generate webdriver
     try:
         driver = Webdriver().createWebdriver()
@@ -31,8 +33,8 @@ def init():
         driver = None
         log.error(format_exc())
         print(_("生成WEBDRIVER失败!", color="red"))
-        print(_("无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开",
-                color="red"))
+        print(_("无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试", color="red"))
+        print(_("或可以尝试用管理员方式打开", color="red"))
         print(_("如果还不行请尝试重装谷歌浏览器", color="red"))
         input(_log("按回车键退出"))
         sysQuit(driver)
@@ -40,7 +42,8 @@ def init():
         driver = None
         log.error(format_exc())
         print(_("生成WEBDRIVER失败!", color="red"))
-        print(_("是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试", color="red"))
+        print(_("是否有谷歌浏览器?", color="red"))
+        print(_("是否打开着谷歌浏览器?请关闭后再次尝试", color="red"))
         print(_("如果还不行请尝试重装谷歌浏览器", color="red"))
         input(_log("按回车键退出"))
         sysQuit(driver)
@@ -48,7 +51,8 @@ def init():
         driver = None
         log.error(format_exc())
         print(_("生成WEBDRIVER失败!", color="red"))
-        print(_("是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用", color="red"))
+        print(_("是否有谷歌浏览器?", color="red"))
+        print(_("是不是网络问题?请检查VPN节点是否可用", color="red"))
         print(_("如果还不行请尝试重装谷歌浏览器", color="red"))
         input(_log("按回车键退出"))
         sysQuit(driver)
@@ -119,7 +123,7 @@ def login():
 
 
 def watch():
-    Match(driver=driver).watchMatches(delay=config.delay, maxRunHours=config.maxRunHours)
+    Match(driver=driver).watchMatches()
 
 
 def main():
@@ -148,6 +152,6 @@ if __name__ == '__main__':
     try:
         main()
     except (KeyboardInterrupt, SystemExit):
-        sysQuit(driver, "Exit")
+        sysQuit(driver, _log("程序被终止"))
     except Exception:
         sysQuit(driver, format_exc())

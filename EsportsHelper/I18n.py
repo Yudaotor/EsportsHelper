@@ -8,10 +8,11 @@ class I18n:
         self.language = lang
 
     enUSI18n = {
-        "无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开": "The latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.\nYou can also try to launch the program as an administrator",
-        "是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试": "Is Google Chrome installed?\nIs Google Chrome currently open? Please close it and try again",
-        "是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用": "Is Google Chrome installed?\nIs there a network problem? Check VPN availability if one connected",
+        "无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试": "The latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.",
+        "是否有谷歌浏览器?": "Is Google Chrome installed?",
+        "是否打开着谷歌浏览器?请关闭后再次尝试": "Is Google Chrome running?Please close it and try again.",
         "生成WEBDRIVER失败!": "WebDriver generation failure!",
+        "是不是网络问题?请检查VPN节点是否可用": "Is there a network problem? Check VPN availability if one connected",
         "无法打开Lolesports网页，网络问题，将于3秒后退出...": "Network problem: cannot open LolEsports website. Exiting in 3 seconds...",
         "自动登录失败,检查网络和账号密码": "Automatic login failed. Please check the network availability and account credentials.",
         "登录超时,检查网络或窗口是否被覆盖": "Login timeout. Please check the network availability or if the window is covered.",
@@ -138,12 +139,15 @@ class I18n:
         "如果还不行请尝试重装谷歌浏览器": "If it still doesn't work, try reinstalling Google Chrome.",
         "找不到配置文件": "Configuration file not found.",
         "配置文件错误": "Configuration file error.",
+        "或可以尝试用管理员方式打开": "Or try opening it as an administrator.",
+        "程序被终止": "Program terminated.",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
-        '无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试\n或可以尝试用管理员方式打开': '無法找到最新版谷歌瀏覽器!如沒有下載或不是最新版請檢查好再次嘗試\n或可以嘗試用管理員方式開啟',
-        '是否有谷歌浏览器?\n是否打开着谷歌浏览器?请关闭后再次尝试': '是否有谷歌瀏覽器?\n是否開啟著谷歌瀏覽器?請關閉後再次嘗試',
-        '是否有谷歌浏览器?\n是不是网络问题?请检查VPN节点是否可用': '是否有谷歌瀏覽器?\n是不是網路問題?請檢查VPN節點是否可用',
+        '无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试': '無法找到最新版谷歌瀏覽器!如沒有下載或不是最新版請檢查好再次嘗試',
+        '是否有谷歌浏览器?': '是否有谷歌瀏覽器?',
+        "是不是网络问题?请检查VPN节点是否可用": "是不是網路問題?請檢查VPN節點是否可用",
+        "是否打开着谷歌浏览器?请关闭后再次尝试": "是否開啟著谷歌瀏覽器?請關閉後再次嘗試",
         '无法打开Lolesports网页，网络问题，将于3秒后退出...': '無法開啟Lolesports網頁，網路問題，將於3秒後退出...',
         '自动登录失败,检查网络和账号密码': '自動登入失敗,檢查網路和帳號密碼',
         '好嘞 登录成功': '好ㄉ 登入成功',
@@ -270,6 +274,8 @@ class I18n:
         "无法登录，账号密码可能错误或者网络出现问题": "無法登入，帳號密碼可能錯誤或者網路出現問題",
         "如果还不行请尝试重装谷歌浏览器": "如果還不行請嘗試重裝谷歌瀏覽器",
         "找不到配置文件": "找不到配置檔案",
+        "或可以尝试用管理员方式打开": "或可以嘗試用管理員方式打開",
+        "程序被终止": "程式被終止",
     }
 
     def install(self, lang):

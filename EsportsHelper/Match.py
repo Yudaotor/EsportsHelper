@@ -41,21 +41,16 @@ class Match:
         self.nextMatchHour = None
         self.nextMatchDay = None
 
-    def watchMatches(self, delay, maxRunHours):
+    def watchMatches(self):
         """
            Watch live matches and earn rewards.
-
-           Args:
-               delay (int): Delay time between each check (in seconds).
-               maxRunHours (int): The maximum number of hours to run the script. If set to -1, the script will run indefinitely.
-
         """
         try:
             sleepFlag = False
             isSleep = False
             self.currentWindows = {}
             self.mainWindow = self.driver.current_window_handle
-            maxRunSecond = maxRunHours * 3600
+            maxRunSecond = config.maxRunHours * 3600
             startTimePoint = time.time()
             endTimePoint = startTimePoint + maxRunSecond
             if self.config.countDrops and sleepFlag is False:
@@ -66,13 +61,13 @@ class Match:
                 self.sleepBeginList, self.sleepEndList = getSleepPeriod()
             delimiterLine()
             # 循环观赛
-            while maxRunHours < 0 or time.time() < endTimePoint:
+            while config.maxRunHours < 0 or time.time() < endTimePoint:
                 sleep(1)
                 self.log.info(_log("开始检查..."))
                 print(_("开始检查...", color="green"))
                 self.driver.switch_to.window(self.mainWindow)
                 # Random numbers, used for random delay
-                randomDelay = randint(int(delay * 0.08), int(delay * 0.15))
+                randomDelay = randint(int(config.delay * 0.08), int(config.delay * 0.15))
                 newDelay = randomDelay * 10
                 nowTimeHour = int(time.localtime().tm_hour)
                 nowTimeDay = int(time.localtime().tm_mday)
@@ -136,7 +131,7 @@ class Match:
                                 newDelay = 3599
                             else:
                                 randomDelay = randint(
-                                    int(delay * 0.08), int(delay * 0.15))
+                                    int(config.delay * 0.08), int(config.delay * 0.15))
                                 newDelay = randomDelay * 10
                             isSleep = True
                             sleepEndTime = sleepEnd
@@ -253,13 +248,13 @@ class Match:
                 print(
                     f"{_('下次检查在:', color='bold yellow')} [cyan]"
                     f"{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
-                if maxRunHours != -1:
+                if config.maxRunHours != -1:
                     print(
                         f"{_('预计结束程序时间:', color='green')} [cyan]"
                         f"{time.strftime('%H:%M', time.localtime(endTimePoint))}")
                 delimiterLine()
                 sleep(newDelay)
-            if time.time() >= endTimePoint and maxRunHours != -1 and self.config.platForm == "windows":
+            if time.time() >= endTimePoint and config.maxRunHours != -1 and self.config.platForm == "windows":
                 self.log.info(_log("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作"))
                 print(_("程序设定运行时长已到，将于60秒后关机,请及时做好准备工作", color="yellow"))
                 os.system("shutdown -s -t 60")
