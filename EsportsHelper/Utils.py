@@ -1,4 +1,4 @@
-import sys
+import os
 from time import sleep, strftime
 from traceback import format_exc
 
@@ -263,9 +263,10 @@ def sysQuit(driver=None, e=None):
     sleep(1)
     if driver:
         driver.quit()
-    log.error(e)
+    if e:
+        log.error(e)
     log.info("------Quit------")
-    sys.exit()
+    os.kill(os.getpid(), 9)
 
 
 def getMatchName(url: str) -> str:
