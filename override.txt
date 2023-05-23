@@ -1,3 +1,5 @@
+championTeam: JDG,
+scheduleUrl: https://lolesports.com/schedule?leagues=lcs!north_american_challenger_league!lcs_challengers_qualifiers!college_championship!cblol-brazil!lck!lcl!lco!lec!ljl-japan!lla!lpl!pcs!turkiye-sampiyonluk-ligi!vcs!msi!worlds!all-star!emea_masters!lfl!nlc!elite_series!liga_portuguesa!pg_nationals!ultraliga!superliga!primeleague!hitpoint_masters!esports_balkan_league!greek_legends!arabian_league!lck_academy!ljl_academy!lck_challengers_league!cblol_academy!north_regional_league!south_regional_league!tft_esports,
 https://lolesports.com/live/lco|https://lolesports.com/live/lco/lco,
 https://lolesports.com/live/lpl|https://lolesports.com/live/lpl/lpl,
 https://lolesports.com/live/lck|https://lolesports.com/live/lck/lck,
