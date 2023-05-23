@@ -141,6 +141,8 @@ class I18n:
         "配置文件错误": "Configuration file error.",
         "或可以尝试用管理员方式打开": "Or try opening it as an administrator.",
         "程序被终止": "Program terminated.",
+        "获取地址URL失败": "Failed to get URL.",
+        "获取冠军队伍失败": "Failed to get champion team.",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -276,6 +278,8 @@ class I18n:
         "找不到配置文件": "找不到配置檔案",
         "或可以尝试用管理员方式打开": "或可以嘗試用管理員方式打開",
         "程序被终止": "程式被終止",
+        "获取地址URL失败": "獲取地址URL失敗",
+        "获取冠军队伍失败": "獲取冠軍隊伍失敗",
     }
 
     def install(self, lang):

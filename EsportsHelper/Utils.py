@@ -12,6 +12,7 @@ from retrying import retry
 from rich import print
 from EsportsHelper.Logger import log
 from EsportsHelper.I18n import i18n
+
 _ = i18n.getText
 _log = i18n.getLog
 
@@ -21,6 +22,17 @@ def getGithubFile():
         overrides = {}
         championTeam = ""
         scheduleUrl = ""
+        defaultScheduleUrl = "https://lolesports.com/schedule?" \
+                             "leagues=lcs,north_american_challenger_league," \
+                             "lcs_challengers_qualifiers,college_championship," \
+                             "cblol-brazil,lck,lcl,lco,lec,ljl-japan,lla,lpl,pcs," \
+                             "turkiye-sampiyonluk-ligi,vcs,msi,worlds,all-star," \
+                             "emea_masters,lfl,nlc,elite_series,liga_portuguesa," \
+                             "pg_nationals,ultraliga,superliga,primeleague," \
+                             "hitpoint_masters,esports_balkan_league," \
+                             "greek_legends,arabian_league,lck_academy," \
+                             "ljl_academy,lck_challengers_league,cblol_academy," \
+                             "north_regional_league,south_regional_league,tft_esports"
         req = requests.session()
         headers = {'Content-Type': 'text/plain; charset=utf-8',
                    'Connection': 'close'}
@@ -44,6 +56,11 @@ def getGithubFile():
                 elif "scheduleUrl: " in line:
                     scheduleUrl = line[14:]
             log.info(_log("获取参数文件成功"))
+            if championTeam == "":
+                log.info(_log("获取冠军队伍失败"))
+            if scheduleUrl == "":
+                scheduleUrl = defaultScheduleUrl
+                log.info(_log("获取地址URL失败"))
             if scheduleUrl:
                 scheduleUrl = scheduleUrl.replace("!", ",")
 
