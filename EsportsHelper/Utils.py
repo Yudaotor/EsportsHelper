@@ -10,11 +10,54 @@ from EsportsHelper.VersionManager import VersionManager, checkVersion
 from plyer import notification
 from retrying import retry
 from rich import print
-from EsportsHelper.Logger import delimiterLine
 from EsportsHelper.Logger import log
 from EsportsHelper.I18n import i18n
 _ = i18n.getText
 _log = i18n.getLog
+
+
+def getGithubFile():
+    try:
+        overrides = {}
+        championTeam = ""
+        scheduleUrl = ""
+        req = requests.session()
+        headers = {'Content-Type': 'text/plain; charset=utf-8',
+                   'Connection': 'close'}
+        try:
+            remoteGithubFile = req.get(
+                "https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
+        except Exception:
+            log.error(_log("从Github获取参数文件失败, 将尝试从Gitee获取"))
+            print(_("从Github获取参数文件失败, 将尝试从Gitee获取", color="red"))
+            remoteGithubFile = req.get(
+                "https://gitee.com/yudaotor/EsportsHelper/raw/main/override.txt", headers=headers)
+        if remoteGithubFile.status_code == 200:
+            infos = remoteGithubFile.text.split(",")
+            for line in infos:
+                urls = line.split("|")
+                if len(urls) == 2:
+                    urls[0] = urls[0][1:]
+                    overrides[urls[0]] = urls[1]
+                elif "championTeam: " in line:
+                    championTeam = line[14:]
+                elif "scheduleUrl: " in line:
+                    scheduleUrl = line[14:]
+            log.info(_log("获取参数文件成功"))
+            if scheduleUrl:
+                scheduleUrl = scheduleUrl.replace("!", ",")
+
+            return overrides, championTeam, scheduleUrl
+        else:
+            print(_("获取参数文件失败", color="red"))
+            log.error(_log("获取参数文件失败"))
+            input(_log("按回车键退出"))
+            sysQuit(e=_log("获取参数文件失败"))
+    except Exception:
+        log.error(_log("获取参数文件失败"))
+        print(_("获取参数文件失败", color="red"))
+        input(_log("按回车键退出"))
+        sysQuit(e=_log("获取参数文件失败"))
 
 
 class Utils:
@@ -120,7 +163,15 @@ class Utils:
         githubUrl = "https://github.com/Yudaotor/EsportsHelper"
         checkVersion()
         if self.config.language == "zh_CN":
-            delimiterLine()
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f">_<"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f">_<[/bold yellow]"
+            )
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]        "
                   f"感谢使用 [cyan]电竞助手[/cyan] v{version}!        "
                   f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
@@ -139,10 +190,26 @@ class Utils:
             print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]  "
                   f"如需关闭请勿直接右上角X关闭，请按Ctrl+C来关闭. "
                   f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
-            delimiterLine()
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f">_<"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f">_<[/bold yellow]"
+            )
             print()
         elif self.config.language == "en_US":
-            delimiterLine()
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f">_<"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f">_<[/bold yellow]"
+            )
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow] "
                   f"Thanks for using [cyan]EsportsHelper[/cyan] v{version}!  "
                   f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
@@ -155,10 +222,26 @@ class Utils:
             print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]      "
                   f"If you like it, please give me a star      "
                   f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
-            delimiterLine()
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f">_<"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f">_<[/bold yellow]"
+            )
             print()
         elif self.config.language == "zh_TW":
-            delimiterLine()
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f">_<"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f">_<[/bold yellow]"
+            )
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]        "
                   f"感謝使用 [cyan]電競助手[/cyan] v{version}!        "
                   f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
@@ -177,52 +260,16 @@ class Utils:
             print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]  "
                   f"如需關閉請勿直接右上角X關閉，請按Ctrl+C來關閉. "
                   f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
-            delimiterLine()
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f">_<"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f">_<[/bold yellow]"
+            )
             print()
-
-    def getOverrideFile(self):
-        """
-        Function Name: getOverrideFile
-        Output: Dictionary containing overrides from a remote file
-        Purpose: Retrieve overrides from a remote file and return them as a dictionary
-        """
-        try:
-            OVERRIDES = {}
-            req = requests.session()
-            headers = {'Content-Type': 'text/plain; charset=utf-8',
-                       'Connection': 'close'}
-            try:
-                remoteOverrideFile = req.get(
-                    "https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
-            except Exception:
-                log.error(_log("从github获取override文件失败, 将尝试从gitee获取"))
-                print(_("从github获取override文件失败, 将尝试从gitee获取", color="red"))
-                remoteOverrideFile = req.get(
-                    "https://gitee.com/yudaotor/EsportsHelper/raw/main/override.txt", headers=headers)
-            if remoteOverrideFile.status_code == 200:
-                override = remoteOverrideFile.text.split(",")
-                first = True
-                for o in override:
-                    temp = o.split("|")
-                    if len(temp) == 2:
-                        if first:
-                            first = False
-                        else:
-                            temp[0] = temp[0][1:]
-                        OVERRIDES[temp[0]] = temp[1]
-                log.info(_log("获取override文件成功"))
-                print(_("获取override文件成功", color="green"))
-                return OVERRIDES
-            else:
-                print(_("获取override文件失败", color="red"))
-                log.error(_log("获取override文件失败"))
-                input(_log("按回车键退出"))
-                sysQuit(e=_log("获取override文件失败"))
-        except Exception:
-            log.error(_log("获取override文件失败"))
-            print(_("获取override文件失败", color="red"))
-            input(_log("按回车键退出"))
-            sysQuit(e=_log("获取override文件失败"))
 
 
 def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropLocale):
@@ -299,27 +346,13 @@ def getLolesportsWeb(driver) -> None:
     - driver (selenium.webdriver.remote.webdriver.WebDriver): The driver to use for accessing the Lolesports website
     """
     try:
-        driver.get(
-            "https://lolesports.com/schedule?leagues=msi,lcs,north_american_challenger_league,"
-            "lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,"
-            "ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,emea_masters,"
-            "lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,"
-            "hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,"
-            "ljl_academy,lck_challengers_league,cblol_academy,north_regional_league,"
-            "south_regional_league,tft_esports")
+        driver.get(SCHEDULE_URL)
 
     except Exception:
         print(_("获取LoLEsports网站失败，正在重试...", color="red"))
         log.error(_log("获取LoLEsports网站失败，正在重试..."))
         log.error(format_exc())
-        driver.get(
-            "https://lolesports.com/schedule?leagues=msi,lcs,north_american_challenger_league,"
-            "lcs_challengers_qualifiers,college_championship,cblol-brazil,lck,lcl,lco,lec,"
-            "ljl-japan,lla,lpl,pcs,turkiye-sampiyonluk-ligi,vcs,worlds,all-star,emea_masters,"
-            "lfl,nlc,elite_series,liga_portuguesa,pg_nationals,ultraliga,superliga,primeleague,"
-            "hitpoint_masters,esports_balkan_league,greek_legends,arabian_league,lck_academy,"
-            "ljl_academy,lck_challengers_league,cblol_academy,north_regional_league,"
-            "south_regional_league,tft_esports")
+        driver.get(SCHEDULE_URL)
 
 
 def getSleepPeriod():
@@ -378,3 +411,6 @@ def getMatchTeams(teams):
     else:
         teams = _log("出错, 未知")
     return teams
+
+
+OVERRIDES, CHAMPION_TEAM, SCHEDULE_URL = getGithubFile()

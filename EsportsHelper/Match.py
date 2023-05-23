@@ -8,7 +8,7 @@ from EsportsHelper.Logger import log
 from EsportsHelper.Config import config
 from EsportsHelper.Rewards import Rewards
 from EsportsHelper.Twitch import Twitch
-from EsportsHelper.Utils import (Utils,
+from EsportsHelper.Utils import (Utils, OVERRIDES,
                                  getLolesportsWeb,
                                  getMatchName, sysQuit,
                                  getSleepPeriod)
@@ -35,7 +35,7 @@ class Match:
         self.currentWindows = {}
         self.rewardWindow = None
         self.mainWindow = self.driver.current_window_handle
-        self.OVERRIDES = self.utils.getOverrideFile()
+        self.OVERRIDES = OVERRIDES
         self.sleepBeginList = []
         self.sleepEndList = []
         self.nextMatchHour = None
