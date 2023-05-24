@@ -46,6 +46,7 @@ class YouTube:
             self.driver.switch_to.default_content()
             return True
         except Exception:
+            self.log.error(_log("Youtube: 检查直播发生错误"))
             self.log.error(format_exc())
             self.driver.switch_to.default_content()
             return False
@@ -114,6 +115,8 @@ class YouTube:
             self.driver.switch_to.default_content()
             return True
         except Exception:
+            self.driver.switch_to.default_content()
+            self.log.error(_log("Youtube: 设置清晰度时发生错误"))
             self.log.error(format_exc())
             self.utils.debugScreen(self.driver, lint="youtubeQuality")
             return False

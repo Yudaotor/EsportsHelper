@@ -143,6 +143,10 @@ class I18n:
         "程序被终止": "Program terminated.",
         "获取地址URL失败": "Failed to get URL.",
         "获取冠军队伍失败": "Failed to get champion team.",
+        "Youtube: 设置清晰度时发生错误": "Youtube: Error setting quality.",
+        "Youtube: 检查直播发生错误": "Youtube: Error checking live broadcast.",
+        "Twitch: 检查直播发生失败": "Twitch: Error checking live broadcast.",
+        "Twitch: 设置清晰度发生错误": "Twitch: Error setting quality.",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -280,6 +284,10 @@ class I18n:
         "程序被终止": "程式被終止",
         "获取地址URL失败": "獲取地址URL失敗",
         "获取冠军队伍失败": "獲取冠軍隊伍失敗",
+        "Youtube: 设置清晰度时发生错误": "Youtube: 設定清晰度時發生錯誤",
+        "Youtube: 检查直播发生错误": "Youtube: 檢查直播發生錯誤",
+        "Twitch: 检查直播发生失败": "Twitch: 檢查直播發生失敗",
+        "Twitch: 设置清晰度发生错误": "Twitch: 設定清晰度發生錯誤",
     }
 
     def install(self, lang):

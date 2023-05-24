@@ -45,6 +45,7 @@ class Twitch:
             self.driver.switch_to.default_content()
             return True
         except Exception:
+            self.log.error(_log("Twitch: 设置清晰度发生错误"))
             self.log.error(format_exc())
         self.driver.switch_to.default_content()
         return False
@@ -82,6 +83,7 @@ class Twitch:
             self.driver.switch_to.default_content()
             return True
         except Exception:
+            self.log.error(_log("Twitch: 检查直播发生失败"))
             self.log.error(format_exc())
         self.driver.switch_to.default_content()
         return False
@@ -104,7 +106,8 @@ class Twitch:
             self.log.info(_log("Twitch: 解除静音成功"))
         except Exception:
             print(_("Twitch: 解除静音失败", color="red"))
-            self.log.info(_log("Twitch: 解除静音失败"))
+            self.log.error(_log("Twitch: 解除静音失败"))
+            self.log.error(format_exc())
 
     def playStream(self, playButton) -> None:
         """
@@ -122,4 +125,5 @@ class Twitch:
             print(_("Twitch: 解除暂停成功", color="green"))
         except Exception:
             print(_("Twitch: 解除暂停失败", color="red"))
-            self.log.info(_log("Twitch: 解除暂停失败"))
+            self.log.error(_log("Twitch: 解除暂停失败"))
+            self.log.error(format_exc())
