@@ -26,10 +26,9 @@ class I18n:
         "开始重试": "Restarting.",
         "配置文件找不到": "Configuration file not found.",
         "按回车键退出": "Press Enter to exit.",
-        "配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠": "Configuration file format error.\nPlease check if there are Chinese characters and single spaces after colons.\nChange single slash to double in configuration path if there are any.",
         "配置文件中没有账号密码信息": "There are no account credentials in the configuration file.",
         "检查间隔配置错误,已恢复默认值": "Incorrect interval configuration. The default value has been restored.",
-        "睡眠时间段配置错误,已恢复默认值": "Incorrect sleep time preiod. The default value has been restored.",
+        "睡眠时间段配置错误,已恢复默认值": "Incorrect sleep time period. The default value has been restored.",
         "最大运行时间配置错误,已恢复默认值": "The maximum runtime set incorrectly. The default value has been restored.",
         "代理配置错误,已恢复默认值": "Incorrect proxy configuration. The default setting has been restored.",
         "用户数据userDataDir路径配置错误,已恢复默认值": "Incorrect UserDataDirectory path configuration. The default setting has been restored.",
@@ -147,6 +146,9 @@ class I18n:
         "Youtube: 检查直播发生错误": "Youtube: Error checking live broadcast.",
         "Twitch: 检查直播发生失败": "Twitch: Error checking live broadcast.",
         "Twitch: 设置清晰度发生错误": "Twitch: Error setting quality.",
+        "配置文件格式错误": "Configuration file format error.",
+        '请检查是否存在中文字符以及冒号后面应该有一个空格': 'Please check if there are Chinese characters and there should be a space after the colon.',
+        '配置路径如有单斜杠请改为双斜杠': 'If there is a single slash in the configuration path, change it to a double slash.',
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -166,7 +168,6 @@ class I18n:
         '配置文件找不到': '配置檔案找不到',
         '按回车键退出': '按回車鍵退出',
         "配置文件错误": "配置檔案錯誤",
-        '配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠': '配置檔案格式錯誤,請檢查是否存在中文字元以及冒號後面應該有一個空格,配置路徑如有單斜槓請改為雙斜槓',
         '配置文件中没有账号密码信息': '配置檔案中沒有帳號密碼資訊',
         '检查间隔配置错误,已恢复默认值': '檢查間隔配置錯誤,已恢復預設值',
         '睡眠时间段配置错误,已恢复默认值': '睡眠時間段配置錯誤,已恢復預設值',
@@ -288,6 +289,9 @@ class I18n:
         "Youtube: 检查直播发生错误": "Youtube: 檢查直播發生錯誤",
         "Twitch: 检查直播发生失败": "Twitch: 檢查直播發生失敗",
         "Twitch: 设置清晰度发生错误": "Twitch: 設定清晰度發生錯誤",
+        "配置文件格式错误": "配置檔案格式錯誤",
+        '请检查是否存在中文字符以及冒号后面应该有一个空格': '請檢查是否存在中文字元以及冒號後面應該有一個空格',
+        '配置路径如有单斜杠请改为双斜杠': '配置路徑如有單斜線請改為雙斜線',
     }
 
     def install(self, lang):
@@ -339,9 +343,10 @@ args = parser.parse_args()
 try:
     with open(args.configPath, "r", encoding='utf-8') as f:
         configFile = yaml.safe_load(f)
-        language = configFile.get("language", "zh_CN")
+    language = configFile.get("language", "zh_CN")
 except Exception:
     language = "zh_CN"
+    print("Fail: use zh_CN")
 
 i18n = I18n()
 i18n.install(language)

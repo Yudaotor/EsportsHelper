@@ -64,9 +64,13 @@ class Config:
             self.nickName = configFile.get("nickName", self.username)
             self.format()
         except (ParserError, KeyError, ScannerError):
-            log.error(_log('配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠'))
+            log.error(_log('配置文件格式错误'))
+            log.error(_log('请检查是否存在中文字符以及冒号后面应该有一个空格'))
+            log.error(_log('配置路径如有单斜杠请改为双斜杠'))
             log.error(format_exc())
-            print(_("配置文件格式错误,请检查是否存在中文字符以及冒号后面应该有一个空格,配置路径如有单斜杠请改为双斜杠", color="red"))
+            print(_("配置文件格式错误", color="red"))
+            print(_("请检查是否存在中文字符以及冒号后面应该有一个空格", color="red"))
+            print(_("配置路径如有单斜杠请改为双斜杠", color="red"))
             input(_log("按回车键退出"))
             os.kill(os.getpid(), 9)
         except Exception:
