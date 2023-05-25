@@ -309,9 +309,9 @@ def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, 
             message=f"BY {eventTitle} GET{dropItem} ON{dropLocale} {unlockedDate}",
             timeout=30
         )
-        log.info("Desktop notification sent successfully")
+        log.info(_log("桌面提醒成功发送"))
     except Exception:
-        log.error("Desktop notification failed")
+        log.error(_log("桌面提醒发送失败"))
         log.error(format_exc())
 
 
@@ -329,7 +329,7 @@ def sysQuit(driver=None, e=None):
         driver.quit()
     if e:
         log.error(e)
-    log.info("------Quit------")
+    log.info(_log("程序退出"))
     os.kill(os.getpid(), 9)
 
 

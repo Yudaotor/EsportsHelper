@@ -37,7 +37,7 @@ class Rewards:
             try:
                 self.wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div[class=status-summary] g")))
             except Exception:
-                pass
+                self.log.error(format_exc())
             rewardImg = self.driver.find_elements(By.CSS_SELECTOR, "div[class=status-summary] g")
             if len(rewardImg) > 0:
                 # Check stream
@@ -391,6 +391,7 @@ class Rewards:
                 try:
                     checkRewardPage(self.driver)
                 except Exception:
+                    self.log.error(format_exc())
                     return -1, ""
                 dropRegion = self.driver.find_elements(
                     by=By.CSS_SELECTOR, value="div.name")

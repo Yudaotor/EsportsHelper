@@ -149,6 +149,9 @@ class I18n:
         "配置文件格式错误": "Configuration file format error.",
         '请检查是否存在中文字符以及冒号后面应该有一个空格': 'Please check if there are Chinese characters and there should be a space after the colon.',
         '配置路径如有单斜杠请改为双斜杠': 'If there is a single slash in the configuration path, change it to a double slash.',
+        "桌面提醒成功发送": "Desktop notification sent successfully.",
+        "桌面提醒发送失败": "Desktop notification failed to send.",
+        "程序退出": "Program exited.",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -292,6 +295,9 @@ class I18n:
         "配置文件格式错误": "配置檔案格式錯誤",
         '请检查是否存在中文字符以及冒号后面应该有一个空格': '請檢查是否存在中文字元以及冒號後面應該有一個空格',
         '配置路径如有单斜杠请改为双斜杠': '配置路徑如有單斜線請改為雙斜線',
+        "桌面提醒成功发送": "桌面提醒成功發送",
+        "桌面提醒发送失败": "桌面提醒發送失敗",
+        "程序退出": "程式退出",
     }
 
     def install(self, lang):
