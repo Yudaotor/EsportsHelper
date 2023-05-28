@@ -38,3 +38,4 @@ https://lolesports.com/live/emea_masters|https://lolesports.com/live/emea_master
 https://lolesports.com/live/tft_esports|https://lolesports.com/live/tft_esports/teamfighttactics,
 https://lolesports.com/live/lcs_challengers_qualifiers|https://lolesports.com/live/lcs_challengers_qualifiers/challengersleague,
 https://lolesports.com/live/msi|https://lolesports.com/live/msi/riotgames,
+https://lolesports.com/live/north_regional_league|https://lolesports.com/live/north_regional_league/lvpnorte,
