@@ -87,8 +87,8 @@ autoSleep: False                              # (推荐)是否自动休眠,默�
 
 ### 不观看赛区的配置详解:
 注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看  
-可以设置一些赛区不观看,防止出现24小时观赛的情况  
-具体赛区名字可以见以下说明:  
+可以设置一些赛区不观看,比如次级联赛等(掉落率很低)  
+具体赛区名字可以见以下说明(冒号后的即为在配置中输入的赛区名)(注意是小写):  
 LPL:lpl  
 LCK:lck  
 LCK_CHALLENGERS_LEAGUE:lck_challengers_league  
