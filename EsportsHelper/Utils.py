@@ -416,18 +416,16 @@ def getMatchTeams(teams):
     """
     Get match teams from stream title
     """
-    if teams and ("|" in teams or "-" in teams):
-        delimiter = "|" if "|" in teams else "-"
-        words = teams.split(delimiter)
-        for word in words:
-            if "vs" in word.lower():
-                teams = word
-                break
-            else:
-                teams = words[0]
+    if not teams or ("|" not in teams and "-" not in teams):
+        return _log("出错, 未知")
+
+    delimiter = "|" if "|" in teams else "-"
+    words = teams.split(delimiter)
+    teamNames = [word for word in words if "vs" in word.lower()]
+    if teamNames:
+        return "".join(teamNames)
     else:
-        teams = _log("出错, 未知")
-    return teams
+        return words[0]
 
 
 OVERRIDES, CHAMPION_TEAM, SCHEDULE_URL = getGithubFile()
