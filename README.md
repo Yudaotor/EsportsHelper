@@ -107,7 +107,7 @@ LJL:ljl-japan
 LJL_ACADEMY:ljl_academy   
 EMEA:european-masters  
 PCS:pcs  
-LFL:lfl  
+La Ligue Française:lfl  
 NLC:nlc  
 HONOR_DIVISION:honor_division  
 VOLCANO_DISCOVER_LEAGUAGE:volcano_discover_league  
