@@ -182,14 +182,17 @@ class Rewards:
                           f"{_('观看异常 重试中...', color='yellow')}")
                     sleep((i + 1) * 30)
                     self.driver.refresh()
+                    sleep(10)
                     if stream == "youtube":
                         if self.youtube.checkYoutubeStream() is False:
                             self.driver.refresh()
+                            sleep(10)
                             self.youtube.setYoutubeQuality()
                             self.youtube.checkYoutubeStream()
                     if stream == "twitch":
                         if self.twitch.checkTwitchStream() is False:
                             self.driver.refresh()
+                            sleep(10)
                             self.twitch.setTwitchQuality()
                             self.twitch.checkTwitchStream()
                 else:
