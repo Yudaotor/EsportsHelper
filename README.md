@@ -71,13 +71,13 @@ language: "zh_CN"                             # 现支持语言"zh_CN","zh_TW","
 nickName: ""                                  # 绰号,为空时默认为username.(增强隐私)  
 disWatchMatches: ["lck", "lpl", "lcs"]        # 不想看的赛区名称，可以在这里添加.(注意,是小写)  
 maxRunHours: -1                               # 负值为一直运行，正值为运行小时, 默认-1
-proxy: "你的代理地址"                          # 代理地址，选填，一般用户不用填。 例子, "socks://127.0.0.1:20173"
-connectorDropsUrl: "你的webhook链接"           # (支持钉钉,Discord,饭碗警告)具体配置方法见此处https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F(%E5%8A%9F%E8%83%BD%E5%BE%85%E6%B5%8B%E8%AF%95
+proxy: "你的代理地址"                          # 代理地址，选填，一般用户不用填,除非你知道你在干什么。 例子, "socks://127.0.0.1:20173"
+connectorDropsUrl: "你的webhook链接"           # (支持钉钉,Discord,饭碗警告)具体配置方法见此处https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F
 platForm: "windows"                           # 使用平台,默认为Windows,如需使用Linux请在此处进行配置  
-closeStream: False                          # 省流模式，默认False，关闭直播间的视频流（未知风险）（有兴趣者自行尝试） 
-desktopNotify: False                        # 系统弹窗提示，默认False
+closeStream: False                            # 省流模式，默认False，关闭直播间的视频流（未知风险）（有兴趣者自行尝试） 
+desktopNotify: False                          # 系统右下角弹窗提示，默认False
 sleepPeriod: ["8-13", "20-23"]                # 休眠时间段，（默认为空）格式为"开始小时-结束小时",在休眠时间段中会关闭观赛网页,待休眠结束后重新打开。区间为左闭合右开。
-ignoreBroadCast: True                         # 设置为False会提前进入直播间，以及将支持某些一直处于转播的赛区直播
+ignoreBroadCast: True                         # 设置为False会提前进入直播间，以及将支持某些一直处于转播的赛区直播(例如TFT)
 userDataDir: "C:\\Users\\xxxxx\\AppData\\Local\\Google\\Chrome\\User Data"  # 例子,其中xxxxx处改为自己电脑的名字,具体教程见https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E6%9C%AC%E5%9C%B0%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98-%E5%85%8D%E8%B4%A6%E5%AF%86%E7%99%BB%E5%BD%95
 chromePath: "X:\\xxxxx\\xx\\Chrome.exe"       # 谷歌浏览器自订路径
 countDrops: True                              # 是否检查掉落数
@@ -87,39 +87,43 @@ autoSleep: False                              # (推荐)是否自动休眠,默�
 
 ### 不观看赛区的配置详解:
 注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看  
-可以设置一些赛区不观看,防止出现24小时观赛的情况  
-具体赛区名字可以见以下说明:  
-lpl:lpl  
-lck:lck  
-lck_challengers_league:lck_challengers_league  
-lec:lec  
-lcs:lcs  
-lco:lco  
-vcs:vcs  
-cblol:cblol  
-cblol_academy:cblol_academy  
-lla:lla  
-ljl:ljl-japan  
-ljl_academy:ljl_academy  
-cblol-brazil:cblol-brazil  
-pcs:pcs  
-honor_division:honor_division  
-volcano_discover_league:volcano_discover_league  
-hitpoint_masters:hitpoint_masters  
-worlds:worlds  
-european-masters:european-masters  
-golden_league:movistar_fiber_golden_league  
-honor_league:honor_league  
-tcl:turkiye-sampiyonluk-ligi  
-nlc:nlc  
-elite_series:elite_series  
-superliga:superliga  
-greek_legends:greek_legends  
-primeleague:primeleague  
-liga_master:liga_master_flo  
-ultraliga:ultraliga  
-claro_gaming_stars_league:claro_gaming_stars_league  
-arabian_league:arabian_league  
-lfl:lfl  
+可以设置一些赛区不观看,比如次级联赛等(掉落率很低)  
+具体赛区名字可以见以下说明(冒号后的即为在配置中输入的赛区名)(注意是小写):  
+LPL:lpl  
+LCK:lck  
+LCK_CHALLENGERS_LEAGUE:lck_challengers_league  
+LEC:lec  
+LCS:lcs  
+TFT:tft_esports  
+LCS_CHALLENGERS_QUALIFIERS:lcs_challengers_qualifiers  
+LCO:lco  
+VCS:vcs  
+MSI:msi  
+WORLDS:worlds  
+CBLOL:cblol  
+CBLOL_ACADEMY:cblol_academy  
+LLA:lla  
+LJL:ljl-japan  
+LJL_ACADEMY:ljl_academy   
+EMEA:european-masters  
+PCS:pcs  
+La Ligue Française:lfl  
+NLC:nlc  
+HONOR_DIVISION:honor_division  
+VOLCANO_DISCOVER_LEAGUAGE:volcano_discover_league  
+HITPOINT_MASTERS:hitpoint_masters  
+GOLDEN_LEAGUE:movistar_fiber_golden_league  
+HONOR_LEAGUE:honor_league  
+TCL:turkiye-sampiyonluk-ligi  
+ELITE_SERIES:elite_series  
+SUPERLIGA:superliga  
+GREEK_LEAGUE:greek_legends  
+PRIMELEAGUE:primeleague  
+LIGA_MASTER:liga_master_flo  
+ULTRALIGA:ultraliga  
+CLARO_GAMING_STARS_LEAGUE:claro_gaming_stars_league  
+ARABIAN_LEAGUE:arabian_league  
+NORTH_REGIONAL_LEAGUE:north_regional_league  
+SOUTH_REGIONAL_LEAGUE:south_regional_league  
 ## By the way
 本项目思路及部分代码来自Poro，感谢。[此处](https://github.com/LeagueOfPoro/EsportsCapsuleFarmer)
