@@ -40,3 +40,4 @@ https://lolesports.com/live/tft_esports|https://lolesports.com/live/tft_esports/
 https://lolesports.com/live/lcs_challengers_qualifiers|https://lolesports.com/live/lcs_challengers_qualifiers/challengersleague,
 https://lolesports.com/live/north_regional_league|https://lolesports.com/live/north_regional_league/lvpnorte,
 https://lolesports.com/live/ultraliga|https://lolesports.com/live/ultraliga/polsatgames2,
+https://lolesports.com/live/south_regional_league|https://lolesports.com/live/south_regional_league/lvpsur,
