@@ -423,7 +423,7 @@ def getMatchTeams(teams):
     words = teams.split(delimiter)
     teamNames = [word for word in words if "vs" in word.lower()]
     if teamNames:
-        return "".join(teamNames)
+        return "-".join(teamNames)[:-1]
     else:
         return words[0]
 

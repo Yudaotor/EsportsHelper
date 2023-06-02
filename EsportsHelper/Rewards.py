@@ -133,6 +133,7 @@ class Rewards:
                 if stream == "twitch":
                     if self.twitch.checkTwitchStream() is False:
                         self.driver.refresh()
+                        sleep(10)
                         self.twitch.setTwitchQuality()
                         self.twitch.checkTwitchStream()
                     self.log.info(
@@ -144,11 +145,13 @@ class Rewards:
                         f"[bold magenta]{match}[/bold magenta] {_('正常观看 可获取奖励', color='green')} ")
                     print(
                         f"--{_('标题: ', color='bold yellow')}"
-                        f"[bold green]{teams}[/bold green] | "
-                        f"{viewerNumber} {_('人观看', color='bold yellow')}")
+                        f"[bold green]{teams}[/bold green]"
+                    )
+                    print(f"--{viewerNumber} {_('人观看', color='bold yellow')}")
                 elif stream == "youtube":
                     if self.youtube.checkYoutubeStream() is False:
                         self.driver.refresh()
+                        sleep(10)
                         self.youtube.setYoutubeQuality()
                         self.youtube.checkYoutubeStream()
                     self.log.info(
