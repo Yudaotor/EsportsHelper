@@ -24,7 +24,7 @@ def getLatestVersion():
             latestTagJson = latestTagResponse.json()
             if "tag_name" in latestTagJson:
                 return str(latestTagJson["tag_name"][1:])
-            print(_("获取最新版本过于频繁, 请过段时间再试", color="red"))
+            print(_("当前IP地址获取最新版本过于频繁, 请过段时间再试", color="red"))
             delimiterLine(color="red")
             log.error(latestTagJson["message"])
             return "0.0.0"
