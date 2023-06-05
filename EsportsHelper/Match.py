@@ -206,6 +206,7 @@ class Match:
                 except Exception:
                     self.log.error(format_exc())
                     self.log.error(_log("无法打开Lolesports网页，网络问题，将于3秒后退出..."))
+                    self.utils.errorNotify(error=_log("无法打开Lolesports网页，网络问题"))
                     print(_("无法打开Lolesports网页，网络问题，将于3秒后退出...", color="red"))
                     sysQuit(self.driver, _log(
                         "无法打开Lolesports网页，网络问题，将于3秒后退出..."))
