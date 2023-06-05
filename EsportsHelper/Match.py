@@ -477,7 +477,7 @@ class Match:
             self.log.error(format_exc())
         else:
             self.log.info(_log("视频流关闭成功."))
-            print(f'--{_("视频流关闭成功.", color="red")}')
+            print(f'--{_("视频流关闭成功.", color="green")}')
 
     def checkNextMatch(self):
         """
