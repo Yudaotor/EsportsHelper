@@ -41,3 +41,4 @@ https://lolesports.com/live/lcs_challengers_qualifiers|https://lolesports.com/li
 https://lolesports.com/live/north_regional_league|https://lolesports.com/live/north_regional_league/lvpnorte,
 https://lolesports.com/live/ultraliga|https://lolesports.com/live/ultraliga/polsatgames2,
 https://lolesports.com/live/south_regional_league|https://lolesports.com/live/south_regional_league/lvpsur,
+https://lolesports.com/live/liga_portuguesa|https://lolesports.com/live/liga_portuguesa/inygontv1,
