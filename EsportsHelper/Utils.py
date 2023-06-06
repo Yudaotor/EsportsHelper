@@ -402,12 +402,16 @@ def checkRewardPage(driver):
             wait.until(ec.presence_of_element_located(
                 (By.XPATH, "//div[text()='NO DROPS YET']")))
         except Exception:
-            driver.refresh()
-            print(_("获取reward网站失败，正在重试...", color="red"))
-            log.error(_log("获取reward网站失败，正在重试..."))
-            log.error(format_exc())
-            wait.until(ec.presence_of_element_located(
-                (By.CSS_SELECTOR, "div.name")))
+            if len(driver.find_elements(By.CSS_SELECTOR, "div.InformBubble.error")) > 0:
+                print(f'--{_("Riot原因,reward页面出现异常无法正常加载", color="red")}')
+                log.error(_log("Riot原因,该页面出现异常无法正常加载"))
+            else:
+                driver.refresh()
+                print(f'--{_("获取reward网站失败，正在重试...", color="red")}')
+                log.error(_log("获取reward网站失败，正在重试..."))
+                log.error(format_exc())
+                wait.until(ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, "div.name")))
         else:
             return
 

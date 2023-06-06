@@ -147,7 +147,7 @@ class Rewards:
                         f"--{_('标题: ', color='bold yellow')}"
                         f"[bold green]{teams}[/bold green]"
                     )
-                    print(f"--{viewerNumber} {_('人观看', color='bold yellow')}")
+                    print(f"-- {viewerNumber} {_('人观看', color='bold yellow')}")
                 elif stream == "youtube":
                     if self.youtube.checkYoutubeStream() is False:
                         self.driver.refresh()

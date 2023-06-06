@@ -152,6 +152,7 @@ class I18n:
         "桌面提醒成功发送": "Desktop notification sent successfully.",
         "桌面提醒发送失败": "Desktop notification failed to send.",
         "程序退出": "Program exited.",
+        "Riot原因,reward页面出现异常无法正常加载": "Riot Error, reward page exception cannot be loaded normally.",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -298,6 +299,7 @@ class I18n:
         "桌面提醒成功发送": "桌面提醒成功發送",
         "桌面提醒发送失败": "桌面提醒發送失敗",
         "程序退出": "程式退出",
+        "Riot原因,reward页面出现异常无法正常加载": "Riot原因,reward頁面出現異常無法正常載入",
     }
 
     def install(self, lang):
