@@ -25,7 +25,7 @@ https://lolesports.com/live/volcano_discover_league|https://lolesports.com/live/
 https://lolesports.com/live/hitpoint_masters|https://lolesports.com/live/hitpoint_masters/hitpointcz,
 https://lolesports.com/live/movistar_fiber_golden_league|https://lolesports.com/live/movistar_fiber_golden_league/lvpcol,
 https://lolesports.com/live/honor_league|https://lolesports.com/live/honor_league/lvpcl,
-https://lolesports.com/live/nlc/nlclol|https://lolesports.com/live/nlc/nlclol,
+https://lolesports.com/live/nlc|https://lolesports.com/live/nlc/nlclol,
 https://lolesports.com/live/elite_series|https://lolesports.com/live/elite_series/rtbf_ixpe,
 https://lolesports.com/live/lfl|https://lolesports.com/live/lfl/otplol_,
 https://lolesports.com/live/arabian_league|https://lolesports.com/live/arabian_league/lolesports_ar,
