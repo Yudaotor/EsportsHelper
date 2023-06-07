@@ -39,8 +39,8 @@ class LoginHandler:
             loginButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "a[data-riotbar-link-id=login]")))
             self.driver.execute_script("arguments[0].click();", loginButton)
-            self.log.info(_log("登录中..."))
-            print(_("登录中...", color="yellow"))
+            self.log.info(f'<{self.config.nickName}> {_log("登录中...")}')
+            print(f'<{self.config.nickName}> {_("登录中...", color="yellow")}')
             sleep(2)
             usernameInput = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "input[name=username]")))
