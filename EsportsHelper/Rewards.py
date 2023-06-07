@@ -50,6 +50,7 @@ class Rewards:
 
             # Check for VODs
             if len(self.driver.find_elements(By.CSS_SELECTOR, "main.Vods")) > 0:
+                self.utils.debugScreen(self.driver, "vods")
                 return 0
 
         except Exception:
