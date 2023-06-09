@@ -154,6 +154,7 @@ class I18n:
         "程序退出": "Program exited.",
         "Riot原因,reward页面出现异常无法正常加载": "Riot Error, reward page exception cannot be loaded normally.",
         '程序启动时间: ': 'Program startup time: ',
+        "观看人数: ": "Viewers: ",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -247,6 +248,7 @@ class I18n:
         '日期: ': '日期: ',
         '下次检查在:': '下次檢查在:',
         '人观看': '人觀看',
+        "观看人数: ": "觀看人數: ",
         '掉落提醒成功': '掉落提醒成功',
         '检查赛区直播状态...': '檢查賽區直播狀態...',
         '识别到距离比赛时间较长 检查间隔为1小时': '識別到距離比賽時間較長 檢查間隔為1小時',

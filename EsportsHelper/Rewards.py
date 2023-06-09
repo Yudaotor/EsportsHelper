@@ -141,14 +141,14 @@ class Rewards:
                         f"{match} {_log('正常观看 可获取奖励')} "
                         f"{_log('标题: ')}"
                         f"{teams} "
-                        f"{viewerNumber} {_log('人观看')}")
+                        f"{_log('观看人数: ')}{viewerNumber}")
                     print(
                         f"[bold magenta]{match}[/bold magenta] {_('正常观看 可获取奖励', color='green')} ")
                     print(
                         f"--{_('标题: ', color='bold yellow')}"
                         f"[bold green]{teams}[/bold green]"
                     )
-                    print(f"-- {viewerNumber} {_('人观看', color='bold yellow')}")
+                    print(f"--{_('观看人数: ', 'bold yellow')}{viewerNumber}")
                 elif stream == "youtube":
                     if self.youtube.checkYoutubeStream() is False:
                         self.driver.refresh()
@@ -208,6 +208,7 @@ class Rewards:
                 return True
             elif flag == -1:
                 if i != retryTimes - 1:
+                    self.utils.debugScreen(self.driver, "rewardFailed")
                     self.log.warning(f"{match} {_log('观看异常 重试中...')}")
                     print(f"[bold magenta]{match}[/bold magenta] "
                           f"{_('观看异常 重试中...', color='yellow')}")
