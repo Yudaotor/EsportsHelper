@@ -166,7 +166,7 @@ class Utils:
         try:
             if self.config.debug:
                 sleep(3)
-                driver.save_screenshot(f"./logs/pics/{strftime('%b-%d-%H-%M-%S')}-{lint}.png")
+                driver.save_screenshot(f"./logs/pics/{strftime('%m.%d_%H-%M')}-{lint}.png")
                 log.info(f'{lint}-{_log("调试截图成功")}')
         except Exception:
             log.error(f'{lint}-{_log("调试截图失败")}')
