@@ -174,6 +174,33 @@ class Rewards:
                       f"{_('正常观看 可获取奖励', color='green')} ")
                 return True
             elif flag == 0:
+                times = 3
+                while times > 0:
+                    self.driver.get(url)
+                    times -= 1
+                    sleep(5)
+                    self.utils.debugScreen(self.driver, "afterRefresh")
+                    if self.checkRewards(stream=stream) == 1 and self.config.closeStream is False:
+                        if stream == "twitch":
+                            self.twitch.setTwitchQuality()
+                        elif stream == "youtube":
+                            self.youtube.setYoutubeQuality()
+                        self.log.info(
+                            f"{match} {_log('正常观看 可获取奖励')} ")
+                        print(f"[bold magenta]{match}[/bold magenta] "
+                              f"{_('正常观看 可获取奖励', color='green')} ")
+                        self.utils.debugScreen(self.driver, "afterVods")
+                        return True
+                    elif self.checkRewards(stream=stream) == 1 and self.config.closeStream is True:
+                        self.log.info(
+                            f"{match} {_log('比赛结束 等待关闭')} ")
+                        print(f"[bold magenta]{match}[/bold magenta] "
+                              f"{_('比赛结束 等待关闭', color='yellow')} ")
+                        self.utils.debugScreen(self.driver, "afterVods")
+                        return True
+                    elif self.checkRewards(stream=stream) == 0:
+                        self.utils.debugScreen(self.driver, "afterVods")
+                        continue
                 self.log.info(
                     f"{match} {_log('比赛结束 等待关闭')} ")
                 print(f"[bold magenta]{match}[/bold magenta] "
