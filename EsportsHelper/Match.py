@@ -48,6 +48,8 @@ class Match:
         try:
             sleepFlag = False
             isSleep = False
+            openDatetime = datetime.now()
+            formattedOpenDatetime = openDatetime.strftime("%Y-%m-%d %H:%M:%S")
             self.currentWindows = {}
             self.mainWindow = self.driver.current_window_handle
             maxRunSecond = config.maxRunHours * 3600
@@ -182,10 +184,10 @@ class Match:
                         print(
                             f"{_('生涯总掉落:', color='bold yellow')}{dropsNumber} | "
                             f"{_('总观看时长: ', color='bold yellow')}{watchHours}")
-                        print(
-                            f"{_('本次运行掉落总和:', color='bold yellow')}{sessionDrops}")
+                        print(f"{_('程序启动时间: ', color='bold yellow')}{formattedOpenDatetime} | {_('运行掉落总和:', color='bold yellow')}{sessionDrops}")
                         self.log.info(
-                            f"{_log('本次运行掉落总和:')}"
+                            f"{_log('程序启动时间: ')}"
+                            f"{_log('运行掉落总和:')}"
                             f"{sessionDrops} | "
                             f"{_log('生涯总掉落:')}"
                             f"{dropsNumber} | "
@@ -193,7 +195,7 @@ class Match:
                             f"{watchHours}")
                         if len(dropsSessionInfo) != 0:
                             print(
-                                f"{_('本次运行掉落详细:', color='bold yellow')} "
+                                f"--{_('本次运行掉落详细:', color='bold yellow')} "
                                 f"[bold cyan]{dropsSessionInfo}[/bold cyan]")
                             self.log.info(
                                 f"{_log('本次运行掉落详细:')} "
