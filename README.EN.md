@@ -57,7 +57,7 @@ Read This!  -->[Guide](https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Us
 8. Option to set multiple hibernation period in which the software will close lolesports site,waiting until the end if period and reopen.
 9. Desktop notifications. 
 10. Option to manually add a proxy.
-11. Option of **deleting video-player elements** in order to save traffic. (Risk currently unknown).
+11. Option of **deleting video-player elements** in order to save traffic. (Risk known).
 12. You can view the number of drops and the drop information of current session.
 13. Password-free login using local browser cookies.
 14. You can customize the path of Google Chrome installation (Portable version).
@@ -82,7 +82,7 @@ runHours: -1                            # Negative value is always running, posi
 proxy: ""                               # Proxy address, not required for general users, e.g., "127.0.0.1:7890".
 connectorDropsUrl: ""                   # Discord webhook link.
 platForm: "windows"                     # OS, Windows is set by default. If you want to use the program on Linux, please change the value here.  
-closeStream: False                      # Option of deleting video-player elements to save traffic. (Risk currently unknown).
+closeStream: False                      # Option of deleting video-player elements to save traffic. (Risk known).
 desktopNotify: False                    # Experimental feature to enable Desktop notifications.
 sleepPeriod: ["8-13", "20-23"]          # Hibernation period, empty by default, allowed multiple period. The format is "Start hour – End hour". Tabs will be closed and reopened at the end of sleep.
 ignoreBroadCast: True                   # Option to ignore broadcasts.
