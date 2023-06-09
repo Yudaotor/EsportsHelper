@@ -47,6 +47,7 @@ class Twitch:
         except Exception:
             self.log.error(_log("Twitch: 设置清晰度发生错误"))
             self.log.error(format_exc())
+            self.utils.debugScreen(self.driver, lint="setTwitchQuality")
         self.driver.switch_to.default_content()
         return False
 
