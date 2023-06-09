@@ -554,6 +554,20 @@ class Match:
                     value="div.divider.future + div.EventDate + div.EventMatch ~ div.EventMatch > div > div.league > div.strategy").text
                 print(f'{_("(检查下一场比赛时 过滤失效的比赛 ->", color="yellow")} '
                       f'[yellow]{invalidMatch})')
+
+                if nextMatchTime == "" or nextMatchLeague == "":
+                    nextMatchTime = self.driver.find_element(
+                        by=By.CSS_SELECTOR,
+                        value="div.single.future.event > div.EventTime > div > span.hour").text
+                    nextMatchAMOrPM = self.driver.find_element(
+                        by=By.CSS_SELECTOR,
+                        value="div.single.future.event > div.EventTime > div > span.hour ~ span.ampm").text
+                    nextMatchLeague = self.driver.find_element(
+                        by=By.CSS_SELECTOR,
+                        value="div.single.future.event > div.league > div.name").text
+                    nextMatchBO = self.driver.find_element(
+                        by=By.CSS_SELECTOR,
+                        value="div.single.future.event > div.league > div.strategy").text
                 print(
                     f"{_('下一场比赛时间:', color='bold yellow')} "
                     f"[cyan]{nextMatchTime}{nextMatchAMOrPM}[/cyan] | "
