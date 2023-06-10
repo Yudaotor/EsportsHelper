@@ -105,8 +105,12 @@ class YouTube:
                 (By.CSS_SELECTOR, "button.ytp-button.ytp-settings-button")))
             self.driver.execute_script("arguments[0].click();", settingsButton)
             sleep(1)
-            qualityButton = self.wait.until(ec.presence_of_element_located(
-                (By.CSS_SELECTOR, "div.ytp-panel > div.ytp-panel-menu > div:nth-child(3)")))
+            try:
+                qualityButton = self.wait.until(ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, "div.ytp-panel > div.ytp-panel-menu > div:nth-child(3)")))
+            except Exception:
+                qualityButton = self.wait.until(ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, "div.ytp-panel > div.ytp-panel-menu > div:nth-child(2)")))
             self.driver.execute_script("arguments[0].click();", qualityButton)
             sleep(1)
             option = self.wait.until(ec.presence_of_element_located(
