@@ -420,7 +420,8 @@ def getMatchTeams(teams):
     """
     Get match teams from stream title
     """
-    if not teams or ("|" not in teams and "-" not in teams):
+    teams = teams.replace("│", "|")
+    if not teams or ("|" not in teams and "-" not in teams and "vs" not in teams.lower()):
         return _log("出错, 未知")
 
     delimiter = "|" if "|" in teams else "-"
