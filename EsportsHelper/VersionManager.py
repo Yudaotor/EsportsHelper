@@ -45,7 +45,7 @@ def checkVersion():
     versionLatest = getLatestVersion()
     if versionNow < versionLatest:
         print(_("当前版本: ", color="yellow"), end="")
-        print(versionNow, end="")
+        print(versionNow, end="|")
         print(_("最新版本: ", color="yellow"), end="")
         print(versionLatest)
         print(_("==!!! 新版本可用 !!!==\n===下载:", color="yellow"), end="")

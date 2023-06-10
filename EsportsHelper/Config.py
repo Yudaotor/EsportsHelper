@@ -40,7 +40,7 @@ class Config:
                 os.kill(os.getpid(), 9)
             with open(configPath, "r", encoding='utf-8') as f:
                 configFile = yaml.safe_load(f)
-            self.version = "1.6.2"
+            self.version = "1.6.3"
             self.headless = configFile.get("headless", False)
             self.username = configFile.get("username", "账号用户名")
             self.password = configFile.get("password", "密码")

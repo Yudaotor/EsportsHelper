@@ -184,9 +184,10 @@ class Match:
                         print(
                             f"{_('生涯总掉落:', color='bold yellow')}{dropsNumber} | "
                             f"{_('总观看时长: ', color='bold yellow')}{watchHours}")
-                        print(f"{_('程序启动时间: ', color='bold yellow')}{formattedOpenDatetime} | {_('运行掉落总和:', color='bold yellow')}{sessionDrops}")
+                        print(f"{_('程序启动时间: ', color='bold yellow')} [cyan]{formattedOpenDatetime}[/cyan] | {_('运行掉落总和:', color='bold yellow')}{sessionDrops}")
                         self.log.info(
                             f"{_log('程序启动时间: ')}"
+                            f"{formattedOpenDatetime} | "
                             f"{_log('运行掉落总和:')}"
                             f"{sessionDrops} | "
                             f"{_log('生涯总掉落:')}"

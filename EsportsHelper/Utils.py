@@ -190,7 +190,7 @@ class Utils:
                 f">_<[/bold yellow]"
             )
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]        "
-                  f"感谢使用 [cyan]电竞助手[/cyan] v{version}!        "
+                  f"感谢使用 [cyan]电竞助手[/cyan] v {version}!       "
                   f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
             print(f"[bold yellow]>_<{'=' * 12}[/bold yellow] "
                   f"本程序开源于github链接地址如下: "
