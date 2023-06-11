@@ -155,6 +155,9 @@ class I18n:
         "Riot原因,reward页面出现异常无法正常加载": "Riot Error, reward page exception cannot be loaded normally.",
         '程序启动时间: ': 'Program startup time: ',
         "观看人数: ": "Viewers: ",
+        "接受cookies": "Accept cookies",
+        "未找到cookies按钮": "Cookies button not found",
+        "接受cookies失败": "Failed to accept cookies",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -304,6 +307,9 @@ class I18n:
         "程序退出": "程式退出",
         "Riot原因,reward页面出现异常无法正常加载": "Riot原因,reward頁面出現異常無法正常載入",
         '程序启动时间: ': '程式啟動時間: ',
+        "接受cookies": "接受cookies",
+        "未找到cookies按钮": "未找到cookies按鈕",
+        "接受cookies失败": "接受cookies失敗",
     }
 
     def install(self, lang):

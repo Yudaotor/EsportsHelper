@@ -11,7 +11,7 @@ from EsportsHelper.Twitch import Twitch
 from EsportsHelper.Utils import (Utils, OVERRIDES,
                                  getLolesportsWeb,
                                  getMatchName, sysQuit,
-                                 getSleepPeriod)
+                                 getSleepPeriod, acceptCookies)
 from EsportsHelper.Logger import delimiterLine
 from EsportsHelper.YouTube import YouTube
 from rich import print
@@ -55,6 +55,7 @@ class Match:
             maxRunSecond = config.maxRunHours * 3600
             startTimePoint = time.time()
             endTimePoint = startTimePoint + maxRunSecond
+            acceptCookies(driver=self.driver)
             if self.config.countDrops and sleepFlag is False:
                 # Open the Rewards page
                 self.rewardWindow = self.rewards.getRewardPage(newTab=True)
@@ -184,7 +185,10 @@ class Match:
                         print(
                             f"{_('生涯总掉落:', color='bold yellow')}{dropsNumber} | "
                             f"{_('总观看时长: ', color='bold yellow')}{watchHours}")
-                        print(f"{_('程序启动时间: ', color='bold yellow')} [cyan]{formattedOpenDatetime}[/cyan] | {_('运行掉落总和:', color='bold yellow')}{sessionDrops}")
+                        print(f"{_('程序启动时间: ', color='bold yellow')} "
+                              f"[cyan]{formattedOpenDatetime}[/cyan] | "
+                              f"{_('运行掉落总和:', color='bold yellow')}"
+                              f"{sessionDrops}")
                         self.log.info(
                             f"{_log('程序启动时间: ')}"
                             f"{formattedOpenDatetime} | "

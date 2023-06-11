@@ -2,6 +2,7 @@ import os
 from time import sleep, strftime
 from traceback import format_exc
 import requests
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -416,7 +417,7 @@ def checkRewardPage(driver):
             return
 
 
-def getMatchTeams(teams):
+def getMatchTitle(teams):
     """
     Get match teams from stream title
     """
@@ -428,9 +429,24 @@ def getMatchTeams(teams):
     words = teams.split(delimiter)
     teamNames = [word for word in words if "vs" in word.lower()]
     if teamNames:
-        return "-".join(teamNames)[:-1]
+        return "-".join(teamNames)
     else:
         return words[0]
+
+
+def acceptCookies(driver):
+    try:
+        WebDriverWait(driver, 5).until(ec.element_to_be_clickable(
+            (By.CSS_SELECTOR, "button.osano-cm-accept-all"))).click()
+        log.info(_log("接受cookies"))
+        return True
+    except TimeoutException:
+        log.info(_log("未找到cookies按钮"))
+        return True
+    except Exception:
+        log.error(_log("接受cookies失败"))
+        log.error(format_exc())
+        return False
 
 
 OVERRIDES, CHAMPION_TEAM, SCHEDULE_URL = getGithubFile()
