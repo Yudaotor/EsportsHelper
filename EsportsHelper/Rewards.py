@@ -2,7 +2,7 @@ from time import sleep
 from traceback import format_exc
 from selenium import webdriver
 import requests
-from EsportsHelper.Utils import getMatchName, desktopNotify, checkRewardPage, getMatchTeams
+from EsportsHelper.Utils import getMatchName, desktopNotify, checkRewardPage, getMatchTitle
 from rich import print
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
@@ -126,7 +126,7 @@ class Rewards:
                         iframeTitle = self.driver.execute_script("return document.title;")
                         teams = iframeTitle.strip() if iframeTitle else _log("出错, 未知")
                         self.driver.switch_to.default_content()
-                    teams = getMatchTeams(teams)
+                    teams = getMatchTitle(teams)
 
                 except Exception:
                     self.driver.switch_to.default_content()
@@ -177,6 +177,7 @@ class Rewards:
                 times = 3
                 while times > 0:
                     self.driver.get(url)
+                    name = getMatchName(url).lower()
                     times -= 1
                     sleep(5)
                     self.utils.debugScreen(self.driver, "afterRefresh")
@@ -185,10 +186,16 @@ class Rewards:
                             self.twitch.setTwitchQuality()
                         elif stream == "youtube":
                             self.youtube.setYoutubeQuality()
-                        self.log.info(
-                            f"{match} {_log('正常观看 可获取奖励')} ")
-                        print(f"[bold magenta]{match}[/bold magenta] "
-                              f"{_('正常观看 可获取奖励', color='green')} ")
+                        if name not in self.driver.current_url:
+                            self.log.info(
+                                f"{match} {_log('比赛结束 等待关闭')} ")
+                            print(f"[bold magenta]{match}[/bold magenta] "
+                                  f"{_('比赛结束 等待关闭', color='yellow')} ")
+                        else:
+                            self.log.info(
+                                f"{match} {_log('正常观看 可获取奖励')} ")
+                            print(f"[bold magenta]{match}[/bold magenta] "
+                                  f"{_('正常观看 可获取奖励', color='green')} ")
                         self.utils.debugScreen(self.driver, "afterVods")
                         return True
                     elif self.checkRewards(stream=stream) == 1 and self.config.closeStream is True:
