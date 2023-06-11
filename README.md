@@ -11,7 +11,7 @@
 通过selenium模拟浏览器来自动观看电竞比赛,网址: [LolEsports](lolesports.com)  
 至于会不会被拳头检测到这个问题,目前还没有答案.  
 哦对了,用的是谷歌浏览器哦 （必须要下一个最新版的谷歌浏览器哦）  
-来自中国大陆的需搭配VPN使用  
+**来自中国大陆的需搭配VPN使用**  
 **如何下载**:点击右侧的[Releases](https://github.com/Yudaotor/EsportsHelper/releases)下载
 ## 联系我
 使用过程中有遇到什么问题或者建议可以在Github上提出issue  
@@ -49,12 +49,12 @@ python -m pip install -r requirements.txt
 8. 可以设置多段休眠时间段，在休眠时间段中会关闭观赛网页,待休眠结束后重新打开.
 9. 可以设置桌面提醒
 10. 可以手动添加代理(绝大部分用户无需配置)
-11. **省流模式**,可以删除视频流元素(节省流量)(风险存在,有被拳头检测可能) 
+11. 省流模式,可以删除视频流元素(节省流量)(风险存在,有被拳头检测可能) 
 12. 可以查看程序本次运行得到的掉落数以及掉落赛区信息
 13. 可以通过本地浏览器缓存免账密登录
 14. 可以自定义谷歌浏览器的地址(支持绿色版即免安装版)
 15. 可以配置语言,目前支持**简体中文**,**繁体中文**和**英语**
-16. 可以配置是否**自动休眠**,即当没有比赛时关闭页面,直到比赛重新打开.(推荐设置)(第二次检查时生效)
+16. 可以配置是否**自动休眠**,即当没有比赛时关闭页面,直到比赛重新打开.(**推荐**设置)(第二次检查时生效)
 17. 非自动休眠模式下如检测到距离下场比赛时间较长也会进行以1小时间隔检查.
 
 
@@ -87,7 +87,7 @@ autoSleep: False                              # (推荐)是否自动休眠,默�
 
 ### 不观看赛区的配置详解:
 注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看  
-可以设置一些赛区不观看,比如次级联赛等(掉落率很低)  
+可以设置一些赛区不观看,比如次级联赛等(掉落率很低)(推荐)  
 具体赛区名字可以见以下说明(冒号后的即为在配置中输入的赛区名)(注意是小写):  
 LPL:lpl  
 LCK:lck  
@@ -95,6 +95,7 @@ LCK_CHALLENGERS_LEAGUE:lck_challengers_league
 LEC:lec  
 LCS:lcs  
 TFT:tft_esports  
+LCS_CHALLENGERS:north_american_challenger_league  
 LCS_CHALLENGERS_QUALIFIERS:lcs_challengers_qualifiers  
 LCO:lco  
 VCS:vcs  
@@ -117,13 +118,16 @@ HONOR_LEAGUE:honor_league
 TCL:turkiye-sampiyonluk-ligi  
 ELITE_SERIES:elite_series  
 SUPERLIGA:superliga  
+ULTRALIGA:ultraliga  
 GREEK_LEAGUE:greek_legends  
 PRIMELEAGUE:primeleague  
 LIGA_MASTER:liga_master_flo  
-ULTRALIGA:ultraliga  
+LIGA_PORTUGUESA:liga_portuguesa  
 CLARO_GAMING_STARS_LEAGUE:claro_gaming_stars_league  
 ARABIAN_LEAGUE:arabian_league  
 NORTH_REGIONAL_LEAGUE:north_regional_league  
 SOUTH_REGIONAL_LEAGUE:south_regional_league  
+PG_NATIONALS:pg_nationals  
+
 ## By the way
 本项目思路及部分代码来自Poro，感谢。[此处](https://github.com/LeagueOfPoro/EsportsCapsuleFarmer)
