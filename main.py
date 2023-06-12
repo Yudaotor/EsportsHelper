@@ -67,6 +67,7 @@ def init():
         log.error(
             _log("无法打开Lolesports网页，网络问题，将于3秒后退出..."))
         print(_("无法打开Lolesports网页，网络问题，将于3秒后退出...", color="red"))
+        Utils().debugScreen(driver, "initWeb")
         sysQuit(driver, _log("无法打开Lolesports网页，网络问题，将于3秒后退出..."))
     # Switch web language to English
     try:
@@ -80,13 +81,17 @@ def init():
         log.info(_log("切换网页语言成功"))
         print(_("切换网页语言成功", color="green"))
     except TimeoutException:
+        Utils().debugScreen(driver, "language")
         log.error(_log("切换网页语言失败"))
-        print(_("切换网页语言失败", color="green"))
+        print(_("切换网页语言失败", color="red"))
         log.error(format_exc())
+        sysQuit(driver, _log("切换网页语言失败"))
     except Exception:
+        Utils().debugScreen(driver, "language")
         log.error(_log("切换网页语言失败"))
-        print(_("切换网页语言失败", color="green"))
+        print(_("切换网页语言失败", color="red"))
         log.error(format_exc())
+        sysQuit(driver, _log("切换网页语言失败"))
 
 
 def login():
@@ -110,6 +115,8 @@ def login():
                         print(f'--{_("5秒后开始重试", color="yellow")}')
                         sleep(5)
             except Exception:
+                utils = Utils()
+                utils.debugScreen(driver, "login")
                 log.error(format_exc())
                 print(f'--{_("出现异常,登录失败", color="red")}')
                 sysQuit(driver, _log("出现异常,登录失败"))

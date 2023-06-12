@@ -1,7 +1,7 @@
 from time import sleep
 from traceback import format_exc
 from EsportsHelper.Config import config
-from EsportsHelper.Utils import getLolesportsWeb, sysQuit
+from EsportsHelper.Utils import getLolesportsWeb, sysQuit, Utils
 from rich import print
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
@@ -63,6 +63,7 @@ class LoginHandler:
                 (By.CSS_SELECTOR, "div.riotbar-summoner-name")))
             return True
         except TimeoutException:
+            Utils().debugScreen(self.driver, "LoginHandler")
             wait = WebDriverWait(self.driver, 7)
             errorInfo = wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "span.status-message.text__web-error > a")))
@@ -104,6 +105,7 @@ class LoginHandler:
                 (By.CSS_SELECTOR, "a[data-riotbar-link-id=login]")))
             self.driver.execute_script("arguments[0].click();", loginButton)
         except TimeoutException:
+            Utils().debugScreen(self.driver, "userDataLogin")
             if self.driver.find_element(By.CSS_SELECTOR, "div.riotbar-summoner-name"):
                 return
             print(f'--{_("免密登录失败,请去浏览器手动登录后再行尝试", color="red")}')
