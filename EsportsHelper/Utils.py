@@ -64,12 +64,13 @@ def getGithubFile():
                 log.info(_log("获取地址URL失败"))
             if scheduleUrl:
                 scheduleUrl = scheduleUrl.replace("!", ",")
-
+            req.close()
             return overrides, championTeam, scheduleUrl
         else:
             print(_("获取参数文件失败", color="red"))
             log.error(_log("获取参数文件失败"))
             input(_log("按回车键退出"))
+            req.close()
             sysQuit(e=_log("获取参数文件失败"))
     except Exception:
         log.error(_log("获取参数文件失败"))
@@ -290,7 +291,7 @@ class Utils:
             print()
 
 
-def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropLocale):
+def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropLocale, todayDrops):
     """
     Desktop notification function that sends a notification to the user's desktop.
 
@@ -302,12 +303,12 @@ def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, 
     dropItem (str): The name of the dropped item.
     dropItemImg (str): The image URL of the dropped item.
     dropLocale (str): The location where the drop will occur.
-
+    todayDrops (str): The number of drops for the day.
     """
     try:
         notification.notify(
-            title="New drop!",
-            message=f"BY {eventTitle} GET{dropItem} ON{dropLocale} {unlockedDate}",
+            title=f"{_log('新的掉落!')}{_log('今日: ')}{todayDrops}",
+            message=f"{_log('通过')} {eventTitle} {_log('获得')} {dropItem} {_log('于')} {dropLocale} {unlockedDate}",
             timeout=30
         )
         log.info(_log("桌面提醒成功发送"))
@@ -403,6 +404,8 @@ def checkRewardPage(driver):
             wait.until(ec.presence_of_element_located(
                 (By.XPATH, "//div[text()='NO DROPS YET']")))
         except Exception:
+            utils = Utils()
+            utils.debugScreen(driver, "rewardError")
             if len(driver.find_elements(By.CSS_SELECTOR, "div.InformBubble.error")) > 0:
                 print(f'--{_("Riot原因,reward页面出现异常无法正常加载", color="red")}')
                 log.error(_log("Riot原因,该页面出现异常无法正常加载"))
@@ -447,6 +450,34 @@ def acceptCookies(driver):
         log.error(_log("接受cookies失败"))
         log.error(format_exc())
         return False
+
+
+def mouthTrans(mouth):
+    trans = {"jan": "1月", "feb": "2月", "mar": "3月", "apr": "4月",
+             "may": "5月", "jun": "6月", "jul": "7月", "aug": "8月",
+             "sep": "9月", "oct": "10月", "nov": "11月", "dec": "12月"}
+    try:
+        if i18n.language == "zh_CN" or i18n.language == "zh_TW":
+            return trans.get(mouth.lower()[:3], mouth)
+        else:
+            return mouth
+    except Exception:
+        return mouth
+
+
+def timeTrans(time):
+    try:
+        if i18n.language == "zh_CN" or i18n.language == "zh_TW":
+            if time[-2:] == "AM" and time[:-2] != "12":
+                return "上午" + time[:-2] + "点"
+            elif time[-2:] == "AM" and time[:-2] == "12":
+                return "凌晨" + time[:-2] + "点"
+            elif time[-2:] == "PM":
+                return "下午" + time[:-2] + "点"
+        else:
+            return time
+    except Exception:
+        return time
 
 
 OVERRIDES, CHAMPION_TEAM, SCHEDULE_URL = getGithubFile()

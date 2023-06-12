@@ -11,7 +11,7 @@ from EsportsHelper.Twitch import Twitch
 from EsportsHelper.Utils import (Utils, OVERRIDES,
                                  getLolesportsWeb,
                                  getMatchName, sysQuit,
-                                 getSleepPeriod, acceptCookies)
+                                 getSleepPeriod, acceptCookies, mouthTrans, timeTrans)
 from EsportsHelper.Logger import delimiterLine
 from EsportsHelper.YouTube import YouTube
 from rich import print
@@ -272,12 +272,14 @@ class Match:
             print(_("对应窗口找不到", color="red"))
             self.log.error(format_exc())
             self.utils.errorNotify(_log("对应窗口找不到"))
+            self.utils.debugScreen(self.driver, "main")
             sysQuit(self.driver, _log("对应窗口找不到"))
         except Exception:
             self.log.error(_log("发生错误"))
             print(_("发生错误", color="red"))
             self.log.error(format_exc())
             self.utils.errorNotify(_log("发生错误"))
+            self.utils.debugScreen(self.driver, "main")
             sysQuit(self.driver, _log("发生错误"))
 
     def getMatchInfo(self, ignoreBroadCast=True):
@@ -312,6 +314,7 @@ class Match:
             return matches
         except Exception:
             self.log.error(_log("获取比赛列表失败"))
+            self.utils.debugScreen(self.driver, "getMatchInfo")
             print(_("获取比赛列表失败", color="red"))
             self.log.error(format_exc())
             return []
@@ -351,6 +354,7 @@ class Match:
             print(f'--{_("所有窗口已关闭", color="green")}')
             self.log.info(_log("所有窗口已关闭"))
         except Exception:
+            self.utils.debugScreen(self.driver, "closeAllTabs")
             self.log.error(_log("关闭所有窗口时发生异常"))
             print(f'--{_("关闭所有窗口时发生异常", color="red")}')
             self.utils.errorNotify(error=_log("关闭所有窗口时发生异常"))
@@ -390,6 +394,7 @@ class Match:
                 self.currentWindows.pop(keys, None)
             self.driver.switch_to.window(self.mainWindow)
         except Exception:
+            self.utils.debugScreen(self.driver, "closeFinishedTabs")
             print(_("关闭已结束的比赛时发生错误", color="red"))
             self.utils.errorNotify(error=_log("关闭已结束的比赛时发生错误"))
             self.log.error(format_exc())
@@ -422,6 +427,7 @@ class Match:
             if match in self.OVERRIDES:
                 url = self.OVERRIDES[match]
                 self.driver.get(url)
+                self.log.info("Twitch " + self.driver.current_url)
                 if not self.rewards.checkMatches("twitch", url):
                     return
                 if self.config.closeStream:
@@ -443,7 +449,7 @@ class Match:
                 url = match
                 self.driver.get(url)
                 # It is convenient to add to overrides next time
-                self.log.info(self.driver.current_url)
+                self.log.info("YouTube " + self.driver.current_url)
                 self.youtube.checkYoutubeStream()
                 # When rewards are not currently available, no need to set the quality
                 if not self.rewards.checkMatches("youtube", url):
@@ -479,6 +485,7 @@ class Match:
         try:
             self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
         except Exception:
+            self.utils.debugScreen(self.driver, "closeStream")
             self.log.error(_log("关闭视频流失败."))
             print(f'--{_("关闭视频流失败.", color="red")}')
             self.log.error(format_exc())
@@ -542,6 +549,8 @@ class Match:
             nowHour = int(time.localtime().tm_hour)
             nowMonth = time.strftime("%b", time.localtime())
             nowDay = int(time.strftime("%d", time.localtime()))
+            month = mouthTrans(nextMatchDayTime.split(" ")[0])
+            day = nextMatchDayTime.split(" ")[1]
             if (nowMonth in nextMatchMonth and nowDay == nextMatchDay and nowHour > nextMatchStartHour) or \
                     (nowMonth not in nextMatchMonth and nowDay < nextMatchDay) or \
                     (nowMonth in nextMatchMonth and nowDay > nextMatchDay):
@@ -575,18 +584,19 @@ class Match:
                         value="div.single.future.event > div.league > div.strategy").text
                 print(
                     f"{_('下一场比赛时间:', color='bold yellow')} "
-                    f"[cyan]{nextMatchTime}{nextMatchAMOrPM}[/cyan] | "
+                    f"[cyan]{timeTrans(nextMatchTime + nextMatchAMOrPM)}[/cyan] | "
                     f"[magenta]{nextMatchLeague}[/magenta] | "
                     f"[blue]{nextMatchBO}[/blue]")
                 self.nextMatchDay = None
             else:
                 print(
                     f"{_('下一场比赛时间:', color='bold yellow')} "
-                    f"[cyan]{nextMatchDayTime}[/cyan] | "
-                    f"[cyan]{nextMatchTime}{nextMatchAMOrPM}[/cyan] | "
+                    f"[cyan]{month}{day}[/cyan]{_('日', color='cyan')} | "
+                    f"[cyan]{timeTrans(nextMatchTime + nextMatchAMOrPM)}[/cyan] | "
                     f"[magenta]{nextMatchLeague}[/magenta] | "
                     f"[bold blue]{nextMatchBO}[/bold blue]")
         except Exception:
+            self.utils.debugScreen(self.driver, "nextMatch")
             self.log.error(_log("获取下一场比赛时间失败"))
             self.log.error(format_exc())
             print(_("获取下一场比赛时间失败", color="red"))

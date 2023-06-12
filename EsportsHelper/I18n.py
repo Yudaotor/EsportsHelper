@@ -158,6 +158,13 @@ class I18n:
         "接受cookies": "Accept cookies",
         "未找到cookies按钮": "Cookies button not found",
         "接受cookies失败": "Failed to accept cookies",
+        "今日": "TODAY",
+        '于': 'FROM',
+        '获得': 'GET',
+        '通过': 'BY',
+        '新的掉落!': 'NEW DROP!',
+        '今日: ': 'TODAY: ',
+        '日': '',
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -310,6 +317,13 @@ class I18n:
         "接受cookies": "接受cookies",
         "未找到cookies按钮": "未找到cookies按鈕",
         "接受cookies失败": "接受cookies失敗",
+        "今日": "今日",
+        '通过': '通過',
+        '获得': '獲得',
+        '于': '於',
+        '新的掉落!': '新的掉落!',
+        '今日: ': '今日: ',
+        '日': '日',
     }
 
     def install(self, lang):
