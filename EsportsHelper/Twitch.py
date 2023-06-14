@@ -92,6 +92,31 @@ class Twitch:
         self.driver.switch_to.default_content()
         return False
 
+    def checkTwitchIsOnline(self) -> bool:
+        """
+        Checks the status of the Twitch stream.
+        :return:
+        """
+        if self.config.closeStream:
+            return True
+        try:
+            self.wait.until(ec.frame_to_be_available_and_switch_to_it(
+                (By.CSS_SELECTOR, "iframe[title=Twitch]")))
+            self.driver.implicitly_wait(5)
+            sleep(5)
+            if len(self.driver.find_elements(By.CSS_SELECTOR, "span.offline-embeds--stylized-link")) > 0:
+                self.utils.debugScreen(self.driver, "offline")
+                self.driver.switch_to.default_content()
+                return False
+            self.driver.implicitly_wait(15)
+            self.driver.switch_to.default_content()
+            return True
+        except Exception:
+            self.log.error(_log("Twitch: 检查直播间是否在线失败"))
+            self.log.error(formatExc(format_exc()))
+        self.driver.switch_to.default_content()
+        return False
+
     def unmuteStream(self, muteButton) -> None:
         """
         Unmute the stream by clicking the given mute button. If the click fails,

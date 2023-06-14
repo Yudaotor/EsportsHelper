@@ -165,6 +165,8 @@ class I18n:
         '新的掉落!': 'NEW DROP!',
         '今日: ': 'TODAY: ',
         '日': '',
+        "未找到奖励标识": "Reward mark not found",
+        "Twitch: 检查直播间是否在线失败": "Twitch: Failed to check if the live is online",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -324,6 +326,8 @@ class I18n:
         '新的掉落!': '新的掉落!',
         '今日: ': '今日: ',
         '日': '日',
+        "未找到奖励标识": "未找到獎勵標識",
+        "Twitch: 检查直播间是否在线失败": "Twitch: 檢查直播間是否線上失敗",
     }
 
     def install(self, lang):

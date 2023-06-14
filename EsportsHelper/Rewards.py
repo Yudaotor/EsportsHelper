@@ -40,7 +40,7 @@ class Rewards:
             try:
                 self.wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div[class=status-summary] g")))
             except Exception:
-                self.log.error(format_exc())
+                self.log.error(_log("未找到奖励标识"))
             rewardImg = self.driver.find_elements(By.CSS_SELECTOR, "div[class=status-summary] g")
             if len(rewardImg) > 0:
                 # Check stream
@@ -56,9 +56,9 @@ class Rewards:
                 self.utils.debugScreen(self.driver, "vods")
                 return 0
 
-            if len(self.driver.find_elements(By.CSS_SELECTOR, "span.offline-embeds--stylized-link")) > 0:
-                self.utils.debugScreen(self.driver, "offline")
-                return 0
+            if stream == "twitch":
+                if self.twitch.checkTwitchIsOnline() is False:
+                    return 0
 
         except Exception:
             self.log.error(_log("检测奖励标识失败"))
