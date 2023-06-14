@@ -48,6 +48,7 @@ class I18n:
         "检查掉落数失败": "Failed to check drop count.",
         "开始检查...": "Start checking...",
         "本次运行掉落总和:": "Session  Drops: ",
+        '运行掉落总和:': 'Session Drops: ',
         "生涯总掉落:": "Lifetime Drops: ",
         "没有赛区正在直播": "No live broadcasts.",
         "个赛区正在直播中": "match currently live.",
@@ -170,6 +171,7 @@ class I18n:
         '日': '',
         "未找到奖励标识": "Reward mark not found",
         "Twitch: 检查直播间是否在线失败": "Twitch: Failed to check if the live is online",
+        "只看模式已开启,已忽略不看模式配置": "Only mode is turned on, ignore the configuration of disWatching mode",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -211,6 +213,7 @@ class I18n:
         '检查掉落数失败': '檢查掉落數失敗',
         '开始检查...': '開始檢查...',
         '本次运行掉落总和:': '本次執行掉落總和:',
+        '运行掉落总和:': '執行掉落總和:',
         '生涯总掉落:': '生涯總掉落:',
         '没有赛区正在直播': '沒有賽區正在直播',
         '个赛区正在直播中': '個賽區正在直播中',
@@ -333,6 +336,7 @@ class I18n:
         '日': '日',
         "未找到奖励标识": "未找到獎勵標識",
         "Twitch: 检查直播间是否在线失败": "Twitch: 檢查直播間是否線上失敗",
+        "只看模式已开启,已忽略不看模式配置": "只看模式已開啟,已忽略不看模式配置",
     }
 
     def install(self, lang):

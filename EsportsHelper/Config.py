@@ -62,6 +62,7 @@ class Config:
             self.notifyType = configFile.get("notifyType", "all")
             self.autoSleep = configFile.get("autoSleep", False)
             self.nickName = configFile.get("nickName", self.username)
+            self.onlyWatchMatches = configFile.get("onlyWatchMatches", [])
             self.format()
         except (ParserError, KeyError, ScannerError):
             log.error(_log('配置文件格式错误'))
@@ -245,6 +246,11 @@ class Config:
 
         if self.nickName == "":
             self.nickName = self.username
+
+        self.onlyWatchMatches = [match.lower() for match in self.onlyWatchMatches if match != ""]
+        if self.onlyWatchMatches and self.disWatchMatches:
+            self.disWatchMatches = []
+            print(_("只看模式已开启,已忽略不看模式配置", color="yellow"))
 
 
 parser = argparse.ArgumentParser(
