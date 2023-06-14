@@ -3,7 +3,7 @@ from time import sleep
 from traceback import format_exc
 from selenium import webdriver
 import requests
-from EsportsHelper.Utils import getMatchName, desktopNotify, checkRewardPage, getMatchTitle, mouthTrans
+from EsportsHelper.Utils import getMatchName, desktopNotify, checkRewardPage, getMatchTitle, mouthTrans, formatExc
 from rich import print
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
@@ -56,9 +56,13 @@ class Rewards:
                 self.utils.debugScreen(self.driver, "vods")
                 return 0
 
+            if len(self.driver.find_elements(By.CSS_SELECTOR, "span.offline-embeds--stylized-link")) > 0:
+                self.utils.debugScreen(self.driver, "offline")
+                return 0
+
         except Exception:
             self.log.error(_log("检测奖励标识失败"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
             self.utils.debugScreen(self.driver, "reward")
 
         return -1
@@ -133,7 +137,7 @@ class Rewards:
 
                 except Exception:
                     self.driver.switch_to.default_content()
-                    self.log.error(format_exc())
+                    self.log.error(formatExc(format_exc()))
                 if stream == "twitch":
                     if self.twitch.checkTwitchStream() is False:
                         self.driver.refresh()
@@ -146,7 +150,8 @@ class Rewards:
                         f"{teams} "
                         f"{_log('观看人数: ')}{viewerNumber}")
                     print(
-                        f"[bold magenta]{match}[/bold magenta] {_('正常观看 可获取奖励', color='green')} ")
+                        f"[bold magenta]{match}[/bold magenta] "
+                        f"{_('正常观看 可获取奖励', color='green')} ")
                     print(
                         f"--{_('标题: ', color='bold yellow')}"
                         f"[bold green]{teams}[/bold green]"
@@ -307,7 +312,7 @@ class Rewards:
             return poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg
         except Exception:
             self.log.error(_log("检查掉落失败"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
             print(_("检查掉落失败", color="red"))
             return None, None, None, None, None, None
 
@@ -420,7 +425,7 @@ class Rewards:
                 self.log.info(_log("掉落提醒成功"))
             except Exception:
                 self.log.error(_log("掉落提醒失败"))
-                self.log.error(format_exc())
+                self.log.error(formatExc(format_exc()))
                 print(_("掉落提醒失败", color="red"))
 
     def countDrops(self, rewardWindow, isInit=False):
@@ -449,7 +454,7 @@ class Rewards:
                 try:
                     checkRewardPage(self.driver)
                 except Exception:
-                    self.log.error(format_exc())
+                    self.log.error(formatExc(format_exc()))
                     return -1, ""
                 dropRegion = self.driver.find_elements(
                     by=By.CSS_SELECTOR, value="div.name")
@@ -462,7 +467,7 @@ class Rewards:
                 self.utils.debugScreen(self.driver, "count")
                 print(_("获取掉落数失败", color="red"))
                 self.log.error(_log("获取掉落数失败"))
-                self.log.error(format_exc())
+                self.log.error(formatExc(format_exc()))
                 return -1, ""
             # Not the first run
             if not isInit:
@@ -519,7 +524,7 @@ class Rewards:
                     self.utils.debugScreen(self.driver, "countDrops")
                     print(_("统计掉落失败", color="red"))
                     self.log.error(_log("统计掉落失败"))
-                    self.log.error(format_exc())
+                    self.log.error(formatExc(format_exc()))
                     self.totalWatchHours = -1
                     return -1, ""
 
@@ -539,7 +544,7 @@ class Rewards:
                     self.utils.debugScreen(self.driver, "countInit")
                     print(_("初始化掉落数失败", color="red"))
                     self.log.error(_log("初始化掉落数失败"))
-                    self.log.error(format_exc())
+                    self.log.error(formatExc(format_exc()))
                     self.historyDrops = -1
                     self.totalWatchHours = -1
                     return -1, ""
@@ -571,4 +576,4 @@ class Rewards:
             self.utils.debugScreen(self.driver, "getRewardPage")
             print(_("检查掉落数失败", color="red"))
             self.log.error(_log("检查掉落数失败"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))

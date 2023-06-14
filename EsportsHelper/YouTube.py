@@ -7,6 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from EsportsHelper.Logger import log
 from EsportsHelper.Config import config
 from EsportsHelper.I18n import i18n
+from EsportsHelper.Utils import formatExc
+
 _ = i18n.getText
 _log = i18n.getLog
 
@@ -47,7 +49,7 @@ class YouTube:
             return True
         except Exception:
             self.log.error(_log("Youtube: 检查直播发生错误"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
             self.driver.switch_to.default_content()
             return False
 
@@ -68,7 +70,7 @@ class YouTube:
         except Exception:
             print(_("Youtube: 解除暂停失败", color="red"))
             self.log.error(_log("Youtube: 解除暂停失败"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
 
     def unmuteStream(self, muteButton) -> None:
         """
@@ -89,7 +91,7 @@ class YouTube:
         except Exception:
             print(_("Youtube: 解除静音失败", color="red"))
             self.log.error(_log("Youtube: 解除静音失败"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
 
     def setYoutubeQuality(self) -> bool:
         """
@@ -121,6 +123,6 @@ class YouTube:
         except Exception:
             self.driver.switch_to.default_content()
             self.log.error(_log("Youtube: 设置清晰度时发生错误"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
             self.utils.debugScreen(self.driver, lint="youtubeQuality")
             return False

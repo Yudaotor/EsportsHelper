@@ -480,4 +480,14 @@ def timeTrans(time):
         return time
 
 
+def formatExc(error):
+    modifiedTrace = ""
+    lines = error.splitlines()
+    for line in lines:
+        if "Stacktrace:" in line:
+            break
+        modifiedTrace += line + '\n'
+    return modifiedTrace
+
+
 OVERRIDES, CHAMPION_TEAM, SCHEDULE_URL = getGithubFile()

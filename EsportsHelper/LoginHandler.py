@@ -1,7 +1,7 @@
 from time import sleep
 from traceback import format_exc
 from EsportsHelper.Config import config
-from EsportsHelper.Utils import getLolesportsWeb, sysQuit, Utils
+from EsportsHelper.Utils import getLolesportsWeb, sysQuit, Utils, formatExc
 from rich import print
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
@@ -73,7 +73,7 @@ class LoginHandler:
             else:
                 print(f'--{_("登录超时,检查网络或窗口是否被覆盖", color="red")}')
                 self.log.error(_log("登录超时,检查网络或窗口是否被覆盖"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
             return False
 
     def insert2FACode(self) -> None:
@@ -110,5 +110,5 @@ class LoginHandler:
                 return
             print(f'--{_("免密登录失败,请去浏览器手动登录后再行尝试", color="red")}')
             self.log.error(_log("免密登录失败,请去浏览器手动登录后再行尝试"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
             sysQuit(self.driver, _log("免密登录失败,请去浏览器手动登录后再行尝试"))

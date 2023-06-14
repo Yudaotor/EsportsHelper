@@ -6,7 +6,7 @@ from EsportsHelper.I18n import i18n
 from EsportsHelper.Logger import log
 from EsportsHelper.LoginHandler import LoginHandler
 from EsportsHelper.Match import Match
-from EsportsHelper.Utils import Utils, getLolesportsWeb, sysQuit
+from EsportsHelper.Utils import Utils, getLolesportsWeb, sysQuit, formatExc
 from EsportsHelper.Webdriver import Webdriver
 from rich import print
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -31,7 +31,7 @@ def init():
         driver = Webdriver().createWebdriver()
     except TypeError:
         driver = None
-        log.error(format_exc())
+        log.error(formatExc(format_exc()))
         print(_("生成WEBDRIVER失败!", color="red"))
         print(_("无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试", color="red"))
         print(_("或可以尝试用管理员方式打开", color="red"))
@@ -40,7 +40,7 @@ def init():
         sysQuit(driver)
     except WebDriverException:
         driver = None
-        log.error(format_exc())
+        log.error(formatExc(format_exc()))
         print(_("生成WEBDRIVER失败!", color="red"))
         print(_("是否有谷歌浏览器?", color="red"))
         print(_("是否打开着谷歌浏览器?请关闭后再次尝试", color="red"))
@@ -49,7 +49,7 @@ def init():
         sysQuit(driver)
     except Exception:
         driver = None
-        log.error(format_exc())
+        log.error(formatExc(format_exc()))
         print(_("生成WEBDRIVER失败!", color="red"))
         print(_("是否有谷歌浏览器?", color="red"))
         print(_("是不是网络问题?请检查VPN节点是否可用", color="red"))
@@ -63,9 +63,9 @@ def init():
     try:
         getLolesportsWeb(driver)
     except Exception:
-        log.error(format_exc())
         log.error(
             _log("无法打开Lolesports网页，网络问题，将于3秒后退出..."))
+        log.error(formatExc(format_exc()))
         print(_("无法打开Lolesports网页，网络问题，将于3秒后退出...", color="red"))
         Utils().debugScreen(driver, "initWeb")
         sysQuit(driver, _log("无法打开Lolesports网页，网络问题，将于3秒后退出..."))
@@ -84,13 +84,13 @@ def init():
         Utils().debugScreen(driver, "language")
         log.error(_log("切换网页语言失败"))
         print(_("切换网页语言失败", color="red"))
-        log.error(format_exc())
+        log.error(formatExc(format_exc()))
         sysQuit(driver, _log("切换网页语言失败"))
     except Exception:
         Utils().debugScreen(driver, "language")
         log.error(_log("切换网页语言失败"))
         print(_("切换网页语言失败", color="red"))
-        log.error(format_exc())
+        log.error(formatExc(format_exc()))
         sysQuit(driver, _log("切换网页语言失败"))
 
 
@@ -117,7 +117,7 @@ def login():
             except Exception:
                 utils = Utils()
                 utils.debugScreen(driver, "login")
-                log.error(format_exc())
+                log.error(formatExc(format_exc()))
                 print(f'--{_("出现异常,登录失败", color="red")}')
                 sysQuit(driver, _log("出现异常,登录失败"))
 

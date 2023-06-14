@@ -11,7 +11,7 @@ from EsportsHelper.Twitch import Twitch
 from EsportsHelper.Utils import (Utils, OVERRIDES,
                                  getLolesportsWeb,
                                  getMatchName, sysQuit,
-                                 getSleepPeriod, acceptCookies, mouthTrans, timeTrans)
+                                 getSleepPeriod, acceptCookies, mouthTrans, timeTrans, formatExc)
 from EsportsHelper.Logger import delimiterLine
 from EsportsHelper.YouTube import YouTube
 from rich import print
@@ -185,7 +185,7 @@ class Match:
                         print(
                             f"{_('生涯总掉落:', color='bold yellow')}{dropsNumber} | "
                             f"{_('总观看时长: ', color='bold yellow')}{watchHours}")
-                        print(f"{_('程序启动时间: ', color='bold yellow')} "
+                        print(f"{_('程序启动时间: ', color='bold yellow')}"
                               f"[cyan]{formattedOpenDatetime}[/cyan] | "
                               f"{_('运行掉落总和:', color='bold yellow')}"
                               f"{sessionDrops}")
@@ -211,7 +211,7 @@ class Match:
                 try:
                     getLolesportsWeb(self.driver)
                 except Exception:
-                    self.log.error(format_exc())
+                    self.log.error(formatExc(format_exc()))
                     self.log.error(_log("无法打开Lolesports网页，网络问题，将于3秒后退出..."))
                     self.utils.errorNotify(error=_log("无法打开Lolesports网页，网络问题"))
                     print(_("无法打开Lolesports网页，网络问题，将于3秒后退出...", color="red"))
@@ -270,14 +270,14 @@ class Match:
         except NoSuchWindowException:
             self.log.error(_log("对应窗口找不到"))
             print(_("对应窗口找不到", color="red"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
             self.utils.errorNotify(_log("对应窗口找不到"))
             self.utils.debugScreen(self.driver, "main")
             sysQuit(self.driver, _log("对应窗口找不到"))
         except Exception:
             self.log.error(_log("发生错误"))
             print(_("发生错误", color="red"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
             self.utils.errorNotify(_log("发生错误"))
             self.utils.debugScreen(self.driver, "main")
             sysQuit(self.driver, _log("发生错误"))
@@ -316,7 +316,7 @@ class Match:
             self.log.error(_log("获取比赛列表失败"))
             self.utils.debugScreen(self.driver, "getMatchInfo")
             print(_("获取比赛列表失败", color="red"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
             return []
 
     def closeAllTabs(self):
@@ -358,7 +358,7 @@ class Match:
             self.log.error(_log("关闭所有窗口时发生异常"))
             print(f'--{_("关闭所有窗口时发生异常", color="red")}')
             self.utils.errorNotify(error=_log("关闭所有窗口时发生异常"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
 
     def closeFinishedTabs(self, liveMatches):
         """
@@ -397,7 +397,7 @@ class Match:
             self.utils.debugScreen(self.driver, "closeFinishedTabs")
             print(_("关闭已结束的比赛时发生错误", color="red"))
             self.utils.errorNotify(error=_log("关闭已结束的比赛时发生错误"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
 
     def startWatchNewMatches(self, liveMatches, disWatchMatches):
         """
@@ -443,7 +443,7 @@ class Match:
                     except Exception:
                         self.log.error(_log("无法设置 Twitch 清晰度."))
                         print(f'--{_("无法设置 Twitch 清晰度.", color="red")}')
-                        self.log.error(format_exc())
+                        self.log.error(formatExc(format_exc()))
             # Identified as a YouTube stream.
             else:
                 url = match
@@ -475,7 +475,7 @@ class Match:
                             _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者"))
                         print(f'--'
                               f'{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red")}')
-                        self.log.error(format_exc())
+                        self.log.error(formatExc(format_exc()))
             sleep(4)
 
     def closeStream(self):
@@ -488,7 +488,7 @@ class Match:
             self.utils.debugScreen(self.driver, "closeStream")
             self.log.error(_log("关闭视频流失败."))
             print(f'--{_("关闭视频流失败.", color="red")}')
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
         else:
             self.log.info(_log("视频流关闭成功."))
             print(f'--{_("视频流关闭成功.", color="green")}')
@@ -598,5 +598,5 @@ class Match:
         except Exception:
             self.utils.debugScreen(self.driver, "nextMatch")
             self.log.error(_log("获取下一场比赛时间失败"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
             print(_("获取下一场比赛时间失败", color="red"))

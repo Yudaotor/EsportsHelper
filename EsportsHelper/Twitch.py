@@ -7,6 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from EsportsHelper.Logger import log
 from EsportsHelper.Config import config
 from EsportsHelper.I18n import i18n
+from EsportsHelper.Utils import formatExc
+
 _ = i18n.getText
 _log = i18n.getLog
 
@@ -46,7 +48,7 @@ class Twitch:
             return True
         except Exception:
             self.log.error(_log("Twitch: 设置清晰度发生错误"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
             self.utils.debugScreen(self.driver, lint="setTwitchQuality")
         self.driver.switch_to.default_content()
         return False
@@ -86,7 +88,7 @@ class Twitch:
             return True
         except Exception:
             self.log.error(_log("Twitch: 检查直播发生失败"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
         self.driver.switch_to.default_content()
         return False
 
@@ -109,7 +111,7 @@ class Twitch:
         except Exception:
             print(_("Twitch: 解除静音失败", color="red"))
             self.log.error(_log("Twitch: 解除静音失败"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
 
     def playStream(self, playButton) -> None:
         """
@@ -128,4 +130,4 @@ class Twitch:
         except Exception:
             print(_("Twitch: 解除暂停失败", color="red"))
             self.log.error(_log("Twitch: 解除暂停失败"))
-            self.log.error(format_exc())
+            self.log.error(formatExc(format_exc()))
