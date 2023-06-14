@@ -1,4 +1,5 @@
 import os
+from functools import wraps
 from time import sleep, strftime
 from traceback import format_exc
 import requests
@@ -42,6 +43,7 @@ def getGithubFile():
                 "https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
         except Exception:
             log.error(_log("从Github获取参数文件失败, 将尝试从Gitee获取"))
+            log.error(formatExc(format_exc()))
             print(_("从Github获取参数文件失败, 将尝试从Gitee获取", color="red"))
             remoteGithubFile = req.get(
                 "https://gitee.com/yudaotor/EsportsHelper/raw/main/override.txt", headers=headers)
@@ -107,7 +109,7 @@ class Utils:
                 except Exception:
                     print(_("错误提醒发送失败", color="red"))
                     log.error(_log("错误提醒发送失败"))
-                    log.error(format_exc())
+                    log.error(formatExc(format_exc()))
 
             if connectorUrl != "":
                 s = requests.session()
@@ -152,7 +154,7 @@ class Utils:
                 except Exception:
                     print(_("异常提醒失败", color="red"))
                     log.error(_log("异常提醒失败"))
-                    log.error(format_exc())
+                    log.error(formatExc(format_exc()))
 
     def debugScreen(self, driver, lint="normal"):
         """
@@ -172,7 +174,7 @@ class Utils:
                 log.info(f'{lint}-{_log("调试截图成功")}')
         except Exception:
             log.error(f'{lint}-{_log("调试截图失败")}')
-            log.error(format_exc())
+            log.error(formatExc(format_exc()))
 
     def info(self):
         """
@@ -314,7 +316,7 @@ def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, 
         log.info(_log("桌面提醒成功发送"))
     except Exception:
         log.error(_log("桌面提醒发送失败"))
-        log.error(format_exc())
+        log.error(formatExc(format_exc()))
 
 
 def sysQuit(driver=None, e=None):
@@ -448,7 +450,7 @@ def acceptCookies(driver):
         return True
     except Exception:
         log.error(_log("接受cookies失败"))
-        log.error(format_exc())
+        log.error(formatExc(format_exc()))
         return False
 
 
@@ -462,6 +464,7 @@ def mouthTrans(mouth):
         else:
             return mouth
     except Exception:
+        log.error(formatExc(format_exc()))
         return mouth
 
 
@@ -477,6 +480,7 @@ def timeTrans(time):
         else:
             return time
     except Exception:
+        log.error(formatExc(format_exc()))
         return time
 
 

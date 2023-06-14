@@ -95,12 +95,13 @@ class Rewards:
                         retryTeamsTimes = 6
                         while not teams and retryTeamsTimes > 0:
                             retryTeamsTimes -= 1
-                            self.utils.debugScreen(self.driver, match + "title")
+                            if retryTeamsTimes != 5:
+                                self.utils.debugScreen(self.driver, match + "title")
+                                self.log.warning(match + " " + _log("获取队伍信息重试中..."))
                             self.driver.switch_to.default_content()
                             self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
                             webdriver.ActionChains(self.driver).move_to_element(teamsElement).perform()
                             teams = self.wait.until(ec.presence_of_element_located(teamLocator)).text
-                            self.log.warning(match + _log("获取队伍信息重试中..."))
                             sleep(5)
 
                         peopleLocator = (By.CSS_SELECTOR, "p[data-test-selector=stream-info-card-component__description]")
@@ -109,12 +110,13 @@ class Rewards:
                         retryViewerTimes = 6
                         while not viewerInfo and retryViewerTimes > 0:
                             retryViewerTimes -= 1
-                            self.utils.debugScreen(self.driver, match + "viewerNumber")
+                            if retryViewerTimes != 5:
+                                self.utils.debugScreen(self.driver, match + "viewerNumber")
+                                self.log.warning(match + _log("获取观看人数信息重试中..."))
                             self.driver.switch_to.default_content()
                             self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
                             webdriver.ActionChains(self.driver).move_to_element(viewerInfoElement).perform()
                             viewerInfo = self.wait.until(ec.presence_of_element_located(peopleLocator)).text
-                            self.log.warning(match + _log("获取观看人数信息重试中..."))
                             sleep(5)
 
                         viewerNumberFlag = True
@@ -188,7 +190,7 @@ class Rewards:
                     name = getMatchName(url).lower()
                     times -= 1
                     sleep(5)
-                    self.utils.debugScreen(self.driver, match + "afterRefresh")
+                    self.utils.debugScreen(self.driver, match + " afterRefresh")
                     if self.checkRewards(stream=stream) == 1 and self.config.closeStream is False:
                         if stream == "twitch":
                             self.twitch.setTwitchQuality()
@@ -204,17 +206,17 @@ class Rewards:
                                 f"{match} {_log('正常观看 可获取奖励')} ")
                             print(f"[bold magenta]{match}[/bold magenta] "
                                   f"{_('正常观看 可获取奖励', color='green')} ")
-                        self.utils.debugScreen(self.driver, match + "afterVods")
+                        self.utils.debugScreen(self.driver, match + " afterVods")
                         return True
                     elif self.checkRewards(stream=stream) == 1 and self.config.closeStream is True:
                         self.log.info(
                             f"{match} {_log('比赛结束 等待关闭')} ")
                         print(f"[bold magenta]{match}[/bold magenta] "
                               f"{_('比赛结束 等待关闭', color='yellow')} ")
-                        self.utils.debugScreen(self.driver, match + "afterVods")
+                        self.utils.debugScreen(self.driver, match + " afterVods")
                         return True
                     elif self.checkRewards(stream=stream) == 0:
-                        self.utils.debugScreen(self.driver, match + "afterVods")
+                        self.utils.debugScreen(self.driver, match + " afterVods")
                         continue
                 self.log.info(
                     f"{match} {_log('比赛结束 等待关闭')} ")
@@ -223,10 +225,11 @@ class Rewards:
                 return True
             elif flag == -1:
                 if i != retryTimes - 1:
-                    self.utils.debugScreen(self.driver, match + "rewardFailed")
+                    self.utils.debugScreen(self.driver, match + " rewardFailed")
                     self.log.warning(f"{match} {_log('观看异常 重试中...')}")
                     print(f"[bold magenta]{match}[/bold magenta] "
-                          f"{_('观看异常 重试中...', color='yellow')}")
+                          f"{_('观看异常', color='yellow')} "
+                          f"{(i + 1) * 30}{_('秒后重试', color='yellow')}")
                     sleep((i + 1) * 30)
                     self.driver.refresh()
                     sleep(10)
