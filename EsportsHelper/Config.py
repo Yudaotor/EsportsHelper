@@ -92,7 +92,7 @@ class Config:
             if self.language not in ["zh_CN", "en_US", "zh_TW"]:
                 self.language = "zh_CN"
                 print(_("语言配置错误,已恢复zh_CN默认值", color="red"))
-                log(_log("语言配置错误,已恢复zh_CN默认值"))
+                log.error(_log("语言配置错误,已恢复zh_CN默认值"))
                 delimiterLine(color="red")
         self.disWatchMatches = [match.lower() for match in self.disWatchMatches if match != ""]
 
@@ -114,7 +114,7 @@ class Config:
                 self.delay = int(self.delay)
             except ValueError:
                 print(_("检查间隔配置错误,已恢复默认值", color="red"))
-                log(_log("检查间隔配置错误,已恢复默认值"))
+                log.error(_log("检查间隔配置错误,已恢复默认值"))
                 delimiterLine(color="red")
                 self.delay = 600
 
@@ -146,32 +146,32 @@ class Config:
                     sleepPeriod = period.split("-")
                     if len(sleepPeriod) != 2:
                         print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red")}')
-                        log(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
+                        log.error(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
                         delimiterLine(color="red")
                         afterFormat.append("")
                     else:
                         try:
                             if int(sleepPeriod[0]) > int(sleepPeriod[1]):
                                 print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red")}')
-                                log(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
+                                log.error(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
                                 delimiterLine(color="red")
                                 afterFormat.append("")
                             elif int(sleepPeriod[0]) < 0 or int(sleepPeriod[1]) > 24:
                                 print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red")}')
-                                log(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
+                                log.error(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
                                 delimiterLine(color="red")
                                 afterFormat.append("")
                             else:
                                 afterFormat.append(period)
                         except ValueError:
                             print(f'{period} {_("睡眠时间段配置错误,已恢复默认值", color="red")}')
-                            log(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
+                            log.error(_log(f'{period} {_log("睡眠时间段配置错误,已恢复默认值")}'))
                             delimiterLine(color="red")
                             afterFormat.append("")
                 self.sleepPeriod = afterFormat
             else:
                 print(_("睡眠时间段配置错误,已恢复默认值", color="red"))
-                log(_log("睡眠时间段配置错误,已恢复默认值"))
+                log.error(_log("睡眠时间段配置错误,已恢复默认值"))
                 delimiterLine(color="red")
                 self.sleepPeriod = [""]
         if isinstance(self.maxRunHours, str):
@@ -182,7 +182,7 @@ class Config:
                     self.maxRunHours = int(self.maxRunHours)
                 except ValueError:
                     print(_("最大运行时间配置错误,已恢复默认值", color="red"))
-                    log(_log("最大运行时间配置错误,已恢复默认值"))
+                    log.error(_log("最大运行时间配置错误,已恢复默认值"))
                     delimiterLine(color="red")
                     self.maxRunHours = -1
         if isinstance(self.debug, str):
@@ -194,7 +194,7 @@ class Config:
                 self.debug = False
         if not isinstance(self.proxy, str):
             print(_("代理配置错误,已恢复默认值", color="red"))
-            log(_log("代理配置错误,已恢复默认值"))
+            log.error(_log("代理配置错误,已恢复默认值"))
             delimiterLine(color="red")
             self.proxy = ""
         if isinstance(self.countDrops, str):
@@ -206,12 +206,12 @@ class Config:
                 self.countDrops = False
         if not isinstance(self.chromePath, str):
             print(_("chrome路径配置错误,已恢复默认值", color="red"))
-            log(_log("chrome路径配置错误,已恢复默认值"))
+            log.error(_log("chrome路径配置错误,已恢复默认值"))
             delimiterLine(color="red")
             self.chromePath = ""
         if not isinstance(self.userDataDir, str):
             print(_("用户数据userDataDir路径配置错误,已恢复默认值", color="red"))
-            log(_log("用户数据userDataDir路径配置错误,已恢复默认值"))
+            log.error(_log("用户数据userDataDir路径配置错误,已恢复默认值"))
             delimiterLine(color="red")
             self.userDataDir = ""
         if isinstance(self.ignoreBroadCast, str):
@@ -224,12 +224,12 @@ class Config:
         if isinstance(self.notifyType, str):
             if self.notifyType not in ["all", "drops", "error"]:
                 print(_("通知类型配置错误,已恢复默认值", color="red"))
-                log(_log("通知类型配置错误,已恢复默认值"))
+                log.error(_log("通知类型配置错误,已恢复默认值"))
                 delimiterLine(color="red")
                 self.notifyType = "all"
         else:
             print(_("通知类型配置错误,已恢复默认值", color="red"))
-            log(_log("通知类型配置错误,已恢复默认值"))
+            log.error(_log("通知类型配置错误,已恢复默认值"))
             delimiterLine(color="red")
             self.notifyType = "all"
         if isinstance(self.autoSleep, str):
@@ -241,7 +241,7 @@ class Config:
                 self.autoSleep = False
         if self.countDrops is False and self.connectorDropsUrl != "":
             print(_("提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭", color="yellow"))
-            log(_log("提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭"))
+            log.warning(_log("提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭"))
             delimiterLine(color="red")
 
         if self.nickName == "":
@@ -251,6 +251,8 @@ class Config:
         if self.onlyWatchMatches and self.disWatchMatches:
             self.disWatchMatches = []
             print(_("只看模式已开启,已忽略不看模式配置", color="yellow"))
+            log.warning(_log("只看模式已开启,已忽略不看模式配置"))
+            delimiterLine(color="yellow")
 
 
 parser = argparse.ArgumentParser(
