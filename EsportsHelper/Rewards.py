@@ -572,7 +572,7 @@ class Rewards:
                                         self.todayDrops = self.todayDrops + 1
                                         # write to history file
                                         try:
-                                            with open('./dropsHistory/' + strftime("%Y%m%d-") + 'drops.txt', 'a', encoding="utf-8") as f:
+                                            with open('./dropsHistory/' + strftime("%Y%m%d-") + 'drops.txt', 'a+', encoding="utf-8") as f:
                                                 f.write(f"{strftime('%H:%M:%S')}--{self.config.nickName}--{dropRegionNow}--{eventTitle}--{dropItem}\n")
                                         except Exception:
                                             self.log.error(_log("写入掉落历史文件失败"))
@@ -616,12 +616,29 @@ class Rewards:
             # First run
             else:
                 try:
+                    if self.config.exportDrops:
+                        self.log.error(_log("总掉落文件生成中..."))
+                        print(_("总掉落文件生成中...", color="green"))
                     for i in range(0, len(dropRegion)):
                         if dropNumber[i].text[:-6] == '':
                             continue
                         self.dropsDict[dropRegion[i].text] = int(
                             dropNumber[i].text[:-6])
                         totalDropsNumber = totalDropsNumber + int(dropNumber[i].text[:-6])
+                        if self.config.exportDrops:
+                            try:
+                                with open(strftime("%Y%m%d-%H-%M-%S-") + 'totalDrops.txt', 'a+', encoding="utf-8") as f:
+                                    f.write(f"{dropRegion[i].text}:{dropNumber[i].text[:-6]}\n")
+                            except Exception:
+                                self.log.error(_log("写入总掉落文件失败"))
+                                self.log.error(formatExc(format_exc()))
+                    if self.config.exportDrops:
+                        try:
+                            with open(strftime("%Y%m%d-%H-%M-%S-") + 'totalDrops.txt', 'a+', encoding="utf-8") as f:
+                                f.write(f"TOTAL:{totalDropsNumber}\n")
+                        except Exception:
+                            self.log.error(_log("写入总掉落文件失败"))
+                            self.log.error(formatExc(format_exc()))
                     self.historyDrops = totalDropsNumber
                     self.totalWatchHours = totalWatchHours
                     return totalDropsNumber, ""

@@ -181,6 +181,8 @@ class I18n:
         "写入掉落历史文件失败": "Failed to write drop history file",
         "读取掉落记录失败": "Failed to read drop history file",
         "推送掉落失败": "Failed to push drop notification",
+        "总掉落文件生成中...": "Generating total drop file...",
+        "写入总掉落文件失败": "Failed to write total drop file",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -355,6 +357,8 @@ class I18n:
         "写入掉落历史文件失败": "寫入掉落歷史檔案失敗",
         "读取掉落记录失败": "讀取掉落記錄失敗",
         "推送掉落失败": "推送掉落失敗",
+        "总掉落文件生成中...": "總掉落檔案生成中...",
+        "写入总掉落文件失败": "寫入總掉落檔案失敗",
     }
 
     def install(self, lang):

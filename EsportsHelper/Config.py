@@ -64,6 +64,7 @@ class Config:
             self.nickName = configFile.get("nickName", self.username)
             self.onlyWatchMatches = configFile.get("onlyWatchMatches", [])
             self.maxStream = configFile.get("maxStream", 3)
+            self.exportDrops = configFile.get("exportDrops", False)
             self.format()
         except (ParserError, KeyError, ScannerError):
             log.error(_log('配置文件格式错误'))
@@ -122,6 +123,14 @@ class Config:
             else:
                 self.headless = False
 
+        if isinstance(self.exportDrops, str):
+            if self.exportDrops == "True" or self.exportDrops == "true":
+                self.exportDrops = True
+            elif self.exportDrops == "False" or self.exportDrops == "false":
+                self.exportDrops = False
+            else:
+                self.exportDrops = False
+
         if isinstance(self.delay, str):
             try:
                 self.delay = int(self.delay)
@@ -137,6 +146,7 @@ class Config:
             self.platForm = self.platForm.lower()
             if self.platForm not in ["windows", "linux"]:
                 self.platForm = "windows"
+
         if isinstance(self.desktopNotify, str):
             if self.desktopNotify == "True" or self.desktopNotify == "true":
                 self.desktopNotify = True
@@ -144,6 +154,7 @@ class Config:
                 self.desktopNotify = False
             else:
                 self.desktopNotify = False
+
         if isinstance(self.closeStream, str):
             if self.closeStream == "True" or self.closeStream == "true":
                 self.closeStream = True
