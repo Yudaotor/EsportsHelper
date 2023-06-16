@@ -40,6 +40,7 @@ class Match:
         self.sleepEndList = []
         self.nextMatchHour = None
         self.nextMatchDay = None
+        self.streamNumber = 0
 
     def watchMatches(self):
         """
@@ -353,6 +354,7 @@ class Match:
                 self.currentWindows.pop(handle, None)
             print(f'--{_("所有窗口已关闭", color="green")}')
             self.log.info(_log("所有窗口已关闭"))
+            self.streamNumber = 0
         except Exception:
             self.utils.debugScreen(self.driver, "closeAllTabs")
             self.log.error(_log("关闭所有窗口时发生异常"))
@@ -392,6 +394,7 @@ class Match:
                         self.rewards.checkMatches("youtube", keys)
             for keys in removeList:
                 self.currentWindows.pop(keys, None)
+                self.streamNumber -= 1
             self.driver.switch_to.window(self.mainWindow)
         except Exception:
             self.utils.debugScreen(self.driver, "closeFinishedTabs")
@@ -427,7 +430,10 @@ class Match:
                     print(f"[bold magenta]{skipName}[/bold magenta] "
                           f"{_('比赛跳过', color='yellow')}")
                     continue
-
+            if self.streamNumber >= self.config.maxStream:
+                self.log.info(_log("已达到最大观看赛区数, 剩余比赛将不予观看"))
+                print(f'{_("已达到最大观看赛区数, 剩余比赛将不予观看", color="yellow")}')
+                break
             self.driver.switch_to.new_window('tab')
             sleep(1)
             self.currentWindows[match] = self.driver.current_window_handle
@@ -439,7 +445,7 @@ class Match:
                 if not self.rewards.checkMatches("twitch", url):
                     return
                 if self.config.closeStream:
-                    self.closeStream()
+                    self.closeStreamElement()
                 else:
                     try:
                         if self.twitch.setTwitchQuality():
@@ -464,7 +470,7 @@ class Match:
                     return
                 # remove the YouTube stream
                 if self.config.closeStream:
-                    self.closeStream()
+                    self.closeStreamElement()
                 else:
                     try:
                         if self.youtube.setYoutubeQuality():
@@ -484,9 +490,10 @@ class Match:
                         print(f'--'
                               f'{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red")}')
                         self.log.error(formatExc(format_exc()))
+            self.streamNumber += 1
             sleep(4)
 
-    def closeStream(self):
+    def closeStreamElement(self):
         """
         Close the current video stream by removing the video player element from the DOM.
         """

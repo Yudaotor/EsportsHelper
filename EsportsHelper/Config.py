@@ -63,6 +63,7 @@ class Config:
             self.autoSleep = configFile.get("autoSleep", False)
             self.nickName = configFile.get("nickName", self.username)
             self.onlyWatchMatches = configFile.get("onlyWatchMatches", [])
+            self.maxStream = configFile.get("maxStream", 3)
             self.format()
         except (ParserError, KeyError, ScannerError):
             log.error(_log('配置文件格式错误'))
@@ -185,6 +186,23 @@ class Config:
                     log.error(_log("最大运行时间配置错误,已恢复默认值"))
                     delimiterLine(color="red")
                     self.maxRunHours = -1
+        if isinstance(self.maxStream, str):
+            if self.maxRunHours == "":
+                self.maxRunHours = 3
+            else:
+                try:
+                    self.maxStream = int(self.maxStream)
+                except ValueError:
+                    print(_("最大同时观看数配置错误,已恢复默认值3", color="red"))
+                    log.error(_log("最大同时观看数配置错误,已恢复默认值3"))
+                    delimiterLine(color="red")
+                    self.maxStream = 3
+        elif isinstance(self.maxStream, int):
+            if self.maxStream < 1:
+                print(_("最大同时观看数配置错误,已恢复默认值3", color="red"))
+                log.error(_log("最大同时观看数配置错误,已恢复默认值3"))
+                delimiterLine(color="red")
+                self.maxStream = 3
         if isinstance(self.debug, str):
             if self.debug == "True" or self.debug == "true":
                 self.debug = True

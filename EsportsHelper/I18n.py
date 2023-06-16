@@ -172,6 +172,7 @@ class I18n:
         "未找到奖励标识": "Reward mark not found",
         "Twitch: 检查直播间是否在线失败": "Twitch: Failed to check if the live is online",
         "只看模式已开启,已忽略不看模式配置": "Only mode is turned on, ignore the configuration of disWatching mode",
+        "最大同时观看数配置错误,已恢复默认值3": "Maximum number of streams configuration error, default value has been restored to 3",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -337,6 +338,7 @@ class I18n:
         "未找到奖励标识": "未找到獎勵標識",
         "Twitch: 检查直播间是否在线失败": "Twitch: 檢查直播間是否線上失敗",
         "只看模式已开启,已忽略不看模式配置": "只看模式已開啟,已忽略不看模式配置",
+        "最大同时观看数配置错误,已恢复默认值3": "最大同時觀看數配置錯誤,已恢復預設值3",
     }
 
     def install(self, lang):
