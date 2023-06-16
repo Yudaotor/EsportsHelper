@@ -80,6 +80,71 @@ class Rewards:
             bool: True if rewards are available, False otherwise.
         """
         match = getMatchName(url)
+        # Check if the match stream is correct
+        if url not in self.driver.current_url:
+            self.log.info(self.driver.current_url + " " + url)
+            self.log.warning(_log(match + " " + "进错直播间,正在重新进入"))
+            print(match + " " + _("进错直播间,正在重新进入", color="yellow"))
+            self.driver.get(url)
+            sleep(5)
+            if stream == "twitch":
+                if self.config.closeStream:
+                    try:
+                        self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
+                    except Exception:
+                        self.utils.debugScreen(self.driver, "closeStreamElement")
+                        self.log.error(_log("关闭视频流失败."))
+                        print(f'--{_("关闭视频流失败.", color="red")}')
+                        self.log.error(formatExc(format_exc()))
+                    else:
+                        self.log.info(_log("视频流关闭成功."))
+                        print(f'--{_("视频流关闭成功.", color="green")}')
+                else:
+                    try:
+                        if self.twitch.setTwitchQuality():
+                            self.log.info(_log("Twitch 160p清晰度设置成功"))
+                            print(f'--{_("Twitch 160p清晰度设置成功", color="green")}')
+                        else:
+                            self.log.error(_log("Twitch 清晰度设置失败"))
+                            print(f'--{_("Twitch 160p清晰度设置失败", color="red")}')
+                    except Exception:
+                        self.log.error(_log("无法设置 Twitch 清晰度."))
+                        print(f'--{_("无法设置 Twitch 清晰度.", color="red")}')
+                        self.log.error(formatExc(format_exc()))
+            else:
+                self.youtube.checkYoutubeStream()
+                # remove the YouTube stream
+                if self.config.closeStream:
+                    try:
+                        self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
+                    except Exception:
+                        self.utils.debugScreen(self.driver, "closeStreamElement")
+                        self.log.error(_log("关闭视频流失败."))
+                        print(f'--{_("关闭视频流失败.", color="red")}')
+                        self.log.error(formatExc(format_exc()))
+                    else:
+                        self.log.info(_log("视频流关闭成功."))
+                        print(f'--{_("视频流关闭成功.", color="green")}')
+                else:
+                    try:
+                        if self.youtube.setYoutubeQuality():
+                            self.log.info(_log("Youtube 144p清晰度设置成功"))
+                            print(f'--'
+                                  f'{_("Youtube 144p清晰度设置成功", color="green")}')
+                        else:
+                            self.utils.debugScreen(self.driver, "youtube")
+                            self.log.error(
+                                _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者"))
+                            print(f'--'
+                                  f'{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red")}')
+                    except Exception:
+                        self.utils.debugScreen(self.driver, "youtube")
+                        self.log.error(
+                            _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者"))
+                        print(f'--'
+                              f'{_("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red")}')
+                        self.log.error(formatExc(format_exc()))
+
         teams = _log("出错, 未知")
         viewerNumber = _log("出错, 未知")
         for i in range(retryTimes):
@@ -102,7 +167,7 @@ class Rewards:
                             self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
                             webdriver.ActionChains(self.driver).move_to_element(teamsElement).perform()
                             teams = self.wait.until(ec.presence_of_element_located(teamLocator)).text
-                            sleep(5)
+                            sleep(2)
 
                         peopleLocator = (By.CSS_SELECTOR, "p[data-test-selector=stream-info-card-component__description]")
                         viewerInfoElement = self.wait.until(ec.presence_of_element_located(peopleLocator))
@@ -117,7 +182,7 @@ class Rewards:
                             self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
                             webdriver.ActionChains(self.driver).move_to_element(viewerInfoElement).perform()
                             viewerInfo = self.wait.until(ec.presence_of_element_located(peopleLocator)).text
-                            sleep(5)
+                            sleep(1)
 
                         viewerNumberFlag = True
                         for num in viewerInfo:
@@ -184,7 +249,7 @@ class Rewards:
                       f"{_('正常观看 可获取奖励', color='green')} ")
                 return True
             elif flag == 0:
-                times = 3
+                times = 1
                 while times > 0:
                     self.driver.get(url)
                     name = getMatchName(url).lower()
@@ -226,7 +291,7 @@ class Rewards:
             elif flag == -1:
                 if i != retryTimes - 1:
                     self.utils.debugScreen(self.driver, match + " rewardFailed")
-                    self.log.warning(f"{match} {_log('观看异常 重试中...')}")
+                    self.log.warning(f"{match} {_log('观看异常 重试中...')}{(i + 1) * 30}{_log('秒后重试')}")
                     print(f"[bold magenta]{match}[/bold magenta] "
                           f"{_('观看异常', color='yellow')} "
                           f"{(i + 1) * 30}{_('秒后重试', color='yellow')}")

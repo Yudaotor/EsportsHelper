@@ -160,7 +160,7 @@ class I18n:
         '程序启动时间: ': 'Program startup time: ',
         "观看人数: ": "Viewers: ",
         "接受cookies": "Accept cookies",
-        "未找到cookies按钮": "Cookies button not found",
+        "未找到cookies按钮(正常情况)": "Cookies button not found (normal)",
         "接受cookies失败": "Failed to accept cookies",
         "今日": "TODAY",
         '于': 'FROM',
@@ -173,6 +173,7 @@ class I18n:
         "Twitch: 检查直播间是否在线失败": "Twitch: Failed to check if the live is online",
         "只看模式已开启,已忽略不看模式配置": "Only mode is turned on, ignore the configuration of disWatching mode",
         "最大同时观看数配置错误,已恢复默认值3": "Maximum number of streams configuration error, default value has been restored to 3",
+        "进错直播间,正在重新进入": "Entered the wrong live broadcast, re-entering",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -326,7 +327,7 @@ class I18n:
         "Riot原因,reward页面出现异常无法正常加载": "Riot原因,reward頁面出現異常無法正常載入",
         '程序启动时间: ': '程式啟動時間: ',
         "接受cookies": "接受cookies",
-        "未找到cookies按钮": "未找到cookies按鈕",
+        "未找到cookies按钮(正常情况)": "未找到cookies按鈕(正常情況)",
         "接受cookies失败": "接受cookies失敗",
         "今日": "今日",
         '通过': '通過',
@@ -339,6 +340,7 @@ class I18n:
         "Twitch: 检查直播间是否在线失败": "Twitch: 檢查直播間是否線上失敗",
         "只看模式已开启,已忽略不看模式配置": "只看模式已開啟,已忽略不看模式配置",
         "最大同时观看数配置错误,已恢复默认值3": "最大同時觀看數配置錯誤,已恢復預設值3",
+        "进错直播间,正在重新进入": "進錯直播間,正在重新進入",
     }
 
     def install(self, lang):

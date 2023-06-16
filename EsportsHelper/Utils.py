@@ -232,7 +232,7 @@ class Utils:
                 f">_<[/bold yellow]"
             )
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow] "
-                  f"Thanks for using [cyan]EsportsHelper[/cyan] v{version}!  "
+                  f"Thanks for using [cyan]EsportsHelper[/cyan] v {version}! "
                   f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]   "
                   f"The program is open source at GitHub  "
@@ -264,7 +264,7 @@ class Utils:
                 f">_<[/bold yellow]"
             )
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]        "
-                  f"感謝使用 [cyan]電競助手[/cyan] v{version}!        "
+                  f"感謝使用 [cyan]電競助手[/cyan] v {version}!       "
                   f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
             print(f"[bold yellow]>_<{'=' * 12}[/bold yellow] "
                   f"本程式開源於github連結地址如下: "
@@ -372,7 +372,7 @@ def getLolesportsWeb(driver) -> None:
     except Exception:
         print(_("获取LoLEsports网站失败，正在重试...", color="red"))
         log.error(_log("获取LoLEsports网站失败，正在重试..."))
-        log.error(format_exc())
+        log.error(formatExc(format_exc()))
         driver.get(SCHEDULE_URL)
 
 
@@ -415,7 +415,7 @@ def checkRewardPage(driver):
                 driver.refresh()
                 print(f'--{_("获取reward网站失败，正在重试...", color="red")}')
                 log.error(_log("获取reward网站失败，正在重试..."))
-                log.error(format_exc())
+                log.error(formatExc(format_exc()))
                 wait.until(ec.presence_of_element_located(
                     (By.CSS_SELECTOR, "div.name")))
         else:
@@ -446,7 +446,7 @@ def acceptCookies(driver):
         log.info(_log("接受cookies"))
         return True
     except TimeoutException:
-        log.info(_log("未找到cookies按钮"))
+        log.info(_log("未找到cookies按钮(正常情况)"))
         return True
     except Exception:
         log.error(_log("接受cookies失败"))
@@ -485,7 +485,7 @@ def timeTrans(time):
 
 
 def formatExc(error):
-    modifiedTrace = ""
+    modifiedTrace = f"{50 * '+'}\n"
     lines = error.splitlines()
     for line in lines:
         if "Stacktrace:" in line:

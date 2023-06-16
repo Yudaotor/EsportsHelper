@@ -389,7 +389,7 @@ class Match:
                     sleep(3)
                 else:
                     if keys in self.OVERRIDES:
-                        self.rewards.checkMatches("twitch", keys)
+                        self.rewards.checkMatches("twitch", OVERRIDES[keys])
                     else:
                         self.rewards.checkMatches("youtube", keys)
             for keys in removeList:
@@ -500,7 +500,7 @@ class Match:
         try:
             self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
         except Exception:
-            self.utils.debugScreen(self.driver, "closeStream")
+            self.utils.debugScreen(self.driver, "closeStreamElement")
             self.log.error(_log("关闭视频流失败."))
             print(f'--{_("关闭视频流失败.", color="red")}')
             self.log.error(formatExc(format_exc()))
