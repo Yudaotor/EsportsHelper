@@ -38,6 +38,7 @@ class I18n:
         "观看异常": "Watch system work anomaly.",
         "检查掉落失败": "Drops check failed.",
         "掉落提醒失败": "Drop alert failed.",
+        "掉落提醒失败 重试中...": "Drop alert failed. Retrying...",
         "无法打开Lolesports网页，网络问题": "Network error. Cannot open LolEsports website.",
         "登录中...": "Logging in...",
         "账密 提交成功": "Account credentials inserted...",
@@ -177,6 +178,9 @@ class I18n:
         "上午": "AM",
         "下午": "PM",
         "凌晨": "AM",
+        "写入掉落历史文件失败": "Failed to write drop history file",
+        "读取掉落记录失败": "Failed to read drop history file",
+        "推送掉落失败": "Failed to push drop notification",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -273,6 +277,7 @@ class I18n:
         '人观看': '人觀看',
         "观看人数: ": "觀看人數: ",
         '掉落提醒成功': '掉落提醒成功',
+        "掉落提醒失败 重试中...": "掉落提醒失敗 重試中...",
         '检查赛区直播状态...': '檢查賽區直播狀態...',
         '识别到距离比赛时间较长 检查间隔为1小时': '識別到距離比賽時間較長 檢查間隔為1小時',
         '提醒: 由于已关闭统计掉落功能,webhook提示掉落功能也将关闭': '提醒: 由於已關閉統計掉落功能,webhook提示掉落功能也將關閉',
@@ -347,6 +352,9 @@ class I18n:
         "上午": "上午",
         "下午": "下午",
         "凌晨": "凌晨",
+        "写入掉落历史文件失败": "寫入掉落歷史檔案失敗",
+        "读取掉落记录失败": "讀取掉落記錄失敗",
+        "推送掉落失败": "推送掉落失敗",
     }
 
     def install(self, lang):

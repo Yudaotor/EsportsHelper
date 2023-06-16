@@ -1,5 +1,4 @@
 import os
-from functools import wraps
 from time import sleep, strftime
 from traceback import format_exc
 import requests
@@ -492,6 +491,18 @@ def formatExc(error):
             break
         modifiedTrace += line + '\n'
     return modifiedTrace
+
+
+def loadDropsHistory():
+    try:
+        with open('./dropsHistory/' + strftime("%Y%m%d-") + 'drops.txt', "r", encoding="utf-8") as file:
+            lines = file.readlines()
+
+        return len(lines)
+    except Exception:
+        log.error(_log("读取掉落记录失败"))
+        log.error(formatExc(format_exc()))
+        return 0
 
 
 OVERRIDES, CHAMPION_TEAM, SCHEDULE_URL = getGithubFile()

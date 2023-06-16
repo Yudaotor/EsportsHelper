@@ -1,9 +1,11 @@
 from datetime import datetime
-from time import sleep
+from time import sleep, strftime
 from traceback import format_exc
+
+from retrying import retry
 from selenium import webdriver
 import requests
-from EsportsHelper.Utils import getMatchName, desktopNotify, checkRewardPage, getMatchTitle, mouthTrans, formatExc
+from EsportsHelper.Utils import getMatchName, desktopNotify, checkRewardPage, getMatchTitle, mouthTrans, formatExc, loadDropsHistory
 from rich import print
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
@@ -28,7 +30,7 @@ class Rewards:
         self.historyDrops = -1
         self.totalWatchHours = -1
         self.today = datetime.now().day
-        self.todayDrops = 0
+        self.todayDrops = loadDropsHistory()
         self.wait = WebDriverWait(self.driver, 30)
 
     def checkRewards(self, stream: str):
@@ -384,6 +386,7 @@ class Rewards:
             print(_("检查掉落失败", color="red"))
             return None, None, None, None, None, None
 
+    @retry(stop_max_attempt_number=3, wait_incrementing_increment=10000, wait_incrementing_start=10000)
     def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropRegion, todayDrops) -> None:
         """
             Sends a notification message about a drop obtained through a certain event to a configured webhook.
@@ -406,7 +409,7 @@ class Rewards:
         if self.config.notifyType in ["all", "drops"]:
             try:
                 s = requests.session()
-                s.keep_alive = False  # 关闭多余连接
+                s.keep_alive = False  # close connection after each request
                 if "https://oapi.dingtalk.com" in self.config.connectorDropsUrl:
                     data = {
                         "msgtype": "link",
@@ -492,9 +495,9 @@ class Rewards:
                     sleep(5)
                 self.log.info(_log("掉落提醒成功"))
             except Exception:
-                self.log.error(_log("掉落提醒失败"))
+                self.log.error(_log("掉落提醒失败 重试中..."))
                 self.log.error(formatExc(format_exc()))
-                print(_("掉落提醒失败", color="red"))
+                print(_("掉落提醒失败 重试中...", color="red"))
 
     def countDrops(self, rewardWindow, isInit=False):
         """
@@ -505,6 +508,8 @@ class Rewards:
         """
         if self.today != datetime.now().day:
             self.today = datetime.now().day
+            with open(f'./dropsHistory/{strftime("%Y%m%d-")} + "drops.txt"', "a+"):
+                pass
             self.todayDrops = 0
         if self.config.countDrops:
             try:
@@ -562,9 +567,17 @@ class Rewards:
                                         (By.CSS_SELECTOR, f"div.accordion-body > div > div:nth-child({j})")))
                                     webdriver.ActionChains(self.driver).move_to_element(dropItem).click(dropItem).perform()
                                     poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.getNewDropInfo()
-                                    unlockedDate = mouthTrans(unlockedDate.split(" ")[0]) + " " + unlockedDate.split(" ")[1] + _log('日')
+                                    unlockedDate = mouthTrans(unlockedDate.split(" ")[0]) + "" + unlockedDate.split(" ")[1] + _log('日')
                                     if poweredByImg is not None:
                                         self.todayDrops = self.todayDrops + 1
+                                        # write to history file
+                                        try:
+                                            with open('./dropsHistory/' + strftime("%Y%m%d-") + 'drops.txt', 'a', encoding="utf-8") as f:
+                                                f.write(f"{strftime('%H:%M:%S')}--{self.config.nickName}--{dropRegionNow}--{eventTitle}--{dropItem}\n")
+                                        except Exception:
+                                            self.log.error(_log("写入掉落历史文件失败"))
+                                            self.log.error(formatExc(format_exc()))
+
                                         self.log.info(
                                             f"<{self.config.nickName}>|{_log('今日')}| "
                                             f"{self.todayDrops} |{_log('通过')}| "
@@ -581,8 +594,12 @@ class Rewards:
                                             desktopNotify(
                                                 poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropRegionNow, self.todayDrops)
                                         if self.config.connectorDropsUrl != "":
-                                            self.notifyDrops(
-                                                poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropRegionNow, self.todayDrops)
+                                            try:
+                                                self.notifyDrops(
+                                                    poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropRegionNow, self.todayDrops)
+                                            except Exception:
+                                                self.log.error(_log("推送掉落失败"))
+                                                self.log.error(formatExc(format_exc()))
                                     sleep(3)
                                 self.isNotified[dropRegionNow] = self.isNotified.get(dropRegionNow, 0) + dropsNeedNotify
                         totalDropsNumber = totalDropsNumber + dropNumberNow
