@@ -174,6 +174,9 @@ class I18n:
         "只看模式已开启,已忽略不看模式配置": "Only mode is turned on, ignore the configuration of disWatching mode",
         "最大同时观看数配置错误,已恢复默认值3": "Maximum number of streams configuration error, default value has been restored to 3",
         "进错直播间,正在重新进入": "Entered the wrong live broadcast, re-entering",
+        "上午": "AM",
+        "下午": "PM",
+        "凌晨": "AM",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -341,6 +344,9 @@ class I18n:
         "只看模式已开启,已忽略不看模式配置": "只看模式已開啟,已忽略不看模式配置",
         "最大同时观看数配置错误,已恢复默认值3": "最大同時觀看數配置錯誤,已恢復預設值3",
         "进错直播间,正在重新进入": "進錯直播間,正在重新進入",
+        "上午": "上午",
+        "下午": "下午",
+        "凌晨": "凌晨",
     }
 
     def install(self, lang):

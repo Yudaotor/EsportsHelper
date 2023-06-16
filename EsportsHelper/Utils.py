@@ -472,11 +472,11 @@ def timeTrans(time):
     try:
         if i18n.language == "zh_CN" or i18n.language == "zh_TW":
             if time[-2:] == "AM" and time[:-2] != "12":
-                return "上午" + time[:-2] + "点"
+                return log("上午") + time[:-2] + log("点")
             elif time[-2:] == "AM" and time[:-2] == "12":
-                return "凌晨" + time[:-2] + "点"
+                return log("凌晨") + time[:-2] + log("点")
             elif time[-2:] == "PM":
-                return "下午" + time[:-2] + "点"
+                return log("下午") + time[:-2] + log("点")
         else:
             return time
     except Exception:
