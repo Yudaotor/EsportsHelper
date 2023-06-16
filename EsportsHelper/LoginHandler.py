@@ -33,7 +33,7 @@ class LoginHandler:
                 getLolesportsWeb(self.driver)
             except Exception:
                 self.log.error(_log("无法打开Lolesports网页，网络问题"))
-                self.log.error(format_exc())
+                self.log.error(formatExc(format_exc()))
                 print(_("无法打开Lolesports网页，网络问题", color="red"))
             sleep(2)
             loginButton = self.wait.until(ec.presence_of_element_located(

@@ -31,7 +31,13 @@ def getLatestVersion():
     except Exception:
         print(_("获取最新版本失败", color="red"))
         delimiterLine(color="red")
-        log.error(format_exc())
+        modifiedTrace = f"{50 * '+'}\n"
+        lines = format_exc().splitlines()
+        for line in lines:
+            if "Stacktrace:" in line:
+                break
+            modifiedTrace += line + '\n'
+        log.error(modifiedTrace)
         return "0.0.0"
 
 

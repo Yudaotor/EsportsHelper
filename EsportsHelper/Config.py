@@ -69,7 +69,13 @@ class Config:
             log.error(_log('配置文件格式错误'))
             log.error(_log('请检查是否存在中文字符以及冒号后面应该有一个空格'))
             log.error(_log('配置路径如有单斜杠请改为双斜杠'))
-            log.error(format_exc())
+            modifiedTrace = f"{50 * '+'}\n"
+            lines = format_exc().splitlines()
+            for line in lines:
+                if "Stacktrace:" in line:
+                    break
+                modifiedTrace += line + '\n'
+            log.error(modifiedTrace)
             print(_("配置文件格式错误", color="red"))
             print(_("请检查是否存在中文字符以及冒号后面应该有一个空格", color="red"))
             print(_("配置路径如有单斜杠请改为双斜杠", color="red"))
@@ -77,7 +83,13 @@ class Config:
             os.kill(os.getpid(), 9)
         except Exception:
             log.error(_log("配置文件错误"))
-            log.error(format_exc())
+            modifiedTrace = f"{50 * '+'}\n"
+            lines = format_exc().splitlines()
+            for line in lines:
+                if "Stacktrace:" in line:
+                    break
+                modifiedTrace += line + '\n'
+            log.error(modifiedTrace)
             print(_("配置文件错误", color="red"))
             input(_log("按回车键退出"))
             os.kill(os.getpid(), 9)
