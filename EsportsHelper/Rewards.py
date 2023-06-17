@@ -83,7 +83,7 @@ class Rewards:
         """
         match = getMatchName(url)
         # Check if the match stream is correct
-        if url not in self.driver.current_url:
+        if self.checkRewards(stream) == 1 and url not in self.driver.current_url:
             self.log.info(self.driver.current_url + " " + url)
             self.log.warning(_log(match + " " + "进错直播间,正在重新进入"))
             print(match + " " + _("进错直播间,正在重新进入", color="yellow"))
