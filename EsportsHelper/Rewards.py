@@ -508,7 +508,7 @@ class Rewards:
         """
         if self.today != datetime.now().day:
             self.today = datetime.now().day
-            with open(f'./dropsHistory/{strftime("%Y%m%d-")} + "drops.txt"', "a+"):
+            with open(f'./dropsHistory/{strftime("%Y%m%d-")}drops.txt', "a+"):
                 pass
             self.todayDrops = 0
         if self.config.countDrops:
