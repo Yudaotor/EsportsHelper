@@ -183,18 +183,23 @@ class Match:
                     watchHours = self.rewards.totalWatchHours
                     sessionDrops = dropsNumber - self.rewards.historyDrops
                     if dropsNumber != -1 and sessionDrops >= 0:
+                        todayDrops = self.rewards.todayDrops
+                        if todayDrops == 0:
+                            todayDrops = ""
+                        else:
+                            todayDrops = f"({todayDrops})"
                         print(
                             f"{_('生涯总掉落:', color='bold yellow')}{dropsNumber} | "
                             f"{_('总观看时长: ', color='bold yellow')}{watchHours}")
                         print(f"{_('程序启动时间: ', color='bold yellow')}"
                               f"[cyan]{formattedOpenDatetime}[/cyan] | "
                               f"{_('运行掉落总和:', color='bold yellow')}"
-                              f"{sessionDrops}")
+                              f"{sessionDrops}{todayDrops}")
                         self.log.info(
                             f"{_log('程序启动时间: ')}"
                             f"{formattedOpenDatetime} | "
                             f"{_log('运行掉落总和:')}"
-                            f"{sessionDrops} | "
+                            f"{sessionDrops}{todayDrops} | "
                             f"{_log('生涯总掉落:')}"
                             f"{dropsNumber} | "
                             f"{_log('总观看时长: ')}"
@@ -419,14 +424,14 @@ class Match:
             if disWatchMatchesSet != set():
                 if any(disWatch in match for disWatch in disWatchMatchesSet):
                     skipName = getMatchName(match)
-                    self.log.info(f"{skipName} {_log('比赛跳过')}")
+                    self.log.info(f"{match} {skipName} {_log('比赛跳过')}")
                     print(f"[bold magenta]{skipName}[/bold magenta] "
                           f"{_('比赛跳过', color='yellow')}")
                     continue
             elif self.config.onlyWatchMatches:
                 if match.split('/')[-1] not in self.config.onlyWatchMatches:
                     skipName = getMatchName(match)
-                    self.log.info(f"{skipName} {_log('比赛跳过')}")
+                    self.log.info(f"{match} {skipName} {_log('比赛跳过')}")
                     print(f"[bold magenta]{skipName}[/bold magenta] "
                           f"{_('比赛跳过', color='yellow')}")
                     continue
