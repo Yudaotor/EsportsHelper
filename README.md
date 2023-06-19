@@ -9,7 +9,7 @@
 **Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
 # 电竞助手 EsportsHelper
 通过selenium模拟浏览器来自动观看电竞比赛,网址: [LolEsports](lolesports.com)  
-至于会不会被拳头检测到这个问题,目前还没有答案.  
+**为了避免被拳头检测,请尽量过滤掉小赛区(更何况本来就不怎么掉,并且可以省流量)**  
 哦对了,用的是谷歌浏览器哦 （必须要下一个最新版的谷歌浏览器哦）  
 **来自中国大陆的需搭配VPN使用**  
 **如何下载**:点击右侧的[Releases](https://github.com/Yudaotor/EsportsHelper/releases)下载
@@ -41,21 +41,23 @@ python -m pip install -r requirements.txt
 ## 特性
 1. 自动打开浏览器,进入lolesports.com,查询哪些赛区在进行比赛(在放赛前等待的赛区会被忽视,但是可以通过ignoreBroadCast配置从而不忽视),进入观看并设置为最低清晰度(为了节省流量)
 2. 可以自行设置是否选择无头模式(默认关闭)(无头模式即headless,开启后浏览器会不可见,在后台运行,缓解电脑CPU压力)
-3. 可以自行设置**不观看哪些赛区**的比赛.(默认为空)(注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看)(建议设置,避免观看所有比赛从而被检测)
+3. 可以自行设置**不观看哪些赛区** **或者只观看**的比赛.(默认为空)(注意,不观看是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看)(只观看是严格匹配的逻辑)(建议设置,避免观看所有比赛从而被检测)
 4. 可以自行设置多久来查询一次比赛最新信息.(默认600秒)(关闭已经结束的比赛和开启新开始的比赛)
 5. **掉落提醒**(支持钉钉,Discord,饭碗警告)
 6. 软件发生错误时可以发送错误提醒(推送信息类型支持筛选)
 7. 可以设置最长运行时间，到达时间后自动关机(只有windows会自动关机)  
 8. 可以设置多段休眠时间段，在休眠时间段中会关闭观赛网页,待休眠结束后重新打开.
-9. 可以设置桌面提醒
-10. 可以手动添加代理(绝大部分用户无需配置)
+9. 可以设置桌面提醒.
+10. 可以手动添加代理.(绝大部分用户无需配置)
 11. 省流模式,可以删除视频流元素(节省流量)(风险存在,有被拳头检测可能) 
-12. 可以查看程序本次运行得到的掉落数以及掉落赛区信息
-13. 可以通过本地浏览器缓存免账密登录
-14. 可以自定义谷歌浏览器的地址(支持绿色版即免安装版)
-15. 可以配置语言,目前支持**简体中文**,**繁体中文**和**英语**
+12. 可以查看程序本次运行得到的掉落数以及掉落赛区信息.
+13. 可以通过本地浏览器缓存免账密登录.
+14. 可以自定义谷歌浏览器的地址.(支持绿色版即免安装版)
+15. 可以配置语言,目前支持**简体中文**,**繁体中文**和**英语**.
 16. 可以配置是否**自动休眠**,即当没有比赛时关闭页面,直到比赛重新打开.(**推荐**设置)(第二次检查时生效)
 17. 非自动休眠模式下如检测到距离下场比赛时间较长也会进行以1小时间隔检查.
+18. 可以设定**最大同时观看直播数**,避免同时观看过多赛区被拳头检测.
+19. 可以导出生涯掉落详细信息.
 
 
 ## 配置信息
@@ -69,8 +71,12 @@ delay: 600                                    # 每次检查的时间间隔，�
 headless: False                               # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)  
 language: "zh_CN"                             # 现支持语言"zh_CN","zh_TW","en_US".简体中文,繁体中文,英语.
 nickName: ""                                  # 绰号,为空时默认为username.(增强隐私)  
-disWatchMatches: ["lck", "lpl", "lcs"]        # 不想看的赛区名称，可以在这里添加.(注意,是小写)  
+onlyWatchMatches: ["lcs","lla","lpl","lck","ljl-japan","lco","lec","cblol-brazil","pcs","tft_esports"]   # 只观看的赛区名称,小写.
+
+disWatchMatches: ["prime","lfl","liga","hitpoint","series","nlc","nationals","academy","qualifiers","legends","challengers","league"]        # 不想看的赛区名称，可以在这里添加.(注意,是小写)  
 maxRunHours: -1                               # 负值为一直运行，正值为运行小时, 默认-1
+maxStream: 3                                  # 默认值为3,最大同时观看的比赛数,超过将会不予观看.
+exportDrops: False                            # 默认为False,是否需要导出生涯掉落详情文件,只会在脚本打开时生成.
 proxy: "你的代理地址"                          # 代理地址，选填，一般用户不用填,除非你知道你在干什么。 例子, "socks://127.0.0.1:20173"
 connectorDropsUrl: "你的webhook链接"           # (支持钉钉,Discord,饭碗警告)具体配置方法见此处https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F
 platForm: "windows"                           # 使用平台,默认为Windows,如需使用Linux请在此处进行配置  
@@ -101,7 +107,7 @@ LCO:lco
 VCS:vcs  
 MSI:msi  
 WORLDS:worlds  
-CBLOL:cblol  
+CBLOL:cblol-brazil  
 CBLOL_ACADEMY:cblol_academy  
 LLA:lla  
 LJL:ljl-japan  
