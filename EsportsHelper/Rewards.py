@@ -567,7 +567,10 @@ class Rewards:
                                         (By.CSS_SELECTOR, f"div.accordion-body > div > div:nth-child({j})")))
                                     webdriver.ActionChains(self.driver).move_to_element(dropItem).click(dropItem).perform()
                                     poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.getNewDropInfo()
-                                    unlockedDate = mouthTrans(unlockedDate.split(" ")[0]) + "" + unlockedDate.split(" ")[1] + _log('日')
+                                    try:
+                                        unlockedDate = mouthTrans(unlockedDate.split(" ")[0]) + "" + unlockedDate.split(" ")[1] + _log('日')
+                                    except Exception:
+                                        pass
                                     if poweredByImg is not None:
                                         self.todayDrops = self.todayDrops + 1
                                         # write to history file
