@@ -424,14 +424,14 @@ class Match:
             if disWatchMatchesSet != set():
                 if any(disWatch in match for disWatch in disWatchMatchesSet):
                     skipName = getMatchName(match)
-                    self.log.info(f"{match} {skipName} {_log('比赛跳过')}")
+                    self.log.info(f"{skipName} {_log('比赛跳过')}")
                     print(f"[bold magenta]{skipName}[/bold magenta] "
                           f"{_('比赛跳过', color='yellow')}")
                     continue
             elif self.config.onlyWatchMatches:
                 if match.split('/')[-1] not in self.config.onlyWatchMatches:
                     skipName = getMatchName(match)
-                    self.log.info(f"{match} {skipName} {_log('比赛跳过')}")
+                    self.log.info(f"{skipName} {_log('比赛跳过')}")
                     print(f"[bold magenta]{skipName}[/bold magenta] "
                           f"{_('比赛跳过', color='yellow')}")
                     continue
