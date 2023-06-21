@@ -506,11 +506,13 @@ class Rewards:
         :param rewardWindow:
         :param isInit: Whether it is the first time to enter the page
         """
+        # If the day changes, the number of drops is cleared
         if self.today != datetime.now().day:
             self.today = datetime.now().day
             with open(f'./dropsHistory/{strftime("%Y%m%d-")}drops.txt', "a+"):
                 pass
             self.todayDrops = 0
+
         if self.config.countDrops:
             try:
                 if isInit is True:
@@ -553,6 +555,9 @@ class Rewards:
                             continue
                         dropNumberNow = int(dropNumber[i].text[:-6])
                         dropRegionNow = dropRegion[i].text
+                        # TFT is a special case and needs to be processed separately
+                        if "TFT" in dropRegionNow:
+                            dropRegionNow = "TFT"
                         drops = dropNumberNow - int(self.dropsDict.get(dropRegionNow, 0))
                         if drops > 0 and totalWatchHours != -1:
                             dropNumberInfo.append(
@@ -560,7 +565,7 @@ class Rewards:
                             dropsNeedNotify = drops - self.isNotified.get(dropRegionNow, 0)
                             if dropsNeedNotify > 0:
                                 regionName = self.wait.until(ec.presence_of_element_located(
-                                    (By.XPATH, f"//div[text()='{dropRegionNow}']")))
+                                    (By.XPATH, f"//div[contains(text(), '{dropRegionNow}')]")))
                                 self.driver.execute_script("arguments[0].click();", regionName)
                                 for j in range(dropsNeedNotify, 0, -1):
                                     dropItem = self.wait.until(ec.presence_of_element_located(
@@ -623,15 +628,18 @@ class Rewards:
                         self.log.error(_log("总掉落文件生成中..."))
                         print(_("总掉落文件生成中...", color="green"))
                     for i in range(0, len(dropRegion)):
-                        if dropNumber[i].text[:-6] == '':
+                        dropNumberNow = dropNumber[i].text[:-6]
+                        if dropNumberNow == '':
                             continue
-                        self.dropsDict[dropRegion[i].text] = int(
-                            dropNumber[i].text[:-6])
-                        totalDropsNumber = totalDropsNumber + int(dropNumber[i].text[:-6])
+                        dropRegionNow = dropRegion[i].text
+                        if "TFT" in dropRegionNow:
+                            dropRegionNow = "TFT"
+                        self.dropsDict[dropRegionNow] = int(dropNumberNow)
+                        totalDropsNumber = totalDropsNumber + int(dropNumberNow)
                         if self.config.exportDrops:
                             try:
                                 with open(strftime("%Y%m%d-%H-%M-%S-") + 'totalDrops.txt', 'a+', encoding="utf-8") as f:
-                                    f.write(f"{dropRegion[i].text}:{dropNumber[i].text[:-6]}\n")
+                                    f.write(f"{dropRegionNow}:{dropNumberNow}\n")
                             except Exception:
                                 self.log.error(_log("写入总掉落文件失败"))
                                 self.log.error(formatExc(format_exc()))
