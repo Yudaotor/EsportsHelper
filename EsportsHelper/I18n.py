@@ -184,6 +184,7 @@ class I18n:
         "推送掉落失败": "Failed to push drop notification",
         "总掉落文件生成中...": "Generating total drop file...",
         "写入总掉落文件失败": "Failed to write total drop file",
+        "人已解锁": "unlocked",
     }
     zhTWI18n = {
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
@@ -361,6 +362,7 @@ class I18n:
         "推送掉落失败": "推送掉落失敗",
         "总掉落文件生成中...": "總掉落檔案生成中...",
         "写入总掉落文件失败": "寫入總掉落檔案失敗",
+        "人已解锁": "人已解鎖",
     }
 
     def install(self, lang):

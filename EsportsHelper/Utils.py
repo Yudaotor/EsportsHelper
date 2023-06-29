@@ -311,7 +311,7 @@ class Utils:
             print()
 
 
-def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropLocale, todayDrops):
+def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropLocale, todayDrops, fans):
     """
     Desktop notification function that sends a notification to the user's desktop.
 
@@ -328,7 +328,7 @@ def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, 
     try:
         notification.notify(
             title=f"{_log('新的掉落!')}{_log('今日: ')}{todayDrops}",
-            message=f"{_log('通过')} {eventTitle} {_log('获得')} {dropItem} {_log('于')} {dropLocale} {unlockedDate}",
+            message=f"{_log('通过')} {eventTitle} {_log('获得')} {dropItem} {_log('于')} {dropLocale} {unlockedDate} {fans}",
             timeout=30
         )
         log.info(_log("桌面提醒成功发送"))

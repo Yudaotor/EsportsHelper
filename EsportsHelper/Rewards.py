@@ -368,6 +368,15 @@ class Rewards:
             except Exception:
                 unlockedDate = ""
             try:
+                fans = self.driver.find_element(
+                    by=By.CSS_SELECTOR, value="div.RewardsDropsOverlay > div.content > div.fans-unlocked").text
+                if fans[-8:] == "UNLOCKED":
+                    fans = fans[:-13] + _log("人已解锁")
+                else:
+                    fans = ""
+            except Exception:
+                fans = ""
+            try:
                 dropItemImg = self.driver.find_element(
                     by=By.CSS_SELECTOR, value="div[class=reward] > div[class=image] > img[class=img]").get_attribute("src")
             except Exception:
@@ -379,15 +388,15 @@ class Rewards:
                 closeButton = self.wait.until(ec.presence_of_element_located(
                     (By.CSS_SELECTOR, "div.stats > div:nth-child(2) > div.number")))
             closeButton.click()
-            return poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg
+            return poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, fans
         except Exception:
             self.log.error(_log("检查掉落失败"))
             self.log.error(formatExc(format_exc()))
             print(_("检查掉落失败", color="red"))
-            return None, None, None, None, None, None
+            return None, None, None, None, None, None, None
 
     @retry(stop_max_attempt_number=3, wait_incrementing_increment=10000, wait_incrementing_start=10000)
-    def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropRegion, todayDrops) -> None:
+    def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropRegion, todayDrops, fans) -> None:
         """
             Sends a notification message about a drop obtained through a certain event to a configured webhook.
 
@@ -400,6 +409,7 @@ class Rewards:
                 dropItemImg (str): The URL of the image of the item that was dropped.
                 dropRegion (str): The locale where the event took place.
                 todayDrops (int): The number of drops obtained today.
+                fans (str): The number of fans that unlocked the drop.
             Returns:
                 None. This function only sends a notification message.
 
@@ -414,7 +424,7 @@ class Rewards:
                     data = {
                         "msgtype": "link",
                         "link": {
-                            "text": f"[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}",
+                            "text": f"[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}|{fans}",
                             "title": f"Drop: 今天第{todayDrops}个\nFrom: {dropRegion}",
                             "picUrl": f"{dropItemImg}",
                             "messageUrl": "https://lolesports.com/rewards"
@@ -459,11 +469,18 @@ class Rewards:
                         "value": f"{todayDrops}",
                         "inline": True
                     }
+                    field7 = {
+                        "name": "UnlockNumber",
+                        "value": f"{fans}",
+                        "inline": True
+                    }
+                    if fans == "":
+                        field7 = fieldNone
                     embed = {
                         "title": "Drop!",
                         "image": {"url": f"{productImg}"},
                         "thumbnail": {"url": f"{dropItemImg}"},
-                        "fields": [field0, field1, fieldNone, field2, field4, field5, field6],
+                        "fields": [field0, field1, field7, field2, field4, field5, field6],
                         "color": 6676471,
                     }
                     params = {
@@ -476,7 +493,7 @@ class Rewards:
                     sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
-                        "text": f"今天第{todayDrops}个掉落\n[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}\n[赛区]{dropRegion} [时间]{unlockedDate}",
+                        "text": f"今天第{todayDrops}个掉落\n[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}\n[赛区]{dropRegion} [时间]{unlockedDate} {fans}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
                         "Content-type": "application/json"}, json=params)
@@ -489,7 +506,7 @@ class Rewards:
                             "articles": [
                                 {
                                     "title": f"今天第{todayDrops}个掉落",
-                                    "description": f"[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}\n[赛区]{dropRegion} [时间]{unlockedDate}",
+                                    "description": f"[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}\n[赛区]{dropRegion} [时间]{unlockedDate} {fans}",
                                     "url": "https://lolesports.com/rewards",
                                     "picurl": f"{dropItemImg}"
                                 }
@@ -502,7 +519,7 @@ class Rewards:
                     sleep(10)
                 else:
                     params = {
-                        "text": f"今天第{todayDrops}个掉落\n[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}\n[赛区]{dropRegion} [时间]{unlockedDate}",
+                        "text": f"今天第{todayDrops}个掉落\n[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}\n[赛区]{dropRegion} [时间]{unlockedDate} {fans}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
                         "Content-type": "application/json"}, json=params)
@@ -573,8 +590,6 @@ class Rewards:
                         # TFT is a special case and needs to be processed separately
                         if "TFT" in dropRegionNow:
                             dropRegionNow = "TFT"
-                        if "LPL" in dropRegionNow:
-                            dropNumberNow = dropNumberNow + 2
                         drops = dropNumberNow - int(self.dropsDict.get(dropRegionNow, 0))
                         if drops > 0 and totalWatchHours != -1:
                             dropNumberInfo.append(
@@ -588,7 +603,7 @@ class Rewards:
                                     dropItem = self.wait.until(ec.presence_of_element_located(
                                         (By.CSS_SELECTOR, f"div.accordion-body > div > div:nth-child({j})")))
                                     webdriver.ActionChains(self.driver).move_to_element(dropItem).click(dropItem).perform()
-                                    poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg = self.getNewDropInfo()
+                                    poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, fans = self.getNewDropInfo()
                                     try:
                                         unlockedDate = mouthTrans(unlockedDate.split(" ")[0]) + "" + unlockedDate.split(" ")[1] + _log('日')
                                     except Exception:
@@ -617,11 +632,13 @@ class Rewards:
                                             f"[bold blue] [bold yellow]{unlockedDate}[/bold yellow]")
                                         if self.config.desktopNotify:
                                             desktopNotify(
-                                                poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropRegionNow, self.todayDrops)
+                                                poweredByImg, productImg, unlockedDate, eventTitle,
+                                                dropItem, dropItemImg, dropRegionNow, self.todayDrops, fans)
                                         if self.config.connectorDropsUrl != "":
                                             try:
                                                 self.notifyDrops(
-                                                    poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropRegionNow, self.todayDrops)
+                                                    poweredByImg, productImg, eventTitle, unlockedDate,
+                                                    dropItem, dropItemImg, dropRegionNow, self.todayDrops, fans)
                                             except Exception:
                                                 self.log.error(_log("推送掉落失败"))
                                                 self.log.error(formatExc(format_exc()))
