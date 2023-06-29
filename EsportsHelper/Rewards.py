@@ -414,15 +414,15 @@ class Rewards:
                     data = {
                         "msgtype": "link",
                         "link": {
-                            "text": f"Drop掉落提醒 今天第{todayDrops}个掉落",
-                            "title": f"[{self.config.nickName}]在{dropRegion} 通过事件{eventTitle} 获得{dropItem} {unlockedDate}",
+                            "text": f"[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}",
+                            "title": f"Drop: 今天第{todayDrops}个\nFrom: {dropRegion}",
                             "picUrl": f"{dropItemImg}",
                             "messageUrl": "https://lolesports.com/rewards"
                         }
                     }
                     s.post(self.config.connectorDropsUrl, json=data)
                     s.close()
-                    sleep(5)
+                    sleep(10)
                 elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
                     field0 = {
                         "name": "Account",
@@ -476,23 +476,38 @@ class Rewards:
                     sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
-                        "text": f"[{self.config.nickName}]在{dropRegion} "
-                                f"通过事件{eventTitle} 获得{dropItem} {unlockedDate}"
-                                f"今天第{todayDrops}个掉落",
-                    }
-                    s.post(self.config.connectorDropsUrl, headers={
-                        "Content-type": "application/json"}, json=params)
-                    sleep(10)
-                else:
-                    params = {
-                        "text": f"[{self.config.nickName}]在{dropRegion} "
-                                f"通过事件{eventTitle} 获得{dropItem} {unlockedDate}"
-                                f"今天第{todayDrops}个掉落",
+                        "text": f"今天第{todayDrops}个掉落\n[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}\n[赛区]{dropRegion} [时间]{unlockedDate}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
                         "Content-type": "application/json"}, json=params)
                     s.close()
-                    sleep(5)
+                    sleep(10)
+                elif "https://qyapi.weixin.qq.com" in self.config.connectorDropsUrl:
+                    params = {
+                        "msgtype": "news",
+                        "news": {
+                            "articles": [
+                                {
+                                    "title": f"今天第{todayDrops}个掉落",
+                                    "description": f"[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}\n[赛区]{dropRegion} [时间]{unlockedDate}",
+                                    "url": "https://lolesports.com/rewards",
+                                    "picurl": f"{dropItemImg}"
+                                }
+                            ]
+                        }
+                    }
+                    s.post(self.config.connectorDropsUrl, headers={
+                        "Content-type": "application/json"}, json=params)
+                    s.close()
+                    sleep(10)
+                else:
+                    params = {
+                        "text": f"今天第{todayDrops}个掉落\n[昵称]{self.config.nickName}\n[事件]{eventTitle}\n[掉落]{dropItem}\n[赛区]{dropRegion} [时间]{unlockedDate}",
+                    }
+                    s.post(self.config.connectorDropsUrl, headers={
+                        "Content-type": "application/json"}, json=params)
+                    s.close()
+                    sleep(10)
                 self.log.info(_log("掉落提醒成功"))
             except Exception:
                 self.log.error(_log("掉落提醒失败 重试中..."))
@@ -558,6 +573,8 @@ class Rewards:
                         # TFT is a special case and needs to be processed separately
                         if "TFT" in dropRegionNow:
                             dropRegionNow = "TFT"
+                        if "LPL" in dropRegionNow:
+                            dropNumberNow = dropNumberNow + 2
                         drops = dropNumberNow - int(self.dropsDict.get(dropRegionNow, 0))
                         if drops > 0 and totalWatchHours != -1:
                             dropNumberInfo.append(

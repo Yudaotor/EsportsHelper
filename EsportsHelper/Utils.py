@@ -125,6 +125,7 @@ class Utils:
                             }
                         }
                         s.post(connectorUrl, json=data)
+                        s.close()
 
                     elif "https://discord.com/api/webhooks" in connectorUrl:
                         embed = {
@@ -140,13 +141,31 @@ class Utils:
                         }
                         s.post(connectorUrl, headers={
                             "Content-type": "application/json"}, json=params)
-
+                        s.close()
+                    elif "https://qyapi.weixin.qq.com" in connectorUrl:
+                        params = {
+                            "msgtype": "news",
+                            "news": {
+                                "articles": [
+                                    {
+                                        "title": "Alert: Drop farming stopped",
+                                        "description": f"{error}",
+                                        "url": "https://lolesports.com/schedule",
+                                        "picurl": "https://am-a.akamaihd.net/image?resize=:54&f=http%3A%2F%2Fstatic.lolesports.com%2Fdrops%2F1678819650320_riot-logo-centered.png"
+                                    }
+                                ]
+                            }
+                        }
+                        s.post(connectorUrl, headers={
+                            "Content-type": "application/json"}, json=params)
+                        s.close()
                     else:
                         params = {
                             "text": f"发生错误停止获取Drop{error}",
                         }
                         s.post(connectorUrl, headers={
                             "Content-type": "application/json"}, json=params)
+                        s.close()
 
                     log.info(_log("异常提醒成功"))
                     print(_("异常提醒成功", color="green"))
