@@ -494,6 +494,10 @@ class Match:
                     if not any(_("已达到最大观看赛区数, 剩余比赛将不予观看", color="yellow") in info for info in stats.info):
                         stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " +
                                           _("已达到最大观看赛区数, 剩余比赛将不予观看", color="yellow"))
+                    for league in stats.liveRegions:
+                        if "white" == league.color:
+                            league.color = "dim yellow"
+
                     break
                 self.driver.switch_to.new_window('tab')
                 sleep(1)
