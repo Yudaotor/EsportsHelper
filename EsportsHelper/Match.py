@@ -660,13 +660,14 @@ class Match:
                     nextMatchBO = self.driver.find_element(
                         by=By.CSS_SELECTOR,
                         value="div.single.future.event > div.league > div.strategy").text
-                stats.nextMatch = f"[cyan]{timeTrans(nextMatchTime + nextMatchAMOrPM)}[/cyan]|" \
-                                  f"[magenta]{nextMatchLeague}[/magenta]"
+                stats.nextMatch = f"{nextMatchLeague}|" \
+                                  f"{timeTrans(nextMatchTime + nextMatchAMOrPM)}"
+
                 self.nextMatchDay = None
             else:
-                stats.nextMatch = f"[cyan]{month}{day}[/cyan]{_('日', color='cyan')}|" \
-                                  f"[cyan]{timeTrans(nextMatchTime + nextMatchAMOrPM)}[/cyan]|" \
-                                  f"[magenta]{nextMatchLeague}[/magenta]"
+                stats.nextMatch = f"{nextMatchLeague}|" \
+                                  f"{month}{day} " \
+                                  f"{timeTrans(nextMatchTime + nextMatchAMOrPM)}"
             self.log.info(_log("WEB 获取下一场比赛时间成功"))
             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('WEB 获取下一场比赛时间成功', color='green')}")
         except Exception:

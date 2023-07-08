@@ -626,8 +626,8 @@ def getLiveRegionsInfo():
 def getNextMatchTimeInfo():
     nextMatchTime = ""
     if stats.nextMatch:
-        date, time = stats.nextMatch.split("|")
-        nextMatchTime = f"[bold magenta]{date}[/bold magenta]|" f"[cyan]{time}[/cyan]"
+        league, time = stats.nextMatch.split("|")
+        nextMatchTime = f"[bold magenta]{league}[/bold magenta]|" f"[cyan]{time}[/cyan]"
     return nextMatchTime
 
 
