@@ -753,4 +753,11 @@ def countValidLive():
     return sum(1 for live in stats.lives if live.gameNumber != _log("转播") and live.status != "notReady")
 
 
+def updateLiveDefinition(match, definition):
+    for live in stats.lives:
+        if match == live.league:
+            live.definition = definition
+            break
+
+
 OVERRIDES, CHAMPION_TEAM, SCHEDULE_URL = getGithubFile()

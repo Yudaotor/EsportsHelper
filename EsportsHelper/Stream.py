@@ -8,7 +8,7 @@ _log = i18n.getLog
 
 
 class Stream:
-    def __init__(self, provider, league, url, viewers, status, gameNumber="", strategy="", title="None"):
+    def __init__(self, provider, league, url, viewers, status, gameNumber="", strategy="", title="None", definition="Auto"):
         self.provider = provider
         self.league = league
         self.title = title
@@ -17,6 +17,7 @@ class Stream:
         self.status = status
         self.strategy = strategy
         self.gameNumber = gameNumber
+        self.definition = definition
 
     def show(self):
         try:
@@ -35,17 +36,18 @@ class Stream:
                 titleText = f"{_('标题: ', color=statusColor)}[{titleColor}]{self.title}[/{titleColor}] {status}"
                 leagueText = f"{_('赛区: ', color=statusColor)}[{leagueColor}]{self.league}[/{leagueColor}]"
                 statusText = f"{_('状态: ', color=statusColor)}{status}"
+                definitionText = f"{_('清晰度: ', color=statusColor)}[{titleColor}]{self.definition}[/{titleColor}]"
 
                 if self.viewers.isdigit():
                     if self.title != "None":
-                        return f"{leagueText} {viewersText}\n{titleText}"
+                        return f"{leagueText} {viewersText} {definitionText}\n{titleText}"
                     else:
-                        return f"{leagueText} {viewersText}\n{statusText}"
+                        return f"{leagueText} {viewersText} {definitionText}\n{statusText}"
                 else:
                     if self.title != "None":
-                        return f"{leagueText}\n{titleText}"
+                        return f"{leagueText} {definitionText}\n{titleText}"
                     else:
-                        return f"{leagueText}\n{statusText}"
+                        return f"{leagueText} {definitionText}\n{statusText}"
             elif self.status == "offline":
                 return f"[{leagueColor}]{self.league}[/{leagueColor}] {_('比赛结束 等待关闭', color='yellow')}"
             elif self.status == "retry":
@@ -59,7 +61,7 @@ class Stream:
 
     def log(self):
         try:
-            if self.gameNumber == _log("转播") or self.gameNumber == _log("转播"):
+            if self.gameNumber == _log("转播") or self.strategy == _log("转播"):
                 status = _log("转播")
             else:
                 status = "(" + str(self.gameNumber) + "/" + self.strategy.upper() + ")"
@@ -68,18 +70,19 @@ class Stream:
             viewersText = f"{_log('观看人数: ')}{self.viewers}"
             titleText = f"{_log('标题: ')}{self.title} {status}"
             statusText = f"{_log('状态: ')}{status}"
+            definitionText = f"{_log('清晰度: ')}{self.definition}"
 
             if self.status == "online":
                 if self.viewers.isdigit():
                     if self.title != "None":
-                        return f"\n{leagueText} {viewersText}\n{titleText}"
+                        return f"\n{leagueText} {viewersText} {definitionText}\n{titleText}"
                     else:
-                        return f"\n{leagueText} {viewersText}\n{statusText}"
+                        return f"\n{leagueText} {viewersText} {definitionText}\n{statusText}"
                 else:
                     if self.title != "None":
-                        return f"\n{leagueText}\n{titleText}"
+                        return f"\n{leagueText} {definitionText}\n{titleText}"
                     else:
-                        return f"\n{leagueText}\n{statusText}"
+                        return f"\n{leagueText} {definitionText}\n{statusText}"
             elif self.status == "offline":
                 return f"{self.league} {_log('比赛结束 等待关闭')}"
             elif self.status == "retry":
