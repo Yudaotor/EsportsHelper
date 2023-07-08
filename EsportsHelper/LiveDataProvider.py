@@ -4,6 +4,7 @@ from traceback import format_exc
 
 import cloudscraper
 
+from EsportsHelper.Config import config
 from EsportsHelper.I18n import i18n
 from EsportsHelper.Logger import log
 from EsportsHelper.Stats import stats
@@ -22,7 +23,7 @@ client = cloudscraper.create_scraper(
 client.get("https://lolesports.com/&lang=en")
 
 
-def fetchLiveMatches(ignoreBroadCast=True):
+def fetchLiveMatches(ignoreBroadCast=True, ignoreDisWatchMatches=False):
     try:
         headers = {"x-api-key": "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z"}
         res = client.get("https://esports-api.lolesports.com/persisted/gw/getLive?hl=en-GB", headers=headers)
@@ -35,7 +36,15 @@ def fetchLiveMatches(ignoreBroadCast=True):
         res.close()
         events = resJson["data"]["schedule"].get("events", [])
         liveList = []
+        watchList = []
+        if config.mode == "safe":
+            watchList = ["worlds", "msi", "lcs", "lec", "lla", "vcs", "pcs", "lpl", "lck", "ljl-japan", "lco", "cblol-brazil", "tft_esports", "european-masters"]
+        elif config.onlyWatchMatches != [] and config.onlyWatchMatches != [""]:
+            watchList = config.onlyWatchMatches
         for event in events:
+            if ignoreDisWatchMatches:
+                if event["league"]["slug"] not in watchList:
+                    continue
             if ignoreBroadCast and event["type"] == "show":
                 continue
             if len(event["streams"]) > 0:
@@ -91,6 +100,11 @@ def fetchLiveMatches(ignoreBroadCast=True):
 
 def checkNextMatch():
     try:
+        watchList = []
+        if config.mode == "safe":
+            watchList = ["worlds", "msi", "lcs", "lec", "lla", "vcs", "pcs", "lpl", "lck", "ljl-japan", "lco", "cblol-brazil", "tft_esports", "european-masters"]
+        elif config.onlyWatchMatches != [] and config.onlyWatchMatches != [""]:
+            watchList = config.onlyWatchMatches
         headers = {"x-api-key": "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z"}
         res = client.get("https://esports-api.lolesports.com/persisted/gw/getSchedule?hl=en-GB", headers=headers)
         if not matchStatusCode(200, res):
@@ -104,18 +118,35 @@ def checkNextMatch():
         events = resJson["data"]["schedule"]["events"]
         for event in events:
             if event["state"] == "unstarted":
-                startTime = datetime.strptime(event["startTime"], '%Y-%m-%dT%H:%M:%SZ')
-                currentTimeString = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-                currentTime = datetime.strptime(currentTimeString, '%Y-%m-%dT%H:%M:%SZ')
-                if currentTime < startTime:
-                    timeDiff = startTime - currentTime
-                    systemTimeDT = getSystemTime()
-                    startTime = systemTimeDT + timeDiff
-                    niceStartTime = datetime.strftime(startTime, '%m-%d %H:%M')
-                    stats.nextMatch = event["league"]["name"] + "|" + niceStartTime
-                    break
+                if watchList:
+                    if event["league"]["slug"] in watchList:
+                        startTime = datetime.strptime(event["startTime"], '%Y-%m-%dT%H:%M:%SZ')
+                        currentTimeString = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+                        currentTime = datetime.strptime(currentTimeString, '%Y-%m-%dT%H:%M:%SZ')
+                        if currentTime < startTime:
+                            timeDiff = startTime - currentTime
+                            systemTimeDT = getSystemTime()
+                            startTime = systemTimeDT + timeDiff
+                            niceStartTime = datetime.strftime(startTime, '%m-%d %H:%M')
+                            stats.nextMatch = event["league"]["name"] + "|" + niceStartTime
+                            break
+                        else:
+                            continue
+                    else:
+                        continue
                 else:
-                    continue
+                    startTime = datetime.strptime(event["startTime"], '%Y-%m-%dT%H:%M:%SZ')
+                    currentTimeString = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+                    currentTime = datetime.strptime(currentTimeString, '%Y-%m-%dT%H:%M:%SZ')
+                    if currentTime < startTime:
+                        timeDiff = startTime - currentTime
+                        systemTimeDT = getSystemTime()
+                        startTime = systemTimeDT + timeDiff
+                        niceStartTime = datetime.strftime(startTime, '%m-%d %H:%M')
+                        stats.nextMatch = event["league"]["name"] + "|" + niceStartTime
+                        break
+                    else:
+                        continue
         return True
     except Exception:
         log.error("API " + _log("获取下一场比赛时间失败"))

@@ -100,7 +100,7 @@ class Match:
                 # get match information (including matches that are still counting down).
                 if isSleep is False:
                     self.log.info(_log("检查赛区直播状态..."))
-                    liveUrlList = fetchLiveMatches(ignoreBroadCast=False)
+                    liveUrlList = fetchLiveMatches(ignoreBroadCast=False, ignoreDisWatchMatches=True)
                     if liveUrlList == ["ERROR"]:
                         liveUrlList = self.getMatchInfo(ignoreBroadCast=False)
                 if self.config.autoSleep:
