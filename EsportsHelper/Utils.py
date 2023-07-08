@@ -614,10 +614,30 @@ def getConfigInfo():
     return configInfo
 
 
+def formatLeagueName(name):
+    if "LJL-JAPAN" == name:
+        name = "LJL"
+    elif "lCK_CHALLENGERS_LEAGUE" == name:
+        name = "LCK_CL"
+    elif "NORTH_AMERICAN_CHALLENGER_LEAGUE" == name:
+        name = "LCS_CL"
+    elif "CBLOL-BRAZIL" == name:
+        name = "CBLOL"
+    elif "EUROPEAN-MASTERS" == name:
+        name = "EMEA_MASTERS"
+    elif "EUROPEAN_MASTERS" == name:
+        name = "EMEA_MASTERS"
+    elif "TFT" in name:
+        name = "TFT"
+    elif "LCS_CHALLENGERS_QUALIFIERS" == name:
+        name = "LCS_CLQ"
+    return name
+
+
 def getLiveRegionsInfo():
     liveRegions = ""
     if stats.liveRegions:
-        liveRegions = ' '.join([f"[{league.color}]{league.name}[/{league.color}]" for league in stats.liveRegions])
+        liveRegions = ' '.join([f"[{league.color}]{formatLeagueName(league.name)}[/{league.color}]" for league in stats.liveRegions])
     else:
         liveRegions = _("暂无", color="bold yellow")
     return liveRegions
