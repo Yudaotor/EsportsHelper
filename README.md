@@ -9,7 +9,7 @@
 **Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
 # 电竞助手 EsportsHelper
 通过selenium模拟浏览器来自动观看电竞比赛,网址: [LolEsports](lolesports.com)  
-**为了避免被拳头检测,请尽量过滤掉小赛区(更何况本来就不怎么掉,并且可以省流量)**  
+**为了避免被拳头检测,请尽量过滤掉小赛区(打开安全模式即可)(更何况本来就不怎么掉,并且可以省流量)**  
 哦对了,用的是谷歌浏览器哦 （必须要下一个最新版的谷歌浏览器哦）  
 **来自中国大陆的需搭配VPN使用**  
 **如何下载**:点击右侧的[Releases](https://github.com/Yudaotor/EsportsHelper/releases)下载
@@ -43,7 +43,7 @@ python -m pip install -r requirements.txt
 2. 可以自行设置是否选择无头模式(默认关闭)(无头模式即headless,开启后浏览器会不可见,在后台运行,缓解电脑CPU压力)
 3. 可以自行设置**不观看哪些赛区** **或者只观看**的比赛.(默认为空)(注意,不观看是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看)(只观看是严格匹配的逻辑)(建议设置,避免观看所有比赛从而被检测)
 4. 可以自行设置多久来查询一次比赛最新信息.(默认600秒)(关闭已经结束的比赛和开启新开始的比赛)
-5. **掉落提醒**(支持钉钉,Discord,饭碗警告)
+5. **掉落提醒**(支持钉钉,Discord,饭碗警告,企业微信,飞书)
 6. 软件发生错误时可以发送错误提醒(推送信息类型支持筛选)
 7. 可以设置最长运行时间，到达时间后自动关机(只有windows会自动关机)  
 8. 可以设置多段休眠时间段，在休眠时间段中会关闭观赛网页,待休眠结束后重新打开.
@@ -58,6 +58,8 @@ python -m pip install -r requirements.txt
 17. 非自动休眠模式下如检测到距离下场比赛时间较长也会进行以1小时间隔检查.
 18. 可以设定**最大同时观看直播数**,避免同时观看过多赛区被拳头检测.
 19. 可以导出生涯掉落详细信息.
+20. 可以打开**安全模式**,自动过滤小赛区 防止被检测.
+21. 可以显示双方对局比分信息.
 
 
 ## 配置信息
@@ -72,13 +74,14 @@ headless: False                               # 设置为True时，程序会在�
 language: "zh_CN"                             # 现支持语言"zh_CN","zh_TW","en_US".简体中文,繁体中文,英语.
 nickName: ""                                  # 绰号,为空时默认为username.(增强隐私)  
 onlyWatchMatches: ["lcs","lla","lpl","lck","ljl-japan","lco","lec","cblol-brazil","pcs","tft_esports"]   # 只观看的赛区名称,小写.
-
 disWatchMatches: ["prime","lfl","liga","hitpoint","series","nlc","nationals","academy","qualifiers","legends","challengers","league"]        # 不想看的赛区名称，可以在这里添加.(注意,是小写)  
 maxRunHours: -1                               # 负值为一直运行，正值为运行小时, 默认-1
 maxStream: 3                                  # 默认值为3,最大同时观看的比赛数,超过将会不予观看.
+mode: "safe"                                  # 模式选择，safe为安全模式，normal为普通模式，默认为safe.具体含义见github 
 exportDrops: False                            # 默认为False,是否需要导出生涯掉落详情文件,只会在脚本打开时生成.
+briefLogLength: 10                            # 日志简略信息条数.默认为10
 proxy: "你的代理地址"                          # 代理地址，选填，一般用户不用填,除非你知道你在干什么。 例子, "socks://127.0.0.1:20173"
-connectorDropsUrl: "你的webhook链接"           # (支持钉钉,Discord,饭碗警告)具体配置方法见此处https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F
+connectorDropsUrl: "你的webhook链接"           # (支持钉钉,Discord,饭碗警告,企业微信,飞书)具体配置方法见此处https://github.com/Yudaotor/EsportsHelper/wiki/%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E6%8E%89%E8%90%BD%E6%8F%90%E9%86%92%3F
 platForm: "windows"                           # 使用平台,默认为Windows,如需使用Linux请在此处进行配置  
 closeStream: False                            # 省流模式，默认False，关闭直播间的视频流(风险存在,有被拳头检测可能) 
 desktopNotify: False                          # 系统右下角弹窗提示，默认False
@@ -88,7 +91,7 @@ userDataDir: "C:\\Users\\xxxxx\\AppData\\Local\\Google\\Chrome\\User Data"  # �
 chromePath: "X:\\xxxxx\\xx\\Chrome.exe"       # 谷歌浏览器自订路径
 countDrops: True                              # 是否检查掉落数
 notifyType: "all"                             # 推送信息的类型筛选,"all"为所有信息推送,"error"为仅推送报错信息,"drops"为仅推送掉落信息
-autoSleep: False                              # (推荐)是否自动休眠,默认False
+autoSleep: True                               # (推荐)是否自动休眠,默认True
 ```
 
 ### 不观看赛区的配置详解:
