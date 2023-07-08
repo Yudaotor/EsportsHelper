@@ -19,7 +19,7 @@ from EsportsHelper.Utils import (Utils, OVERRIDES,
                                  getMatchName, sysQuit,
                                  getSleepPeriod,
                                  mouthTrans, timeTrans, formatExc,
-                                 sortLiveList, updateLiveRegions, updateLiveRegionsColor)
+                                 sortLiveList, updateLiveRegions, updateLiveRegionsColor, countValidLive)
 from EsportsHelper.Logger import delimiterLine
 from EsportsHelper.YouTube import YouTube
 from rich import print
@@ -49,7 +49,7 @@ class Match:
         self.sleepEndList = []
         self.nextMatchHour = None
         self.nextMatchDay = None
-        self.streamNumber = 0
+        self.streamNumber = countValidLive()
 
     def watchMatches(self):
         """
@@ -397,7 +397,7 @@ class Match:
             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " + _("所有窗口已关闭", color="green"))
             self.log.info(_log("所有窗口已关闭"))
             stats.lives = []
-            self.streamNumber = 0
+            self.streamNumber = countValidLive()
         except Exception:
             self.utils.debugScreen(self.driver, "closeAllTabs")
             self.log.error(_log("关闭所有窗口时发生异常"))
@@ -439,7 +439,7 @@ class Match:
                         self.rewards.checkMatches("youtube", keys)
             for keys in removeList:
                 self.currentWindows.pop(keys, None)
-                self.streamNumber -= 1
+                self.streamNumber = countValidLive()
             self.driver.switch_to.window(self.mainWindow)
         except Exception:
             self.utils.debugScreen(self.driver, "closeFinishedTabs")
@@ -560,7 +560,7 @@ class Match:
                             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + name + "[/bold magenta] " +
                                               _("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red"))
                             self.log.error(formatExc(format_exc()))
-                self.streamNumber += 1
+                self.streamNumber = countValidLive()
                 sleep(4)
         except Exception:
             self.log.error(_log("打开新比赛时发生错误") + _log("待重试"))

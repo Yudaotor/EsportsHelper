@@ -20,7 +20,7 @@ class Stream:
 
     def show(self):
         try:
-            if self.gameNumber == _log("转播") or self.gameNumber == _log("转播"):
+            if self.gameNumber == _log("转播") or self.strategy == _log("转播"):
                 status = _log("转播")
             else:
                 status = "(" + str(self.gameNumber) + "/" + self.strategy.upper() + ")"

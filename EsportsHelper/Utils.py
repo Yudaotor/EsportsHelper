@@ -749,4 +749,8 @@ def getInfo():
     return info1, info2
 
 
+def countValidLive():
+    return sum(1 for live in stats.lives if live.gameNumber != _log("转播") and live.status != "notReady")
+
+
 OVERRIDES, CHAMPION_TEAM, SCHEDULE_URL = getGithubFile()
