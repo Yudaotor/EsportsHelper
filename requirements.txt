@@ -7,3 +7,4 @@ selenium==4.8.3
 undetected_chromedriver==3.4.6
 urllib3==1.26.15
 webdriver_manager==3.8.5
+cloudscraper==1.2.71
