@@ -20,7 +20,8 @@
 Discord: Khalil#7843  
 可以给我点个小星星吗(*^_^*)⭐  
 ## 界面
-![image](https://github.com/Yudaotor/EsportsHelper/assets/87225219/22429210-8e7c-4f3a-a11b-b2319ed357b3)
+![image](https://github.com/Yudaotor/EsportsHelper/assets/87225219/ec3603e5-463c-4a57-b09a-0c34e90522da)
+
 
 ## 运行平台  
 Windows, Linux  
