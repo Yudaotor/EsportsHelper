@@ -170,6 +170,7 @@ class Match:
                         sleepFlag = True
                     else:
                         self.log.info(_log("处于休眠时间..."))
+                        stats.status = _("休眠", color="yellow")
                     if sleepEndTime:
                         wakeTime = sleepEndTime
                     else:
