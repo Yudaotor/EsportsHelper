@@ -249,6 +249,9 @@ class Match:
                     liveList = tempList
                 if config.onlyWatchMatches:
                     liveList = sortLiveList(liveList, config.onlyWatchMatches)
+                safeModeMatches = ["worlds", "msi", "lcs", "lec", "lla", "vcs", "pcs", "lpl", "lck", "ljl-japan", "lco", "cblol-brazil", "tft_esports", "european-masters"]
+                if config.mode == "safe":
+                    liveList = sortLiveList(liveList, safeModeMatches)
                 liveUrlList = []
                 for live in liveList:
                     liveUrlList.append("https://lolesports.com/live/" + live)
