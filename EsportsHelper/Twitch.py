@@ -67,7 +67,7 @@ class Twitch:
             self.wait.until(ec.frame_to_be_available_and_switch_to_it(
                 (By.CSS_SELECTOR, "iframe[title=Twitch]")))
             self.driver.implicitly_wait(5)
-            sleep(5)
+            sleep(2)
             errorInfo = self.driver.find_elements(By.CSS_SELECTOR, "div[data-a-target=player-overlay-content-gate]")
             if len(errorInfo) > 0:
                 self.utils.debugScreen(self.driver, lint="streamError")
@@ -119,7 +119,7 @@ class Twitch:
             self.wait.until(ec.frame_to_be_available_and_switch_to_it(
                 (By.CSS_SELECTOR, "iframe[title=Twitch]")))
             self.driver.implicitly_wait(5)
-            sleep(5)
+            sleep(3)
             if len(self.driver.find_elements(By.CSS_SELECTOR, "span.offline-embeds--stylized-link")) > 0:
                 self.utils.debugScreen(self.driver, "offline")
                 self.driver.switch_to.default_content()

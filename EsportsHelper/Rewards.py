@@ -93,7 +93,7 @@ class Rewards:
             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
                               f"[bold magenta]{match}[/bold magenta] {_('进错直播间,正在重新进入', color='yellow')}")
             self.driver.get(url)
-            sleep(5)
+            sleep(3)
             if stream == "twitch":
                 if self.config.closeStream:
                     try:
@@ -184,7 +184,7 @@ class Rewards:
                     if self.twitch.checkTwitchStream() is False:
                         self.driver.refresh()
                         updateLiveDefinition(match, "Auto")
-                        sleep(10)
+                        sleep(8)
                         if self.twitch.setTwitchQuality():
                             updateLiveDefinition(match, "160p")
                         self.twitch.checkTwitchStream()
@@ -217,7 +217,7 @@ class Rewards:
                     updateLiveDefinition(match, "Auto")
                     name = getMatchName(url).lower()
                     times -= 1
-                    sleep(5)
+                    sleep(3)
                     self.utils.debugScreen(self.driver, match + " afterRefresh")
                     if self.checkRewards(stream=stream) == 1 and self.config.closeStream is False:
                         if stream == "twitch":
@@ -264,7 +264,7 @@ class Rewards:
                     if stream == "youtube":
                         if self.youtube.checkYoutubeStream() is False:
                             self.driver.refresh()
-                            sleep(10)
+                            sleep(8)
                             if self.youtube.setYoutubeQuality():
                                 updateLiveDefinition(match, "144p")
                             else:
@@ -274,7 +274,7 @@ class Rewards:
                         if self.twitch.checkTwitchStream() is False:
                             self.driver.refresh()
                             updateLiveDefinition(match, "160p")
-                            sleep(10)
+                            sleep(8)
                             if self.twitch.setTwitchQuality():
                                 updateLiveDefinition(match, "160p")
                             else:
