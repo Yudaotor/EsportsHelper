@@ -1,6 +1,8 @@
+from datetime import datetime
 from time import sleep
 from traceback import format_exc
 from EsportsHelper.Config import config
+from EsportsHelper.Stats import stats
 from EsportsHelper.Utils import getLolesportsWeb, sysQuit, Utils, formatExc
 from rich import print
 from selenium.common import TimeoutException
@@ -34,13 +36,13 @@ class LoginHandler:
             except Exception:
                 self.log.error(_log("无法打开Lolesports网页，网络问题"))
                 self.log.error(formatExc(format_exc()))
-                print(_("无法打开Lolesports网页，网络问题", color="red"))
+                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('无法打开Lolesports网页，网络问题', 'red')}")
             sleep(2)
             loginButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "a[data-riotbar-link-id=login]")))
             self.driver.execute_script("arguments[0].click();", loginButton)
             self.log.info(f'<{self.config.nickName}> {_log("登录中...")}')
-            print(f'<{self.config.nickName}> {_("登录中...", color="yellow")}')
+            stats.status = _("登录中", color="yellow")
             sleep(2)
             usernameInput = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "input[name=username]")))
@@ -55,7 +57,7 @@ class LoginHandler:
             sleep(1)
             self.driver.execute_script("arguments[0].click();", submitButton)
             self.log.info(_log("账密 提交成功"))
-            print(f'--{_("账密 提交成功", color="yellow")}')
+            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('账密 提交成功', 'yellow')}")
             sleep(4)
             if len(self.driver.find_elements(by=By.CSS_SELECTOR, value="div.text__web-code")) > 0:
                 self.insert2FACode()
@@ -69,10 +71,10 @@ class LoginHandler:
                 (By.CSS_SELECTOR, "span.status-message.text__web-error > a")))
             if errorInfo.text == "can't sign in":
                 self.log.error(_log("登录失败,检查账号密码是否正确"))
-                print(f'--{_("登录失败,检查账号密码是否正确", color="red")}')
+                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('登录失败,检查账号密码是否正确', 'red')}")
             else:
-                print(f'--{_("登录超时,检查网络或窗口是否被覆盖", color="red")}')
                 self.log.error(_log("登录超时,检查网络或窗口是否被覆盖"))
+                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('登录超时,检查网络或窗口是否被覆盖', 'red')}")
             self.log.error(formatExc(format_exc()))
             return False
 
@@ -84,6 +86,7 @@ class LoginHandler:
         authText = self.wait.until(ec.presence_of_element_located(
             (By.CSS_SELECTOR, "h5.grid-panel__subtitle")))
         self.log.info(f'{_log("请输入二级验证代码:")} ({authText.text})')
+        stats.status = _("二级验证", color="yellow")
         code = input(_log("请输入二级验证代码:"))
         codeInput = self.wait.until(ec.presence_of_element_located(
             (By.CSS_SELECTOR, "div.codefield__code--empty > div > input")))
@@ -92,6 +95,7 @@ class LoginHandler:
             (By.CSS_SELECTOR, "button[type=submit]")))
         self.driver.execute_script("arguments[0].click();", submitButton)
         self.log.info(_log("二级验证代码提交成功"))
+        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('二级验证代码提交成功', 'green')}")
 
     def userDataLogin(self) -> None:
         """
@@ -108,7 +112,8 @@ class LoginHandler:
             Utils().debugScreen(self.driver, "userDataLogin")
             if self.driver.find_element(By.CSS_SELECTOR, "div.riotbar-summoner-name"):
                 return
-            print(f'--{_("免密登录失败,请去浏览器手动登录后再行尝试", color="red")}')
+            stats.status = _("登录失败", color="red")
             self.log.error(_log("免密登录失败,请去浏览器手动登录后再行尝试"))
+            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('免密登录失败,请去浏览器手动登录后再行尝试', 'red')}")
             self.log.error(formatExc(format_exc()))
             sysQuit(self.driver, _log("免密登录失败,请去浏览器手动登录后再行尝试"))

@@ -44,7 +44,6 @@ class Webdriver:
         elif self.config.platForm == "windows":
             chromeDriverManager = ChromeDriverManager(path=".\\driver")
         else:
-            print(_("不支持的操作系统", color="red"))
             self.log.error(_("不支持的操作系统"))
         options = self.addWebdriverOptions(uc.ChromeOptions())
         print(_("正在准备中...", color="yellow"))

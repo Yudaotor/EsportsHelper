@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from EsportsHelper.Logger import log
 from EsportsHelper.Config import config
 from EsportsHelper.I18n import i18n
+from EsportsHelper.Stats import stats
 from EsportsHelper.Utils import formatExc
 
 _ = i18n.getText
@@ -65,10 +66,8 @@ class YouTube:
         """
         try:
             playButton.click()
-            print(_("Youtube: 解除暂停成功", color="green"))
             self.log.info(_log("Youtube: 解除暂停成功"))
         except Exception:
-            print(_("Youtube: 解除暂停失败", color="red"))
             self.log.error(_log("Youtube: 解除暂停失败"))
             self.log.error(formatExc(format_exc()))
 
@@ -86,10 +85,8 @@ class YouTube:
         """
         try:
             muteButton.click()
-            print(_("Youtube: 解除静音成功", color="green"))
             self.log.info(_log("Youtube: 解除静音成功"))
         except Exception:
-            print(_("Youtube: 解除静音失败", color="red"))
             self.log.error(_log("Youtube: 解除静音失败"))
             self.log.error(formatExc(format_exc()))
 

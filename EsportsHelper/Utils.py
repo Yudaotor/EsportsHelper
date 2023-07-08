@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from time import sleep, strftime
 from traceback import format_exc
 import requests
@@ -7,6 +8,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from EsportsHelper.Config import config
+from EsportsHelper.League import League
+from EsportsHelper.Stats import stats
+from EsportsHelper.Stream import Stream
 from EsportsHelper.VersionManager import VersionManager, checkVersion
 from plyer import notification
 from retrying import retry
@@ -42,8 +46,6 @@ def getGithubFile():
                 "https://raw.githubusercontent.com/Yudaotor/EsportsHelper/main/override.txt", headers=headers)
         except Exception:
             log.error(_log("从Github获取参数文件失败, 将尝试从Gitee获取"))
-            log.error(formatExc(format_exc()))
-            print(_("从Github获取参数文件失败, 将尝试从Gitee获取", color="red"))
             remoteGithubFile = req.get(
                 "https://gitee.com/yudaotor/EsportsHelper/raw/main/override.txt", headers=headers)
         if remoteGithubFile.status_code == 200:
@@ -68,14 +70,16 @@ def getGithubFile():
             req.close()
             return overrides, championTeam, scheduleUrl
         else:
-            print(_("获取参数文件失败", color="red"))
+            stats.info.append(_("获取参数文件失败", color="red"))
+            stats.status = _("错误", color="red")
             log.error(_log("获取参数文件失败"))
             input(_log("按回车键退出"))
             req.close()
             sysQuit(e=_log("获取参数文件失败"))
     except Exception:
         log.error(_log("获取参数文件失败"))
-        print(_("获取参数文件失败", color="red"))
+        stats.info.append(_("获取参数文件失败", color="red"))
+        stats.status = _("错误", color="red")
         input(_log("按回车键退出"))
         sysQuit(e=_log("获取参数文件失败"))
 
@@ -103,10 +107,9 @@ class Utils:
                         message=f"Error Message: {error}",
                         timeout=30
                     )
-                    print(_("错误提醒发送成功", color="green"))
                     log.info(_log("错误提醒发送成功"))
                 except Exception:
-                    print(_("错误提醒发送失败", color="red"))
+                    stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('错误提醒发送失败', color='red')}")
                     log.error(_log("错误提醒发送失败"))
                     log.error(formatExc(format_exc()))
 
@@ -118,7 +121,7 @@ class Utils:
                         data = {
                             "msgtype": "link",
                             "link": {
-                                "text": "Alert: Drop farming stopped",
+                                "text": f"{_log('警告: 停止获取Drop')}",
                                 "title": error,
                                 "picUrl": "",
                                 "messageUrl": ""
@@ -129,7 +132,7 @@ class Utils:
 
                     elif "https://discord.com/api/webhooks" in connectorUrl:
                         embed = {
-                            "title": "Alert: Drop farming stopped",
+                            "title": f"{_log('警告: 停止获取Drop')}",
                             "description": f"{error}",
                             "image": {"url": f""},
                             "thumbnail": {"url": f""},
@@ -148,7 +151,7 @@ class Utils:
                             "news": {
                                 "articles": [
                                     {
-                                        "title": "Alert: Drop farming stopped",
+                                        "title": f"{_log('警告: 停止获取Drop')}",
                                         "description": f"{error}",
                                         "url": "https://lolesports.com/schedule",
                                         "picurl": "https://am-a.akamaihd.net/image?resize=:54&f=http%3A%2F%2Fstatic.lolesports.com%2Fdrops%2F1678819650320_riot-logo-centered.png"
@@ -159,18 +162,35 @@ class Utils:
                         s.post(connectorUrl, headers={
                             "Content-type": "application/json"}, json=params)
                         s.close()
+                    elif "https://fwalert.com" in connectorUrl:
+                        params = {
+                            "text": f"{_log('警告: 停止获取Drop')}: {error}"
+                        }
+                        s.post(connectorUrl, headers={
+                            "Content-type": "application/json"}, json=params)
+                        s.close()
+
+                    elif "https://open.feishu.cn" in connectorUrl:
+                        params = {
+                            "msg_type": "text",
+                            "content": {
+                                "text": f"{_log('警告: 停止获取Drop')}: {error}"
+                            }
+                        }
+                        s.post(connectorUrl, headers={
+                            "Content-type": "application/json"}, json=params)
+                        s.close()
                     else:
                         params = {
-                            "text": f"发生错误停止获取Drop{error}",
+                            "text": f"{_log('警告: 停止获取Drop')}: {error}"
                         }
                         s.post(connectorUrl, headers={
                             "Content-type": "application/json"}, json=params)
                         s.close()
 
                     log.info(_log("异常提醒成功"))
-                    print(_("异常提醒成功", color="green"))
                 except Exception:
-                    print(_("异常提醒失败", color="red"))
+                    stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('异常提醒失败', color='red')}")
                     log.error(_log("异常提醒失败"))
                     log.error(formatExc(format_exc()))
 
@@ -366,9 +386,6 @@ def getMatchName(url: str) -> str:
         str: A string that represents the name of the match.
     """
     match = url.split('/')[-2] if url.split('/')[-2] != "live" else url.split('/')[-1]
-    match = "cblol" if match == "cblol-brazil" else match
-    match = "ljl" if match == "ljl-japan" else match
-    match = "tft" if match == "tft_esports" else match
     match = match.upper()
     return match
 
@@ -385,13 +402,24 @@ def getLolesportsWeb(driver) -> None:
     - driver (selenium.webdriver.remote.webdriver.WebDriver): The driver to use for accessing the Lolesports website
     """
     try:
-        driver.get(SCHEDULE_URL)
+        if driver.current_url != SCHEDULE_URL:
+            driver.get(SCHEDULE_URL)
 
     except Exception:
-        print(_("获取LoLEsports网站失败，正在重试...", color="red"))
+        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('获取LoLEsports网站失败，正在重试...', 'red')}")
         log.error(_log("获取LoLEsports网站失败，正在重试..."))
         log.error(formatExc(format_exc()))
         driver.get(SCHEDULE_URL)
+
+
+def matchStatusCode(expected, response):
+    if response.status_code != expected:
+        statusCode = response.status_code
+        url = response.request.url
+        response.close()
+        log.error(_log(f"请求失败: ") + f"{url} {_log('状态码:')} {statusCode}")
+        return False
+    return True
 
 
 def getSleepPeriod():
@@ -427,11 +455,11 @@ def checkRewardPage(driver):
             utils = Utils()
             utils.debugScreen(driver, "rewardError")
             if len(driver.find_elements(By.CSS_SELECTOR, "div.InformBubble.error")) > 0:
-                print(f'--{_("Riot原因,reward页面出现异常无法正常加载", color="red")}')
+                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('Riot原因,reward页面出现异常无法正常加载', 'red')}")
                 log.error(_log("Riot原因,该页面出现异常无法正常加载"))
             else:
                 driver.refresh()
-                print(f'--{_("获取reward网站失败，正在重试...", color="red")}')
+                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('获取reward网站失败，正在重试...', 'red')}")
                 log.error(_log("获取reward网站失败，正在重试..."))
                 log.error(formatExc(format_exc()))
                 wait.until(ec.presence_of_element_located(
@@ -459,8 +487,9 @@ def getMatchTitle(teams):
 
 def acceptCookies(driver):
     try:
-        WebDriverWait(driver, 5).until(ec.element_to_be_clickable(
-            (By.CSS_SELECTOR, "button.osano-cm-accept-all"))).click()
+        acceptButton = WebDriverWait(driver, 5).until(ec.element_to_be_clickable(
+            (By.CSS_SELECTOR, "button.osano-cm-accept-all")))
+        driver.execute_script("arguments[0].click();", acceptButton)
         log.info(_log("接受cookies"))
         return True
     except TimeoutException:
@@ -491,6 +520,8 @@ def timeTrans(time):
         if i18n.language == "zh_CN" or i18n.language == "zh_TW":
             if time[-2:] == "AM" and time[:-2] != "12":
                 return _log("上午") + time[:-2] + _log("点")
+            elif time[-2:] == "PM" and time[:-2] == "12":
+                return _log("中午") + time[:-2] + _log("点")
             elif time[-2:] == "AM" and time[:-2] == "12":
                 return _log("凌晨") + time[:-2] + _log("点")
             elif time[-2:] == "PM":
@@ -520,8 +551,202 @@ def loadDropsHistory():
         return len(lines)
     except Exception:
         log.error(_log("读取掉落记录失败"))
+        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('读取掉落记录失败', 'red')}")
         log.error(formatExc(format_exc()))
         return 0
+
+
+def colorFlicker():
+    if stats.status == _("检查中", "green"):
+        stats.status = _("检查中", "yellow")
+    elif stats.status == _("检查中", "yellow"):
+        stats.status = _("检查中", "green")
+    if stats.status == _("初始化", "yellow") + "[yellow]1[/yellow]":
+        stats.status = _("初始化", "green") + "[green]1[/green]"
+    elif stats.status == _("初始化", "green") + "[green]1[/green]":
+        stats.status = _("初始化", "yellow") + "[yellow]1[/yellow]"
+    if stats.status == _("初始化", "yellow") + "[yellow]2[/yellow]":
+        stats.status = _("初始化", "green") + "[green]2[/green]"
+    elif stats.status == _("初始化", "green") + "[green]2[/green]":
+        stats.status = _("初始化", "yellow") + "[yellow]2[/yellow]"
+    if stats.status == _("登录中", "yellow"):
+        stats.status = _("登录中", "green")
+    elif stats.status == _("登录中", "green"):
+        stats.status = _("登录中", "yellow")
+
+
+def sortLiveList(liveList, onlyWatchMatches):
+    sortedList = sorted(liveList, key=lambda x: (onlyWatchMatches.index(x) if x in onlyWatchMatches else float('inf'), liveList.index(x)))
+    return sortedList
+
+
+def getWebhookInfo():
+    webhookInfo = ""
+    if config.connectorDropsUrl:
+        if "oapi.dingtalk.com" in config.connectorDropsUrl:
+            webhookInfo = _log("推送工具: ") + _log("钉钉")
+        elif "discord.com/api/webhooks" in config.connectorDropsUrl:
+            webhookInfo = _log("推送工具: ") + "Discord"
+        elif "fwalert.com" in config.connectorDropsUrl:
+            webhookInfo = _log("推送工具: ") + _log("饭碗警告")
+        elif "qyapi.weixin.qq.com" in config.connectorDropsUrl:
+            webhookInfo = _log("推送工具: ") + _log("企业微信")
+        elif "open.feishu.cn" in config.connectorDropsUrl:
+            webhookInfo = _log("推送工具: ") + _log("飞书")
+        else:
+            webhookInfo = _log("推送工具: ") + _log("未知")
+    else:
+        webhookInfo = _log("推送工具: ") + _log("无")
+
+    return webhookInfo
+
+
+def getConfigInfo():
+    configInfo = []
+    if config.closeStream:
+        configInfo.append(_("省流模式", color="bold yellow") + ':' + "ON")
+
+    if config.ignoreBroadCast:
+        configInfo.append(_("忽略转播", color="bold yellow") + ':' + "ON")
+    else:
+        configInfo.append(_("忽略转播", color="bold yellow") + ':' + "OFF")
+    configInfo = '|'.join(configInfo)
+    return configInfo
+
+
+def getLiveRegionsInfo():
+    liveRegions = ""
+    if stats.liveRegions:
+        liveRegions = ' '.join([f"[{league.color}]{league.name}[/{league.color}]" for league in stats.liveRegions])
+    else:
+        liveRegions = _("暂无", color="bold yellow")
+    return liveRegions
+
+
+def getNextMatchTimeInfo():
+    nextMatchTime = ""
+    if stats.nextMatch:
+        date, time = stats.nextMatch.split("|")
+        nextMatchTime = f"[bold magenta]{date}[/bold magenta]|" f"[cyan]{time}[/cyan]"
+    return nextMatchTime
+
+
+def getDropInfo():
+    dropInfo = ""
+    if stats.sessionDropsDict:
+        dropInfo = ' '.join([f"{key}: {stats.sessionDropsDict[key]}\t" for key in stats.sessionDropsDict])
+    dropInfo = dropInfo if dropInfo else _("暂无掉落", "bold yellow")
+    return dropInfo
+
+
+def getSleepBalloonsInfo(frameCount):
+    spinnerBalloon2 = [' ', '.', 'z', 'Z']
+    sleepInfo = ""
+    if _log("休眠") in stats.status:
+        sleepInfo = ''.join(spinnerBalloon2[i] for i in range(frameCount % 4 + 1))
+    return sleepInfo
+
+
+def getSleepPeriodInfo():
+    sleepPeriodInfo = ""
+    if config.sleepPeriod != [''] and config.sleepPeriod != []:
+        sleepPeriodInfo = f"{_log('休眠时段: ')}{config.sleepPeriod}"
+    return sleepPeriodInfo
+
+
+def cleanBriefInfo():
+    while len(stats.info) > config.briefLogLength:
+        stats.info.pop(0)
+
+
+def getLiveInfo(width):
+    liveInfo1 = []
+    liveInfo2 = []
+    liveCounter = 0
+    for li in stats.lives:
+        if li.url and li.status != "notReady":
+            targetList = liveInfo1 if liveCounter % 2 == 0 else liveInfo2
+            targetList.extend([li.show(), f"[bold yellow]{'-' * width}[/bold yellow]"])
+            liveCounter += 1
+    return liveInfo1, liveInfo2
+
+
+def updateLiveInfo(match, viewerNumber, status, stream, url):
+    for li in stats.lives:
+        if li.league == match:
+            li.viewers = viewerNumber
+            li.status = status
+            li.provider = stream
+            li.url = url
+            log.info(li.log())
+            break
+    else:
+        live = Stream(stream, match, url, viewerNumber, status)
+        stats.lives.append(live)
+
+
+def getWarningInfo():
+    warningInfo = ""
+    liveNumber = 0
+    liveNumber = sum(1 for liveT in stats.lives if liveT.status != "notReady")
+    if liveNumber > 3:
+        warningInfo = _("提示: ", "bold yellow") + _("直播数>3存在风险", "bold yellow")
+    return warningInfo, liveNumber
+
+
+def transDropItemName(dropItem):
+    en2cn = {
+        "Esports Capsule": "电竞引擎",
+        "Hextech Chest and Key Bundle": "海克斯科技宝箱和钥匙",
+        "MSI Esports Capsule 2023": "MSI电竞引擎2023",
+        "1 Masterwork Chest and Key Bundle": "杰作宝箱和钥匙",
+    }
+    en2tw = {
+        "Esports Capsule": "電競典藏罐",
+        "Hextech Chest and Key Bundle": "海克斯科技寶箱和鑰匙",
+        "MSI Esports Capsule 2023": "MSI電競典藏罐2023",
+        "1 Masterwork Chest and Key Bundle": "精雕寶箱和鑰匙",
+    }
+    if i18n.language == "en_US":
+        return dropItem
+    elif i18n.language == "zh_CN":
+        return en2cn[dropItem]
+    elif i18n.language == "zh_TW":
+        return en2tw[dropItem]
+    else:
+        return dropItem
+
+
+def updateLiveRegionsColor(match, color):
+    for league in stats.liveRegions:
+        if match == league.name:
+            league.color = color
+            break
+
+
+def updateLiveRegions(liveUrlList):
+    names = [getMatchName(match) for match in liveUrlList]
+    for name in names:
+        if not any(league.name == name for league in stats.liveRegions):
+            stats.liveRegions.append(League(name=name))
+    return names
+
+
+def addRetrySuccessInfo(i, match):
+    if i != 0:
+        log.info(f"{match} " + _log("重试成功"))
+        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " + f"[bold magenta]{match}[/bold magenta] " + _("重试成功", color="green"))
+
+
+def getInfo():
+    info1 = []
+    info2 = []
+    for line in stats.info:
+        if len(info1) <= config.briefLogLength / 2:
+            info1.append(line)
+        else:
+            info2.append(line)
+    return info1, info2
 
 
 OVERRIDES, CHAMPION_TEAM, SCHEDULE_URL = getGithubFile()

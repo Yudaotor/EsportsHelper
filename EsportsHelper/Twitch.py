@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from EsportsHelper.Logger import log
 from EsportsHelper.Config import config
 from EsportsHelper.I18n import i18n
+from EsportsHelper.Stats import stats
 from EsportsHelper.Utils import formatExc
 
 _ = i18n.getText
@@ -72,6 +73,17 @@ class Twitch:
                 self.utils.debugScreen(self.driver, lint="streamError")
                 self.driver.switch_to.default_content()
                 return False
+            loading = self.driver.find_elements(By.CSS_SELECTOR, "div.Layout-sc-1xcs6mc-0.MIEJo.player-overlay-background > div")
+            if len(loading) > 0:
+                sleep(5)
+                loading = self.driver.find_elements(By.CSS_SELECTOR, "div.Layout-sc-1xcs6mc-0.MIEJo.player-overlay-background > div")
+                if len(loading) > 0:
+                    sleep(10)
+                    loading = self.driver.find_elements(By.CSS_SELECTOR, "div.Layout-sc-1xcs6mc-0.MIEJo.player-overlay-background > div")
+                    if len(loading) > 0:
+                        self.utils.debugScreen(self.driver, lint="streamLoading")
+                        self.driver.switch_to.default_content()
+                        return False
             self.driver.implicitly_wait(15)
             isMute = self.driver.find_elements(By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button] > div > div > div > svg > g")
             muteButton = self.wait.until(ec.presence_of_element_located(
@@ -89,16 +101,17 @@ class Twitch:
         except Exception:
             self.log.error(_log("Twitch: 检查直播发生失败"))
             self.log.error(formatExc(format_exc()))
+            self.utils.debugScreen(self.driver, "rewardFailed")
         self.driver.switch_to.default_content()
         return False
 
-    def checkTwitchIsOnline(self) -> bool:
+    def checkTwitchIsOnline(self) -> int:
         """
         Checks the status of the Twitch stream.
         :return:
         """
         if self.config.closeStream:
-            return True
+            return 1
         try:
             self.wait.until(ec.frame_to_be_available_and_switch_to_it(
                 (By.CSS_SELECTOR, "iframe[title=Twitch]")))
@@ -107,15 +120,15 @@ class Twitch:
             if len(self.driver.find_elements(By.CSS_SELECTOR, "span.offline-embeds--stylized-link")) > 0:
                 self.utils.debugScreen(self.driver, "offline")
                 self.driver.switch_to.default_content()
-                return False
+                return -1
             self.driver.implicitly_wait(15)
             self.driver.switch_to.default_content()
-            return True
+            return 1
         except Exception:
             self.log.error(_log("Twitch: 检查直播间是否在线失败"))
             self.log.error(formatExc(format_exc()))
         self.driver.switch_to.default_content()
-        return False
+        return 0
 
     def unmuteStream(self, muteButton) -> None:
         """
@@ -131,10 +144,8 @@ class Twitch:
         """
         try:
             muteButton.click()
-            print(_("Twitch: 解除静音成功", color="green"))
             self.log.info(_log("Twitch: 解除静音成功"))
         except Exception:
-            print(_("Twitch: 解除静音失败", color="red"))
             self.log.error(_log("Twitch: 解除静音失败"))
             self.log.error(formatExc(format_exc()))
 
@@ -151,8 +162,6 @@ class Twitch:
         try:
             playButton.click()
             self.log.info(_log("Twitch: 解除暂停成功"))
-            print(_("Twitch: 解除暂停成功", color="green"))
         except Exception:
-            print(_("Twitch: 解除暂停失败", color="red"))
             self.log.error(_log("Twitch: 解除暂停失败"))
             self.log.error(formatExc(format_exc()))
