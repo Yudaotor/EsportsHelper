@@ -81,9 +81,12 @@ class Twitch:
                     sleep(10)
                     loading = self.driver.find_elements(By.CSS_SELECTOR, "div.Layout-sc-1xcs6mc-0.MIEJo.player-overlay-background > div")
                     if len(loading) > 0:
-                        self.utils.debugScreen(self.driver, lint="streamLoading")
-                        self.driver.switch_to.default_content()
-                        return False
+                        sleep(15)
+                        loading = self.driver.find_elements(By.CSS_SELECTOR, "div.Layout-sc-1xcs6mc-0.MIEJo.player-overlay-background > div")
+                        if len(loading) > 0:
+                            self.utils.debugScreen(self.driver, lint="streamLoading")
+                            self.driver.switch_to.default_content()
+                            return False
             self.driver.implicitly_wait(15)
             isMute = self.driver.find_elements(By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button] > div > div > div > svg > g")
             muteButton = self.wait.until(ec.presence_of_element_located(

@@ -263,13 +263,12 @@ class Rewards:
                 if i != retryTimes - 1:
                     stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
                                       f"[bold magenta]{match}[/bold magenta] "
-                                      f"{_('观看异常', color='red')}{(i + 1) * 30}{_('秒后重试', color='red')}")
+                                      f"{_('观看异常', color='red')}{(i + 1) * 15}{_('秒后重试', color='red')}")
                     updateLiveRegionsColor(match, "bold red")
                     updateLiveInfo(match, viewerNumber, "retry", stream, url)
-
-                    sleep((i + 1) * 30)
+                    sleep((i + 1) * 15)
                     self.driver.refresh()
-                    sleep(10)
+                    sleep(7)
                     if stream == "youtube":
                         if self.youtube.checkYoutubeStream() is False:
                             self.driver.refresh()
