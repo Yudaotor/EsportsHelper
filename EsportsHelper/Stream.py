@@ -30,24 +30,25 @@ class Stream:
             leagueColor = "bold magenta"
             viewersColor = "bold cyan"
             titleColor = "bold green"
-
+            leagueName = formatLeagueName(self.league)
             if self.status == "online":
                 viewersText = f"{_('观看人数: ', color=statusColor)}[{viewersColor}]{self.viewers}[/{viewersColor}]"
                 titleText = f"{_('标题: ', color=statusColor)}[{titleColor}]{self.title}[/{titleColor}] {status}"
-                leagueText = f"{_('赛区: ', color=statusColor)}[{leagueColor}]{self.league}[/{leagueColor}]"
+                leagueText = f"{_('赛区: ', color=statusColor)}[{leagueColor}]{leagueName}[/{leagueColor}]"
                 statusText = f"{_('状态: ', color=statusColor)}{status}"
                 definitionText = f"{_('清晰度: ', color=statusColor)}[{titleColor}]{self.definition}[/{titleColor}]"
-
+                space1 = spaceNumber(leagueName, 8) * " "
+                space2 = spaceNumber(str(self.viewers), 8) * " "
                 if self.viewers.isdigit():
                     if self.title != "None":
-                        return f"{leagueText} {viewersText} {definitionText}\n{titleText}"
+                        return f"{leagueText}{space1}{viewersText}{space2}{definitionText}\n{titleText}"
                     else:
-                        return f"{leagueText} {viewersText} {definitionText}\n{statusText}"
+                        return f"{leagueText}{space1}{viewersText}{space2}{definitionText}\n{statusText}"
                 else:
                     if self.title != "None":
-                        return f"{leagueText} {definitionText}\n{titleText}"
+                        return f"{leagueText}{space1}{definitionText}\n{titleText}"
                     else:
-                        return f"{leagueText} {definitionText}\n{statusText}"
+                        return f"{leagueText}{space1}{definitionText}\n{statusText}"
             elif self.status == "offline":
                 return f"[{leagueColor}]{self.league}[/{leagueColor}] {_('比赛结束 等待关闭', color='yellow')}"
             elif self.status == "retry":
@@ -66,7 +67,7 @@ class Stream:
             else:
                 status = "(" + str(self.gameNumber) + "/" + self.strategy.upper() + ")"
 
-            leagueText = f"{_log('赛区: ')}{self.league}"
+            leagueText = f"{_log('赛区: ')}{formatLeagueName(self.league)}"
             viewersText = f"{_log('观看人数: ')}{self.viewers}"
             titleText = f"{_log('标题: ')}{self.title} {status}"
             statusText = f"{_log('状态: ')}{status}"
@@ -94,3 +95,30 @@ class Stream:
             log.error(format_exc())
             return ""
 
+
+def spaceNumber(content, number):
+    length = len(content)
+    if length < number:
+        return number - length
+    else:
+        return 1
+
+
+def formatLeagueName(name):
+    if "LJL-JAPAN" == name:
+        name = "LJL"
+    elif "lCK_CHALLENGERS_LEAGUE" == name:
+        name = "LCK_CL"
+    elif "NORTH_AMERICAN_CHALLENGER_LEAGUE" == name:
+        name = "LCS_CL"
+    elif "CBLOL-BRAZIL" == name:
+        name = "CBLOL"
+    elif "EUROPEAN-MASTERS" == name:
+        name = "EMEA_MASTERS"
+    elif "EUROPEAN_MASTERS" == name:
+        name = "EMEA_MASTERS"
+    elif "TFT" in name:
+        name = "TFT"
+    elif "LCS_CHALLENGERS_QUALIFIERS" == name:
+        name = "LCS_CLQ"
+    return name
