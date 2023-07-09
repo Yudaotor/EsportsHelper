@@ -19,7 +19,7 @@ from EsportsHelper.Utils import (Utils, OVERRIDES,
                                  getMatchName, sysQuit,
                                  getSleepPeriod,
                                  mouthTrans, timeTrans, formatExc,
-                                 sortLiveList, updateLiveRegions, updateLiveRegionsColor, countValidLive, updateLiveDefinition)
+                                 sortLiveList, updateLiveRegions, updateLiveRegionsColor, countValidLive, updateLiveDefinition, formatLeagueName)
 from EsportsHelper.Logger import delimiterLine
 from EsportsHelper.YouTube import YouTube
 from rich import print
@@ -506,30 +506,38 @@ class Match:
                 if match in self.OVERRIDES:
                     url = self.OVERRIDES[match]
                     name = getMatchName(match)
+                    formatName = formatLeagueName(name)
                     self.driver.get(url)
                     updateLiveDefinition(name, "Auto")
                     self.log.info("Twitch " + self.driver.current_url)
                     if not self.rewards.checkMatches("twitch", url):
                         return
                     if self.config.closeStream:
-                        self.closeStreamElement()
-                        updateLiveDefinition(name, "None")
+                        if self.closeStreamElement():
+                            self.log.info(formatName + " " + _log("视频流关闭成功."))
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + formatName + "[/bold magenta] " +
+                                              _("视频流关闭成功", color="green"))
+                            updateLiveDefinition(name, "None")
+                        else:
+                            self.log.info(formatName + " " + _log("关闭视频流失败."))
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + formatName + "[/bold magenta] " +
+                                              _("关闭视频流失败", color="red"))
                     else:
                         try:
                             if self.twitch.setTwitchQuality():
-                                self.log.info(_log("Twitch 160p清晰度设置成功"))
+                                self.log.info(formatName + " " + _log("Twitch 160p清晰度设置成功"))
                                 updateLiveDefinition(name, "160p")
-                                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + name + "[/bold magenta] " +
+                                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + formatName + "[/bold magenta] " +
                                                   _("Twitch 160p清晰度设置成功", color="green"))
                             else:
                                 self.log.error(_log("Twitch 清晰度设置失败"))
                                 updateLiveDefinition(name, "Auto")
-                                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + name + "[/bold magenta] " +
+                                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + formatName + "[/bold magenta] " +
                                                   _("Twitch 清晰度设置失败", color="red"))
                         except Exception:
                             self.log.error(_log("无法设置 Twitch 清晰度."))
                             updateLiveDefinition(name, "Auto")
-                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + name + "[/bold magenta] " +
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + formatName + "[/bold magenta] " +
                                               _("无法设置 Twitch 清晰度.", color="red"))
                             self.log.error(formatExc(format_exc()))
                 # Identified as a YouTube stream.
@@ -537,6 +545,7 @@ class Match:
                     url = match
                     self.driver.get(url)
                     name = getMatchName(match)
+                    formatName = formatLeagueName(name)
                     updateLiveDefinition(name, "Auto")
                     # It is convenient to add to overrides next time
                     self.log.info("YouTube " + self.driver.current_url)
@@ -551,21 +560,21 @@ class Match:
                     else:
                         try:
                             if self.youtube.setYoutubeQuality():
-                                self.log.info(_log("Youtube 144p清晰度设置成功"))
+                                self.log.info(formatName + " " + _log("Youtube 144p清晰度设置成功"))
                                 updateLiveDefinition(name, "144p")
-                                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + name + "[/bold magenta] " +
+                                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + formatName + "[/bold magenta] " +
                                                   _("Youtube 144p清晰度设置成功", color="green"))
                             else:
                                 self.utils.debugScreen(self.driver, "youtube")
                                 updateLiveDefinition(name, "Auto")
                                 self.log.error(_log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者"))
-                                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + name + "[/bold magenta] " +
+                                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + formatName + "[/bold magenta] " +
                                                   _("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red"))
                         except Exception:
                             self.utils.debugScreen(self.driver, "youtube")
                             self.log.error(_log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者"))
                             updateLiveDefinition(name, "Auto")
-                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + name + "[/bold magenta] " +
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + formatName + "[/bold magenta] " +
                                               _("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red"))
                             self.log.error(formatExc(format_exc()))
                 self.streamNumber = countValidLive()
