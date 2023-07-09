@@ -16,16 +16,16 @@ _log = i18n.getLog
 
 
 class LoginHandler:
-    def __init__(self, driver) -> None:
+    def __init__(self, driver, locks) -> None:
         self.log = log
         self.driver = driver
         self.config = config
         self.wait = WebDriverWait(self.driver, 20)
+        self.locks = locks
 
     def automaticLogIn(self, username: str, password: str) -> bool:
         """
         An automatic login function that logs in with a given username and password.
-
         :param username: str，username
         :param password: str，password
         :return: bool True if login is successful, False if login is unsuccessful
@@ -87,7 +87,11 @@ class LoginHandler:
             (By.CSS_SELECTOR, "h5.grid-panel__subtitle")))
         self.log.info(f'{_log("请输入二级验证代码:")} ({authText.text})')
         stats.status = _("二级验证", color="yellow")
+        sleep(3)
+        self.locks["refreshLock"].acquire()
         code = input(_log("请输入二级验证代码:"))
+        if self.locks["refreshLock"].locked():
+            self.locks["refreshLock"].release()
         codeInput = self.wait.until(ec.presence_of_element_located(
             (By.CSS_SELECTOR, "div.codefield__code--empty > div > input")))
         codeInput.send_keys(code)

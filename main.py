@@ -86,13 +86,6 @@ def switchLanguage():
             (By.CSS_SELECTOR, "[data-testid='riotbar:localeswitcher:dropdown'] > li:nth-child(1) > a")))
         enUSButton.click()
         log.info(_log("切换网页语言成功"))
-    except TimeoutException:
-        Utils().debugScreen(driver, "language")
-        log.error(_log("切换网页语言失败"))
-        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
-                          f"{_('切换网页语言失败', color='red')}")
-        log.error(formatExc(format_exc()))
-        sysQuit(driver, _log("切换网页语言失败"))
     except Exception:
         Utils().debugScreen(driver, "language")
         log.error(_log("切换网页语言失败"))
@@ -102,11 +95,11 @@ def switchLanguage():
         sysQuit(driver, _log("切换网页语言失败"))
 
 
-def login():
+def login(locks):
     """
     The login function, which logs in with the given configuration information and outputs the login result.
     """
-    loginHandler = LoginHandler(driver=driver)
+    loginHandler = LoginHandler(driver=driver, locks=locks)
     if config.userDataDir == "":
         tryLoginTimes = 4
         while not driver.find_elements(by=By.CSS_SELECTOR, value="div.riotbar-summoner-name") and tryLoginTimes > 0:
@@ -169,7 +162,7 @@ def main():
 
     switchLanguage()
     acceptCookies(driver=driver)
-    login()
+    login(locks)
     sleep(1)
     watch()
     stats.info.append(_("观看结束", color="green"))
