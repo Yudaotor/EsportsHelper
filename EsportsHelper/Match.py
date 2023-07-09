@@ -420,10 +420,10 @@ class Match:
                 sleep(1)
                 if keys not in liveMatches:
                     match = getMatchName(keys)
-                    self.log.info(
-                        f"{match} {_log('比赛结束')}")
+                    name = formatLeagueName(match)
+                    self.log.info(f"{name} {_log('比赛结束')}")
                     stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
-                                      + f"[bold magenta]{match}[/bold magenta] {_('比赛结束', color='green')}")
+                                      + f"[bold magenta]{name}[/bold magenta] {_('比赛结束', color='green')}")
                     for live in stats.lives:
                         if live.league == match:
                             stats.lives.remove(live)
@@ -437,6 +437,15 @@ class Match:
                         self.rewards.checkMatches("twitch", OVERRIDES[keys])
                     else:
                         self.rewards.checkMatches("youtube", keys)
+                    if self.streamNumber > config.maxStream:
+                        for live in stats.lives:
+                            if live.gameNumber == _log("转播") and live.league == getMatchName(keys):
+                                removeList.append(keys)
+                                stats.lives.remove(live)
+                                self.driver.close()
+                                sleep(2)
+                                self.driver.switch_to.window(self.mainWindow)
+                                sleep(3)
             for keys in removeList:
                 self.currentWindows.pop(keys, None)
                 self.streamNumber = countValidLive()
