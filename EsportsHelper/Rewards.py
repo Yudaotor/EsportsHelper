@@ -7,8 +7,9 @@ from selenium import webdriver
 import requests
 
 from EsportsHelper.Stream import Stream
-from EsportsHelper.Utils import getMatchName, desktopNotify, checkRewardPage, getMatchTitle, mouthTrans, formatExc, loadDropsHistory, updateLiveInfo, updateLiveRegionsColor, \
-    addRetrySuccessInfo, transDropItemName, updateLiveDefinition
+from EsportsHelper.Utils import getMatchName, desktopNotify, checkRewardPage, getMatchTitle,\
+    mouthTrans, formatExc, loadDropsHistory, updateLiveInfo, updateLiveRegionsColor, \
+    addRetrySuccessInfo, transDropItemName, updateLiveDefinition, formatLeagueName
 from rich import print
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
@@ -86,12 +87,13 @@ class Rewards:
             bool: True if rewards are available, False otherwise.
         """
         match = getMatchName(url)
+        name = formatLeagueName(match)
         # Check if the match stream is correct
         if self.checkRewards(stream) == 1 and url not in self.driver.current_url:
             self.log.info(self.driver.current_url + " " + url)
-            self.log.warning(match + " " + _log("进错直播间,正在重新进入"))
+            self.log.warning(name + " " + _log("进错直播间,正在重新进入"))
             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
-                              f"[bold magenta]{match}[/bold magenta] {_('进错直播间,正在重新进入', color='yellow')}")
+                              f"[bold magenta]{name}[/bold magenta] {_('进错直播间,正在重新进入', color='yellow')}")
             self.driver.get(url)
             sleep(3)
             if stream == "twitch":
@@ -100,20 +102,30 @@ class Rewards:
                         self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
                     except Exception:
                         self.utils.debugScreen(self.driver, "closeStreamElement")
-                        self.log.error(_log("关闭视频流失败."))
+                        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                          f"[bold magenta]{name}[/bold magenta] {_('关闭视频流失败', color='yellow')}")
+                        self.log.error(name + " " + _log("关闭视频流失败."))
                         self.log.error(formatExc(format_exc()))
                     else:
                         updateLiveDefinition(match, "None")
-                        self.log.info(_log("视频流关闭成功."))
+                        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                          f"[bold magenta]{name}[/bold magenta] {_('视频流关闭成功', color='yellow')}")
+                        self.log.info(name + " " + _log("视频流关闭成功."))
                 else:
                     try:
                         if self.twitch.setTwitchQuality():
-                            self.log.info(_log("Twitch 160p清晰度设置成功"))
+                            self.log.info(name + " " + _log("Twitch 160p清晰度设置成功"))
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                              f"[bold magenta]{name}[/bold magenta] {_('Twitch 160p清晰度设置成功', color='yellow')}")
                             updateLiveDefinition(match, "160p")
                         else:
-                            self.log.error(_log("Twitch 清晰度设置失败"))
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                              f"[bold magenta]{name}[/bold magenta] {_('Twitch 160p清晰度设置失败', color='yellow')}")
+                            self.log.error(name + " " + _log("Twitch 清晰度设置失败"))
                     except Exception:
-                        self.log.error(_log("无法设置 Twitch 清晰度."))
+                        self.log.error(name + " " + _log("无法设置 Twitch 清晰度."))
+                        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                          f"[bold magenta]{name}[/bold magenta] {_('无法设置 Twitch 清晰度', color='yellow')}")
                         self.log.error(formatExc(format_exc()))
             else:
                 self.youtube.checkYoutubeStream()
@@ -123,24 +135,32 @@ class Rewards:
                         self.driver.execute_script("""var data=document.querySelector('#video-player').remove()""")
                     except Exception:
                         self.utils.debugScreen(self.driver, "closeStreamElement")
-                        self.log.error(_log("关闭视频流失败."))
+                        self.log.error(name + " " + _log("关闭视频流失败."))
+                        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                          f"[bold magenta]{name}[/bold magenta] {_('关闭视频流失败', color='yellow')}")
                         self.log.error(formatExc(format_exc()))
                     else:
                         updateLiveDefinition(match, "None")
-                        self.log.info(_log("视频流关闭成功."))
+                        self.log.info(name + " " + _log("视频流关闭成功."))
+                        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                          f"[bold magenta]{name}[/bold magenta] {_('视频流关闭成功', color='yellow')}")
                 else:
                     try:
                         if self.youtube.setYoutubeQuality():
-                            self.log.info(_log("Youtube 144p清晰度设置成功"))
+                            self.log.info(name + " " + _log("Youtube 144p清晰度设置成功"))
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                              f"[bold magenta]{name}[/bold magenta] {_('Youtube 144p清晰度设置成功', color='yellow')}")
                             updateLiveDefinition(match, "144p")
                         else:
                             self.utils.debugScreen(self.driver, "youtube")
-                            self.log.error(
-                                _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者"))
+                            self.log.error(name + " " + _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者"))
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                              f"[bold magenta]{name}[/bold magenta] {_('无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者', color='yellow')}")
                     except Exception:
                         self.utils.debugScreen(self.driver, "youtube")
-                        self.log.error(
-                            _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者"))
+                        self.log.error(name + " " + _log("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者"))
+                        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                          f"[bold magenta]{name}[/bold magenta] {_('无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者', color='yellow')}")
                         self.log.error(formatExc(format_exc()))
 
         viewerNumber = _log("出错, 未知")
@@ -159,8 +179,8 @@ class Rewards:
                         while not viewerInfo and retryViewerTimes > 0:
                             retryViewerTimes -= 1
                             if retryViewerTimes != 5:
-                                self.utils.debugScreen(self.driver, match + "viewerNumber")
-                                self.log.warning(match + _log("获取观看人数信息重试中..."))
+                                self.utils.debugScreen(self.driver, name + "viewerNumber")
+                                self.log.warning(name + _log("获取观看人数信息重试中..."))
                             self.driver.switch_to.default_content()
                             self.wait.until(ec.frame_to_be_available_and_switch_to_it(frameLocator))
                             webdriver.ActionChains(self.driver).move_to_element(viewerInfoElement).perform()
@@ -188,7 +208,7 @@ class Rewards:
                         if self.twitch.setTwitchQuality():
                             updateLiveDefinition(match, "160p")
                         self.twitch.checkTwitchStream()
-                    addRetrySuccessInfo(i, match)
+                    addRetrySuccessInfo(i, name)
                     updateLiveRegionsColor(match, "bold yellow")
                     updateLiveInfo(match, viewerNumber, "online", stream, url)
 
@@ -200,14 +220,14 @@ class Rewards:
                         if self.youtube.setYoutubeQuality():
                             updateLiveDefinition(match, "144p")
                         self.youtube.checkYoutubeStream()
-                    addRetrySuccessInfo(i, match)
+                    addRetrySuccessInfo(i, name)
                     updateLiveRegionsColor(match, "bold yellow")
                     updateLiveInfo(match, viewerNumber, "online", stream, url)
                 return True
             # reward flag is ok, but closeStream is True
             elif flag == 1 and self.config.closeStream is True:
                 updateLiveRegionsColor(match, "bold yellow")
-                addRetrySuccessInfo(i, match)
+                addRetrySuccessInfo(i, name)
                 updateLiveInfo(match, viewerNumber, "online", stream, url)
                 return True
             elif flag == 0:
@@ -215,10 +235,10 @@ class Rewards:
                 while times > 0:
                     self.driver.get(url)
                     updateLiveDefinition(match, "Auto")
-                    name = getMatchName(url).lower()
+                    nameUrl = getMatchName(url).lower()
                     times -= 1
                     sleep(3)
-                    self.utils.debugScreen(self.driver, match + " afterRefresh")
+                    self.utils.debugScreen(self.driver, name + " afterRefresh")
                     if self.checkRewards(stream=stream) == 1 and self.config.closeStream is False:
                         if stream == "twitch":
                             if self.twitch.setTwitchQuality():
@@ -230,21 +250,21 @@ class Rewards:
                                 updateLiveDefinition(match, "144p")
                             else:
                                 updateLiveDefinition(match, "Auto")
-                        if name not in self.driver.current_url:
+                        if nameUrl not in self.driver.current_url:
                             updateLiveRegionsColor(match, "dim yellow")
                             updateLiveInfo(match, viewerNumber, "offline", stream, url)
                         else:
                             updateLiveRegionsColor(match, "bold yellow")
-                            addRetrySuccessInfo(i, match)
+                            addRetrySuccessInfo(i, name)
                             updateLiveInfo(match, viewerNumber, "online", stream, url)
-                        self.utils.debugScreen(self.driver, match + " afterRetry")
+                        self.utils.debugScreen(self.driver, name + " afterRetry")
                         return True
                     elif self.checkRewards(stream=stream) == 1 and self.config.closeStream is True:
                         updateLiveRegionsColor(match, "bold yellow")
                         updateLiveInfo(match, viewerNumber, "online", stream, url)
                         return True
                     elif self.checkRewards(stream=stream) == 0:
-                        self.utils.debugScreen(self.driver, match + " afterVods")
+                        self.utils.debugScreen(self.driver, name + " afterVods")
                         continue
                 updateLiveRegionsColor(match, "dim yellow")
                 updateLiveInfo(match, viewerNumber, "offline", stream, url)
@@ -253,7 +273,7 @@ class Rewards:
             elif flag == -1:
                 if i != retryTimes - 1:
                     stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
-                                      f"[bold magenta]{match}[/bold magenta] "
+                                      f"[bold magenta]{name}[/bold magenta] "
                                       f"{_('观看异常', color='red')}{(i + 1) * 15}{_('秒后重试', color='red')}")
                     updateLiveRegionsColor(match, "bold red")
                     updateLiveInfo(match, viewerNumber, "retry", stream, url)
@@ -282,11 +302,11 @@ class Rewards:
                             self.twitch.checkTwitchStream()
                 else:
                     stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
-                                      f"[bold magenta]{match}[/bold magenta] "
+                                      f"[bold magenta]{name}[/bold magenta] "
                                       f"{_('观看异常', color='red')}")
                     updateLiveRegionsColor(match, "bold red")
                     updateLiveInfo(match, viewerNumber, "error", stream, url)
-                    self.utils.errorNotify(f"{match} {_log('观看异常')}")
+                    self.utils.errorNotify(f"{name} {_log('观看异常')}")
                     return False
 
     def getNewDropInfo(self):
