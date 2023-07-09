@@ -282,6 +282,10 @@ class Rewards:
                     updateLiveDefinition(match, "Auto")
                     sleep(7)
                     if stream == "youtube":
+                        if self.youtube.setYoutubeQuality():
+                            updateLiveDefinition(match, "144p")
+                        else:
+                            updateLiveDefinition(match, "Auto")
                         if self.youtube.checkYoutubeStream() is False:
                             self.driver.refresh()
                             sleep(8)
@@ -291,6 +295,10 @@ class Rewards:
                                 updateLiveDefinition(match, "Auto")
                             self.youtube.checkYoutubeStream()
                     if stream == "twitch":
+                        if self.twitch.setTwitchQuality():
+                            updateLiveDefinition(match, "160p")
+                        else:
+                            updateLiveDefinition(match, "Auto")
                         if self.twitch.checkTwitchStream() is False:
                             self.driver.refresh()
                             updateLiveDefinition(match, "160p")
