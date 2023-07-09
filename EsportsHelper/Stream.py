@@ -50,11 +50,11 @@ class Stream:
                     else:
                         return f"{leagueText}{space1}{definitionText}\n{statusText}"
             elif self.status == "offline":
-                return f"[{leagueColor}]{self.league}[/{leagueColor}] {_('比赛结束 等待关闭', color='yellow')}"
+                return f"[{leagueColor}]{leagueName}[/{leagueColor}] {_('比赛结束 等待关闭', color='yellow')}"
             elif self.status == "retry":
-                return f"[{leagueColor}]{self.league}[/{leagueColor}] {_('观看异常 待重试', color='red')}"
+                return f"[{leagueColor}]{leagueName}[/{leagueColor}] {_('观看异常 待重试', color='red')}"
             elif self.status == "error":
-                return f"[{leagueColor}]{self.league}[/{leagueColor}] {_('观看异常', color='red')}"
+                return f"[{leagueColor}]{leagueName}[/{leagueColor}] {_('观看异常', color='red')}"
             return ""
         except Exception:
             log.error(format_exc())
