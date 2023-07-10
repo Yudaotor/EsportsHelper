@@ -606,8 +606,10 @@ class Match:
             self.utils.debugScreen(self.driver, "closeStreamElement")
             self.log.error(_log("关闭视频流失败."))
             self.log.error(formatExc(format_exc()))
+            return False
         else:
             self.log.info(_log("视频流关闭成功."))
+            return True
 
     def checkNextMatch(self):
         """
