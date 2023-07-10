@@ -19,7 +19,8 @@ from EsportsHelper.Utils import (Utils, OVERRIDES,
                                  getMatchName, sysQuit,
                                  getSleepPeriod,
                                  mouthTrans, timeTrans, formatExc,
-                                 sortLiveList, updateLiveRegions, updateLiveRegionsColor, countValidLive, updateLiveDefinition, formatLeagueName)
+                                 sortLiveList, updateLiveRegions, updateLiveRegionsColor,
+                                 countValidLive, updateLiveDefinition, formatLeagueName)
 from EsportsHelper.Logger import delimiterLine
 from EsportsHelper.YouTube import YouTube
 from rich import print
@@ -165,6 +166,7 @@ class Match:
                     if sleepFlag is False:
                         self.log.info(_log("进入休眠时间"))
                         stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " + _("进入休眠时间", color="green"))
+                        stats.liveRegions = []
                         stats.status = _("休眠", color="yellow")
                         self.closeAllTabs()
                         sleepFlag = True
@@ -442,6 +444,7 @@ class Match:
                             if live.gameNumber == _log("转播") and live.league == getMatchName(keys):
                                 removeList.append(keys)
                                 stats.lives.remove(live)
+                                updateLiveRegionsColor(live.league, "dim yellow")
                                 self.driver.close()
                                 sleep(2)
                                 self.driver.switch_to.window(self.mainWindow)

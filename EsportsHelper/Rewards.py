@@ -277,28 +277,40 @@ class Rewards:
                                       f"{_('观看异常', color='red')}{(i + 1) * 15}{_('秒后重试', color='red')}")
                     updateLiveRegionsColor(match, "bold red")
                     updateLiveInfo(match, viewerNumber, "retry", stream, url)
-                    sleep((i + 1) * 15)
+                    waitTime = (i + 1) * 15
+                    sleep(waitTime // 2)
                     self.driver.refresh()
+                    sleep(waitTime // 2)
                     updateLiveDefinition(match, "Auto")
                     sleep(7)
                     if stream == "youtube":
                         if self.youtube.setYoutubeQuality():
                             updateLiveDefinition(match, "144p")
+
                         else:
                             updateLiveDefinition(match, "Auto")
+
                         if self.youtube.checkYoutubeStream() is False:
                             self.driver.refresh()
                             sleep(8)
                             if self.youtube.setYoutubeQuality():
                                 updateLiveDefinition(match, "144p")
+                                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                                  f"[bold magenta]{name}[/bold magenta] {_('Youtube 144p清晰度设置成功', color='yellow')}")
                             else:
                                 updateLiveDefinition(match, "Auto")
+                                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                                  f"[bold magenta]{name}[/bold magenta] {_('Youtube 144p清晰度设置失败', color='yellow')}")
                             self.youtube.checkYoutubeStream()
                     if stream == "twitch":
                         if self.twitch.setTwitchQuality():
                             updateLiveDefinition(match, "160p")
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + name + "[/bold magenta] " +
+                                              _("Twitch 160p清晰度设置成功", color="green"))
                         else:
                             updateLiveDefinition(match, "Auto")
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                              f"[bold magenta]{name}[/bold magenta] {_('Twitch 160p清晰度设置失败', color='yellow')}")
                         if self.twitch.checkTwitchStream() is False:
                             self.driver.refresh()
                             updateLiveDefinition(match, "160p")
