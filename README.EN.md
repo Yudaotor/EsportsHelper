@@ -28,7 +28,8 @@ Telegram: https://t.me/Yudaotor, Discord username: Khalil#7843
 Can you please give me a little star?(*^_^*)⭐  
 
 ## GUI
-![image](https://github.com/Yudaotor/EsportsHelper/assets/87225219/48a77f43-6af0-4f88-9be8-979f6dd5f40c)
+![image](https://github.com/Yudaotor/EsportsHelper/assets/87225219/695f9b06-2283-4f98-9133-54e94f9ed81b)
+
 
 
 ## OS  
