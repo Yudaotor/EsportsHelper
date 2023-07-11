@@ -63,6 +63,7 @@ class Config:
             self.maxRunHours = configFile.get("maxRunHours", -1)
             self.disWatchMatches = configFile.get("disWatchMatches", [])
             self.connectorDropsUrl = configFile.get("connectorDropsUrl", "")
+            self.connectorTest = configFile.get("connectorTest", False)
             self.platForm = configFile.get("platForm", "windows")
             self.debug = configFile.get("debug", False)
             self.proxy = configFile.get("proxy", "")
@@ -144,6 +145,7 @@ class Config:
         self.countDrops = formatBoolean(self.countDrops)
         self.ignoreBroadCast = formatBoolean(self.ignoreBroadCast)
         self.autoSleep = formatBoolean(self.autoSleep)
+        self.connectorTest = formatBoolean(self.connectorTest)
 
         if isinstance(self.delay, str):
             try:

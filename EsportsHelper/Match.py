@@ -67,6 +67,14 @@ class Match:
             startTimePoint = time.time()
             endTimePoint = startTimePoint + maxRunSecond
             sleep(1)
+            if config.connectorTest and config.connectorDropsUrl:
+                if self.rewards.notifyDrops("", "", "Drop:Test", "", "", "", "", 0, ""):
+                    self.log.info(_log("测试通知成功"))
+                    stats.info.append(_("测试通知成功", color="green"))
+                else:
+                    self.log.info(_log("测试通知失败"))
+                    stats.info.append(_("测试通知失败", color="red"))
+
             if self.config.countDrops and sleepFlag is False:
                 stats.status = _("初始化", color="yellow") + "[yellow]2[/yellow]"
                 # Open the Rewards page

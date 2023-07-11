@@ -7,7 +7,7 @@ from selenium import webdriver
 import requests
 
 from EsportsHelper.Stream import Stream
-from EsportsHelper.Utils import getMatchName, desktopNotify, checkRewardPage, getMatchTitle,\
+from EsportsHelper.Utils import getMatchName, desktopNotify, checkRewardPage, getMatchTitle, \
     mouthTrans, formatExc, loadDropsHistory, updateLiveInfo, updateLiveRegionsColor, \
     addRetrySuccessInfo, transDropItemName, updateLiveDefinition, formatLeagueName
 from rich import print
@@ -286,31 +286,45 @@ class Rewards:
                     if stream == "youtube":
                         if self.youtube.setYoutubeQuality():
                             updateLiveDefinition(match, "144p")
-
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                              f"[bold magenta]{name}[/bold magenta] "
+                                              f"{_('Youtube 144p清晰度设置成功', color='green')}")
                         else:
                             updateLiveDefinition(match, "Auto")
-
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                              f"[bold magenta]{name}[/bold magenta] "
+                                              f"{_('Youtube 144p清晰度设置失败', color='yellow')}")
+                            sleep(5)
+                            self.youtube.setYoutubeQuality()
                         if self.youtube.checkYoutubeStream() is False:
                             self.driver.refresh()
                             sleep(8)
                             if self.youtube.setYoutubeQuality():
                                 updateLiveDefinition(match, "144p")
                                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
-                                                  f"[bold magenta]{name}[/bold magenta] {_('Youtube 144p清晰度设置成功', color='yellow')}")
+                                                  f"[bold magenta]{name}[/bold magenta] "
+                                                  f"{_('Youtube 144p清晰度设置成功', color='green')}")
                             else:
                                 updateLiveDefinition(match, "Auto")
                                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
-                                                  f"[bold magenta]{name}[/bold magenta] {_('Youtube 144p清晰度设置失败', color='yellow')}")
+                                                  f"[bold magenta]{name}[/bold magenta] "
+                                                  f"{_('Youtube 144p清晰度设置失败', color='yellow')}")
+                                sleep(5)
+                                self.twitch.setTwitchQuality()
                             self.youtube.checkYoutubeStream()
                     if stream == "twitch":
                         if self.twitch.setTwitchQuality():
                             updateLiveDefinition(match, "160p")
-                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + name + "[/bold magenta] " +
+                            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
+                                              f"[bold magenta]" + name + "[/bold magenta] " +
                                               _("Twitch 160p清晰度设置成功", color="green"))
                         else:
                             updateLiveDefinition(match, "Auto")
                             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
-                                              f"[bold magenta]{name}[/bold magenta] {_('Twitch 160p清晰度设置失败', color='yellow')}")
+                                              f"[bold magenta]{name}[/bold magenta] "
+                                              f"{_('Twitch 160p清晰度设置失败', color='yellow')}")
+                            sleep(5)
+                            self.twitch.setTwitchQuality()
                         if self.twitch.checkTwitchStream() is False:
                             self.driver.refresh()
                             updateLiveDefinition(match, "160p")
@@ -403,7 +417,7 @@ class Rewards:
             return None, None, None, None, None, None, None
 
     @retry(stop_max_attempt_number=3, wait_incrementing_increment=10000, wait_incrementing_start=10000)
-    def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropRegion, todayDrops, fans) -> None:
+    def notifyDrops(self, poweredByImg, productImg, eventTitle, unlockedDate, dropItem, dropItemImg, dropRegion, todayDrops, fans):
         """
             Sends a notification message about a drop obtained through a certain event to a configured webhook.
 
@@ -544,10 +558,12 @@ class Rewards:
                     s.close()
                     sleep(10)
                 self.log.info(_log("掉落提醒成功"))
+                return True
             except Exception:
                 self.log.error(_log("掉落提醒失败 重试中..."))
                 self.log.error(formatExc(format_exc()))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('掉落提醒失败 重试中...', color='red')}")
+                return False
 
     def countDrops(self, rewardWindow, isInit=False):
         """
