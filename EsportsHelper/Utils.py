@@ -456,7 +456,7 @@ def checkRewardPage(driver):
             utils.debugScreen(driver, "rewardError")
             if len(driver.find_elements(By.CSS_SELECTOR, "div.InformBubble.error")) > 0:
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('Riot原因,reward页面出现异常无法正常加载', 'red')}")
-                log.error(_log("Riot原因,该页面出现异常无法正常加载"))
+                log.error(_log("Riot原因,reward页面出现异常无法正常加载"))
             else:
                 driver.refresh()
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('获取reward网站失败，正在重试...', 'red')}")

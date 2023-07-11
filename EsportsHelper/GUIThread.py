@@ -53,7 +53,7 @@ class GUIThread(Thread):
             f"[bold cyan]{str(config.nickName)}[/bold cyan]",
             str(stats.status),
             str(liveRegions),
-            f"[cyan]{str(stats.historyDrops)}[/cyan]",
+            f"[cyan]{str(stats.historyDrops + stats.sessionDrops)}[/cyan]",
             f"[cyan]{str(stats.totalWatchHours)}[/cyan]",
             str(stats.lastCheckTime),
             str(stats.nextCheckTime),
