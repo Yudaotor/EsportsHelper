@@ -232,6 +232,10 @@ class Config:
                 stats.info.append(_("简略日志长度配置错误,已恢复默认值10", color="red"))
                 log.error(_log("简略日志长度配置错误,已恢复默认值10"))
                 self.briefLogLength = 10
+        if self.delay <= 120:
+            stats.info.append(_("检查间隔过短,建议延长.", color="yellow"))
+            log.error(_log("检查间隔过短,建议延长."))
+
         if not isinstance(self.proxy, str):
             stats.info.append(_("代理配置错误,已恢复默认值", color="red"))
             log.error(_log("代理配置错误,已恢复默认值"))
