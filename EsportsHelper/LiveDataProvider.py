@@ -42,7 +42,7 @@ def fetchLiveMatches(ignoreBroadCast=True, ignoreDisWatchMatches=False):
         elif config.onlyWatchMatches != [] and config.onlyWatchMatches != [""]:
             watchList = config.onlyWatchMatches
         for event in events:
-            if ignoreDisWatchMatches:
+            if ignoreDisWatchMatches and watchList != []:
                 if event["league"]["slug"] not in watchList:
                     continue
             if ignoreBroadCast and event["type"] == "show":
@@ -93,7 +93,7 @@ def fetchLiveMatches(ignoreBroadCast=True, ignoreDisWatchMatches=False):
     except Exception:
         log.error("API " + _log("获取比赛列表失败"))
         log.error(formatExc(format_exc()))
-        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} API {_('获取比赛列表失败', color='red')}")
+        # stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} API {_('获取比赛列表失败', color='red')}")
         liveList = ["ERROR"]
         return liveList
 
@@ -151,7 +151,7 @@ def checkNextMatch():
     except Exception:
         log.error("API " + _log("获取下一场比赛时间失败"))
         log.error(formatExc(format_exc()))
-        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} API {_('获取下一场比赛时间失败', color='red')}")
+        # stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} API {_('获取下一场比赛时间失败', color='red')}")
         return False
 
 
