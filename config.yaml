@@ -1,13 +1,13 @@
 delay: 600                # 每次检查的时间间隔，单位为秒(默认为600秒)(每次检测时间会在你设置的时延0.8-1.5倍之间随机波动) / Time interval for each check in seconds (600 seconds by default). Each check time will randomly range between 0.8 and 1.5 times the time delay you set
-headless: False           # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False) / # When set to True, the program will run in the background; otherwise it will open a browser window (set False by default)
+headless: False           # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False) / # When set to True, the program will run in the background; otherwise it will open a browser window (False by default)
 username: "账号用户名"     # 必填，账号 / Required field, username
-password: "密码"          # 必填，密码 / Required field, passward
-connectorDropsUrl: ""     # webhook提醒链接，不填则不提醒(支持discord,企业微信,钉钉,饭碗警告,飞书)/ webhook url, if not filled, no notify. (Support discord, WeCom, DingTalk, Fwalert, Feishu)
-nickName: ""              # 绰号, 不填即为用户名. / NickName. default is username.
+password: "密码"          # 必填，密码 / Required field, password
+connectorDropsUrl: ""     # webhook提醒链接，不填则不提醒(支持discord,企业微信,钉钉,饭碗警告,飞书) / Webhook URL to send notifications (supported: Discord, WeCom, DingTalk, Fwalert, Feishu)
+nickName: ""              # 绰号, 不填即为用户名. / Nickname for added account, "username" by default.
 maxStream: 3              # 最大同时观看比赛数.默认为3 / Maximum number of matches to be watched simultaneously. Default is 3.
-briefLogLength: 10        # 日志简略信息条数.默认为10 / Length of log brief information. Default is 10.
-language: "en_US"         # 语言选择，zh_CN是简体中文，en_US是英文, zh_TW是繁体中文 / Language selection, zh_CN for Chinese (Simplified), en_US for English,zh_TW for Chinese (Traditional)
-autoSleep: True           # 是否自动休眠,即没比赛时自动休眠，有比赛时自动唤醒(默认为True) / Whether to sleep automatically, that is, to sleep automatically when there is no match, and to wake up automatically when there is a match (default is False)
-mode: "safe"              # 模式选择，safe为安全模式，normal为普通模式，默认为safe.具体含义见github / Mode selection, safe for safe mode, narmal for narmal mode, default is safe. For details, see github
-# 更多配置请参考readme中的配置说明 / Refer to the Readme file for more configuration options.
+briefLogLength: 10        # 日志简略信息条数.默认为10 / Length of logging information, 10 by default.
+language: "en_US"         # 语言选择，zh_CN是简体中文，en_US是英文, zh_TW是繁体中文 / Language selection, zh_CN for Chinese (Simplified), en_US for English, zh_TW for Chinese (Traditional)
+autoSleep: True           # 是否自动休眠,即没比赛时自动休眠，有比赛时自动唤醒(默认为True) / Toggle for auto-sleep mode: sleeping while no matches live, waking up when match go live (True by default)
+mode: "safe"              # 模式选择，safe为安全模式，normal为普通模式，默认为safe.具体含义见github / Mode selection: "safe" for Safe mode, "normal" for regular mode, default is "safe". Check github page for more details
+# 更多配置请参考readme中的配置说明 / Please refer to the Readme file for more configuration options
 # github: https://github.com/Yudaotor/EsportsHelper
