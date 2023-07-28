@@ -1,4 +1,5 @@
 from datetime import datetime
+import time
 from time import sleep
 from traceback import format_exc
 from EsportsHelper.Config import config
@@ -46,14 +47,18 @@ class LoginHandler:
             sleep(2)
             usernameInput = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "input[name=username]")))
-            usernameInput.send_keys(username)
+            for character in username:
+                usernameInput.send_keys(character)
+                time.sleep(0.03)  # Wait 30 ms to emulate human behavior
             sleep(1)
             passwordInput = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "input[name=password]")))
-            passwordInput.send_keys(password)
+            for character in password:
+                passwordInput.send_keys(character)
+                time.sleep(0.03)  # Wait 30 ms to emulate human behavior
             sleep(1)
             submitButton = self.wait.until(ec.element_to_be_clickable(
-                (By.CSS_SELECTOR, "button[type=submit]")))
+                (By.CSS_SELECTOR, "button[data-testid='btn-signin-submit']"))) # Sometimes the button was not pressed correctly, this is a possible fix
             sleep(1)
             self.driver.execute_script("arguments[0].click();", submitButton)
             self.log.info(_log("账密 提交成功"))
