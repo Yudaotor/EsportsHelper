@@ -139,6 +139,11 @@ class Match:
                             newDelay = 3599
                         elif nowTimeDay < self.nextMatchDay and nowTimeHour >= 23:
                             isSleep = False
+                        elif (nowTimeDay == 31 or nowTimeDay == 30 or nowTimeDay == 29) and \
+                                (self.nextMatchDay == 1 or self.nextMatchDay == 2 or self.nextMatchDay == 3) \
+                                and nowTimeHour < 23:
+                            isSleep = True
+                            newDelay = 3599
                         else:
                             isSleep = False
                     # Stay awake when the next game time is wrong.
