@@ -1,6 +1,8 @@
 import undetected_chromedriver as uc
 from rich import print
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.driver_cache import DriverCacheManager
+
 from EsportsHelper.Config import config
 from EsportsHelper.Logger import log
 from EsportsHelper.I18n import i18n
@@ -38,11 +40,14 @@ class Webdriver:
         Returns:
             A uc.Chrome instance.
         """
-        chromeDriverManager = ChromeDriverManager(path=".\\driver")
+        customPath = ".\\driver"
+        chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
         if self.config.platForm == "linux":
-            chromeDriverManager = ChromeDriverManager(path="driver")
+            customPath = "driver"
+            chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
         elif self.config.platForm == "windows":
-            chromeDriverManager = ChromeDriverManager(path=".\\driver")
+            customPath = ".\\driver"
+            chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
         else:
             self.log.error(_("不支持的操作系统"))
         options = self.addWebdriverOptions(uc.ChromeOptions())
