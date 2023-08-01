@@ -18,12 +18,12 @@ Google Chrome must be downloaded in order to work (must be the latest version).
 Click here: [Releases](https://github.com/Yudaotor/EsportsHelper/releases)
 
 **WORD OF CAUTION:** 
-To avoid detection by RIOT, please try to filter out the smaller league.  
+To avoid detection by RIOT, please try to filter out the smaller league(mode: "safe" is ok).**Don't watch more than 5 games at the same time!**   
 
 ## Contact Me
 If you encounter any problems or suggestions in the process of use, feel free to create an issue on GitHub or contact me:
 
-Telegram: https://t.me/Yudaotor, Discord username: Khalil#7843 
+Telegram: **https://t.me/Yudaotor**, Discord username: **Khalil#7843** 
 
 Can you please give me a little star?(*^_^*)⭐  
 
@@ -66,7 +66,7 @@ Read This!  -->[Guide](https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Us
 17. You can set a **maximum number of simultaneous streams** to avoid being detected by RIOT for watching too many steams at the same time.
 18. You can export total drop details file.
 19. **Safe mode** can be switched on to automatically filter out small leagues.
-## Configuation
+## Configuration
 Using config.yaml file.
 ```yaml
 
@@ -78,9 +78,9 @@ Password: "password"  # Riot account password
 
 delay: 600                              # Time interval for each check in seconds (600 seconds by default). Each check time will fluctuate randomly between 0.8 and 1.5 times the time delay you set. 
 headless: False                         # When set to True, the program will run in the background; otherwise it will open a browser window (False by default).  
-nickName: ""                            # nickName, default is username.
-mode: "safe"                            # Mode selection, safe for safe mode, narmal for narmal mode, default is safe. For details, see github
-# 更多配置请参考readme中的配置说明 / Refer to the Readme file for more configuration options.
+nickName: ""                            # Nickname for added account, "username" by default.
+mode: "safe"                            # Mode selection: "safe" for Safe mode, "normal" for regular mode, default is "safe". Check github page for more details
+# 更多配置请参考readme中的配置说明 / Please refer to the Readme file for more configuration options
 briefLogLength: 10                      # Length of log brief information. Default is 10.
 onlyWatchMatches: ["lcs","lla","lpl","lck","ljl-japan","lco","lec","cblol-brazil","pcs","tft_esports"] 
 disWatchMatches: []                     # Optional, here you can add Leagues you wish to ignore. Please note, names should be in lowercase.    
@@ -98,8 +98,8 @@ ignoreBroadCast: True                   # Option to ignore broadcasts.
 userDataDir: "C:\\Users\\xxxxx\\AppData\\Local\\Google\\Chrome\\User Data"  # Path to Chrome cookie files. 
 chromePath: "X:\\xxxxx\\xx\\Chrome.exe" # Chrome.exe location.
 countDrops: True                        # Option to monitor Drops number.
-autoSleep: True                         # which will close all webpages related to Lolesports when there are no ongoing matches, achieving a true non-24/7.
-
+autoSleep: True                         # Toggle for auto-sleep mode: sleeping while no matches live, waking up when match go live (True by default)
+debug: False                            # Debug mode, default is False.
 ```
 
 ## Honorable mention

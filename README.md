@@ -9,8 +9,8 @@
 **Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
 # 电竞助手 EsportsHelper
 通过selenium模拟浏览器来自动观看电竞比赛,网址: [LolEsports](lolesports.com)  
-**为了避免被拳头检测,请尽量过滤掉小赛区(打开安全模式即可)(更何况本来就不怎么掉,并且可以省流量)**  
-哦对了,用的是谷歌浏览器哦 （必须要下一个最新版的谷歌浏览器哦）  
+**避免被拳头检测,请尽量过滤掉小赛区(打开安全模式即可)(以及不要同时观看超过5个比赛)**  
+哦对了,用的是谷歌浏览器哦 （必须要下一个谷歌浏览器哦）  
 **来自中国大陆的需搭配VPN使用**  
 **如何下载**:点击右侧的[Releases](https://github.com/Yudaotor/EsportsHelper/releases)下载
 ## 联系我
@@ -19,6 +19,8 @@
 或者可以联系我  
 Discord: Khalil#7843  
 可以给我点个小星星吗(*^_^*)⭐  
+## 不想自己挂?  
+可以找我代挂 Q群:553984868  
 ## 界面
 ![image](https://github.com/Yudaotor/EsportsHelper/assets/87225219/ec3603e5-463c-4a57-b09a-0c34e90522da)
 
@@ -93,6 +95,7 @@ chromePath: "X:\\xxxxx\\xx\\Chrome.exe"       # 谷歌浏览器自订路径
 countDrops: True                              # 是否检查掉落数
 notifyType: "all"                             # 推送信息的类型筛选,"all"为所有信息推送,"error"为仅推送报错信息,"drops"为仅推送掉落信息
 autoSleep: True                               # (推荐)是否自动休眠,默认True
+debug: False                                  # 是否开启debug模式,开启后在发生异常时会截屏到pics文件夹下,默认False
 ```
 
 ### 不观看赛区的配置详解:
