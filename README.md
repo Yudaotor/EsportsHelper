@@ -20,7 +20,7 @@
 Discord: Khalil#7843  
 可以给我点个小星星吗(*^_^*)⭐  
 ## 不想自己挂?  
-可以找我代挂 Q群:553984868  
+可以找我代挂 Q群:553984868  闲鱼: Khalilc
 ## 界面
 ![image](https://github.com/Yudaotor/EsportsHelper/assets/87225219/ec3603e5-463c-4a57-b09a-0c34e90522da)
 
