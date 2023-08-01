@@ -454,7 +454,7 @@ class Rewards:
                     s.post(self.config.connectorDropsUrl, json=data)
                     s.close()
                     sleep(10)
-                elif "https://discord.com/api/webhooks" in self.config.connectorDropsUrl:
+                elif "https://discord" in self.config.connectorDropsUrl:
                     field0 = {
                         "name": f"{_log('昵称')}",
                         "value": f"{self.config.nickName}",
