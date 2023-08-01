@@ -79,7 +79,7 @@ class Config:
             self.autoSleep = configFile.get("autoSleep", True)
             self.nickName = configFile.get("nickName", self.username)
             self.onlyWatchMatches = configFile.get("onlyWatchMatches", [])
-            self.maxStream = configFile.get("maxStream", 3)
+            self.maxStream = configFile.get("maxStream", 4)
             self.exportDrops = configFile.get("exportDrops", False)
             self.briefLogLength = configFile.get("briefLogLength", 10)
             self.mode = configFile.get("mode", "safe")
@@ -204,19 +204,19 @@ class Config:
                     self.maxRunHours = -1
         if isinstance(self.maxStream, str):
             if self.maxRunHours == "":
-                self.maxRunHours = 3
+                self.maxRunHours = 4
             else:
                 try:
                     self.maxStream = int(self.maxStream)
                 except ValueError:
-                    stats.info.append(_("最大同时观看数配置错误,已恢复默认值3", color="red"))
-                    log.error(_log("最大同时观看数配置错误,已恢复默认值3"))
-                    self.maxStream = 3
+                    stats.info.append(_("最大同时观看数配置错误,已恢复默认值4", color="red"))
+                    log.error(_log("最大同时观看数配置错误,已恢复默认值4"))
+                    self.maxStream = 4
         elif isinstance(self.maxStream, int):
             if self.maxStream < 1:
-                stats.info.append(_("最大同时观看数配置错误,已恢复默认值3", color="red"))
-                log.error(_log("最大同时观看数配置错误,已恢复默认值3"))
-                self.maxStream = 3
+                stats.info.append(_("最大同时观看数配置错误,已恢复默认值4", color="red"))
+                log.error(_log("最大同时观看数配置错误,已恢复默认值4"))
+                self.maxStream = 4
         if isinstance(self.briefLogLength, str):
             if self.briefLogLength == "":
                 self.briefLogLength = 10

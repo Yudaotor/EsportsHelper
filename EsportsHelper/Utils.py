@@ -455,8 +455,8 @@ def checkRewardPage(driver):
             utils = Utils()
             utils.debugScreen(driver, "rewardError")
             if len(driver.find_elements(By.CSS_SELECTOR, "div.InformBubble.error")) > 0:
-                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('Riot原因,reward页面出现异常无法正常加载', 'red')}")
-                log.error(_log("Riot原因,reward页面出现异常无法正常加载"))
+                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('reward页面出现异常无法正常加载', 'red')}")
+                log.error(_log("reward页面出现异常无法正常加载"))
             else:
                 driver.refresh()
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('获取reward网站失败，正在重试...', 'red')}")
@@ -709,8 +709,8 @@ def getWarningInfo():
     warningInfo = ""
     liveNumber = 0
     liveNumber = sum(1 for liveT in stats.lives if liveT.status != "notReady")
-    if liveNumber > 3:
-        warningInfo = _("提示: ", "bold yellow") + _("直播数>3存在风险", "bold yellow")
+    if liveNumber > 4:
+        warningInfo = _("提示: ", "bold yellow") + _("直播数>4存在风险", "bold yellow")
     return warningInfo, liveNumber
 
 
@@ -770,7 +770,7 @@ def getInfo():
 
 
 def countValidLive():
-    return sum(1 for live in stats.lives if live.gameNumber != _log("转播") and live.status != "notReady")
+    return sum(1 for live in stats.lives)
 
 
 def updateLiveDefinition(match, definition):
