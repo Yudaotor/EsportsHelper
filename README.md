@@ -79,7 +79,7 @@ nickName: ""                                  # 绰号,为空时默认为usernam
 onlyWatchMatches: ["lcs","lla","lpl","lck","ljl-japan","lco","lec","cblol-brazil","pcs","tft_esports"]   # 只观看的赛区名称,小写.
 disWatchMatches: ["prime","lfl","liga","hitpoint","series","nlc","nationals","academy","qualifiers","legends","challengers","league"]        # 不想看的赛区名称，可以在这里添加.(注意,是小写)  
 maxRunHours: -1                               # 负值为一直运行，正值为运行小时, 默认-1
-maxStream: 3                                  # 默认值为3,最大同时观看的比赛数,超过将会不予观看.
+maxStream: 4                                  # 默认值为4,最大同时观看的比赛数,超过将会不予观看.
 mode: "safe"                                  # 模式选择，safe为安全模式，normal为普通模式，默认为safe.具体含义见github 
 exportDrops: False                            # 默认为False,是否需要导出生涯掉落详情文件,只会在脚本打开时生成.
 briefLogLength: 10                            # 日志简略信息条数.默认为10

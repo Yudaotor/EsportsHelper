@@ -85,7 +85,7 @@ briefLogLength: 10                      # Length of log brief information. Defau
 onlyWatchMatches: ["lcs","lla","lpl","lck","ljl-japan","lco","lec","cblol-brazil","pcs","tft_esports"] 
 disWatchMatches: []                     # Optional, here you can add Leagues you wish to ignore. Please note, names should be in lowercase.    
 language: "en_US"                       # en_US for English.zh_CN for Simplified Chinese,zh_TW for Traditional Chinese.
-maxStream: 3                            # The default value is 3, which is the maximum number of matches that can be watched at the same time, beyond which they will not be watched.
+maxStream: 4                            # The default value is 4, which is the maximum number of matches that can be watched at the same time, beyond which they will not be watched.
 maxRunHours: -1                         # Negative value is always running, positive value is running by hours, default -1.
 proxy: ""                               # Proxy address, not required for general users, e.g., "127.0.0.1:7890".
 connectorDropsUrl: ""                   # Discord webhook link.
