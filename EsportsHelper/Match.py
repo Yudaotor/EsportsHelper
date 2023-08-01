@@ -318,12 +318,12 @@ class Match:
                 os.system("shutdown -s -t 60")
 
         except NoSuchWindowException:
-            self.log.error(_log("对应窗口找不到"))
-            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " + _("对应窗口找不到", color="red"))
+            self.log.error(_log("对应窗口找不到") + "，" + _log("检查是否手动关闭或电脑运存不足"))
+            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " + _("对应窗口找不到", color="red") + "，" + _("检查是否手动关闭或电脑运存不足", color="red"))
             self.log.error(formatExc(format_exc()))
-            self.utils.errorNotify(_log("对应窗口找不到"))
+            self.utils.errorNotify(_log("对应窗口找不到") + "，" + _log("检查是否手动关闭或电脑运存不足"))
             self.utils.debugScreen(self.driver, "main")
-            sysQuit(self.driver, _log("对应窗口找不到"))
+            sysQuit(self.driver, _log("对应窗口找不到") + "，" + _log("检查是否手动关闭或电脑运存不足"))
         except Exception:
             self.log.error(_log("发生错误"))
             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " + _("发生错误", color="red"))
@@ -452,16 +452,6 @@ class Match:
                         self.rewards.checkMatches("twitch", OVERRIDES[keys])
                     else:
                         self.rewards.checkMatches("youtube", keys)
-                    if self.streamNumber > config.maxStream:
-                        for live in stats.lives:
-                            if live.gameNumber == _log("转播") and live.league == getMatchName(keys):
-                                removeList.append(keys)
-                                stats.lives.remove(live)
-                                updateLiveRegionsColor(live.league, "dim yellow")
-                                self.driver.close()
-                                sleep(2)
-                                self.driver.switch_to.window(self.mainWindow)
-                                sleep(3)
             for keys in removeList:
                 self.currentWindows.pop(keys, None)
                 self.streamNumber = countValidLive()
