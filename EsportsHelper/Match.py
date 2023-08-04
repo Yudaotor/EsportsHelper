@@ -50,7 +50,7 @@ class Match:
         self.sleepEndList = []
         self.nextMatchHour = None
         self.nextMatchDay = None
-        self.streamNumber = countValidLive()
+        self.streamNumber = 0
 
     def watchMatches(self):
         """
@@ -412,7 +412,7 @@ class Match:
             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " + _("所有窗口已关闭", color="green"))
             self.log.info(_log("所有窗口已关闭"))
             stats.lives = []
-            self.streamNumber = countValidLive()
+            self.streamNumber = 0
         except Exception:
             self.utils.debugScreen(self.driver, "closeAllTabs")
             self.log.error(_log("关闭所有窗口时发生异常"))
@@ -454,7 +454,7 @@ class Match:
                         self.rewards.checkMatches("youtube", keys)
             for keys in removeList:
                 self.currentWindows.pop(keys, None)
-                self.streamNumber = countValidLive()
+                self.streamNumber -= 1
             self.driver.switch_to.window(self.mainWindow)
         except Exception:
             self.utils.debugScreen(self.driver, "closeFinishedTabs")
@@ -592,7 +592,7 @@ class Match:
                             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} [bold magenta]" + formatName + "[/bold magenta] " +
                                               _("无法设置 Youtube 清晰度.可能是误判成youtube源,请联系作者", color="red"))
                             self.log.error(formatExc(format_exc()))
-                self.streamNumber = countValidLive()
+                self.streamNumber += 1
                 sleep(4)
         except Exception:
             self.log.error(_log("打开新比赛时发生错误") + " " + _log("待重试"))
