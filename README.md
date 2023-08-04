@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://github.com/Yudaotor/EsportsHelper"><img alt="EsportsHelper" src="https://i.328888.xyz/2023/03/28/itMRQF.png"></a><br/>
+<a href="https://github.com/Yudaotor/EsportsHelper"><img alt="EsportsHelper" src="https://github.com/Yudaotor/EsportsHelper/assets/87225219/79896860-f119-4e69-bac7-148504d4c2ae"></a><br/>
 <a href="https://lolesports.com"><img alt="lolesports" src="https://img.shields.io/badge/WebSite-lol%20esports-445fa5.svg?style=plastic"></a>
 <a href="https://github.com/Yudaotor/EsportsHelper/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/Yudaotor/EsportsHelper"></a>
 <a href="https://github.com/Yudaotor/EsportsHelper/pulls"><img alt="PRWelcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat"></a><br/>
