@@ -342,14 +342,14 @@ class Utils:
             print(f"[bold yellow]>_<{'=' * 8}[/bold yellow] "
                   f"Gracias por usar [cyan]EsportsHelper[/cyan] v {version}! "
                   f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
-            print(f"[bold yellow]>_<{'=' * 8}[/bold yellow]   "
+            print(f"[bold yellow]>_<{'=' * 5}[/bold yellow]   "
                   f"El programa es de código abierto en GitHub  "
-                  f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
+                  f"[bold yellow]{'=' * 5}>_<[/bold yellow]")
             print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]    "
                   f"{githubUrl}    [bold yellow]{'=' * 4}"
                   f">_<[/bold yellow]")
-            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]      "
-                  f"Si te gusta, por favor dame una estrella      "
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]     "
+                  f"Si te gusta, por favor dame una estrella    "
                   f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
             print(
                 f"[bold yellow]>_<"
