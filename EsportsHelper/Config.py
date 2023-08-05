@@ -83,6 +83,7 @@ class Config:
             self.exportDrops = configFile.get("exportDrops", False)
             self.briefLogLength = configFile.get("briefLogLength", 10)
             self.mode = configFile.get("mode", "safe")
+            self.exportDrops = configFile.get("arm64", False)
             self.format()
         except (ParserError, KeyError, ScannerError):
             log.error(_log('配置文件格式错误'))

@@ -1,3 +1,4 @@
+import os
 import undetected_chromedriver as uc
 from rich import print
 from webdriver_manager.chrome import ChromeDriverManager
@@ -43,17 +44,26 @@ class Webdriver:
         customPath = ".\\driver"
         chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
         if self.config.platForm == "linux":
-            customPath = "driver"
-            chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
+            if self.config.arm64:
+                username = os.getlogin()
+                driverPath = f"/home/{username}/.local/share/undetected_chromedriver/chromedriver"
+                if not os.path.exists(driverPath):
+                    self.log.error(_("找不到 chromedriver"))
+                    return
+            else:
+                customPath = "driver"
+                chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
+                driverPath = chromeDriverManager.install()
         elif self.config.platForm == "windows":
             customPath = ".\\driver"
             chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
+            driverPath = chromeDriverManager.install()
         else:
             self.log.error(_("不支持的操作系统"))
+
         options = self.addWebdriverOptions(uc.ChromeOptions())
         print(_("正在准备中...", color="yellow"))
-        log.info(_log("正在准备中..."))
-        driverPath = chromeDriverManager.install()
+        self.log.info(_log("正在准备中..."))
         version = getDriverVersion(chromeDriverManager)
 
         kwargs = {
