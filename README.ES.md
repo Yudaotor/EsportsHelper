@@ -44,8 +44,6 @@ python -m pip install -r requirements.txt
 ## Cuentas Múltiples 
 Descomprime varias carpetas y luego archivos de configuración diferentes. Abre todas las instancias para utilizar múltiples cuentas.
 
-## ¿Quieres usar Chromium en ARM64?
-Lee esto:  -->[Guide](https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64)
 ## Features
 1. Abre automáticamente tu navegador, va a lolesports.com, verifica qué ligas están jugando actualmente (ignora los VOD), entra a ver, enciende el volumen y ajusta la calidad de la transmisión al mínimo.
 2. Opción para definir si el programa se lanzará en modo sin cabeza o con una ventana de navegador visible (desactivado por defecto). El modo sin cabeza abre el navegador sin GUI (no será visible, configurado para ejecutarse en segundo plano para reducir el uso de la CPU).
@@ -93,7 +91,7 @@ proxy: ""                               # Dirección del proxy, no es necesario 
 connectorDropsUrl: ""                   # Enlace del webhook de Discord.
 exportDrops: False                      # Por defecto es False, si necesitas o no exportar el archivo con detalles totales de caídas, solo se generará cuando el script esté abierto.
 platForm: "windows"                     # Sistema operativo, por defecto es Windows. Si quieres usar el programa en Linux, cambia el valor aquí.  
-arm64: False                            # Habilita la compatibilidad para utilizar Chromium en Linux ARM64, se requiere platForm: "linux" y tener el chromedriver en "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver"
+arm64: False                            # Habilita la compatibilidad para utilizar Chromium en Linux ARM64, se requiere platForm: "linux" y tener el chromedriver en "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver", más información: https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64
 closeStream: False                      # Opción para eliminar elementos del reproductor de video para ahorrar tráfico. (Riesgo).
 desktopNotify: False                    # Función experimental para habilitar notificaciones de escritorio.
 sleepPeriod: ["8-13", "20-23"]          # Período de hibernación, vacío por defecto, se permiten varios períodos. El formato es "Hora de inicio – Hora de fin". Las pestañas se cerrarán y se volverán a abrir al final del período de hibernación.
