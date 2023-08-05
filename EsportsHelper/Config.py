@@ -83,6 +83,7 @@ class Config:
             self.exportDrops = configFile.get("exportDrops", False)
             self.briefLogLength = configFile.get("briefLogLength", 10)
             self.mode = configFile.get("mode", "safe")
+            self.arm64 = configFile.get("arm64", False)
             self.format()
         except (ParserError, KeyError, ScannerError):
             log.error(_log('配置文件格式错误'))
@@ -127,7 +128,7 @@ class Config:
         - ValueError: If an invalid format is given for certain variables.
         """
         if isinstance(self.language, str):
-            if self.language not in ["zh_CN", "en_US", "zh_TW"]:
+            if self.language not in ["zh_CN", "en_US", "zh_TW", "es_ES"]:
                 self.language = "zh_CN"
                 stats.info.append(_("语言配置错误,已恢复zh_CN默认值", color="red"))
                 log.error(_log("语言配置错误,已恢复zh_CN默认值"))
