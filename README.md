@@ -6,7 +6,7 @@
 <a href="https://www.cdnjson.com/images/2023/03/13/image-merge-1678713037835.png">点它-><img alt="buymecoffee" src="https://user-images.githubusercontent.com/87225219/228188809-9d136e10-faa1-49b9-a6b7-b969dd1d8c7f.png"></a>
 </p>
 
-**Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
+**Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md) | [Spanish](https://github.com/Yudaotor/EsportsHelper/blob/main/README.ES.md)
 # 电竞助手 EsportsHelper
 通过selenium模拟浏览器来自动观看电竞比赛,网址: [LolEsports](lolesports.com)  
 **避免被拳头检测,请尽量过滤掉小赛区(打开安全模式即可)(以及不要同时观看超过5个比赛)**  
@@ -63,6 +63,7 @@ python -m pip install -r requirements.txt
 19. 可以导出生涯掉落详细信息.
 20. 可以打开**安全模式**,自动过滤小赛区 防止被检测.
 21. 可以显示双方对局比分信息.
+22. 支持ARM64.
 
 
 ## 配置信息
@@ -96,6 +97,7 @@ countDrops: True                              # 是否检查掉落数
 notifyType: "all"                             # 推送信息的类型筛选,"all"为所有信息推送,"error"为仅推送报错信息,"drops"为仅推送掉落信息
 autoSleep: True                               # (推荐)是否自动休眠,默认True
 debug: False                                  # 是否开启debug模式,开启后在发生异常时会截屏到pics文件夹下,默认False
+arm64: False                                  # 支持在Linux ARM64使用Chromium,需要同时配置platForm: "linux" 并且要有 chromedriver 在路径: "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver", 更多细节见: https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64
 ```
 
 ### 不观看赛区的配置详解:
