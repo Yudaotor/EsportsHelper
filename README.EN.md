@@ -6,7 +6,7 @@
 <a href="https://www.cdnjson.com/images/2023/03/13/image-merge-1678713037835.png"><img alt="buymecoffee" src="https://user-images.githubusercontent.com/87225219/228188809-9d136e10-faa1-49b9-a6b7-b969dd1d8c7f.png"></a>
 </p>
 
-**Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md)
+**Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md) | [Spanish](https://github.com/Yudaotor/EsportsHelper/blob/main/README.ES.md)
 
 # EsportsHelper
 Automatically watch [LolEsports](lolesports.com) broadcasts using selenium and undetected_chromedriver.
@@ -44,8 +44,6 @@ python -m pip install -r requirements.txt
 ## Multiple Account  
 Unzip multiple folders, and then each different configuration files.Open all instances to achieve multiple account.
 
-## Want Use Chromium on ARM64?
-Read This!  -->[Guide](https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64)
 ## Features
 1. Automatically opens your browser, proceeds to lolesports.com, checks which leagues are currently playing (VODs will be ignored), enters to watch, turns on the volume and sets the quality of the stream to the lowest. 
 2. Option to set whether program will launch in headless mode or with a visible browser window (Off by default). Headless mode is opening the browser without GUI. (It will not be visible, set to running in the background in order to lower CPU usage).
@@ -91,6 +89,7 @@ proxy: ""                               # Proxy address, not required for genera
 connectorDropsUrl: ""                   # Discord webhook link.
 exportDrops: False                      # Default is False, whether or not you need to export the total drop details file, it will only be generated when the script is opened.
 platForm: "windows"                     # OS, Windows is set by default. If you want to use the program on Linux, please change the value here.  
+arm64: False                            # Enable support for using Chromium on Linux ARM64, requires platForm: "linux" and having the chromedriver in "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver", more info: https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64
 closeStream: False                      # Option of deleting video-player elements to save traffic. (Risk).
 desktopNotify: False                    # Experimental feature to enable Desktop notifications.
 sleepPeriod: ["8-13", "20-23"]          # Hibernation period, empty by default, allowed multiple period. The format is "Start hour – End hour". Tabs will be closed and reopened at the end of sleep.

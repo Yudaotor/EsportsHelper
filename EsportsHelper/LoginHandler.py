@@ -1,5 +1,6 @@
 from datetime import datetime
 import time
+import random
 from time import sleep
 from traceback import format_exc
 from EsportsHelper.Config import config
@@ -49,13 +50,13 @@ class LoginHandler:
                 (By.CSS_SELECTOR, "input[name=username]")))
             for character in username:
                 usernameInput.send_keys(character)
-                time.sleep(0.03)  # Wait 30 ms to emulate human behavior
+                time.sleep(random.uniform(0.02, 0.1))  # wait a random time between 20 ms and 100 ms
             sleep(1)
             passwordInput = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "input[name=password]")))
             for character in password:
                 passwordInput.send_keys(character)
-                time.sleep(0.03)  # Wait 30 ms to emulate human behavior
+                time.sleep(random.uniform(0.02, 0.1))  # wait a random time between 20 ms and 100 ms
             sleep(1)
             submitButton = self.wait.until(ec.element_to_be_clickable(
                 (By.CSS_SELECTOR, "button[data-testid='btn-signin-submit']"))) # Sometimes the button was not pressed correctly, this is a possible fix

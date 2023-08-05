@@ -329,6 +329,38 @@ class Utils:
                 f">_<[/bold yellow]"
             )
             print()
+        elif self.config.language == "es_ES":
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f">_<"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f">_<[/bold yellow]"
+            )
+            print(f"[bold yellow]>_<{'=' * 8}[/bold yellow] "
+                  f"Gracias por usar [cyan]EsportsHelper[/cyan] v {version}! "
+                  f"[bold yellow]{'=' * 8}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 5}[/bold yellow]   "
+                  f"El programa es de código abierto en GitHub  "
+                  f"[bold yellow]{'=' * 5}>_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]    "
+                  f"{githubUrl}    [bold yellow]{'=' * 4}"
+                  f">_<[/bold yellow]")
+            print(f"[bold yellow]>_<{'=' * 4}[/bold yellow]     "
+                  f"Si te gusta, por favor dame una estrella    "
+                  f"[bold yellow]{'=' * 4}>_<[/bold yellow]")
+            print(
+                f"[bold yellow]>_<"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f">_<"
+                f"[bold yellow]{CHAMPION_TEAM}[/bold yellow]"
+                f"{'=' * (27 - len(CHAMPION_TEAM))}"
+                f">_<[/bold yellow]"
+            )
+            print()
 
 
 def desktopNotify(poweredByImg, productImg, unlockedDate, eventTitle, dropItem, dropItemImg, dropLocale, todayDrops, fans):
