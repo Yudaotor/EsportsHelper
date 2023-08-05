@@ -45,7 +45,7 @@ python -m pip install -r requirements.txt
 Descomprime varias carpetas y luego archivos de configuración diferentes. Abre todas las instancias para utilizar múltiples cuentas.
 
 ## ¿Quieres usar Chromium en ARM64?
-Read This!  -->[Guide](https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64)
+Lee esto:  -->[Guide](https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64)
 ## Features
 1. Abre automáticamente tu navegador, va a lolesports.com, verifica qué ligas están jugando actualmente (ignora los VOD), entra a ver, enciende el volumen y ajusta la calidad de la transmisión al mínimo.
 2. Opción para definir si el programa se lanzará en modo sin cabeza o con una ventana de navegador visible (desactivado por defecto). El modo sin cabeza abre el navegador sin GUI (no será visible, configurado para ejecutarse en segundo plano para reducir el uso de la CPU).
