@@ -48,7 +48,7 @@ class Webdriver:
                 username = os.getlogin()
                 driverPath = f"/home/{username}/.local/share/undetected_chromedriver/chromedriver"
                 if not os.path.exists(driverPath):
-                    self.log.error(_("找不到 chromedriver"))
+                    self.log.error(_log("找不到 chromedriver"))
                     return
             else:
                 customPath = "driver"
