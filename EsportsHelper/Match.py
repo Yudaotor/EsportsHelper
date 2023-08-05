@@ -141,7 +141,7 @@ class Match:
                             isSleep = False
                         elif (nowTimeDay == 31 or nowTimeDay == 30 or nowTimeDay == 29) and \
                                 (self.nextMatchDay == 1 or self.nextMatchDay == 2 or self.nextMatchDay == 3) \
-                                and nowTimeHour < 23:
+                                and nowTimeHour < 23 and liveUrlList == []:
                             isSleep = True
                             newDelay = 3599
                         else:
