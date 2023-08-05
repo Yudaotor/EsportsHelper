@@ -93,6 +93,7 @@ proxy: ""                               # Dirección del proxy, no es necesario 
 connectorDropsUrl: ""                   # Enlace del webhook de Discord.
 exportDrops: False                      # Por defecto es False, si necesitas o no exportar el archivo con detalles totales de caídas, solo se generará cuando el script esté abierto.
 platForm: "windows"                     # Sistema operativo, por defecto es Windows. Si quieres usar el programa en Linux, cambia el valor aquí.  
+arm64: False                            # Habilita la compatibilidad para utilizar Chromium en Linux ARM64, se requiere platForm: "linux" y tener el chromedriver en "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver"
 closeStream: False                      # Opción para eliminar elementos del reproductor de video para ahorrar tráfico. (Riesgo).
 desktopNotify: False                    # Función experimental para habilitar notificaciones de escritorio.
 sleepPeriod: ["8-13", "20-23"]          # Período de hibernación, vacío por defecto, se permiten varios períodos. El formato es "Hora de inicio – Hora de fin". Las pestañas se cerrarán y se volverán a abrir al final del período de hibernación.
