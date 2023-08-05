@@ -147,6 +147,7 @@ class Config:
         self.ignoreBroadCast = formatBoolean(self.ignoreBroadCast)
         self.autoSleep = formatBoolean(self.autoSleep)
         self.connectorTest = formatBoolean(self.connectorTest)
+        self.arm64 = formatBoolean(self.arm64)
 
         if isinstance(self.delay, str):
             try:
