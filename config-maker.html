@@ -64,11 +64,17 @@
             <div class="form-group">
                <label for="disWatchMatches">Leagues to ignore (separate by commas)</label>
                <input type="text" class="form-control" id="disWatchMatches" placeholder="">
-            </div>
-            <!-- language -->
+            </div>       
+			<!-- language -->
             <div class="form-group">
                <label for="language">Language</label>
-               <input type="text" class="form-control" id="language" placeholder="en_US">
+               <select class="form-control" id="language">
+                  <option value="" disabled selected>Select Language</option>
+                  <option value="en_US">en_US</option>
+                  <option value="zh_CN">zh_CN</option>
+				  <option value="zh_TW">zh_TW</option>
+				  <option value="es_ES">es_ES</option>
+               </select>
             </div>
             <!-- maxStream -->
             <div class="form-group">
@@ -184,7 +190,7 @@
              if (disWatchMatches) yamlContent += `disWatchMatches: ["${disWatchMatches.split(',').map((item) => item.trim()).join('","')}"]\n`;
          
              let language = document.getElementById('language').value;
-             if (language) yamlContent += `language: "${language}"\n`;
+             if (language !== '') yamlContent += `language: "${language}"\n`;
          
              let maxStream = document.getElementById('maxStream').value;
              if (maxStream) yamlContent += `maxStream: ${maxStream}\n`;
