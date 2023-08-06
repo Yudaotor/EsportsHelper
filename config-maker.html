@@ -1,254 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="utf8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>EsportsHelper Config Maker</title>
-      <meta name="description" content="Generate config.yaml for EsportsHelper with this easy-to-use form.">
-      <meta name="robots" content="index, follow">
-      <meta name="author" content="RedR00t">
-      <link rel="canonical" href="https://www.example.com/config-maker">
-      <meta name="language" content="en">
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-   </head>
-   <body>
-      <div class="container mt-5">
-         <center><h1>EsportsHelper Config Maker</h1></center>
-         <form id="configForm">
+<head>
+    <meta charset="utf8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EsportsHelper Config Maker</title>
+    <meta name="description" content="Generate config.yaml for EsportsHelper with this easy-to-use form.">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="RedR00t">
+    <link rel="canonical" href="https://www.example.com/config-maker">
+    <meta name="language" content="en">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-5">
+        <center><h1>EsportsHelper Config Maker</h1></center>
+        <form id="configForm">
             <!-- Required fields -->
             <h5 class="mt-3">Required fields</h5>
             <div class="form-group">
-               <label for="username">Username</label>
-               <input type="text" class="form-control" id="username" placeholder="Riot account username" value="username">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Riot account username" value="username">
             </div>
             <div class="form-group">
-               <label for="password">Password</label>
-               <input type="password" class="form-control" id="password" placeholder="Riot account password" value="password">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Riot account password" value="password">
             </div>
             <!-- Optional fields -->
             <h5 class="mt-3">Optional</h5>
             <div class="form-group">
-               <label for="delay">Delay (in seconds)</label>
-               <input type="number" class="form-control" id="delay" placeholder="600">
+                <label for="delay">Delay (in seconds)</label>
+                <input type="number" class="form-control" id="delay" placeholder="600">
             </div>
             <!-- headless -->
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" id="headless">
-               <label class="form-check-label" for="headless">Headless (Check for True)</label>
+            <div class="form-group">
+                <label for="headless">Headless</label>
+                <select class="form-control" id="headless">
+                    <option value="" disabled selected>Select option</option>
+                    <option value="True">Enabled</option>
+                    <option value="False">Disabled</option>
+                </select>
             </div>
             <!-- nickName -->
             <div class="form-group">
-               <label for="nickName">Nickname</label>
-               <input type="text" class="form-control" id="nickName" placeholder="username">
+                <label for="nickName">Nickname</label>
+                <input type="text" class="form-control" id="nickName" placeholder="username">
             </div>
             <!-- mode -->
             <div class="form-group">
-               <label for="mode">Mode</label>
-               <select class="form-control" id="mode">
-                  <option value="" disabled selected>Select mode</option>
-                  <option value="safe">safe</option>
-                  <option value="normal">normal</option>
-               </select>
+                <label for="mode">Mode</label>
+                <select class="form-control" id="mode">
+                    <option value="" disabled selected>Select mode</option>
+                    <option value="safe">safe</option>
+                    <option value="normal">normal</option>
+                </select>
             </div>
             <!-- briefLogLength -->
             <div class="form-group">
-               <label for="briefLogLength">Length of log brief information</label>
-               <input type="number" class="form-control" id="briefLogLength" placeholder="10">
+                <label for="briefLogLength">Length of log brief information</label>
+                <input type="number" class="form-control" id="briefLogLength" placeholder="10">
             </div>
             <!-- onlyWatchMatches -->
             <div class="form-group">
-               <label for="onlyWatchMatches">Leagues to watch (separate by commas)</label>
-               <input type="text" class="form-control" id="onlyWatchMatches" placeholder="lcs,lla,lpl,lck,ljl-japan,lco,lec,cblol-brazil,pcs,tft_esports">
+                <label for="onlyWatchMatches">Leagues to watch (separate by commas)</label>
+                <input type="text" class="form-control" id="onlyWatchMatches" placeholder="lcs,lla,lpl,lck,ljl-japan,lco,lec,cblol-brazil,pcs,tft_esports">
             </div>
             <!-- disWatchMatches -->
             <div class="form-group">
-               <label for="disWatchMatches">Leagues to ignore (separate by commas)</label>
-               <input type="text" class="form-control" id="disWatchMatches" placeholder="">
+                <label for="disWatchMatches">Leagues to ignore (separate by commas)</label>
+                <input type="text" class="form-control" id="disWatchMatches" placeholder="">
             </div>       
-			<!-- language -->
+            <!-- language -->
             <div class="form-group">
-               <label for="language">Language</label>
-               <select class="form-control" id="language">
-                  <option value="" disabled selected>Select Language</option>
-                  <option value="en_US">en_US</option>
-                  <option value="zh_CN">zh_CN</option>
-				  <option value="zh_TW">zh_TW</option>
-				  <option value="es_ES">es_ES</option>
-               </select>
+                <label for="language">Language</label>
+                <select class="form-control" id="language">
+                    <option value="" disabled selected>Select Language</option>
+                    <option value="en_US">en_US</option>
+                    <option value="zh_CN">zh_CN</option>
+                    <option value="zh_TW">zh_TW</option>
+                    <option value="es_ES">es_ES</option>
+                </select>
             </div>
             <!-- maxStream -->
             <div class="form-group">
-               <label for="maxStream">Max number of matches to watch at the same time</label>
-               <input type="number" class="form-control" id="maxStream" placeholder="4">
+                <label for="maxStream">Max number of matches to watch at the same time</label>
+                <input type="number" class="form-control" id="maxStream" placeholder="4">
             </div>
             <!-- maxRunHours -->
             <div class="form-group">
-               <label for="maxRunHours">Max run hours</label>
-               <input type="number" class="form-control" id="maxRunHours" placeholder="-1">
+                <label for="maxRunHours">Max run hours</label>
+                <input type="number" class="form-control" id="maxRunHours" placeholder="-1">
             </div>
             <!-- proxy -->
             <div class="form-group">
-               <label for="proxy">Proxy address</label>
-               <input type="text" class="form-control" id="proxy" placeholder="">
+                <label for="proxy">Proxy address</label>
+                <input type="text" class="form-control" id="proxy" placeholder="">
             </div>
             <!-- connectorDropsUrl -->
             <div class="form-group">
-               <label for="connectorDropsUrl">Discord webhook link</label>
-               <input type="text" class="form-control" id="connectorDropsUrl" placeholder="">
+                <label for="connectorDropsUrl">Discord webhook link</label>
+                <input type="text" class="form-control" id="connectorDropsUrl" placeholder="">
             </div>
             <!-- exportDrops -->
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" id="exportDrops">
-               <label class="form-check-label" for="exportDrops">Export drop details file</label>
+            <div class="form-group">
+                <label for="exportDrops">Export drop details file</label>
+                <select class="form-control" id="exportDrops">
+                    <option value="" disabled selected>Select option</option>
+                    <option value="True">Enabled</option>
+                    <option value="False">Disabled</option>
+                </select>
             </div>
             <!-- platForm -->
             <div class="form-group">
-               <label for="platForm">Platform</label>
-               <input type="text" class="form-control" id="platForm" placeholder="windows">
+                <label for="platForm">Platform</label>
+                <input type="text" class="form-control" id="platForm" placeholder="windows">
             </div>
             <!-- arm64 -->
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" id="arm64">
-               <label class="form-check-label" for="arm64">Enable support for using Chromium on Linux ARM64</label>
+            <div class="form-group">
+                <label for="arm64">Enable support for using Chromium on Linux ARM64</label>
+                <select class="form-control" id="arm64">
+                    <option value="" disabled selected>Select option</option>
+                    <option value="True">Enabled</option>
+                    <option value="False">Disabled</option>
+                </select>
             </div>
             <!-- closeStream -->
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" id="closeStream">
-               <label class="form-check-label" for="closeStream">Delete video-player elements to save traffic</label>
+            <div class="form-group">
+                <label for="closeStream">Delete video-player elements to save traffic</label>
+                <select class="form-control" id="closeStream">
+                    <option value="" disabled selected>Select option</option>
+                    <option value="True">Enabled</option>
+                    <option value="False">Disabled</option>
+                </select>
             </div>
             <!-- desktopNotify -->
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" id="desktopNotify">
-               <label class="form-check-label" for="desktopNotify">Enable Desktop notifications</label>
+            <div class="form-group">
+                <label for="desktopNotify">Enable Desktop notifications</label>
+                <select class="form-control" id="desktopNotify">
+                    <option value="" disabled selected>Select option</option>
+                    <option value="True">Enabled</option>
+                    <option value="False">Disabled</option>
+                </select>
             </div>
             <!-- sleepPeriod -->
             <div class="form-group">
-               <label for="sleepPeriod">Hibernation period (Start hour - End hour)</label>
-               <input type="text" class="form-control" id="sleepPeriod" placeholder="8-13, 20-23">
+                <label for="sleepPeriod">Hibernation period (Start hour - End hour)</label>
+                <input type="text" class="form-control" id="sleepPeriod" placeholder="8-13, 20-23">
             </div>
             <!-- ignoreBroadCast -->
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" id="ignoreBroadCast" checked>
-               <label class="form-check-label" for="ignoreBroadCast">Ignore broadcasts</label>
+            <div class="form-group">
+                <label for="ignoreBroadCast">Ignore broadcasts</label>
+                <select class="form-control" id="ignoreBroadCast">
+                    <option value="" disabled selected>Select option</option>
+                    <option value="True">Enabled</option>
+                    <option value="False">Disabled</option>
+                </select>
             </div>
             <!-- userDataDir -->
             <div class="form-group">
-               <label for="userDataDir">Path to Chrome cookie files</label>
-               <input type="text" class="form-control" id="userDataDir" placeholder="C:\Users\xxxxx\AppData\Local\Google\Chrome\User Data">
+                <label for="userDataDir">Path to Chrome cookie files</label>
+                <input type="text" class="form-control" id="userDataDir" placeholder="C:\Users\xxxxx\AppData\Local\Google\Chrome\User Data">
             </div>
             <!-- chromePath -->
             <div class="form-group">
-               <label for="chromePath">Chrome.exe location</label>
-               <input type="text" class="form-control" id="chromePath" placeholder="X:\xxxxx\xx\Chrome.exe">
+                <label for="chromePath">Chrome.exe location</label>
+                <input type="text" class="form-control" id="chromePath" placeholder="X:\xxxxx\xx\Chrome.exe">
             </div>
             <!-- countDrops -->
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" id="countDrops" checked>
-               <label class="form-check-label" for="countDrops">Monitor Drops number</label>
+            <div class="form-group">
+                <label for="countDrops">Monitor Drops number</label>
+                <select class="form-control" id="countDrops">
+                    <option value="" disabled selected>Select option</option>
+                    <option value="True">Enabled</option>
+                    <option value="False">Disabled</option>
+                </select>
             </div>
             <!-- autoSleep -->
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" id="autoSleep" checked>
-               <label class="form-check-label" for="autoSleep">Toggle for auto-sleep mode</label>
+            <div class="form-group">
+                <label for="autoSleep">Toggle for auto-sleep mode</label>
+                <select class="form-control" id="autoSleep">
+                    <option value="" disabled selected>Select option</option>
+                    <option value="True">Enabled</option>
+                    <option value="False">Disabled</option>
+                </select>
             </div>
             <!-- debug -->
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" id="debug">
-               <label class="form-check-label" for="debug">Debug mode</label>
+            <div class="form-group">
+                <label for="debug">Debug mode</label>
+                <select class="form-control" id="debug">
+                    <option value="" disabled selected>Select option</option>
+                    <option value="True">Enabled</option>
+                    <option value="False">Disabled</option>
+                </select>
             </div>
             <button type="button" class="btn btn-primary mt-3" onclick="generateYAML()">Generate and Download config.yaml</button>
-         </form>
-      </div>
-      <script>
-         function generateYAML() {
-             let username = document.getElementById('username').value;
-             let password = document.getElementById('password').value;
-         
-             // Start the YAML content without leading new lines
-             let yamlContent = `username: "${username}"\npassword: "${password}"\n`;
-         
-             // Optional values
-             let delay = document.getElementById('delay').value;
-             if (delay) yamlContent += `delay: ${delay}\n`;
-         
-             let headless = document.getElementById('headless').checked;
-             if (headless) yamlContent += `headless: True\n`;  // Only add when checked
-         
-             let nickName = document.getElementById('nickName').value;
-             if (nickName) yamlContent += `nickName: "${nickName}"\n`;
-         
-             let mode = document.getElementById('mode').value;
-             if (mode !== '') yamlContent += `mode: "${mode}"\n`;
-         
-             let briefLogLength = document.getElementById('briefLogLength').value;
-             if (briefLogLength) yamlContent += `briefLogLength: ${briefLogLength}\n`;
-         
-             let onlyWatchMatches = document.getElementById('onlyWatchMatches').value;
-             if (onlyWatchMatches) yamlContent += `onlyWatchMatches: ["${onlyWatchMatches.split(',').map((item) => item.trim()).join('","')}"]\n`;
-         
-             let disWatchMatches = document.getElementById('disWatchMatches').value;
-             if (disWatchMatches) yamlContent += `disWatchMatches: ["${disWatchMatches.split(',').map((item) => item.trim()).join('","')}"]\n`;
-         
-             let language = document.getElementById('language').value;
-             if (language !== '') yamlContent += `language: "${language}"\n`;
-         
-             let maxStream = document.getElementById('maxStream').value;
-             if (maxStream) yamlContent += `maxStream: ${maxStream}\n`;
-         
-             let maxRunHours = document.getElementById('maxRunHours').value;
-             if (maxRunHours) yamlContent += `maxRunHours: ${maxRunHours}\n`;
-         
-             let proxy = document.getElementById('proxy').value;
-             if (proxy) yamlContent += `proxy: "${proxy}"\n`;
-         
-             let connectorDropsUrl = document.getElementById('connectorDropsUrl').value;
-             if (connectorDropsUrl) yamlContent += `connectorDropsUrl: "${connectorDropsUrl}"\n`;
-         
-             let exportDrops = document.getElementById('exportDrops').checked;
-             if (exportDrops) yamlContent += `exportDrops: True\n`;
-         
-             let platForm = document.getElementById('platForm').value;
-             if (platForm) yamlContent += `platForm: "${platForm}"\n`;
-         
-             let arm64 = document.getElementById('arm64').checked;
-             if (arm64) yamlContent += `arm64: True\n`;
-         
-             let closeStream = document.getElementById('closeStream').checked;
-             if (closeStream) yamlContent += `closeStream: True\n`;
-         
-             let desktopNotify = document.getElementById('desktopNotify').checked;
-             if (desktopNotify) yamlContent += `desktopNotify: True\n`;
-         
-             let sleepPeriod = document.getElementById('sleepPeriod').value;
-             if (sleepPeriod) yamlContent += `sleepPeriod: ["${sleepPeriod.split(',').map((item) => item.trim()).join('","')}"]\n`;
-         
-             let ignoreBroadCast = document.getElementById('ignoreBroadCast').checked;
-             if (ignoreBroadCast) yamlContent += `ignoreBroadCast: True\n`;
-         
-             let userDataDir = document.getElementById('userDataDir').value;
-             if (userDataDir) yamlContent += `userDataDir: "${userDataDir}"\n`;
-         
-             let chromePath = document.getElementById('chromePath').value;
-             if (chromePath) yamlContent += `chromePath: "${chromePath}"\n`;
-         
-             let countDrops = document.getElementById('countDrops').checked;
-             if (countDrops) yamlContent += `countDrops: True\n`;
-         
-             let autoSleep = document.getElementById('autoSleep').checked;
-             if (autoSleep) yamlContent += `autoSleep: True\n`;
-         
-             let debug = document.getElementById('debug').checked;
-             if (debug) yamlContent += `debug: True\n`;
-         
-             // Create a blob and download
-             let blob = new Blob([yamlContent], { type: 'text/plain' });
-             let a = document.createElement('a');
-             a.href = URL.createObjectURL(blob);
-             a.download = 'config.yaml';
-             a.click();
-         }
-      </script>
-      <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-   </body>
+        </form>
+    </div>
+    <script>
+        function generateYAML() {
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('password').value;
+        
+            // Start the YAML content without leading new lines
+            let yamlContent = `username: "${username}"\npassword: "${password}"\n`;
+        
+            // Optional values
+            let delay = document.getElementById('delay').value;
+            if (delay) yamlContent += `delay: ${delay}\n`;
+        
+            let headless = document.getElementById('headless').value;
+            if (headless !== '') yamlContent += `headless: ${headless}\n`;
+        
+            let nickName = document.getElementById('nickName').value;
+            if (nickName) yamlContent += `nickName: "${nickName}"\n`;
+        
+            let mode = document.getElementById('mode').value;
+            if (mode !== '') yamlContent += `mode: "${mode}"\n`;
+        
+            let briefLogLength = document.getElementById('briefLogLength').value;
+            if (briefLogLength) yamlContent += `briefLogLength: ${briefLogLength}\n`;
+        
+            let onlyWatchMatches = document.getElementById('onlyWatchMatches').value;
+            if (onlyWatchMatches) yamlContent += `onlyWatchMatches: ["${onlyWatchMatches.split(',').map((item) => item.trim()).join('","')}"]\n`;
+        
+            let disWatchMatches = document.getElementById('disWatchMatches').value;
+            if (disWatchMatches) yamlContent += `disWatchMatches: ["${disWatchMatches.split(',').map((item) => item.trim()).join('","')}"]\n`;
+        
+            let language = document.getElementById('language').value;
+            if (language !== '') yamlContent += `language: "${language}"\n`;
+        
+            let maxStream = document.getElementById('maxStream').value;
+            if (maxStream) yamlContent += `maxStream: ${maxStream}\n`;
+        
+            let maxRunHours = document.getElementById('maxRunHours').value;
+            if (maxRunHours) yamlContent += `maxRunHours: ${maxRunHours}\n`;
+        
+            let proxy = document.getElementById('proxy').value;
+            if (proxy) yamlContent += `proxy: "${proxy}"\n`;
+        
+            let connectorDropsUrl = document.getElementById('connectorDropsUrl').value;
+            if (connectorDropsUrl) yamlContent += `connectorDropsUrl: "${connectorDropsUrl}"\n`;
+        
+            let exportDrops = document.getElementById('exportDrops').value;
+            if (exportDrops !== '') yamlContent += `exportDrops: ${exportDrops}\n`;
+        
+            let platForm = document.getElementById('platForm').value;
+            if (platForm) yamlContent += `platForm: "${platForm}"\n`;
+        
+            let arm64 = document.getElementById('arm64').value;
+            if (arm64 !== '') yamlContent += `arm64: ${arm64}\n`;
+        
+            let closeStream = document.getElementById('closeStream').value;
+            if (closeStream !== '') yamlContent += `closeStream: ${closeStream}\n`;
+        
+            let desktopNotify = document.getElementById('desktopNotify').value;
+            if (desktopNotify !== '') yamlContent += `desktopNotify: ${desktopNotify}\n`;
+        
+            let sleepPeriod = document.getElementById('sleepPeriod').value;
+            if (sleepPeriod) yamlContent += `sleepPeriod: ["${sleepPeriod.split(',').map((item) => item.trim()).join('","')}"]\n`;
+        
+            let ignoreBroadCast = document.getElementById('ignoreBroadCast').value;
+            if (ignoreBroadCast !== '') yamlContent += `ignoreBroadCast: ${ignoreBroadCast}\n`;
+        
+            let userDataDir = document.getElementById('userDataDir').value;
+            if (userDataDir) yamlContent += `userDataDir: "${userDataDir}"\n`;
+        
+            let chromePath = document.getElementById('chromePath').value;
+            if (chromePath) yamlContent += `chromePath: "${chromePath}"\n`;
+        
+            let countDrops = document.getElementById('countDrops').value;
+            if (countDrops !== '') yamlContent += `countDrops: ${countDrops}\n`;
+        
+            let autoSleep = document.getElementById('autoSleep').value;
+            if (autoSleep !== '') yamlContent += `autoSleep: ${autoSleep}\n`;
+        
+            let debug = document.getElementById('debug').value;
+            if (debug !== '') yamlContent += `debug: ${debug}\n`;
+        
+            // Create a blob and download
+            let blob = new Blob([yamlContent], { type: 'text/plain' });
+            let a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'config.yaml';
+            a.click();
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
 </html>
