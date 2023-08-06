@@ -10,6 +10,17 @@
     <link rel="canonical" href="https://www.example.com/config-maker">
     <meta name="language" content="en">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            margin-bottom: 50px;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -20,18 +31,20 @@
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" placeholder="Riot account username" value="username">
+                <small class="form-text text-muted">Riot Games account username</small>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" placeholder="Riot account password" value="password">
+                <small class="form-text text-muted">Riot Games account password</small>
             </div>
             <!-- Optional fields -->
             <h5 class="mt-3">Optional</h5>
             <div class="form-group">
                 <label for="delay">Delay (in seconds)</label>
                 <input type="number" class="form-control" id="delay" placeholder="600">
+                <small class="form-text text-muted">Time interval for each check in seconds (600 seconds by default). Each check time will fluctuate randomly between 0.8 and 1.5 times the time delay you set.</small>
             </div>
-            <!-- headless -->
             <div class="form-group">
                 <label for="headless">Headless</label>
                 <select class="form-control" id="headless">
@@ -39,13 +52,13 @@
                     <option value="True">Enabled</option>
                     <option value="False">Disabled</option>
                 </select>
+                <small class="form-text text-muted">When set to True, the program will run in the background; otherwise, it will open a browser window (False by default).</small>
             </div>
-            <!-- nickName -->
             <div class="form-group">
                 <label for="nickName">Nickname</label>
                 <input type="text" class="form-control" id="nickName" placeholder="username">
+                <small class="form-text text-muted">Nickname for the added account, "username" by default.</small>
             </div>
-            <!-- mode -->
             <div class="form-group">
                 <label for="mode">Mode</label>
                 <select class="form-control" id="mode">
@@ -53,23 +66,23 @@
                     <option value="safe">safe</option>
                     <option value="normal">normal</option>
                 </select>
+                <small class="form-text text-muted">Mode selection: "safe" for Safe mode, "normal" for regular mode, default is "safe". Check the GitHub page for more details.</small>
             </div>
-            <!-- briefLogLength -->
             <div class="form-group">
                 <label for="briefLogLength">Length of log brief information</label>
                 <input type="number" class="form-control" id="briefLogLength" placeholder="10">
+                <small class="form-text text-muted">Length of log brief information. Default is 10.</small>
             </div>
-            <!-- onlyWatchMatches -->
             <div class="form-group">
                 <label for="onlyWatchMatches">Leagues to watch (separate by commas)</label>
                 <input type="text" class="form-control" id="onlyWatchMatches" placeholder="lcs,lla,lpl,lck,ljl-japan,lco,lec,cblol-brazil,pcs,tft_esports">
+                <small class="form-text text-muted">Optional. Enter the leagues you wish to watch, separated by commas. Please note, names should be in lowercase.</small>
             </div>
-            <!-- disWatchMatches -->
             <div class="form-group">
                 <label for="disWatchMatches">Leagues to ignore (separate by commas)</label>
                 <input type="text" class="form-control" id="disWatchMatches" placeholder="">
-            </div>       
-            <!-- language -->
+                <small class="form-text text-muted">Optional. Enter the leagues you wish to ignore, separated by commas. Please note, names should be in lowercase.</small>
+            </div>
             <div class="form-group">
                 <label for="language">Language</label>
                 <select class="form-control" id="language">
@@ -79,42 +92,46 @@
                     <option value="zh_TW">zh_TW</option>
                     <option value="es_ES">es_ES</option>
                 </select>
+                <small class="form-text text-muted">Language selection: en_US for English, zh_CN for Simplified Chinese, zh_TW for Traditional Chinese, es_ES for Spanish.</small>
             </div>
-            <!-- maxStream -->
             <div class="form-group">
-                <label for="maxStream">Max number of matches to watch at the same time</label>
+                <label for="maxStream">Maximum number of matches to watch</label>
                 <input type="number" class="form-control" id="maxStream" placeholder="4">
+                <small class="form-text text-muted">The default value is 4, which is the maximum number of matches that can be watched at the same time, beyond which they will not be watched.</small>
             </div>
-            <!-- maxRunHours -->
             <div class="form-group">
-                <label for="maxRunHours">Max run hours</label>
+                <label for="maxRunHours">Maximum run hours</label>
                 <input type="number" class="form-control" id="maxRunHours" placeholder="-1">
+                <small class="form-text text-muted">Negative value is always running, positive value is running by hours, default -1.</small>
             </div>
-            <!-- proxy -->
             <div class="form-group">
                 <label for="proxy">Proxy address</label>
                 <input type="text" class="form-control" id="proxy" placeholder="">
+                <small class="form-text text-muted">Proxy address, not required for general users, e.g., "127.0.0.1:7890".</small>
             </div>
-            <!-- connectorDropsUrl -->
             <div class="form-group">
                 <label for="connectorDropsUrl">Discord webhook link</label>
                 <input type="text" class="form-control" id="connectorDropsUrl" placeholder="">
+                <small class="form-text text-muted">Discord webhook link.</small>
             </div>
-            <!-- exportDrops -->
             <div class="form-group">
-                <label for="exportDrops">Export drop details file</label>
+                <label for="exportDrops">Export Drops</label>
                 <select class="form-control" id="exportDrops">
                     <option value="" disabled selected>Select option</option>
                     <option value="True">Enabled</option>
                     <option value="False">Disabled</option>
                 </select>
+                <small class="form-text text-muted">Default is False, whether or not you need to export the total drop details file, it will only be generated when the script is opened.</small>
             </div>
-            <!-- platForm -->
             <div class="form-group">
-                <label for="platForm">Platform</label>
-                <input type="text" class="form-control" id="platForm" placeholder="windows">
+                <label for="platForm">Operating System</label>
+                <select class="form-control" id="platForm">
+                    <option value="" disabled selected>Select operating system</option>
+                    <option value="windows">Windows</option>
+                    <option value="linux">Linux</option>
+                </select>
+                <small class="form-text text-muted">Operating System, Windows is set by default. If you want to use the program on Linux, please change the value here.</small>
             </div>
-            <!-- arm64 -->
             <div class="form-group">
                 <label for="arm64">Enable support for using Chromium on Linux ARM64</label>
                 <select class="form-control" id="arm64">
@@ -122,77 +139,80 @@
                     <option value="True">Enabled</option>
                     <option value="False">Disabled</option>
                 </select>
+                <small class="form-text text-muted">Enable support for using Chromium on Linux ARM64, requires platForm: "linux" and having the chromedriver in "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver", more info: https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64</small>
             </div>
-            <!-- closeStream -->
             <div class="form-group">
-                <label for="closeStream">Delete video-player elements to save traffic</label>
+                <label for="closeStream">Close Stream</label>
                 <select class="form-control" id="closeStream">
                     <option value="" disabled selected>Select option</option>
                     <option value="True">Enabled</option>
                     <option value="False">Disabled</option>
                 </select>
+                <small class="form-text text-muted">Option of deleting video-player elements to save traffic. (Risk).</small>
             </div>
-            <!-- desktopNotify -->
             <div class="form-group">
-                <label for="desktopNotify">Enable Desktop notifications</label>
+                <label for="desktopNotify">Desktop Notifications</label>
                 <select class="form-control" id="desktopNotify">
                     <option value="" disabled selected>Select option</option>
                     <option value="True">Enabled</option>
                     <option value="False">Disabled</option>
                 </select>
+                <small class="form-text text-muted">Experimental feature to enable Desktop notifications.</small>
             </div>
-            <!-- sleepPeriod -->
             <div class="form-group">
-                <label for="sleepPeriod">Hibernation period (Start hour - End hour)</label>
+                <label for="sleepPeriod">Hibernation period (multiple periods allowed)</label>
                 <input type="text" class="form-control" id="sleepPeriod" placeholder="8-13, 20-23">
+                <small class="form-text text-muted">Hibernation period, empty by default, allowed multiple periods. The format is "Start hour – End hour". Tabs will be closed and reopened at the end of sleep.</small>
             </div>
-            <!-- ignoreBroadCast -->
             <div class="form-group">
-                <label for="ignoreBroadCast">Ignore broadcasts</label>
+                <label for="ignoreBroadCast">Ignore Broadcasts</label>
                 <select class="form-control" id="ignoreBroadCast">
                     <option value="" disabled selected>Select option</option>
                     <option value="True">Enabled</option>
                     <option value="False">Disabled</option>
                 </select>
+                <small class="form-text text-muted">Option to ignore broadcasts.</small>
             </div>
-            <!-- userDataDir -->
             <div class="form-group">
                 <label for="userDataDir">Path to Chrome cookie files</label>
                 <input type="text" class="form-control" id="userDataDir" placeholder="C:\Users\xxxxx\AppData\Local\Google\Chrome\User Data">
+                <small class="form-text text-muted">Path to Chrome cookie files.</small>
             </div>
-            <!-- chromePath -->
             <div class="form-group">
                 <label for="chromePath">Chrome.exe location</label>
                 <input type="text" class="form-control" id="chromePath" placeholder="X:\xxxxx\xx\Chrome.exe">
+                <small class="form-text text-muted">Chrome.exe location.</small>
             </div>
-            <!-- countDrops -->
             <div class="form-group">
-                <label for="countDrops">Monitor Drops number</label>
+                <label for="countDrops">Count Drops</label>
                 <select class="form-control" id="countDrops">
                     <option value="" disabled selected>Select option</option>
                     <option value="True">Enabled</option>
                     <option value="False">Disabled</option>
                 </select>
+                <small class="form-text text-muted">Option to monitor Drops number.</small>
             </div>
-            <!-- autoSleep -->
             <div class="form-group">
-                <label for="autoSleep">Toggle for auto-sleep mode</label>
+                <label for="autoSleep">Auto-Sleep Mode</label>
                 <select class="form-control" id="autoSleep">
                     <option value="" disabled selected>Select option</option>
                     <option value="True">Enabled</option>
                     <option value="False">Disabled</option>
                 </select>
+                <small class="form-text text-muted">Toggle for auto-sleep mode: sleeping while no matches live, waking up when match goes live (True by default).</small>
             </div>
-            <!-- debug -->
             <div class="form-group">
-                <label for="debug">Debug mode</label>
+                <label for="debug">Debug Mode</label>
                 <select class="form-control" id="debug">
                     <option value="" disabled selected>Select option</option>
                     <option value="True">Enabled</option>
                     <option value="False">Disabled</option>
                 </select>
+                <small class="form-text text-muted">Debug mode, default is False.</small>
             </div>
-            <button type="button" class="btn btn-primary mt-3" onclick="generateYAML()">Generate and Download config.yaml</button>
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Generate config.yaml</button>
+            </div>
         </form>
     </div>
     <script>
