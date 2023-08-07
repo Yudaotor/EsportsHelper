@@ -101,10 +101,22 @@ class Webdriver:
         options.add_experimental_option('prefs', prefs)
         if self.config.proxy:
             options.add_argument(f"--proxy-server={self.config.proxy}")
-        if self.config.headless:
+        if self.config.headless or self.config.isDockerized:
             options.add_argument("--headless=new")
-            windows_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.44"
-            mac_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
-            user_agent = windows_agent if self.config.platForm == "windows" else mac_agent
+            
+            windows_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188"
+            mac_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+            linux_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+            
+            if self.config.platForm == "windows":
+                user_agent = windows_agent
+            elif self.config.platForm == "mac":
+                user_agent = mac_agent
+            elif self.config.platForm == "linux":
+                user_agent = linux_agent
+            else:
+                # Default to one agent, just in case
+                user_agent = windows_agent
+                
             options.add_argument(f'user-agent={user_agent}')
         return options
