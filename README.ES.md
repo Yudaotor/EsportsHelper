@@ -45,8 +45,8 @@ python -m pip install -r requirements.txt
 Descomprime varias carpetas y luego archivos de configuración diferentes. Abre todas las instancias para utilizar múltiples cuentas. Si esto no es de tu agrado también puedes utilizar nuestra imagen de Docker.
 
 ## Versión Dockerizada
-Puedes utilizar nuestra imagen oficial de Docker (o compilar la tuya propia si así lo deseas), para ello solo debes clonar este repositorio o descargarlo en formato ZIP y luego descomprimirlo.
-Posteriormente deberás establecer la opción "isDockerized: True" en el archivo de configuración "config.yaml", luego solo deberás ejecutar "sudo docker compose up -d". Ten en cuenta que esta aplicación utiliza un navegador real (Chromium/Chrome) lo que implica que pueda consumir hasta 2 GB de memoria ram.
+Para utilizar nuestra versión (no oficial) de Docker puedes utilizar nuestro "docker-compose.yml", simplemente colócalo en la ubicación que desees junto con el archivo de configuración "config.yaml" (puedes utilizar nuestra herramienta web) y ejecuta "sudo docker compose up -d". No olvides que la variable "isDockerized" debe estar en "True" en el archivo de configuración.
+Ten en cuenta que esta aplicación utiliza un navegador real (Chromium/Chrome) lo que implica que pueda consumir hasta 2 GB de memoria ram.
 
 ## Features
 1. Abre automáticamente tu navegador, va a lolesports.com, verifica qué ligas están jugando actualmente (ignora los VOD), entra a ver, enciende el volumen y ajusta la calidad de la transmisión al mínimo.

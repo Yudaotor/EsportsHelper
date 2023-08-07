@@ -45,8 +45,8 @@ python -m pip install -r requirements.txt
 Unzip multiple folders, and then each different configuration files.Open all instances to achieve multiple account. If you don't prefer this, you can also use our Docker image.
 
 ## Dockerized Version
-You can use our official Docker image (or build your own if you prefer) by cloning this repository or downloading it in ZIP format and then extracting it.
-Afterwards, you'll need to set the "isDockerized: True" option in the "config.yaml" configuration file. Then, simply run "sudo docker compose up -d" to start the application. Keep in mind that this application uses a real browser (Chromium/Chrome), which may consume up to 2 GB of RAM.
+To use our (unofficial) Docker version, you can use our "docker-compose.yml" file. Simply place it in the desired location along with the configuration file "config.yaml" (you can use our web tool), and then run "sudo docker compose up -d". Don't forget that the "isDockerized" variable must be set to "True" in the configuration file.
+Please note that this application utilizes a real browser (Chromium/Chrome), which means it may consume up to 2 GB of RAM.
 
 ## Features
 1. Automatically opens your browser, proceeds to lolesports.com, checks which leagues are currently playing (VODs will be ignored), enters to watch, turns on the volume and sets the quality of the stream to the lowest. 
