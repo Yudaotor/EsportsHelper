@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  esportshelper:
+    image: redr00t/EsportsHelper:latest
+    container_name: EsportsHelper
+    restart: always
+    shm_size: 2g
+    volumes:
+      - ./config.yaml:/app/config.yaml
