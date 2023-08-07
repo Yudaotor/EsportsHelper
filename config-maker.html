@@ -9,285 +9,552 @@
     <meta name="author" content="RedR00t">
     <link rel="canonical" href="https://www.example.com/config-maker">
     <meta name="language" content="en">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-    <div class="container mt-5">
-        <center><h1>EsportsHelper Config Maker</h1></center>
-        <form id="configForm">
-            <!-- Required fields -->
-            <h5 class="mt-3">Required fields</h5>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Riot account username" value="username">
-                <small class="form-text text-muted">Riot Games account username</small>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Riot account password" value="password">
-                <small class="form-text text-muted">Riot Games account password</small>
-            </div>
-            <!-- Optional fields -->
-            <h5 class="mt-3">Optional</h5>
-            <div class="form-group">
-                <label for="delay">Delay (in seconds)</label>
-                <input type="number" class="form-control" id="delay" placeholder="600">
-                <small class="form-text text-muted">Time interval for each check in seconds (600 seconds by default). Each check time will fluctuate randomly between 0.8 and 1.5 times the time delay you set.</small>
-            </div>
-            <div class="form-group">
-                <label for="headless">Headless</label>
-                <select class="form-control" id="headless">
-                    <option value="" disabled selected>Select option</option>
-                    <option value="True">Enabled</option>
-                    <option value="False">Disabled</option>
-                </select>
-                <small class="form-text text-muted">When set to True, the program will run in the background; otherwise, it will open a browser window (False by default).</small>
-            </div>
-            <div class="form-group">
-                <label for="nickName">Nickname</label>
-                <input type="text" class="form-control" id="nickName" placeholder="username">
-                <small class="form-text text-muted">Nickname for added account, "username" by default.</small>
-            </div>
-            <div class="form-group">
-                <label for="mode">Mode</label>
-                <select class="form-control" id="mode">
-                    <option value="" disabled selected>Select mode</option>
-                    <option value="safe">safe</option>
-                    <option value="normal">normal</option>
-                </select>
-                <small class="form-text text-muted">Mode selection: "safe" for Safe mode, "normal" for regular mode, the default is "safe." Check the GitHub page for more details.</small>
-            </div>
-            <div class="form-group">
-                <label for="briefLogLength">Length of log brief information</label>
-                <input type="number" class="form-control" id="briefLogLength" placeholder="10">
-                <small class="form-text text-muted">Length of log brief information. Default is 10.</small>
-            </div>
-            <div class="form-group">
-                <label for="onlyWatchMatches">Leagues to watch (separate by commas)</label>
-                <input type="text" class="form-control" id="onlyWatchMatches" placeholder="lcs,lla,lpl,lck,ljl-japan,lco,lec,cblol-brazil,pcs,tft_esports">
-                <small class="form-text text-muted">Leagues to watch, separated by commas (e.g., lcs, lla, lpl). Please note, names should be in lowercase.</small>
-            </div>
-            <div class="form-group">
-                <label for="disWatchMatches">Leagues to ignore (separate by commas)</label>
-                <input type="text" class="form-control" id="disWatchMatches" placeholder="">
-                <small class="form-text text-muted">Leagues to ignore, separated by commas (e.g., lms, cbol). Please note, names should be in lowercase.</small>
-            </div>       
-            <div class="form-group">
-                <label for="language">Language</label>
-                <select class="form-control" id="language">
-                    <option value="" disabled selected>Select language</option>
-                    <option value="en_US">en_US</option>
-                    <option value="zh_CN">zh_CN</option>
-                    <option value="zh_TW">zh_TW</option>
-                    <option value="es_ES">es_ES</option>
-                </select>
-                <small class="form-text text-muted">Language selection for the program interface.</small>
-            </div>
-            <div class="form-group">
-                <label for="maxStream">Max number of matches to watch at the same time</label>
-                <input type="number" class="form-control" id="maxStream" placeholder="4">
-                <small class="form-text text-muted">The maximum number of matches that can be watched at the same time, beyond which they will not be watched. Default is 4.</small>
-            </div>
-            <div class="form-group">
-                <label for="maxRunHours">Max run hours</label>
-                <input type="number" class="form-control" id="maxRunHours" placeholder="-1">
-                <small class="form-text text-muted">Negative value means always running; positive value is running by hours. Default -1.</small>
-            </div>
-            <div class="form-group">
-                <label for="proxy">Proxy address</label>
-                <input type="text" class="form-control" id="proxy" placeholder="">
-                <small class="form-text text-muted">Proxy address, not required for general users (e.g., "127.0.0.1:7890").</small>
-            </div>
-            <div class="form-group">
-                <label for="connectorDropsUrl">Discord webhook link</label>
-                <input type="text" class="form-control" id="connectorDropsUrl" placeholder="">
-                <small class="form-text text-muted">Discord webhook link for connector drops.</small>
-            </div>
-            <div class="form-group">
-                <label for="exportDrops">Export drop details file</label>
-                <select class="form-control" id="exportDrops">
-                    <option value="" disabled selected>Select option</option>
-                    <option value="True">Enabled</option>
-                    <option value="False">Disabled</option>
-                </select>
-                <small class="form-text text-muted">Whether or not you need to export the total drop details file, it will only be generated when the script is opened.</small>
-            </div>
-            <div class="form-group">
-                <label for="platForm">Platform</label>
-                <input type="text" class="form-control" id="platForm" placeholder="windows">
-                <small class="form-text text-muted">Operating system platform. Windows is set by default. If you want to use the program on Linux, please change the value here.</small>
-            </div>
-            <div class="form-group">
-                <label for="arm64">Enable support for using Chromium on Linux ARM64</label>
-                <select class="form-control" id="arm64">
-                    <option value="" disabled selected>Select option</option>
-                    <option value="True">Enabled</option>
-                    <option value="False">Disabled</option>
-                </select>
-                <small class="form-text text-muted">Enable support for using Chromium on Linux ARM64, requires platForm: "linux" and having the chromedriver in "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver", more info: <a href="https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64" target="_blank">https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64</a></small>
-            </div>
-            <div class="form-group">
-                <label for="closeStream">Delete video-player elements to save traffic</label>
-                <select class="form-control" id="closeStream">
-                    <option value="" disabled selected>Select option</option>
-                    <option value="True">Enabled</option>
-                    <option value="False">Disabled</option>
-                </select>
-                <small class="form-text text-muted">Option of deleting video-player elements to save traffic (Risk).</small>
-            </div>
-            <div class="form-group">
-                <label for="desktopNotify">Enable Desktop notifications</label>
-                <select class="form-control" id="desktopNotify">
-                    <option value="" disabled selected>Select option</option>
-                    <option value="True">Enabled</option>
-                    <option value="False">Disabled</option>
-                </select>
-                <small class="form-text text-muted">Experimental feature to enable Desktop notifications.</small>
-            </div>
-            <div class="form-group">
-                <label for="sleepPeriod">Hibernation period (Start hour - End hour)</label>
-                <input type="text" class="form-control" id="sleepPeriod" placeholder="8-13, 20-23">
-                <small class="form-text text-muted">Hibernation period, empty by default, allowed multiple periods. The format is "Start hour – End hour". Tabs will be closed and reopened at the end of sleep.</small>
-            </div>
-            <div class="form-group">
-                <label for="ignoreBroadCast">Ignore broadcasts</label>
-                <select class="form-control" id="ignoreBroadCast">
-                    <option value="" disabled selected>Select option</option>
-                    <option value="True">Enabled</option>
-                    <option value="False">Disabled</option>
-                </select>
-                <small class="form-text text-muted">Option to ignore broadcasts.</small>
-            </div>
-            <div class="form-group">
-                <label for="userDataDir">Path to Chrome cookie files</label>
-                <input type="text" class="form-control" id="userDataDir" placeholder="C:\\Users\\xxxxx\\AppData\\Local\\Google\\Chrome\\User Data">
-                <small class="form-text text-muted">Path to Chrome cookie files.</small>
-            </div>
-            <div class="form-group">
-                <label for="chromePath">Chrome.exe location</label>
-                <input type="text" class="form-control" id="chromePath" placeholder="X:\\xxxxx\\xx\\Chrome.exe">
-                <small class="form-text text-muted">Chrome.exe location.</small>
-            </div>
-            <div class="form-group">
-                <label for="countDrops">Monitor Drops number</label>
-                <select class="form-control" id="countDrops">
-                    <option value="" disabled selected>Select option</option>
-                    <option value="True">Enabled</option>
-                    <option value="False">Disabled</option>
-                </select>
-                <small class="form-text text-muted">Option to monitor Drops number.</small>
-            </div>
-            <div class="form-group">
-                <label for="autoSleep">Toggle for auto-sleep mode</label>
-                <select class="form-control" id="autoSleep">
-                    <option value="" disabled selected>Select option</option>
-                    <option value="True">Enabled</option>
-                    <option value="False">Disabled</option>
-                </select>
-                <small class="form-text text-muted">Toggle for auto-sleep mode: sleeping while no matches live, waking up when a match goes live (True by default).</small>
-            </div>
-            <div class="form-group">
-                <label for="debug">Debug mode</label>
-                <select class="form-control" id="debug">
-                    <option value="" disabled selected>Select option</option>
-                    <option value="True">Enabled</option>
-                    <option value="False">Disabled</option>
-                </select>
-                <small class="form-text text-muted">Debug mode, default is False.</small>
-            </div>
-            <button type="button" class="btn btn-primary mt-3" onclick="generateYAML()">Generate and Download config.yaml</button>
-        </form>
+<div class="container mt-5">
+    <div class="form-group" style="width: 50%; float: left;">
+        <label for="lang">Page Language</label>
+        <select class="form-control" id="lang" onchange="changeLanguage()">
+            <option value="" disabled selected>Select Page language(选择语言)</option>
+            <option value="en_US">en_US</option>
+            <option value="zh_CN">zh_CN</option>
+            <option value="zh_TW">zh_TW</option>
+            <option value="es_ES">es_ES</option>
+        </select>
     </div>
-    <script>
-        function generateYAML() {
-            let username = document.getElementById('username').value;
-            let password = document.getElementById('password').value;
-        
-            // Start the YAML content without leading new lines
-            let yamlContent = `username: "${username}"\npassword: "${password}"\n`;
-        
-            // Optional values
-            let delay = document.getElementById('delay').value;
-            if (delay) yamlContent += `delay: ${delay}\n`;
-        
-            let headless = document.getElementById('headless').value;
-            if (headless !== '') yamlContent += `headless: ${headless}\n`;
-        
-            let nickName = document.getElementById('nickName').value;
-            if (nickName) yamlContent += `nickName: "${nickName}"\n`;
-        
-            let mode = document.getElementById('mode').value;
-            if (mode !== '') yamlContent += `mode: "${mode}"\n`;
-        
-            let briefLogLength = document.getElementById('briefLogLength').value;
-            if (briefLogLength) yamlContent += `briefLogLength: ${briefLogLength}\n`;
-        
-            let onlyWatchMatches = document.getElementById('onlyWatchMatches').value;
-            if (onlyWatchMatches) yamlContent += `onlyWatchMatches: ["${onlyWatchMatches.split(',').map((item) => item.trim()).join('","')}"]\n`;
-        
-            let disWatchMatches = document.getElementById('disWatchMatches').value;
-            if (disWatchMatches) yamlContent += `disWatchMatches: ["${disWatchMatches.split(',').map((item) => item.trim()).join('","')}"]\n`;
-        
-            let language = document.getElementById('language').value;
-            if (language !== '') yamlContent += `language: "${language}"\n`;
-        
-            let maxStream = document.getElementById('maxStream').value;
-            if (maxStream) yamlContent += `maxStream: ${maxStream}\n`;
-        
-            let maxRunHours = document.getElementById('maxRunHours').value;
-            if (maxRunHours) yamlContent += `maxRunHours: ${maxRunHours}\n`;
-        
-            let proxy = document.getElementById('proxy').value;
-            if (proxy) yamlContent += `proxy: "${proxy}"\n`;
-        
-            let connectorDropsUrl = document.getElementById('connectorDropsUrl').value;
-            if (connectorDropsUrl) yamlContent += `connectorDropsUrl: "${connectorDropsUrl}"\n`;
-        
-            let exportDrops = document.getElementById('exportDrops').value;
-            if (exportDrops !== '') yamlContent += `exportDrops: ${exportDrops}\n`;
-        
-            let platForm = document.getElementById('platForm').value;
-            if (platForm) yamlContent += `platForm: "${platForm}"\n`;
-        
-            let arm64 = document.getElementById('arm64').value;
-            if (arm64 !== '') yamlContent += `arm64: ${arm64}\n`;
-        
-            let closeStream = document.getElementById('closeStream').value;
-            if (closeStream !== '') yamlContent += `closeStream: ${closeStream}\n`;
-        
-            let desktopNotify = document.getElementById('desktopNotify').value;
-            if (desktopNotify !== '') yamlContent += `desktopNotify: ${desktopNotify}\n`;
-        
-            let sleepPeriod = document.getElementById('sleepPeriod').value;
-            if (sleepPeriod) yamlContent += `sleepPeriod: ["${sleepPeriod.split(',').map((item) => item.trim()).join('","')}"]\n`;
-        
-            let ignoreBroadCast = document.getElementById('ignoreBroadCast').value;
-            if (ignoreBroadCast !== '') yamlContent += `ignoreBroadCast: ${ignoreBroadCast}\n`;
-        
-            let userDataDir = document.getElementById('userDataDir').value;
-            if (userDataDir) yamlContent += `userDataDir: "${userDataDir}"\n`;
-        
-            let chromePath = document.getElementById('chromePath').value;
-            if (chromePath) yamlContent += `chromePath: "${chromePath}"\n`;
-        
-            let countDrops = document.getElementById('countDrops').value;
-            if (countDrops !== '') yamlContent += `countDrops: ${countDrops}\n`;
-        
-            let autoSleep = document.getElementById('autoSleep').value;
-            if (autoSleep !== '') yamlContent += `autoSleep: ${autoSleep}\n`;
-        
-            let debug = document.getElementById('debug').value;
-            if (debug !== '') yamlContent += `debug: ${debug}\n`;
-        
-            // Create a blob and download
-            let blob = new Blob([yamlContent], { type: 'text/plain' });
-            let a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'config.yaml';
-            a.click();
+    <div style="text-align: center;">
+        <h1 style="color: #3498db;">EsportsHelper Config Maker</h1>
+    </div>
+    <br><hr>
+    <form id="configForm">
+        <!-- Required fields -->
+        <h5 class="mt-3">Required fields</h5>
+        <div class="form-group">
+            <label for="username" id=username-label>Username</label>
+            <input type="text" class="form-control" id="username" placeholder="Riot account username" value="username">
+            <small class="form-text text-muted" id=username-small>Riot Games account username</small>
+        </div>
+        <div class="form-group">
+            <label for="password" id=password-label>Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Riot account password" value="password">
+            <small class="form-text text-muted" id=password-small>Riot Games account password</small>
+        </div>
+        <!-- Optional fields -->
+        <h5 class="mt-3">Optional</h5>
+        <div class="form-group">
+            <label for="delay" id=delay-label>Delay (in seconds)</label>
+            <input type="number" class="form-control" id="delay" placeholder="600">
+            <small class="form-text text-muted" id=delay-small>Time interval for each check in seconds (600 seconds by default). Each check time will fluctuate randomly between 0.8
+                and 1.5 times
+                the time delay you set.</small>
+        </div>
+        <div class="form-group">
+            <label for="headless" id=headless-label>Headless</label>
+            <select class="form-control" id="headless">
+                <option value="" disabled selected>Select option</option>
+                <option value="True">Enabled</option>
+                <option value="False">Disabled</option>
+            </select>
+            <small class="form-text text-muted" id=headless-small>When set to True, the program will run in the background; otherwise, it will open a browser window (False by
+                default).</small>
+        </div>
+        <div class="form-group">
+            <label for="nickName" id=nickName-label>Nickname</label>
+            <input type="text" class="form-control" id="nickName" placeholder="username">
+            <small class="form-text text-muted" id=nickName-small>Nickname for added account, "username" by default.</small>
+        </div>
+        <div class="form-group">
+            <label for="mode" id=mode-label>Mode</label>
+            <select class="form-control" id="mode">
+                <option value="" disabled selected>Select mode</option>
+                <option value="safe">safe</option>
+                <option value="normal">normal</option>
+            </select>
+            <small class="form-text text-muted" id=mode-small>Mode selection: "safe" for Safe mode, "normal" for regular mode, the default is "safe." Check the GitHub page for more
+                details.</small>
+        </div>
+        <div class="form-group">
+            <label for="briefLogLength" id=briefLogLength-label>Length of log brief information</label>
+            <input type="number" class="form-control" id="briefLogLength" placeholder="10">
+            <small class="form-text text-muted" id=briefLogLength-small>Length of log brief information. Default is 10.</small>
+        </div>
+        <div class="form-group">
+            <label for="onlyWatchMatches" id=onlyWatchMatches-label>Leagues to watch (separate by commas)</label>
+            <input type="text" class="form-control" id="onlyWatchMatches" placeholder="lcs,lla,lpl,lck,ljl-japan,lco,lec,cblol-brazil,pcs,tft_esports">
+            <small class="form-text text-muted" id=onlyWatchMatches-small>Leagues to watch, separated by commas (e.g., lcs, lla, lpl). Please note, names should be in
+                lowercase.</small>
+        </div>
+        <div class="form-group">
+            <label for="disWatchMatches" id=disWatchMatches-label>Leagues to ignore (separate by commas)</label>
+            <input type="text" class="form-control" id="disWatchMatches" placeholder="">
+            <small class="form-text text-muted" id=disWatchMatches-small>Leagues to ignore, separated by commas (e.g., lms, cbol). Please note, names should be in
+                lowercase.</small>
+        </div>
+        <div class="form-group">
+            <label for="language" id=language-label>Language</label>
+            <select class="form-control" id="language">
+                <option value="" disabled selected>Select language</option>
+                <option value="en_US">en_US</option>
+                <option value="zh_CN">zh_CN</option>
+                <option value="zh_TW">zh_TW</option>
+                <option value="es_ES">es_ES</option>
+            </select>
+            <small class="form-text text-muted" id=language-small>Language selection for the program interface.</small>
+        </div>
+        <div class="form-group">
+            <label for="maxStream" id=maxStream-label>Max number of matches to watch at the same time</label>
+            <input type="number" class="form-control" id="maxStream" placeholder="4">
+            <small class="form-text text-muted" id=maxStream-small>The maximum number of matches that can be watched at the same time, beyond which they will not be watched.
+                Default is 4.</small>
+        </div>
+        <div class="form-group">
+            <label for="maxRunHours" id=maxRunHours-label>Max run hours</label>
+            <input type="number" class="form-control" id="maxRunHours" placeholder="-1">
+            <small class="form-text text-muted" id=maxRunHours-small>Negative value means always running; positive value is running by hours. Default -1.</small>
+        </div>
+        <div class="form-group">
+            <label for="proxy" id=proxy-label>Proxy address</label>
+            <input type="text" class="form-control" id="proxy" placeholder="">
+            <small class="form-text text-muted" id=proxy-small>Proxy address, not required for general users (e.g., "127.0.0.1:7890").</small>
+        </div>
+        <div class="form-group">
+            <label for="connectorDropsUrl" id=connectorDropsUrl-label>Discord webhook link</label>
+            <input type="text" class="form-control" id="connectorDropsUrl" placeholder="">
+            <small class="form-text text-muted" id=connectorDropsUrl-small>Discord webhook link for connector drops.</small>
+        </div>
+        <div class="form-group">
+            <label for="exportDrops" id=exportDrops-label>Export drop details file</label>
+            <select class="form-control" id="exportDrops">
+                <option value="" disabled selected>Select option</option>
+                <option value="True">Enabled</option>
+                <option value="False">Disabled</option>
+            </select>
+            <small class="form-text text-muted" id=exportDrops-small>Whether or not you need to export the total drop details file, it will only be generated when the script is
+                opened.</small>
+        </div>
+        <div class="form-group">
+            <label for="platForm" id=platForm-label>Platform</label>
+            <input type="text" class="form-control" id="platForm" placeholder="windows">
+            <small class="form-text text-muted" id=platForm-small>Operating system platform. Windows is set by default. If you want to use the program on Linux, please change the
+                value here.</small>
+        </div>
+        <div class="form-group">
+            <label for="arm64" id=arm64-label>Enable support for using Chromium on Linux ARM64</label>
+            <select class="form-control" id="arm64">
+                <option value="" disabled selected>Select option</option>
+                <option value="True">Enabled</option>
+                <option value="False">Disabled</option>
+            </select>
+            <small class="form-text text-muted" id=arm64-small>Enable support for using Chromium on Linux ARM64, requires platForm: "linux" and having the chromedriver in
+                "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver", more info: <a
+                        href="https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64" target="_blank">https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64</a></small>
+        </div>
+        <div class="form-group">
+            <label for="closeStream" id=closeStream-label>Delete video-player elements to save traffic</label>
+            <select class="form-control" id="closeStream">
+                <option value="" disabled selected>Select option</option>
+                <option value="True">Enabled</option>
+                <option value="False">Disabled</option>
+            </select>
+            <small class="form-text text-muted" id=closeStream-small>Option of deleting video-player elements to save traffic (Risk).</small>
+        </div>
+        <div class="form-group">
+            <label for="desktopNotify" id=desktopNotify-label>Enable Desktop notifications</label>
+            <select class="form-control" id="desktopNotify">
+                <option value="" disabled selected>Select option</option>
+                <option value="True">Enabled</option>
+                <option value="False">Disabled</option>
+            </select>
+            <small class="form-text text-muted" id=desktopNotify-small>Experimental feature to enable Desktop notifications.</small>
+        </div>
+        <div class="form-group">
+            <label for="sleepPeriod" id=sleepPeriod-label>Hibernation period (Start hour - End hour)</label>
+            <input type="text" class="form-control" id="sleepPeriod" placeholder="8-13, 20-23">
+            <small class="form-text text-muted" id=sleepPeriod-small>Hibernation period, empty by default, allowed multiple periods. The format is "Start hour – End hour". Tabs
+                will be closed and
+                reopened at the end of sleep.</small>
+        </div>
+        <div class="form-group">
+            <label for="ignoreBroadCast" id=ignoreBroadCast-label>Ignore broadcasts</label>
+            <select class="form-control" id="ignoreBroadCast">
+                <option value="" disabled selected>Select option</option>
+                <option value="True">Enabled</option>
+                <option value="False">Disabled</option>
+            </select>
+            <small class="form-text text-muted" id=ignoreBroadCast-small>Option to ignore broadcasts.</small>
+        </div>
+        <div class="form-group">
+            <label for="userDataDir" id=userDataDir-label>Path to Chrome cookie files</label>
+            <input type="text" class="form-control" id="userDataDir" placeholder="C:\\Users\\xxxxx\\AppData\\Local\\Google\\Chrome\\User Data">
+            <small class="form-text text-muted" id=userDataDir-small>Path to Chrome cookie files.</small>
+        </div>
+        <div class="form-group">
+            <label for="chromePath" id=chromePath-label>Chrome.exe location</label>
+            <input type="text" class="form-control" id="chromePath" placeholder="X:\\xxxxx\\xx\\Chrome.exe">
+            <small class="form-text text-muted" id=chromePath-small>Chrome.exe location.</small>
+        </div>
+        <div class="form-group">
+            <label for="countDrops" id=countDrops-label>Monitor Drops number</label>
+            <select class="form-control" id="countDrops">
+                <option value="" disabled selected>Select option</option>
+                <option value="True">Enabled</option>
+                <option value="False">Disabled</option>
+            </select>
+            <small class="form-text text-muted" id=countDrops-small>Option to monitor Drops number.</small>
+        </div>
+        <div class="form-group">
+            <label for="autoSleep" id=autoSleep-label>Toggle for auto-sleep mode</label>
+            <select class="form-control" id="autoSleep">
+                <option value="" disabled selected>Select option</option>
+                <option value="True">Enabled</option>
+                <option value="False">Disabled</option>
+            </select>
+            <small class="form-text text-muted" id=autoSleep-small>Toggle for auto-sleep mode: sleeping while no matches live, waking up when a match goes live (True by
+                default).</small>
+        </div>
+        <div class="form-group">
+            <label for="debug" id=debug-label>Debug mode</label>
+            <select class="form-control" id="debug">
+                <option value="" disabled selected>Select option</option>
+                <option value="True">Enabled</option>
+                <option value="False">Disabled</option>
+            </select>
+            <small class="form-text text-muted" id=debug-small>Debug mode, default is False.</small>
+        </div>
+        <button type="button" class="btn btn-primary mt-3" onclick="generateYAML()" id="generate-button">Generate and Download config.yaml</button>
+    </form>
+</div>
+<script>
+    function changeLanguage() {
+        var selectedLanguage = document.getElementById("lang").value;
+        var textMappings = {
+            'en_US': {
+                'username-label': 'Username',
+                'password-label': 'Password',
+                'delay-label': 'Delay (in seconds)',
+                'headless-label': 'Headless',
+                'nickName-label': 'Nickname',
+                'mode-label': 'Mode',
+                'briefLogLength-label': 'Length of log brief information',
+                'onlyWatchMatches-label': 'Leagues to watch (separate by commas)',
+                'disWatchMatches-label': 'Leagues to ignore (separate by commas)',
+                'maxStream-label': 'Max number of matches to watch at the same time',
+                'maxRunHours-label': 'Max run hours',
+                'proxy-label': 'Proxy address',
+                'language-label': 'Language',
+                'connectorDropsUrl-label': 'Discord webhook link',
+                'exportDrops-label': 'Export drop details file',
+                'platForm-label': 'Platform',
+                'arm64-label': 'Enable support for using Chromium on Linux ARM64',
+                'closeStream-label': 'Delete video-player elements to save traffic',
+                'desktopNotify-label': 'Enable Desktop notifications',
+                'sleepPeriod-label': 'Hibernation period (Start hour - End hour)',
+                'ignoreBroadCast-label': 'Ignore broadcasts',
+                'userDataDir-label': 'Path to Chrome cookie files',
+                'chromePath-label': 'Chrome.exe location',
+                'countDrops-label': 'Monitor Drops number',
+                'autoSleep-label': 'Toggle for auto-sleep mode',
+                'debug-label': 'Debug mode',
+                'username-small': 'Riot Games account username',
+                'password-small': 'Riot Games account password',
+                'delay-small': 'Time interval for each check in seconds (600 seconds by default). Each check time will fluctuate randomly between 0.8 and 1.5 times the time delay you set.',
+                'headless-small': 'When set to True, the program will run in the background; otherwise, it will open a browser window (False by default).',
+                'nickName-small': 'Nickname for added account, "username" by default.',
+                'mode-small': 'Mode selection: "safe" for Safe mode, "normal" for regular mode,the default is "safe." Check the GitHub page for more details.',
+                'briefLogLength-small': 'Length of log brief information. Default is 10.',
+                'onlyWatchMatches-small': 'Leagues to watch, separated by commas (e.g., lcs, lla, lpl). Please note, names should be in lowercase.',
+                'disWatchMatches-small': 'Leagues to ignore, separated by commas (e.g., lms, cblol). Please note, names should be in lowercase.',
+                'language-small': 'Language selection for the program interface.',
+                'maxStream-small': 'The maximum number of matches that can be watched at the same time,beyond which they will not be watched. Default is 4.',
+                'maxRunHours-small': 'Negative value means always running; positive value is running by hours. Default -1.',
+                'proxy-small': 'Proxy address, not required for general users (e.g.,"127.0.0.1:7890").',
+                'connectorDropsUrl-small': 'Discord webhook link for connector drops.',
+                'exportDrops-small': 'Whether or not you need to export the total drop details file, it will only be generated when the script is opened.',
+                'platForm-small': 'Operating system platform. Windows is set by default. If you want to use the program on Linux, please change the value here.',
+                'arm64-small': 'Enable support for using Chromium on Linux ARM64, requires platForm: "linux" and having the chromedriver in "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver", more info: https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64',
+                'closeStream-small': 'Option of deleting video-player elements to save traffic(Risk).',
+                'desktopNotify-small': 'Experimental feature to enable Desktop notifications.',
+                'sleepPeriod-small': 'Hibernation period, empty by default, allowed multiple periods. The format is Start hour – End hour. Tabs will be closed and reopened at the end of sleep.',
+                'ignoreBroadCast-small': 'Option to ignore broadcasts.',
+                'userDataDir-small': 'Path to Chrome cookie files.',
+                'chromePath-small': 'Chrome.exe location.',
+                'countDrops-small': 'Option to monitor Drops number, default is True.',
+                'autoSleep-small': 'Toggle for auto-sleep mode: sleeping while no matches live, waking up when a match goes live (True by default).',
+                'debug-small': 'Debug mode, default is False.',
+                'generate-button': 'Generate and Download config.yaml',
+            },
+            'zh_CN': {
+                'username-label': '用户名',
+                'password-label': '密码',
+                'delay-label': '延迟（秒）',
+                'headless-label': '无头浏览',
+                'nickName-label': '昵称',
+                'mode-label': '模式',
+                'briefLogLength-label': '简要日志信息长度',
+                'onlyWatchMatches-label': '只观看的联赛（逗号分隔）',
+                'disWatchMatches-label': '需忽略的联赛（逗号分隔）',
+                'maxStream-label': '同时观看的最大比赛场次',
+                'maxRunHours-label': '最大运行小时数',
+                'language-label': '显示语言',
+                'proxy-label': '代理地址',
+                'connectorDropsUrl-label': 'Webhook掉落提醒链接',
+                'exportDrops-label': '导出掉落详情文件',
+                'platForm-label': '系统平台',
+                'arm64-label': '启用对 Linux ARM64 上 Chromium 的支持',
+                'closeStream-label': '删除视频播放器元素以节省流量',
+                'desktopNotify-label': '启用桌面通知',
+                'sleepPeriod-label': '休眠时段（起始小时 - 结束小时）',
+                'ignoreBroadCast-label': '忽略转播状态',
+                'userDataDir-label': 'Chrome Cookie 文件路径',
+                'chromePath-label': 'Chrome.exe 路径',
+                'countDrops-label': '监视掉落数量',
+                'autoSleep-label': '自动休眠模式开关',
+                'debug-label': '调试模式',
+                'username-small': 'Riot Games 账号用户名',
+                'password-small': 'Riot Games 账号密码',
+                'delay-small': '每次检查的时间间隔，单位为秒（默认为 600 秒），每次检查时间会在你设置的时间间隔的 0.8 到 1.5 倍之间随机波动。',
+                'headless-small': '设置为 True 时，程序将在后台运行；否则，将打开一个浏览器窗口（默认为 False）。',
+                'nickName-small': '添加账号的昵称，默认为“username”。',
+                'mode-small': '模式选择：“safe”为安全模式，“normal”为正常模式，默认为“safe”。更多详情请查看 GitHub 页面。',
+                'briefLogLength-small': '日志简要信息长度，默认为 10。',
+                'onlyWatchMatches-small': '只观看的联赛（逗号分隔）注意:需要小写',
+                'disWatchMatches-small': '需忽略的联赛（逗号分隔）注意:需要小写',
+                'maxStream-small': '同时观看的最大比赛场次，超过该数量的比赛将不会被观看，默认为 4。',
+                'maxRunHours-small': '负数表示一直运行；正数表示运行小时数，默认为 -1。',
+                'language-small': '显示语言，默认为“en_US”。',
+                'proxy-small': '代理地址，一般用户不需要填写',
+                'connectorDropsUrl-small': 'webhook链接，用于掉落提醒。支持Discord, 钉钉, 饭碗警告, 企业微信, 飞书,具体详见wiki',
+                'exportDrops-small': '是否需要导出掉落详情文件，仅在脚本开启时才会生成。',
+                'platForm-small': '操作系统平台，默认为 Windows。如果你想在 Linux 上使用本程序，请在此处更改为linux',
+                'arm64-small': '启用对 Linux ARM64 上 Chromium 的支持，需要 platForm: "linux" 以及将 chromedriver 放置在 "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver"，更多信息请查看 GitHub wiki。',
+                'closeStream-small': '删除视频播放器元素以节省流量。',
+                'desktopNotify-small': '启用windows桌面通知。',
+                'sleepPeriod-small': '休眠时段，格式为 起始小时 - 结束小时，默认为空。在休眠时段，所有标签页将被关闭，休眠结束后将重新打开。',
+                'ignoreBroadCast-small': '忽略转播状态，如果设置为True，将忽略转播状态',
+                'userDataDir-small': 'Chrome Cookie 文件路径，如果你想使用自己的缓存信息，请在此处填写userDataDir的路径。',
+                'chromePath-small': 'Chrome.exe 路径，如果你想使用自己的 Chrome.exe，请在此处填写 Chrome.exe 的路径。',
+                'countDrops-small': '是否检查掉落数量',
+                'autoSleep-small': '自动休眠模式开关，打开后没比赛时会自动休眠',
+                'debug-small': '调试模式，开启后会在发生错误时截图',
+                'generate-button': '生成及下载config.yaml文件',
+            },
+            'zh_TW': {
+                'username-label': '用戶名',
+                'password-label': '密碼',
+                'delay-label': '延遲（秒）',
+                'headless-label': '無頭瀏覽',
+                'nickName-label': '暱稱',
+                'mode-label': '模式',
+                'briefLogLength-label': '簡要日誌信息長度',
+                'onlyWatchMatches-label': '只觀看的聯賽（逗號分隔）',
+                'disWatchMatches-label': '需忽略的聯賽（逗號分隔）',
+                'maxStream-label': '同時觀看的最大比賽場次',
+                'maxRunHours-label': '最大運行小時數',
+                'language-label': '顯示語言',
+                'proxy-label': '代理地址',
+                'connectorDropsUrl-label': 'Webhook掉落提醒鏈接',
+                'exportDrops-label': '導出掉落詳情文件',
+                'platForm-label': '系統平臺',
+                'arm64-label': '啟用對 Linux ARM64 上 Chromium 的支持',
+                'closeStream-label': '刪除視頻播放器元素以節省流量',
+                'desktopNotify-label': '啟用桌面通知',
+                'sleepPeriod-label': '休眠時段（起始小時 - 結束小時）',
+                'ignoreBroadCast-label': '忽略轉播狀態',
+                'userDataDir-label': 'Chrome Cookie 文件路徑',
+                'chromePath-label': 'Chrome.exe 路徑',
+                'countDrops-label': '監視掉落數量',
+                'autoSleep-label': '自動休眠模式開關',
+                'debug-label': '調試模式',
+                'username-small': 'Riot Games 帳號用戶名',
+                'password-small': 'Riot Games 帳號密碼',
+                'delay-small': '每次檢查的時間間隔，單位為秒（預設為 600 秒），每次檢查時間會在你設定的時間間隔的 0.8 到 1.5 倍之間隨機波動。',
+                'headless-small': '設定為 True 時，程式將在背景運行；否則，將開啟一個瀏覽器視窗（預設為 False）。',
+                'nickName-small': '添加帳號的暱稱，預設為“username”。',
+                'mode-small': '模式選擇：“safe”為安全模式，“normal”為正常模式，預設為“safe”。更多詳情請查看 GitHub 頁面。',
+                'briefLogLength-small': '日誌簡要信息長度，預設為 10。',
+                'onlyWatchMatches-small': '只觀看的聯賽（逗號分隔）注意：需要小寫',
+                'disWatchMatches-small': '需忽略的聯賽（逗號分隔）注意：需要小寫',
+                'maxStream-small': '同時觀看的最大比賽場次，超過該數量的比賽將不會被觀看，預設為 4。',
+                'maxRunHours-small': '負數表示一直運行；正數表示運行小時數，預設為 -1。',
+                'language-small': '顯示語言，預設為“en_US”。',
+                'proxy-small': '代理地址，一般用戶不需要填寫',
+                'connectorDropsUrl-small': 'webhook連結，用於掉落提醒。支援 Discord、釘釘、飯碗警告、企業微信、飛書，詳細內容請參閱 wiki。',
+                'exportDrops-small': '是否需要匯出掉落詳情檔案，僅在腳本開啟時才會生成。',
+                'platForm-small': '作業系統平台，預設為 Windows。如果你想在 Linux 上使用本程式，請在此處更改為 linux',
+                'arm64-small': '啟用對 Linux ARM64 上 Chromium 的支援，需要 platForm: "linux" 以及將 chromedriver 放置在 "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver"，更多資訊請查看 GitHub wiki。',
+                'closeStream-small': '刪除影片播放器元素以節省流量。',
+                'desktopNotify-small': '啟用 Windows 桌面通知。',
+                'sleepPeriod-small': '休眠時段，格式為 起始小時 - 結束小時，預設為空。在休眠時段，所有標籤頁將被關閉，休眠結束後將重新打開。',
+                'ignoreBroadCast-small': '忽略轉播狀態，如果設定為 True，將忽略轉播狀態',
+                'userDataDir-small': 'Chrome Cookie 檔案路徑，如果你想使用自己的緩存資訊，請在此處填寫 userDataDir 的路徑。',
+                'chromePath-small': 'Chrome.exe 路徑，如果你想使用自己的 Chrome.exe，請在此處填寫 Chrome.exe 的路徑。',
+                'countDrops-small': '是否檢查掉落數量',
+                'autoSleep-small': '自動休眠模式開關，打開後沒比賽時會自動休眠',
+                'debug-small': '調試模式，開啟後會在發生錯誤時截圖',
+                'generate-button': '產生並下載 config.yaml 檔案',
+
+            },
+            'es_ES': {
+                'username-label': 'Nombre de usuario',
+                'password-label': 'Contraseña',
+                'delay-label': 'Retraso (segundos)',
+                'headless-label': 'Navegación sin cabeza',
+                'nickName-label': 'Apodo',
+                'mode-label': 'Modo',
+                'briefLogLength-label': 'Longitud del registro de información breve',
+                'onlyWatchMatches-label': 'Solo ver partidos (separados por comas)',
+                'disWatchMatches-label': 'Ignorar partidos (separados por comas)',
+                'maxStream-label': 'Número máximo de partidos para ver simultáneamente',
+                'maxRunHours-label': 'Número máximo de horas de ejecución',
+                'language-label': 'Idioma de la interfaz',
+                'proxy-label': 'Dirección del proxy',
+                'connectorDropsUrl-label': 'Enlace de notificación de caída de Webhook',
+                'exportDrops-label': 'Exportar archivo de detalles de caída',
+                'platForm-label': 'Plataforma del sistema',
+                'arm64-label': 'Habilitar soporte para Chromium en Linux ARM64',
+                'closeStream-label': 'Eliminar elementos del reproductor de video para ahorrar ancho de banda',
+                'desktopNotify-label': 'Habilitar notificaciones de escritorio',
+                'sleepPeriod-label': 'Período de sueño (hora de inicio - hora de finalización)',
+                'ignoreBroadCast-label': 'Ignorar estado de transmisión',
+                'userDataDir-label': 'Ruta del archivo de cookies de Chrome',
+                'chromePath-label': 'Ruta de Chrome.exe',
+                'countDrops-label': 'Número de caídas a monitorear',
+                'autoSleep-label': 'Interruptor del modo de suspensión automática',
+                'debug-label': 'Modo de depuración',
+                'username-small': 'Nombre de usuario de la cuenta de Riot Games',
+                'password-small': 'Contraseña de la cuenta de Riot Games',
+                'delay-small': 'Intervalo de tiempo para cada revisión en segundos (600 segundos por defecto). Cada intervalo de tiempo de revisión fluctuará aleatoriamente entre 0,8 y 1,5 veces el retraso de tiempo que establezcas.',
+                'headless-small': 'Cuando se establece en Verdadero (True), el programa se ejecutará en segundo plano; de lo contrario, abrirá una ventana de navegador (Falso por defecto).',
+                'nickName-small': 'Apodo para la cuenta añadida, "nombre de usuario" por defecto.',
+                'mode-small': 'Selección de modo: "seguro" para el modo Seguro, "normal" para el modo regular, el valor por defecto es "seguro". Consulta la página de GitHub para más detalles.',
+                'briefLogLength-small': 'Longitud de la información resumida del registro. Por defecto son 10.',
+                'onlyWatchMatches-small': 'Ligas para observar, separadas por comas (por ejemplo, lcs, lla, lpl). Por favor, nota que los nombres deben estar en minúsculas.',
+                'disWatchMatches-small': 'Ligas para ignorar, separadas por comas (por ejemplo, lms, cblol). Por favor, nota que los nombres deben estar en minúsculas.',
+                'language-small': 'Selección de idioma para la interfaz del programa.',
+                'maxStream-small': 'El número máximo de partidas que se pueden observar al mismo tiempo, más allá de las cuales no se observarán. Por defecto son 4.',
+                'maxRunHours-small': 'Valor negativo significa que siempre está en funcionamiento; valor positivo es el tiempo de funcionamiento en horas. Por defecto es -1.',
+                'proxy-small': 'Dirección del proxy, no es necesario para usuarios generales (por ejemplo, "127.0.0.1:7890").',
+                'connectorDropsUrl-small': 'Enlace del webhook de Discord para las notificaciones de caídas.',
+                'exportDrops-small': 'Si necesitas o no exportar el archivo de detalles totales de caídas, solo se generará cuando se abra el script.',
+                'platForm-small': 'Plataforma del sistema operativo. Windows está configurado por defecto. Si deseas utilizar el programa en Linux, por favor cambia el valor aquí.',
+                'arm64-small': 'Habilitar el soporte para usar Chromium en Linux ARM64, requiere platForm: "linux" y tener el chromedriver en "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver". Más información: https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64',
+                'closeStream-small': 'Opción para eliminar elementos del reproductor de vídeo para ahorrar tráfico (Riesgo).',
+                'desktopNotify-small': 'Función experimental para habilitar notificaciones de escritorio.',
+                'sleepPeriod-small': 'Período de hibernación, vacío por defecto, permite múltiples períodos. El formato es Hora de inicio - Hora de finalización. Las pestañas se cerrarán y se reabrirán al finalizar el período de hibernación.',
+                'ignoreBroadCast-small': 'Opción para ignorar las transmisiones en directo.',
+                'userDataDir-small': 'Ruta a los archivos de cookies de Chrome.',
+                'chromePath-small': 'Ubicación de Chrome.exe.',
+                'countDrops-small': 'Opción para monitorizar el número de caídas, por defecto es Verdadero (True).',
+                'autoSleep-small': 'Interruptor para el modo de auto-hibernación: hibernando cuando no hay partidas en directo, despertando cuando comienza una partida en directo (Verdadero (True) por defecto).',
+                'debug-small': 'Modo de depuración, por defecto es Falso (False).',
+                'generate-button': 'Generar y descargar archivo config.yaml',
+            },
+        };
+
+        var selectedLanguageTexts = textMappings[selectedLanguage];
+
+        for (var elementId in selectedLanguageTexts) {
+            if (selectedLanguageTexts.hasOwnProperty(elementId)) {
+                var element = document.getElementById(elementId);
+                if (element) {
+                    element.textContent = selectedLanguageTexts[elementId];
+                }
+            }
         }
-    </script>
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    }
+
+    function generateYAML() {
+        let username = document.getElementById('username').value;
+        let password = document.getElementById('password').value;
+
+        // Start the YAML content without leading new lines
+        let yamlContent = `username: "${username}"\npassword: "${password}"\n`;
+
+        // Optional values
+        let delay = document.getElementById('delay').value;
+        if (delay) yamlContent += `delay: ${delay}\n`;
+
+        let headless = document.getElementById('headless').value;
+        if (headless !== '') yamlContent += `headless: ${headless}\n`;
+
+        let nickName = document.getElementById('nickName').value;
+        if (nickName) yamlContent += `nickName: "${nickName}"\n`;
+
+        let mode = document.getElementById('mode').value;
+        if (mode !== '') yamlContent += `mode: "${mode}"\n`;
+
+        let briefLogLength = document.getElementById('briefLogLength').value;
+        if (briefLogLength) yamlContent += `briefLogLength: ${briefLogLength}\n`;
+
+        let onlyWatchMatches = document.getElementById('onlyWatchMatches').value;
+        if (onlyWatchMatches) yamlContent += `onlyWatchMatches: ["${onlyWatchMatches.split(',').map((item) => item.trim()).join('","')}"]\n`;
+
+        let disWatchMatches = document.getElementById('disWatchMatches').value;
+        if (disWatchMatches) yamlContent += `disWatchMatches: ["${disWatchMatches.split(',').map((item) => item.trim()).join('","')}"]\n`;
+
+        let language = document.getElementById('language').value;
+        if (language !== '') yamlContent += `language: "${language}"\n`;
+
+        let maxStream = document.getElementById('maxStream').value;
+        if (maxStream) yamlContent += `maxStream: ${maxStream}\n`;
+
+        let maxRunHours = document.getElementById('maxRunHours').value;
+        if (maxRunHours) yamlContent += `maxRunHours: ${maxRunHours}\n`;
+
+        let proxy = document.getElementById('proxy').value;
+        if (proxy) yamlContent += `proxy: "${proxy}"\n`;
+
+        let connectorDropsUrl = document.getElementById('connectorDropsUrl').value;
+        if (connectorDropsUrl) yamlContent += `connectorDropsUrl: "${connectorDropsUrl}"\n`;
+
+        let exportDrops = document.getElementById('exportDrops').value;
+        if (exportDrops !== '') yamlContent += `exportDrops: ${exportDrops}\n`;
+
+        let platForm = document.getElementById('platForm').value;
+        if (platForm) yamlContent += `platForm: "${platForm}"\n`;
+
+        let arm64 = document.getElementById('arm64').value;
+        if (arm64 !== '') yamlContent += `arm64: ${arm64}\n`;
+
+        let closeStream = document.getElementById('closeStream').value;
+        if (closeStream !== '') yamlContent += `closeStream: ${closeStream}\n`;
+
+        let desktopNotify = document.getElementById('desktopNotify').value;
+        if (desktopNotify !== '') yamlContent += `desktopNotify: ${desktopNotify}\n`;
+
+        let sleepPeriod = document.getElementById('sleepPeriod').value;
+        if (sleepPeriod) yamlContent += `sleepPeriod: ["${sleepPeriod.split(',').map((item) => item.trim()).join('","')}"]\n`;
+
+        let ignoreBroadCast = document.getElementById('ignoreBroadCast').value;
+        if (ignoreBroadCast !== '') yamlContent += `ignoreBroadCast: ${ignoreBroadCast}\n`;
+
+        let userDataDir = document.getElementById('userDataDir').value;
+        if (userDataDir) yamlContent += `userDataDir: "${userDataDir}"\n`;
+
+        let chromePath = document.getElementById('chromePath').value;
+        if (chromePath) yamlContent += `chromePath: "${chromePath}"\n`;
+
+        let countDrops = document.getElementById('countDrops').value;
+        if (countDrops !== '') yamlContent += `countDrops: ${countDrops}\n`;
+
+        let autoSleep = document.getElementById('autoSleep').value;
+        if (autoSleep !== '') yamlContent += `autoSleep: ${autoSleep}\n`;
+
+        let debug = document.getElementById('debug').value;
+        if (debug !== '') yamlContent += `debug: ${debug}\n`;
+
+        // Create a blob and download
+        let blob = new Blob([yamlContent], {type: 'text/plain'});
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'config.yaml';
+        a.click();
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 </body>
 </html>
