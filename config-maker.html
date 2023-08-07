@@ -223,6 +223,15 @@
             </select>
             <small class="form-text text-muted" id=debug-small>Debug mode, default is False.</small>
         </div>
+        <div class="form-group">
+            <label for="isDockerized" id=isDockerized-label>Dockerized mode</label>
+            <select class="form-control" id="isDockerized">
+                <option value="" disabled selected>Select option</option>
+                <option value="True">Enabled</option>
+                <option value="False">Disabled</option>
+            </select>
+            <small class="form-text text-muted" id=isDockerized-small>Run EsportsHelper on Docker container, default is False.</small>
+        </div>
         <button type="button" class="btn btn-primary mt-3" onclick="generateYAML()" id="generate-button">Generate and Download config.yaml</button>
     </form>
 </div>
@@ -257,6 +266,7 @@
                 'countDrops-label': 'Monitor Drops number',
                 'autoSleep-label': 'Toggle for auto-sleep mode',
                 'debug-label': 'Debug mode',
+                'isDockerized-label': 'Dockerized mode',
                 'username-small': 'Riot Games account username',
                 'password-small': 'Riot Games account password',
                 'delay-small': 'Time interval for each check in seconds (600 seconds by default). Each check time will fluctuate randomly between 0.8 and 1.5 times the time delay you set.',
@@ -283,6 +293,7 @@
                 'countDrops-small': 'Option to monitor Drops number, default is True.',
                 'autoSleep-small': 'Toggle for auto-sleep mode: sleeping while no matches live, waking up when a match goes live (True by default).',
                 'debug-small': 'Debug mode, default is False.',
+                'isDockerized-small': 'Run EsportsHelper on Docker container, default is False.',
                 'generate-button': 'Generate and Download config.yaml',
             },
             'zh_CN': {
@@ -312,6 +323,7 @@
                 'countDrops-label': '监视掉落数量',
                 'autoSleep-label': '自动休眠模式开关',
                 'debug-label': '调试模式',
+                'isDockerized-label': 'Dockerized 模式',
                 'username-small': 'Riot Games 账号用户名',
                 'password-small': 'Riot Games 账号密码',
                 'delay-small': '每次检查的时间间隔，单位为秒（默认为 600 秒），每次检查时间会在你设置的时间间隔的 0.8 到 1.5 倍之间随机波动。',
@@ -338,6 +350,7 @@
                 'countDrops-small': '是否检查掉落数量',
                 'autoSleep-small': '自动休眠模式开关，打开后没比赛时会自动休眠',
                 'debug-small': '调试模式，开启后会在发生错误时截图',
+                'isDockerized-small': '在 Docker 容器上运行 EsportsHelper，默认为 False。',
                 'generate-button': '生成及下载config.yaml文件',
             },
             'zh_TW': {
@@ -367,6 +380,7 @@
                 'countDrops-label': '監視掉落數量',
                 'autoSleep-label': '自動休眠模式開關',
                 'debug-label': '調試模式',
+                'isDockerized-label': 'Dockerized 模式',
                 'username-small': 'Riot Games 帳號用戶名',
                 'password-small': 'Riot Games 帳號密碼',
                 'delay-small': '每次檢查的時間間隔，單位為秒（預設為 600 秒），每次檢查時間會在你設定的時間間隔的 0.8 到 1.5 倍之間隨機波動。',
@@ -393,6 +407,7 @@
                 'countDrops-small': '是否檢查掉落數量',
                 'autoSleep-small': '自動休眠模式開關，打開後沒比賽時會自動休眠',
                 'debug-small': '調試模式，開啟後會在發生錯誤時截圖',
+				'isDockerized-small': '在 Docker 容器上運行 EsportsHelper，默認為 False。',
                 'generate-button': '產生並下載 config.yaml 檔案',
 
             },
@@ -423,6 +438,7 @@
                 'countDrops-label': 'Número de caídas a monitorear',
                 'autoSleep-label': 'Interruptor del modo de suspensión automática',
                 'debug-label': 'Modo de depuración',
+                'debug-label': 'Modo Dockerizado',
                 'username-small': 'Nombre de usuario de la cuenta de Riot Games',
                 'password-small': 'Contraseña de la cuenta de Riot Games',
                 'delay-small': 'Intervalo de tiempo para cada revisión en segundos (600 segundos por defecto). Cada intervalo de tiempo de revisión fluctuará aleatoriamente entre 0,8 y 1,5 veces el retraso de tiempo que establezcas.',
@@ -449,6 +465,7 @@
                 'countDrops-small': 'Opción para monitorizar el número de caídas, por defecto es Verdadero (True).',
                 'autoSleep-small': 'Interruptor para el modo de auto-hibernación: hibernando cuando no hay partidas en directo, despertando cuando comienza una partida en directo (Verdadero (True) por defecto).',
                 'debug-small': 'Modo de depuración, por defecto es Falso (False).',
+				'isDockerized-small': 'Ejecuta EsportsHelper en un contenedor de Docker, por defecto es False.',
                 'generate-button': 'Generar y descargar archivo config.yaml',
             },
         };
@@ -544,6 +561,9 @@
 
         let debug = document.getElementById('debug').value;
         if (debug !== '') yamlContent += `debug: ${debug}\n`;
+
+        let isDockerized = document.getElementById('isDockerized').value;
+        if (isDockerized !== '') yamlContent += `isDockerized: ${isDockerized}\n`;
 
         // Create a blob and download
         let blob = new Blob([yamlContent], {type: 'text/plain'});

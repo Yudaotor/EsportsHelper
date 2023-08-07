@@ -44,7 +44,9 @@ class Webdriver:
         customPath = ".\\driver"
         chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
         if self.config.platForm == "linux":
-            if self.config.arm64:
+            if self.config.isDockerized:
+                driverPath = "/usr/bin/chromedriver"
+            elif self.config.arm64:
                 username = os.getlogin()
                 driverPath = f"/home/{username}/.local/share/undetected_chromedriver/chromedriver"
                 if not os.path.exists(driverPath):

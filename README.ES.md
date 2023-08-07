@@ -42,7 +42,11 @@ python -m pip install -r requirements.txt
 ./run_job.sh 0
 ```
 ## Cuentas Múltiples 
-Descomprime varias carpetas y luego archivos de configuración diferentes. Abre todas las instancias para utilizar múltiples cuentas.
+Descomprime varias carpetas y luego archivos de configuración diferentes. Abre todas las instancias para utilizar múltiples cuentas. Si esto no es de tu agrado también puedes utilizar nuestra imagen de Docker.
+
+## Versión Dockerizada
+Puedes utilizar nuestra imagen oficial de Docker (o compilar la tuya propia si así lo deseas), para ello solo debes clonar este repositorio o descargarlo en formato ZIP y luego descomprimirlo.
+Posteriormente deberás establecer la opción "isDockerized: True" en el archivo de configuración "config.yaml", luego solo deberás ejecutar "sudo docker compose up -d". Ten en cuenta que esta aplicación utiliza un navegador real (Chromium/Chrome) lo que implica que pueda consumir hasta 2 GB de memoria ram.
 
 ## Features
 1. Abre automáticamente tu navegador, va a lolesports.com, verifica qué ligas están jugando actualmente (ignora los VOD), entra a ver, enciende el volumen y ajusta la calidad de la transmisión al mínimo.
@@ -101,6 +105,7 @@ chromePath: "X:\\xxxxx\\xx\\Chrome.exe" # Ubicación de Chrome.exe.
 countDrops: True                        # Opción para controlar el número de caídas.
 autoSleep: True                         # Activar o desactivar el modo de sueño automático: dormir cuando no haya partidas en vivo, despertar cuando comiencen las partidas (True por defecto).
 debug: False                            # Modo de depuración, por defecto es False.
+isDockerized: False                     # Solo se debe activar si la EsportsHelper está siendo ejecutado en un contenedor de Docker.
 ```
 
 ## Mención especial

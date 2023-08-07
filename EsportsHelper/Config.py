@@ -84,6 +84,7 @@ class Config:
             self.briefLogLength = configFile.get("briefLogLength", 10)
             self.mode = configFile.get("mode", "safe")
             self.arm64 = configFile.get("arm64", False)
+            self.isDockerized = configFile.get("isDockerized", False)
             self.format()
         except (ParserError, KeyError, ScannerError):
             log.error(_log('配置文件格式错误'))
@@ -148,6 +149,7 @@ class Config:
         self.autoSleep = formatBoolean(self.autoSleep)
         self.connectorTest = formatBoolean(self.connectorTest)
         self.arm64 = formatBoolean(self.arm64)
+        self.isDockerized = formatBoolean(self.isDockerized)
 
         if isinstance(self.delay, str):
             try:

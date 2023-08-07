@@ -156,6 +156,8 @@ class GUIThread(Thread):
                     layout["lower"]["info2"].update(Panel("\n".join(info2), subtitle=_("(详细请见log文件)", "bold yellow"), subtitle_align="right", style="bold yellow"))
                     sleep(1)
                     self.locks["refreshLock"].acquire()
+                    if self.config.isDockerized: # If we use docker we need to clean up the console constantly, otherwise weird visual effects happen.
+                        console.clear()
                     live.refresh()
                     if self.locks["refreshLock"].locked():
                         self.locks["refreshLock"].release()
