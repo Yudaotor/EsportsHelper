@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   esportshelper:
-    image: redr00t/EsportsHelper:latest
+    image: redr00t/esportshelper:latest
     container_name: EsportsHelper
     restart: always
     shm_size: 2g
