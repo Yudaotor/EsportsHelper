@@ -9,8 +9,8 @@
 **Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md) | [Spanish](https://github.com/Yudaotor/EsportsHelper/blob/main/README.ES.md)
 # 电竞助手 EsportsHelper
 通过selenium模拟浏览器来自动观看电竞比赛,网址: [LolEsports](lolesports.com)  
-**避免被拳头检测,请尽量过滤掉小赛区(打开安全模式即可)(以及不要同时观看超过5个比赛)**  
-哦对了,用的是谷歌浏览器哦 （必须要下一个谷歌浏览器哦）  
+**避免被拳头检测,请尽量过滤掉小赛区(打开安全模式即可)(以及不要同时观看超过5个比赛!!!!)**  
+哦对了,用的是谷歌浏览器哦 （必须要下一个最新版本谷歌浏览器哦）  
 **来自中国大陆的需搭配VPN使用**  
 **如何下载**:点击右侧的[Releases](https://github.com/Yudaotor/EsportsHelper/releases)下载
 ## 联系我
@@ -37,8 +37,11 @@ python -m pip install -r requirements.txt
 ./run_job.sh 0
 ```
 
+## 在Docker中运行
+要使用我们的（非官方）Docker 版本，可以使用我们的 "docker-compose.yml "文件。只需将该文件与配置文件 "config.yml"（可以使用我们的网络工具）一起放在需要的位置，然后运行 "sudo docker compose up -d "即可。别忘了，配置文件中的 "isDockerized "变量必须设置为 "True"。请注意，该应用程序使用的是真正的浏览器（Chromium/Chrome），这意味着它可能会占用高达 2 GB 的内存。
+
 ## 关于多开  
-~~压缩包解压多个文件夹,然后各自不同的配置文件多开即可实现(bushi)~~
+压缩包解压多个文件夹,然后各自不同的配置文件多开即可实现 或者你也可以使用Docker来实现多开.
 
 
 ## 特性
@@ -64,6 +67,7 @@ python -m pip install -r requirements.txt
 20. 可以打开**安全模式**,自动过滤小赛区 防止被检测.
 21. 可以显示双方对局比分信息.
 22. 支持ARM64.
+23. 支持Docker环境.
 
 
 ## 配置信息
@@ -98,6 +102,7 @@ notifyType: "all"                             # 推送信息的类型筛选,"all
 autoSleep: True                               # (推荐)是否自动休眠,默认True
 debug: False                                  # 是否开启debug模式,开启后在发生异常时会截屏到pics文件夹下,默认False
 arm64: False                                  # 支持在Linux ARM64使用Chromium,需要同时配置platForm: "linux" 并且要有 chromedriver 在路径: "/home/USERNAME/.local/share/undetected_chromedriver/chromedriver", 更多细节见: https://github.com/Yudaotor/EsportsHelper/wiki/The-Way-Using-Chromium-on-ARM64
+isDockerized: False                           # 只有当在Docker中运行时 配置为True,默认为False.
 ```
 
 ### 不观看赛区的配置详解:
