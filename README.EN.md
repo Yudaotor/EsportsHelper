@@ -42,7 +42,11 @@ python -m pip install -r requirements.txt
 ./run_job.sh 0
 ```
 ## Multiple Account  
-Unzip multiple folders, and then each different configuration files.Open all instances to achieve multiple account.
+Unzip multiple folders, and then each different configuration files.Open all instances to achieve multiple account. If you don't prefer this, you can also use our Docker image.
+
+## Dockerized Version
+To use our (unofficial) Docker version, you can use our "docker-compose.yml" file. Simply place it in the desired location along with the configuration file "config.yaml" (you can use our web tool), and then run "sudo docker compose up -d". Don't forget that the "isDockerized" variable must be set to "True" in the configuration file.
+Please note that this application utilizes a real browser (Chromium/Chrome), which means it may consume up to 2 GB of RAM.
 
 ## Features
 1. Automatically opens your browser, proceeds to lolesports.com, checks which leagues are currently playing (VODs will be ignored), enters to watch, turns on the volume and sets the quality of the stream to the lowest. 
@@ -99,6 +103,7 @@ chromePath: "X:\\xxxxx\\xx\\Chrome.exe" # Chrome.exe location.
 countDrops: True                        # Option to monitor Drops number.
 autoSleep: True                         # Toggle for auto-sleep mode: sleeping while no matches live, waking up when match go live (True by default)
 debug: False                            # Debug mode, default is False.
+isDockerized: False                     # Only enable this option if EsportsHelper is being executed in a Docker container.
 ```
 
 ## Honorable mention

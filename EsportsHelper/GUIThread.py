@@ -74,6 +74,7 @@ class GUIThread(Thread):
                 Layout(name="table", renderable=self.setAccountTable(0))
             )
 
+            is_dockerized = config.isDockerized
             dropInfo = getDropInfo()
             configInfo = getConfigInfo()
             webhookInfo = getWebhookInfo()
@@ -156,6 +157,8 @@ class GUIThread(Thread):
                     layout["lower"]["info2"].update(Panel("\n".join(info2), subtitle=_("(详细请见log文件)", "bold yellow"), subtitle_align="right", style="bold yellow"))
                     sleep(1)
                     self.locks["refreshLock"].acquire()
+                    if is_dockerized:
+                        console.clear()
                     live.refresh()
                     if self.locks["refreshLock"].locked():
                         self.locks["refreshLock"].release()
