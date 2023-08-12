@@ -63,7 +63,7 @@ Please note that this application utilizes a real browser (Chromium/Chrome), whi
 12. You can view the number of drops and the drop information of current session.
 13. Password-free login using local browser cookies.
 14. You can customize the path of Google Chrome installation (Portable version).
-15. Both **Simplified Chinese**, **Traditional Chinese** and **English** are supported
+15. Both **Simplified Chinese**, **Traditional Chinese** ,**English** and **Spanish** are supported
 16. **Auto sleep mode**, which will close all webpages related to Lolesports when there are no ongoing matches, achieving a true non-24/7.(This option is highly recommended)
 17. You can set a **maximum number of simultaneous streams** to avoid being detected by RIOT for watching too many steams at the same time.
 18. You can export total drop details file.
@@ -86,7 +86,7 @@ mode: "safe"                            # Mode selection: "safe" for Safe mode, 
 briefLogLength: 10                      # Length of log brief information. Default is 10.
 onlyWatchMatches: ["lcs","lla","lpl","lck","ljl-japan","lco","lec","cblol-brazil","pcs","tft_esports"] 
 disWatchMatches: []                     # Optional, here you can add Leagues you wish to ignore. Please note, names should be in lowercase.    
-language: "en_US"                       # en_US for English.zh_CN for Simplified Chinese,zh_TW for Traditional Chinese.
+language: "en_US"                       # en_US for English.zh_CN for Simplified Chinese,zh_TW for Traditional Chinese, es_ES for Spanish.
 maxStream: 4                            # The default value is 4, which is the maximum number of matches that can be watched at the same time, beyond which they will not be watched.
 maxRunHours: -1                         # Negative value is always running, positive value is running by hours, default -1.
 proxy: ""                               # Proxy address, not required for general users, e.g., "127.0.0.1:7890".
