@@ -25,6 +25,7 @@ class I18n:
         "无法登陆，账号密码可能错误或者网络出现问题": "Login failed: wrong credentials or network problem.",
         "开始重试": "Restarting.",
         "配置文件找不到": "Configuration file not found.",
+        "总": "Total",
         "按回车键退出": "Press Enter to exit.",
         "配置文件中没有账号密码信息": "There are no account credentials in the configuration file.",
         "检查间隔配置错误,已恢复默认值": "Incorrect interval configuration. The default value has been restored.",
@@ -271,6 +272,7 @@ class I18n:
         "测试通知成功": "Test notification succeeded",
         "检查是否手动关闭或电脑运存不足": "Check whether it is manually closed or the computer memory is insufficient",
         "钉钉": "DingTalk",
+        "代挂:闲鱼搜Khalilc": "",
     }
 
     zhTWI18n = {
@@ -290,6 +292,7 @@ class I18n:
         "检查间隔过短,建议延长.": "檢查間隔過短,建議延長.",
         "测试通知失败": "測試通知失敗",
         "关闭视频流失败": "關閉視頻流失敗",
+        "总": "總",
         'Youtube 144p清晰度设置失败': 'Youtube 144p清晰度設置失敗',
         "已配置观看赛区,模式切换成默认模式.": "已配置觀看賽區,模式切換成默認模式.",
         "推送工具: ": "推送工具: ",
@@ -500,6 +503,7 @@ class I18n:
         "今日": "今日",
         '通过': '通過',
         '获得': '獲得',
+        "代挂:闲鱼搜Khalilc": "",
         '于': '於',
         '新的掉落!': '新的掉落!',
         '今日: ': '今日: ',
@@ -552,6 +556,7 @@ class I18n:
         "无法登陆，账号密码可能错误或者网络出现问题": "Fallo al iniciar sesión: las credenciales de la cuenta pueden ser incorrectas o hay un problema de red.",
         "开始重试": "Reintentando.",
         "配置文件找不到": "Archivo de configuración no encontrado.",
+        "总": "Total",
         "按回车键退出": "Presiona Enter para salir.",
         "配置文件中没有账号密码信息": "No hay credenciales de cuenta en el archivo de configuración.",
         "检查间隔配置错误,已恢复默认值": "Configuración incorrecta del intervalo de verificación. Se ha restaurado el valor predeterminado.",
@@ -657,6 +662,7 @@ class I18n:
         "Twitch: 解除暂停失败": "Twitch: Falló al reanudar.",
         "Youtube: 解除静音成功": "Youtube: Sin sonido exitosamente.",
         "Youtube: 解除静音失败": "Youtube: Falló al quitar el silencio.",
+        "代挂:闲鱼搜Khalilc": "",
         "Youtube: 解除暂停成功": "Youtube: Reanudar exitoso.",
         "Youtube: 解除暂停失败": "Youtube: Falló al reanudar.",
         "初始化掉落数": "Inicializando el recuento de recompensas.",

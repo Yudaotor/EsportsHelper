@@ -679,6 +679,8 @@ def getNextMatchTimeInfo():
     nextMatchTime = ""
     if stats.nextMatch:
         league, time = stats.nextMatch.split("|")
+        if "TFT" in league or "tft" in league:
+            league = "TFT"
         nextMatchTime = f"[bold magenta]{league}[/bold magenta]|" f"[cyan]{time}[/cyan]"
     return nextMatchTime
 
