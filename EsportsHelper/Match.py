@@ -242,8 +242,12 @@ class Match:
                                 f"{dropsSessionInfo}")
                             stats.sessionDropsDict = dropsSessionInfo
                     elif sessionDrops < 0:
-                        self.log.error(_log("统计掉落数出错,掉落数小于0"))
-                        stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " + _("统计掉落数出错,掉落数小于0", color="red"))
+                        try:
+                            self.log.error(_log("统计掉落数出错,掉落数小于0"))
+                            if not any(_("统计掉落数出错,掉落数小于0", color="red") in info for info in stats.info):
+                                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " + _("统计掉落数出错,掉落数小于0", color="red"))
+                        except Exception:
+                            pass
                 # Make sure to come to the lolesports schedule page
                 try:
                     getLolesportsWeb(self.driver)
