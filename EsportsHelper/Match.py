@@ -268,7 +268,7 @@ class Match:
                     liveList = tempList
                 if config.onlyWatchMatches:
                     liveList = sortLiveList(liveList, config.onlyWatchMatches)
-                safeModeMatches = ["worlds", "msi", "lcs", "lec", "lla", "vcs", "pcs", "lpl", "lck", "ljl-japan", "lco", "cblol-brazil", "tft_esports", "european-masters"]
+                safeModeMatches = ["worlds", "msi", "lcs", "lec", "lla", "vcs", "pcs", "lpl", "lck", "ljl-japan", "lco", "cblol-brazil", "tft_esports", "emea_masters"]
                 if config.mode == "safe":
                     liveList = sortLiveList(liveList, safeModeMatches)
                 liveUrlList = []
@@ -312,7 +312,7 @@ class Match:
                     f"{_log('下次检查在:')} "
                     f"{(datetime.now() + timedelta(seconds=newDelay)).strftime('%m-%d %H:%M:%S')}")
                 self.log.info(f"{'=' * 50}")
-                stats.nextCheckTime = "[cyan]" + (datetime.now() + timedelta(seconds=newDelay)).strftime('%H:%M:%S') + "[/cyan]"
+                stats.nextCheckTime = "[cyan]" + (datetime.now() + timedelta(seconds=newDelay)).strftime('%H:%M:%S') + "[/]"
                 stats.status = _("在线", color="bold green")
                 sleep(newDelay)
             if time.time() >= endTimePoint and config.maxRunHours != -1 and self.config.platForm == "windows":
@@ -483,7 +483,7 @@ class Match:
             disWatchMatchesSet = set(config.disWatchMatches)
             onlyWatchMatchesSet = set(config.onlyWatchMatches)
             if config.mode == "safe":
-                safeList = ["worlds", "msi", "lcs", "lec", "lla", "vcs", "pcs", "lpl", "lck", "ljl-japan", "lco", "cblol-brazil", "tft_esports", "european-masters"]
+                safeList = ["worlds", "msi", "lcs", "lec", "lla", "vcs", "pcs", "lpl", "lck", "ljl-japan", "lco", "cblol-brazil", "tft_esports", "emea_masters"]
                 onlyWatchMatchesSet = set(safeList)
             elif config.mode == "normal":
                 pass

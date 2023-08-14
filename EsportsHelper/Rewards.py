@@ -89,7 +89,7 @@ class Rewards:
         match = getMatchName(url)
         name = formatLeagueName(match)
         # Check if the match stream is correct
-        if self.checkRewards(stream) == 1 and url not in self.driver.current_url:
+        if self.checkRewards(stream) == 1 and url not in self.driver.current_url and "emea" not in self.driver.current_url:
             self.log.info(self.driver.current_url + " " + url)
             self.log.warning(name + " " + _log("进错直播间,正在重新进入"))
             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "

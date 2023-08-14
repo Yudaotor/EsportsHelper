@@ -655,10 +655,8 @@ def formatLeagueName(name):
         name = "LCS_CL"
     elif "CBLOL-BRAZIL" == name:
         name = "CBLOL"
-    elif "EUROPEAN-MASTERS" == name:
-        name = "EMEA_MASTERS"
-    elif "EUROPEAN_MASTERS" == name:
-        name = "EMEA_MASTERS"
+    elif "EMEA" in name:
+        name = "EMEA"
     elif "TFT" in name:
         name = "TFT"
     elif "LCS_CHALLENGERS_QUALIFIERS" == name:

@@ -38,7 +38,7 @@ def fetchLiveMatches(ignoreBroadCast=True, ignoreDisWatchMatches=False):
         liveList = []
         watchList = []
         if config.mode == "safe":
-            watchList = ["worlds", "msi", "lcs", "lec", "lla", "vcs", "pcs", "lpl", "lck", "ljl-japan", "lco", "cblol-brazil", "tft_esports", "european-masters"]
+            watchList = ["worlds", "msi", "lcs", "lec", "lla", "vcs", "pcs", "lpl", "lck", "ljl-japan", "lco", "cblol-brazil", "tft_esports", "emea_masters"]
         elif config.onlyWatchMatches != [] and config.onlyWatchMatches != [""]:
             watchList = config.onlyWatchMatches
         for event in events:
@@ -102,7 +102,7 @@ def checkNextMatch():
     try:
         watchList = []
         if config.mode == "safe":
-            watchList = ["worlds", "msi", "lcs", "lec", "lla", "vcs", "pcs", "lpl", "lck", "ljl-japan", "lco", "cblol-brazil", "tft_esports", "european-masters"]
+            watchList = ["worlds", "msi", "lcs", "lec", "lla", "vcs", "pcs", "lpl", "lck", "ljl-japan", "lco", "cblol-brazil", "tft_esports", "emea_masters"]
         elif config.onlyWatchMatches != [] and config.onlyWatchMatches != [""]:
             watchList = config.onlyWatchMatches
         headers = {"x-api-key": "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z"}
@@ -129,11 +129,12 @@ def checkNextMatch():
                             startTime = systemTimeDT + timeDiff
                             niceStartTime = datetime.strftime(startTime, '%m-%d %H:%M')
                             stats.nextMatch = event["league"]["name"] + "|" + niceStartTime
-                            break
+                            return True
                         else:
                             continue
                     else:
                         continue
+
                 else:
                     startTime = datetime.strptime(event["startTime"], '%Y-%m-%dT%H:%M:%SZ')
                     currentTimeString = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -144,9 +145,18 @@ def checkNextMatch():
                         startTime = systemTimeDT + timeDiff
                         niceStartTime = datetime.strftime(startTime, '%m-%d %H:%M')
                         stats.nextMatch = event["league"]["name"] + "|" + niceStartTime
-                        break
+                        return True
                     else:
                         continue
+            startTime = datetime.strptime(events[-1]["startTime"], '%Y-%m-%dT%H:%M:%SZ')
+            currentTimeString = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+            currentTime = datetime.strptime(currentTimeString, '%Y-%m-%dT%H:%M:%SZ')
+            if currentTime < startTime:
+                timeDiff = startTime - currentTime
+                systemTimeDT = getSystemTime()
+                startTime = systemTimeDT + timeDiff
+                niceStartTime = datetime.strftime(startTime, '%m-%d %H:%M')
+                stats.nextMatch = events[-1]["league"]["name"] + "|" + niceStartTime
         return True
     except Exception:
         log.error("API " + _log("获取下一场比赛时间失败"))
