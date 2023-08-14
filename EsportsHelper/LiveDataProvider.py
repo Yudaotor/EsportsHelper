@@ -45,7 +45,7 @@ def fetchLiveMatches(ignoreBroadCast=True, ignoreDisWatchMatches=False):
             if ignoreDisWatchMatches and watchList != []:
                 if event["league"]["slug"] not in watchList:
                     continue
-            if ignoreBroadCast and event["type"] == "show" and event["league"]["slug"] != 'tft_esports':
+            if ignoreBroadCast and event["type"] == "show" and event["league"]["slug"] != 'tft_esports' and event["league"]["slug"] != 'emea_masters':
                 continue
             if len(event["streams"]) > 0:
                 if event["type"] == "match":
