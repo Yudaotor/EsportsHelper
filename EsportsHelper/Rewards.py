@@ -446,7 +446,7 @@ class Rewards:
                         "msgtype": "link",
                         "link": {
                             "text": f"[{_log('昵称')}]{self.config.nickName}\n[{_log('事件')}]{eventTitle}\n[{_log('掉落')}]{dropItem}",
-                            "title": f"Drop: {_log('今天')} {todayDrops} {_log('个')} {_log('总')}:{stats.historyDrops}\nFrom: {dropRegion} {fans}",
+                            "title": f"Drop: {_log('今天')} {todayDrops} {_log('个')} {_log('总')}:{stats.historyDrops + stats.sessionDrops}\nFrom: {dropRegion} {fans}",
                             "picUrl": f"{dropItemImg}",
                             "messageUrl": "https://lolesports.com/rewards"
                         }
@@ -487,7 +487,7 @@ class Rewards:
                     }
                     field6 = {
                         "name": f"{_log('今日')}({_log('总')})",
-                        "value": f"{todayDrops}({stats.historyDrops})",
+                        "value": f"{todayDrops}({stats.historyDrops + stats.sessionDrops})",
                         "inline": True
                     }
                     field7 = {
@@ -514,7 +514,7 @@ class Rewards:
                     sleep(5)
                 elif "https://fwalert.com" in self.config.connectorDropsUrl:
                     params = {
-                        "text": f"{_log('今天')} {todayDrops} {_log('掉宝')} {_log('总')}:{stats.historyDrops}\n[{_log('昵称')}]{self.config.nickName}\n[{_log('事件')}]{eventTitle}\n[{_log('掉落')}]{dropItem}\n[{_log('赛区')}]{dropRegion} [{_log('时间')}]{unlockedDate} {fans}",
+                        "text": f"{_log('今天')} {todayDrops} {_log('掉宝')} {_log('总')}:{stats.historyDrops + stats.sessionDrops}\n[{_log('昵称')}]{self.config.nickName}\n[{_log('事件')}]{eventTitle}\n[{_log('掉落')}]{dropItem}\n[{_log('赛区')}]{dropRegion} [{_log('时间')}]{unlockedDate} {fans}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
                         "Content-type": "application/json"}, json=params)
@@ -526,7 +526,7 @@ class Rewards:
                         "news": {
                             "articles": [
                                 {
-                                    "title": f"{_log('今天')} {todayDrops} {_log('掉宝')} {_log('总')}:{stats.historyDrops}",
+                                    "title": f"{_log('今天')} {todayDrops} {_log('掉宝')} {_log('总')}:{stats.historyDrops + stats.sessionDrops}",
                                     "description": f"[{_log('昵称')}]{self.config.nickName}\n[{_log('事件')}]{eventTitle}\n[{_log('掉落')}]{dropItem}\n[{_log('赛区')}]{dropRegion}\n[{_log('时间')}]{unlockedDate} {fans}",
                                     "url": "https://lolesports.com/rewards",
                                     "picurl": f"{productImg}"
@@ -542,7 +542,7 @@ class Rewards:
                     params = {
                         "msg_type": "text",
                         "content": {
-                            "text": f"Drop:{_log('今天')} {todayDrops} {_log('掉宝')} {_log('总')}:{stats.historyDrops}\n[{_log('昵称')}]{self.config.nickName}\n[{_log('事件')}]{eventTitle}\n[{_log('掉落')}]{dropItem}\n[{_log('赛区')}]{dropRegion} [{_log('时间')}]{unlockedDate} {fans}",
+                            "text": f"Drop:{_log('今天')} {todayDrops} {_log('掉宝')} {_log('总')}:{stats.historyDrops + stats.sessionDrops}\n[{_log('昵称')}]{self.config.nickName}\n[{_log('事件')}]{eventTitle}\n[{_log('掉落')}]{dropItem}\n[{_log('赛区')}]{dropRegion} [{_log('时间')}]{unlockedDate} {fans}",
                         }
                     }
                     s.post(self.config.connectorDropsUrl, headers={
@@ -551,7 +551,7 @@ class Rewards:
                     sleep(10)
                 else:
                     params = {
-                        "text": f"Drop:{_log('今天')}{todayDrops} {_log('掉宝')} {_log('总')}:{stats.historyDrops}\n[{_log('昵称')}]{self.config.nickName}\n[{_log('事件')}]{eventTitle}\n[{_log('掉落')}]{dropItem}\n[{_log('赛区')}]{dropRegion} [{_log('时间')}]{unlockedDate} {fans}",
+                        "text": f"Drop:{_log('今天')}{todayDrops} {_log('掉宝')} {_log('总')}:{stats.historyDrops + stats.sessionDrops}\n[{_log('昵称')}]{self.config.nickName}\n[{_log('事件')}]{eventTitle}\n[{_log('掉落')}]{dropItem}\n[{_log('赛区')}]{dropRegion} [{_log('时间')}]{unlockedDate} {fans}",
                     }
                     s.post(self.config.connectorDropsUrl, headers={
                         "Content-type": "application/json"}, json=params)
