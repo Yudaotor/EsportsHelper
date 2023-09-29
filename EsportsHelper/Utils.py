@@ -37,7 +37,8 @@ def getGithubFile():
                              "hitpoint_masters,esports_balkan_league," \
                              "greek_legends,arabian_league,lck_academy," \
                              "ljl_academy,lck_challengers_league,cblol_academy," \
-                             "north_regional_league,south_regional_league,tft_esports"
+                             "north_regional_league,south_regional_league,tft_esports," \
+                             "duelo_de_reyes,wqs"
         req = requests.session()
         headers = {'Content-Type': 'text/plain; charset=utf-8',
                    'Connection': 'close'}
