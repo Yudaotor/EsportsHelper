@@ -81,7 +81,7 @@ delay: 600                                    # 每次检查的时间间隔，�
 headless: False                               # 设置为True时，程序会在后台运行，否则会打开浏览器窗口(默认为False)  
 language: "zh_CN"                             # 现支持语言"zh_CN","zh_TW","en_US".简体中文,繁体中文,英语.
 nickName: ""                                  # 绰号,为空时默认为username.(增强隐私)  
-onlyWatchMatches: ["lcs","lla","lpl","lck","ljl-japan","lco","lec","cblol-brazil","pcs","tft_esports"]   # 只观看的赛区名称,小写.
+onlyWatchMatches: ["lcs","lla","lpl","lck","ljl-japan","lco","lec","cblol-brazil","pcs","tft_esports","worlds","wqs"]   # 只观看的赛区名称,小写.
 disWatchMatches: ["prime","lfl","liga","hitpoint","series","nlc","nationals","academy","qualifiers","legends","challengers","league"]        # 不想看的赛区名称，可以在这里添加.(注意,是小写)  
 maxRunHours: -1                               # 负值为一直运行，正值为运行小时, 默认-1
 maxStream: 4                                  # 默认值为4,最大同时观看的比赛数,超过将会不予观看.
@@ -109,6 +109,7 @@ isDockerized: False                           # 只有当在Docker中运行时 �
 注意,此处是包含关系的逻辑,举例:当你设置了lck以后,lck_challengers同样不会观看  
 可以设置一些赛区不观看,比如次级联赛等(掉落率很低)(推荐)  
 具体赛区名字可以见以下说明(冒号后的即为在配置中输入的赛区名)(注意是小写):  
+Worlds Qualifying Series:wqs  
 LPL:lpl  
 LCK:lck  
 LCK_CHALLENGERS_LEAGUE:lck_challengers_league  
@@ -148,6 +149,7 @@ ARABIAN_LEAGUE:arabian_league
 NORTH_REGIONAL_LEAGUE:north_regional_league  
 SOUTH_REGIONAL_LEAGUE:south_regional_league  
 PG_NATIONALS:pg_nationals  
+King's Duel:duelo_de_reyes  
 
 ## By the way
 本项目思路及部分代码来自Poro，感谢。[此处](https://github.com/LeagueOfPoro/EsportsCapsuleFarmer)
