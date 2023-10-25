@@ -1,12 +1,13 @@
-version: "3.9"
-
-# Latest version compiled: v2.3.1 (Linux AMD64/ARM64/ARMv7)
+version: '3.9'
 
 services:
+
   esportshelper:
     image: redr00t/esportshelper:latest
-    container_name: EsportsHelper
     restart: unless-stopped
+    container_name: esportshelper
+    ports:
+      - '6080:6080'
     shm_size: 2g
     volumes:
-      - ./config.yaml:/app/config.yaml
+      - ./config.yaml:/home/alpine/Desktop/EsportsHelper/config.yaml
