@@ -38,7 +38,7 @@ python -m pip install -r requirements.txt
 ```
 
 ## 在Docker中运行
-要使用我们的（非官方）Docker 版本，可以使用我们的 "docker-compose.yml "文件。只需将该文件与配置文件 "config.yml"（可以使用我们的配置文件生成器）一起放在需要的位置，然后运行 "sudo docker compose up -d "即可。别忘了，配置文件中的 "isDockerized "变量必须设置为 "True"。请注意，该应用程序使用的是真正的浏览器（Chromium/Chrome），这意味着它可能会占用高达 2 GB 的内存。Docker仓库地址: https://hub.docker.com/r/redr00t/esportshelper  
+要使用我们的 (非官方) Docker版本，您可以使用我们的 “docker-compose.yml” 文件。只需将其与配置文件 “config.yaml” 一起放置在所需的位置 (您可以使用我们的web工具)，然后运行 “sudo docker compose up -d”。不要忘记在配置文件中必须将 “isDockerized” 变量设置为 “True”。然后，您必须访问[https:// HOST-IP:6080/vnc.html](https://HOST-IP:6080/vnc.html )并运行在桌面上找到的 “开始” 脚本。请记住，登录LoLesports网站时必须手动完成验证码。请注意，此应用程序使用真正的浏览器 (Chromium/Chrome)，这意味着它可能会消耗多达2 GB的RAM。Docker仓库地址: https://hub.docker.com/r/redr00t/esportshelper  
 
 ## 关于多开  
 压缩包解压多个文件夹,然后各自不同的配置文件多开即可实现 或者你也可以使用Docker来实现多开.
