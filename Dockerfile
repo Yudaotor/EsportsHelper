@@ -18,7 +18,7 @@ RUN apk add --no-cache sudo git xfce4 faenza-icon-theme bash python3 py3-pip tig
 
 COPY docker-novnc/script.js /opt/noVNC/script.js
 COPY docker-novnc/audify.js /opt/noVNC/audify.js
-COPY docker-novnc/vnc.html /opt/noVNC/vnc.html
+COPY docker-novnc/vnc.html /opt/noVNC/index.html
 COPY docker-novnc/pcm-player.js /opt/noVNC/pcm-player.js
 
 RUN npm install --prefix /opt/noVNC ws
@@ -48,15 +48,23 @@ RUN rm -rf /usr/bin/gnome-keyring*
 
 USER alpine
 
-# Crea el directorio si no existe, luego clona el repositorio
+# Create the directory if it doesn't exist, then clone the repository
 RUN mkdir -p /home/alpine/Desktop/EsportsHelper && \
-    git clone https://github.com/redr00t/EsportsHelper.git /home/alpine/Desktop/EsportsHelper
+    git clone https://github.com/Yudaotor/EsportsHelper.git /home/alpine/Desktop/EsportsHelper
 
-# Instala los paquetes pip desde el archivo requirements.txt
+# Install the pip packages from the requirements.txt file
 RUN pip install --no-cache-dir -r /home/alpine/Desktop/EsportsHelper/requirements.txt
 
-# Mueve el archivo config.yaml al directorio deseado después de clonar el repositorio
+# Move the config.yaml file to the desired directory after cloning the repository
 COPY docker-novnc/config.yaml /home/alpine/Desktop/EsportsHelper/config.yaml
+
+# Create the new START.sh file that opens a terminal and runs the script
+RUN echo '#!/bin/bash' > /home/alpine/Desktop/START.sh && \
+    echo 'xfce4-terminal -e "bash -c \"cd /home/alpine/Desktop/EsportsHelper; python3 main.py\"" &' >> /home/alpine/Desktop/START.sh && \
+    echo 'exit' >> /home/alpine/Desktop/START.sh
+
+# Give execute permissions to the file
+RUN chmod +x /home/alpine/Desktop/START.sh
 
 RUN mkdir -p /home/alpine/.local/share/undetected_chromedriver \
     && cp /usr/bin/chromedriver /home/alpine/.local/share/undetected_chromedriver/chromedriver
