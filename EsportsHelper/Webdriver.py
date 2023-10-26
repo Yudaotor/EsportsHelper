@@ -45,7 +45,7 @@ class Webdriver:
         chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
         if self.config.platForm == "linux":
             if self.config.isDockerized:
-                driverPath = "/usr/bin/chromedriver"
+                driverPath = "/home/alpine/.local/share/undetected_chromedriver/chromedriver"
             elif self.config.arm64:
                 username = os.getlogin()
                 driverPath = f"/home/{username}/.local/share/undetected_chromedriver/chromedriver"
@@ -101,7 +101,7 @@ class Webdriver:
         options.add_experimental_option('prefs', prefs)
         if self.config.proxy:
             options.add_argument(f"--proxy-server={self.config.proxy}")
-        if self.config.headless or self.config.isDockerized:
+        if self.config.headless and not self.config.isDockerized:
             options.add_argument("--headless=new")
             
             windows_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188"
