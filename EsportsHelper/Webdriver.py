@@ -43,25 +43,26 @@ class Webdriver:
         """
         customPath = ".\\driver"
         chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
-        if self.config.platForm == "linux":
-            if self.config.isDockerized:
-                driverPath = "/home/alpine/.local/share/undetected_chromedriver/chromedriver"
-            elif self.config.arm64:
-                username = os.getlogin()
-                driverPath = f"/home/{username}/.local/share/undetected_chromedriver/chromedriver"
-                if not os.path.exists(driverPath):
-                    self.log.error(_log("找不到 chromedriver"))
-                    return
-            else:
-                customPath = "driver"
+        if self.config.isDockerized:
+            driverPath = "/home/alpine/.local/share/undetected_chromedriver/chromedriver"
+        else:
+            if self.config.platForm == "linux":
+                if self.config.arm64:
+                    username = os.getlogin()
+                    driverPath = f"/home/{username}/.local/share/undetected_chromedriver/chromedriver"
+                    if not os.path.exists(driverPath):
+                        self.log.error(_log("找不到 chromedriver"))
+                        return
+                else:
+                    customPath = "driver"
+                    chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
+                    driverPath = chromeDriverManager.install()
+            elif self.config.platForm == "windows":
+                customPath = ".\\driver"
                 chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
                 driverPath = chromeDriverManager.install()
-        elif self.config.platForm == "windows":
-            customPath = ".\\driver"
-            chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
-            driverPath = chromeDriverManager.install()
-        else:
-            self.log.error(_("不支持的操作系统"))
+            else:
+                self.log.error(_("不支持的操作系统"))
 
         options = self.addWebdriverOptions(uc.ChromeOptions())
         print(_("正在准备中...", color="yellow"))
