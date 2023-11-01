@@ -2,6 +2,9 @@ FROM alpine:latest
 
 LABEL maintainer="Pablo Duval <pablo@redroot.me>"
 
+LABEL version="1.2"
+LABEL versionHelper="2.3.1"
+
 ENV NOVNC_PASSWORD=esportshelper
 
 RUN apk add --no-cache sudo git xfce4 faenza-icon-theme bash python3 py3-pip tigervnc xfce4-terminal chromium ffmpeg chromium-chromedriver cmake wget \
@@ -54,9 +57,6 @@ RUN mkdir -p /home/alpine/Desktop/EsportsHelper && \
 
 # Install the pip packages from the requirements.txt file
 RUN pip install --no-cache-dir -r /home/alpine/Desktop/EsportsHelper/requirements.txt
-
-# Move the config.yaml file to the desired directory after cloning the repository
-COPY docker-novnc/config.yaml /home/alpine/Desktop/EsportsHelper/config.yaml
 
 # Create the new START.sh file that opens a terminal and runs the script
 RUN echo '#!/bin/bash' > /home/alpine/Desktop/START.sh && \
