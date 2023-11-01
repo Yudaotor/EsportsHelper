@@ -1,7 +1,8 @@
 version: '3.9'
 
-services:
+# Last Compilation: 01 November at 01:00 UTC
 
+services:
   esportshelper:
     image: redr00t/esportshelper:latest
     restart: unless-stopped
