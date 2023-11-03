@@ -44,7 +44,7 @@ class Webdriver:
         customPath = ".\\driver"
         chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
         if self.config.isDockerized:
-            driverPath = "/app/undetected_chromedriver/chromedriver"
+            driverPath = "/home/alpine/.local/share/undetected_chromedriver/chromedriver"
         else:
             if self.config.platForm == "linux":
                 if self.config.arm64:
