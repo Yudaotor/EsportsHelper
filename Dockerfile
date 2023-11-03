@@ -1,72 +1,68 @@
-FROM alpine:latest
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:alpine318
 
+LABEL build_version="1.3.1"
 LABEL maintainer="Pablo Duval <pablo@redroot.me>"
 
-ENV NOVNC_PASSWORD=esportshelper
+# Install necessary dependencies
+RUN \
+  echo "**** Installing dependencies ****" && \
+  apk add --no-cache \
+    chromium \
+    ffmpeg \
+    chromium-chromedriver \
+    py3-pip \
+    git && \
+  echo "**** Cleaning up ****" && \
+  rm -rf /tmp/*
 
-RUN apk add --no-cache sudo git xfce4 faenza-icon-theme bash python3 py3-pip tigervnc xfce4-terminal chromium ffmpeg chromium-chromedriver cmake wget \
-    pulseaudio xfce4-pulseaudio-plugin pavucontrol pulseaudio-alsa alsa-plugins-pulse alsa-lib-dev nodejs npm gcc build-base libffi-dev yaml-dev mousepad \
-    build-base \
-    && adduser -h /home/alpine -s /bin/bash -S -D alpine && echo -e "alpine\nalpine" | passwd alpine \
-    && echo 'alpine ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
-    && git clone https://github.com/novnc/noVNC /opt/noVNC \
-    && git clone https://github.com/novnc/websockify /opt/noVNC/utils/websockify \
-    && rm -f \
-        /etc/xdg/autostart/xfce4-power-manager.desktop \
-        /etc/xdg/autostart/xscreensaver.desktop \
-        /usr/share/xfce4/panel/plugins/power-manager-plugin.desktop
+# Create the /defaults directory
+RUN mkdir -p /defaults
 
-COPY docker-novnc/script.js /opt/noVNC/script.js
-COPY docker-novnc/audify.js /opt/noVNC/audify.js
-COPY docker-novnc/vnc.html /opt/noVNC/index.html
-COPY docker-novnc/pcm-player.js /opt/noVNC/pcm-player.js
+# Create autostart script
+RUN echo '#!/bin/bash' > /defaults/autostart
+RUN echo 'cd /esportshelper && python3 main.py' >> /defaults/autostart
+RUN chmod +x /defaults/autostart
 
-RUN npm install --prefix /opt/noVNC ws
-RUN npm install --prefix /opt/noVNC audify
+# Create a restart script
+RUN echo '#!/bin/bash' > /defaults/restart_esportshelper.sh
+RUN echo 'pkill -f "python3 main.py"' >> /defaults/restart_esportshelper.sh
+RUN echo 'cd /esportshelper && python3 main.py' >> /defaults/restart_esportshelper.sh
+RUN chmod +x /defaults/restart_esportshelper.sh
 
-USER alpine
-WORKDIR /home/alpine
+# Create menu.xml
+RUN echo '<?xml version="1.0" encoding="utf-8"?>' > /defaults/menu.xml
+RUN echo '<openbox_menu xmlns="http://openbox.org/3.4/menu">' >> /defaults/menu.xml
+RUN echo '  <menu id="root-menu" label="MENU">' >> /defaults/menu.xml
+RUN echo '    <item label="Terminal" icon="/usr/share/pixmaps/xterm-color_48x48.xpm"><action name="Execute"><command>/usr/bin/xterm</command></action></item>' >> /defaults/menu.xml
+RUN echo '    <item label="Restart EsportsHelper" icon="/usr/share/pixmaps/xterm-color_48x48.xpm"><action name="Execute"><command>/defaults/restart_esportshelper.sh/command></action></item>' >> /defaults/menu.xml
+RUN echo '    <item label="Chromium" icon="/usr/share/icons/hicolor/48x48/apps/chromium.png"><action name="Execute"><command>/usr/bin/chromium-browser</command></action></item>' >> /defaults/menu.xml
+RUN echo '  </menu>' >> /defaults/menu.xml
+RUN echo '</openbox_menu>' >> /defaults/menu.xml
 
-RUN mkdir -p /home/alpine/.vnc \
-    && echo -e "-Securitytypes=VNCAuth" > /home/alpine/.vnc/config \
-    && echo -e "#!/bin/bash\nstartxfce4 &" > /home/alpine/.vnc/xstartup \
-    && echo -e "$NOVNC_PASSWORD\n$NOVNC_PASSWORD\nn\n" | vncpasswd
+# Prepare undetected_chromedriver
+RUN mkdir -p /undetected_chromedriver && \
+    cp /usr/bin/chromedriver /undetected_chromedriver/chromedriver && \
+    chmod -R 777 /undetected_chromedriver
 
-USER root
+# Clone the EsportsHelper repository
+RUN mkdir -p /esportshelper && \
+    git clone https://github.com/Yudaotor/EsportsHelper /esportshelper && \
+    chmod -R 777 /esportshelper
 
-RUN echo '\
-#!/bin/bash \
-/usr/bin/vncserver :99 2>&1 | sed  "s/^/[Xtigervnc ] /" & \
-sleep 1 & \
-/usr/bin/pulseaudio 2>&1 | sed  "s/^/[pulseaudio] /" & \
-sleep 1 & \
-/usr/bin/node /opt/noVNC/audify.js 2>&1 | sed "s/^/[audify    ] /" & \
-/opt/noVNC/utils/novnc_proxy --vnc localhost:5999 2>&1 | sed "s/^/[noVNC     ] /"'\
->/entry.sh
+# Set permissions for chromium
+RUN chmod -R 777 /usr/bin/chromium
 
-RUN rm -rf /usr/bin/gnome-keyring*
+# Set the working directory
+WORKDIR /esportshelper
 
-USER alpine
+# Install Python dependencies
+RUN pip install -r requirements.txt
 
-# Create the directory if it doesn't exist, then clone the repository
-RUN mkdir -p /home/alpine/Desktop/EsportsHelper && \
-    git clone https://github.com/Yudaotor/EsportsHelper.git /home/alpine/Desktop/EsportsHelper
+# Expose port 3000
+EXPOSE 3000
 
-# Install the pip packages from the requirements.txt file
-RUN pip install --no-cache-dir -r /home/alpine/Desktop/EsportsHelper/requirements.txt
+# Remove git package
+RUN apk del git
 
-# Move the config.yaml file to the desired directory after cloning the repository
-COPY docker-novnc/config.yaml /home/alpine/Desktop/EsportsHelper/config.yaml
-
-# Create the new START.sh file that opens a terminal and runs the script
-RUN echo '#!/bin/bash' > /home/alpine/Desktop/START.sh && \
-    echo 'xfce4-terminal -e "bash -c \"cd /home/alpine/Desktop/EsportsHelper; python3 main.py\"" &' >> /home/alpine/Desktop/START.sh && \
-    echo 'exit' >> /home/alpine/Desktop/START.sh
-
-# Give execute permissions to the file
-RUN chmod +x /home/alpine/Desktop/START.sh
-
-RUN mkdir -p /home/alpine/.local/share/undetected_chromedriver \
-    && cp /usr/bin/chromedriver /home/alpine/.local/share/undetected_chromedriver/chromedriver
-
-ENTRYPOINT [ "/bin/bash", "/entry.sh" ]
+# Define a volume for /config
+VOLUME /config
