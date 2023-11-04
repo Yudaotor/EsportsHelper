@@ -1,13 +1,19 @@
-version: '3.9'
-
+version: "3.8"
 services:
 
   esportshelper:
     image: redr00t/esportshelper:latest
-    restart: unless-stopped
     container_name: esportshelper
-    ports:
-      - '6080:6080'
-    shm_size: 2g
+    restart: unless-stopped
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
     volumes:
-      - ./config.yaml:/home/alpine/Desktop/EsportsHelper/config.yaml
+      - ./docker-config:/config
+      - ./config.yaml:/esportshelper/config.yaml
+    ports:
+      - 3000:3000
+    shm_size: "2gb"

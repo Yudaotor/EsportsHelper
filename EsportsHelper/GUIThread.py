@@ -159,6 +159,8 @@ class GUIThread(Thread):
                               title=_("代挂:闲鱼搜Khalilc", "bold yellow")))
                     sleep(1)
                     self.locks["refreshLock"].acquire()
+                    if is_dockerized:
+                        console.clear()
                     live.refresh()
                     if self.locks["refreshLock"].locked():
                         self.locks["refreshLock"].release()
