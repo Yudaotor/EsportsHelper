@@ -46,7 +46,7 @@ Descomprime varias carpetas y luego archivos de configuración diferentes. Abre 
 
 ## Versión Dockerizada
 Para utilizar nuestra versión (no oficial) de Docker puedes utilizar nuestro "docker-compose.yml", simplemente colócalo en la ubicación que desees junto con el archivo de configuración "config.yaml" (puedes utilizar nuestra herramienta web) y ejecuta "sudo docker compose up -d". No olvides que la variable "isDockerized" debe estar en "True" en el archivo de configuración.
-Luego deberás acceder a https://IP-DEL-HOST:6080 y ejecutar el script "START" que se encuentra en el escritorio. Recuerda que deberás completar el captcha manualmente al momento de ingresar el usuario en el sitio web de Lolesports.
+Luego deberás acceder rápidamente a https://IP-DEL-HOST:3000 y completar el captcha luego de que EsportsHelper complete los datos de tu cuenta.
 Ten en cuenta que esta aplicación utiliza un navegador real (Chromium/Chrome) lo que implica que pueda consumir hasta 2 GB de memoria ram.
 
 ## Features

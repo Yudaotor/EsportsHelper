@@ -46,7 +46,7 @@ Unzip multiple folders, and then each different configuration files.Open all ins
 
 ## Dockerized Version
 To use our (unofficial) Docker version, you can use our "docker-compose.yml" file. Simply place it in the desired location along with the configuration file "config.yaml" (you can use our web tool), and then run "sudo docker compose up -d". Don't forget that the "isDockerized" variable must be set to "True" in the configuration file.
-Then you must access https://HOST-IP:6080 and run the "START" script found on the desktop. Remember that you must complete the captcha manually when logging in to the Lolesports website
+Then you will have to quickly access https://HOST-IP:3000 and complete the captcha after EsportsHelper completes your account details.
 Please note that this application utilizes a real browser (Chromium/Chrome), which means it may consume up to 2 GB of RAM.
 
 ## Features
