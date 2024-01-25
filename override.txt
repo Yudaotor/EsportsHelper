@@ -42,3 +42,4 @@ https://lolesports.com/live/south_regional_league|https://lolesports.com/live/so
 https://lolesports.com/live/liga_portuguesa|https://lolesports.com/live/liga_portuguesa/inygontv1,
 https://lolesports.com/live/pg_nationals|https://lolesports.com/live/pg_nationals/pg_esports_lol,
 https://lolesports.com/live/wqs|https://lolesports.com/live/wqs/riotgames,
+https://lolesports.com/live/lit|https://lolesports.com/live/lit/litofficial,
