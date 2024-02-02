@@ -60,7 +60,7 @@ class LoginHandler:
                 time.sleep(random.uniform(0.02, 0.1))  # wait a random time between 20 ms and 100 ms
             sleep(1)
             submitButton = self.wait.until(ec.element_to_be_clickable(
-                (By.CSS_SELECTOR, "button[data-testid='btn-signin-submit']"))) # Sometimes the button was not pressed correctly, this is a possible fix
+                (By.CSS_SELECTOR, "button[data-testid='btn-signin-submit']")))  # Sometimes the button was not pressed correctly, this is a possible fix
             sleep(1)
             self.driver.execute_script("arguments[0].click();", submitButton)
             self.log.info(_log("账密 提交成功"))
@@ -135,6 +135,14 @@ class LoginHandler:
             loginButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "a[data-riotbar-link-id=login]")))
             self.driver.execute_script("arguments[0].click();", loginButton)
+            try:
+                WebDriverWait(self.driver, 7).until(ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, "input[name=username]")))
+                self.log.error(_log("免密登录失败,请去浏览器手动登录后再行尝试"))
+                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试', 'red')}")
+                sysQuit(self.driver, _log("免密登录失败,请去浏览器手动登录后再行尝试"))
+            except Exception:
+                pass
         except TimeoutException:
             Utils().debugScreen(self.driver, "userDataLogin")
             if self.driver.find_element(By.CSS_SELECTOR, "div.riotbar-summoner-name"):
