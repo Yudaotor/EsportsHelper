@@ -23,6 +23,7 @@ class LoginHandler:
         self.driver = driver
         self.config = config
         self.wait = WebDriverWait(self.driver, 20)
+        self.quickWait = WebDriverWait(self.driver, 3)
         self.locks = locks
 
     def automaticLogIn(self, username: str, password: str) -> bool:
@@ -67,6 +68,22 @@ class LoginHandler:
             sleep(4)
             if len(self.driver.find_elements(by=By.CSS_SELECTOR, value="div.text__web-code")) > 0:
                 self.insert2FACode()
+            try:
+                self.quickWait.until(ec.element_to_be_clickable(
+                    (By.CSS_SELECTOR, "button[data-testid='btn-signin-submit']")))
+            except TimeoutException:
+                self.log.info(_log("请前往浏览器手动解决验证码"))
+                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('请前往浏览器手动解决验证码', 'yellow')}")
+                try:
+                    WebDriverWait(self.driver, 110).until(ec.presence_of_element_located(
+                        (By.CSS_SELECTOR, "div.riotbar-summoner-name")))
+                except TimeoutException:
+                    Utils().debugScreen(self.driver, "LoginHandler")
+                    self.log.error(_log("验证超时 请重新打开本脚本重试"))
+                    stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('验证超时 请重新打开本脚本重试', 'red')}")
+                    self.log.error(formatExc(format_exc()))
+                    raise TimeoutException
+                return True
             self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "div.riotbar-summoner-name")))
             return True

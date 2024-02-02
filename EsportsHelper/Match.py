@@ -99,7 +99,7 @@ class Match:
                     except IndexError:
                         self.nextMatchHour = None
                         self.nextMatchDay = None
-                        stats.nextMatch = "暂无" + "|" + "暂无"
+                        stats.nextMatch = _("暂无", color="green") + "|" + _("暂无", color="green")
                 else:
                     self.nextMatchDay = None
                     self.checkNextMatch()

@@ -8,6 +8,7 @@ class I18n:
         self.language = lang
 
     enUSI18n = {
+        "请前往浏览器手动解决验证码": "Please solve the captcha manually in the browser",
         "无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试": "The latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.",
         "是否有谷歌浏览器?": "Is Google Chrome installed?",
         "是否打开着谷歌浏览器?请关闭后再次尝试": "Is Google Chrome running?Please close it and try again.",
@@ -273,9 +274,11 @@ class I18n:
         "检查是否手动关闭或电脑运存不足": "Check whether it is manually closed or the computer memory is insufficient",
         "钉钉": "DingTalk",
         "代挂:闲鱼搜Khalilc": "",
+        "验证超时 请重新打开本脚本重试": "Verification timeout. Please reopen this script and try again",
     }
 
     zhTWI18n = {
+        "请前往浏览器手动解决验证码": "請前往瀏覽器手動解決驗證碼",
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
         '无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试': '無法找到最新版谷歌瀏覽器!如沒有下載或不是最新版請檢查好再次嘗試',
         '是否有谷歌浏览器?': '是否有谷歌瀏覽器?',
@@ -536,9 +539,11 @@ class I18n:
         "休眠": "休眠",
         "结束时间: ": "結束時間: ",
         "在线": "線上",
+        "验证超时 请重新打开本脚本重试": "驗證超時 請重新打開本腳本重試",
     }
 
     esESI18n = {
+        "请前往浏览器手动解决验证码": "Por favor, resuelve el captcha manualmente en el navegador.",
         "无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试": "No se pudo encontrar la última versión de Google Chrome. Por favor, verifica si se ha descargado Chrome o si tienes la última versión.",
         "是否有谷歌浏览器?": "¿Está instalado Google Chrome?",
         "是否打开着谷歌浏览器?请关闭后再次尝试": "¿Está Google Chrome abierto? Por favor, ciérrelo e inténtelo de nuevo.",
@@ -804,6 +809,7 @@ class I18n:
         "测试通知成功": "Prueba de notificación exitosa.",
         "检查是否手动关闭或电脑运存不足": "Verifica si lo has cerrado manualmente o si hay falta de memoria en la computadora.",
         "钉钉": "DingTalk",
+        "验证超时 请重新打开本脚本重试": "Tiempo de verificación agotado. Vuelve a abrir este script e inténtalo de nuevo.",
     }
 
     def install(self, lang):
