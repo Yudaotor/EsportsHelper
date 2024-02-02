@@ -93,8 +93,13 @@ class Match:
                 stats.status = _("检查中", color="green")
                 self.log.info(_log("开始检查..."))
                 if checkNextMatch():
-                    self.nextMatchHour = int(stats.nextMatch.split("|")[1].split(' ')[1].split(":")[0])
-                    self.nextMatchDay = int(stats.nextMatch.split("|")[1].split(' ')[0].split("-")[1])
+                    try:
+                        self.nextMatchHour = int(stats.nextMatch.split("|")[1].split(' ')[1].split(":")[0])
+                        self.nextMatchDay = int(stats.nextMatch.split("|")[1].split(' ')[0].split("-")[1])
+                    except IndexError:
+                        self.nextMatchHour = None
+                        self.nextMatchDay = None
+                        stats.nextMatch = "暂无" + "|" + "暂无"
                 else:
                     self.nextMatchDay = None
                     self.checkNextMatch()
