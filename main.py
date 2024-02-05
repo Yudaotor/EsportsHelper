@@ -32,19 +32,24 @@ def initWebdriver():
     # Generate webdriver
     try:
         driver = Webdriver().createWebdriver()
+    except FileNotFoundError:
+        driver = None
+        log.error(formatExc(format_exc()))
+        print(_("该目录下文件查找失败!请检查路径", color="red"))
+        input(_log("按回车键退出"))
+        sysQuit(driver)
     except TypeError:
         driver = None
         log.error(formatExc(format_exc()))
-        print(_("生成WEBDRIVER失败!", color="red"))
         print(_("无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试", color="red"))
         print(_("或可以尝试用管理员方式打开", color="red"))
         print(_("如果还不行请尝试重装谷歌浏览器", color="red"))
+        print(_("或者在配置文件中指定Chrome路径或是使用便携版Chrome并指定路径", color="red"))
         input(_log("按回车键退出"))
         sysQuit(driver)
     except WebDriverException:
         driver = None
         log.error(formatExc(format_exc()))
-        print(_("生成WEBDRIVER失败!", color="red"))
         print(_("是否有谷歌浏览器?", color="red"))
         print(_("是否打开着谷歌浏览器?请关闭后再次尝试", color="red"))
         print(_("如果还不行请尝试重装谷歌浏览器", color="red"))
@@ -53,7 +58,6 @@ def initWebdriver():
     except Exception:
         driver = None
         log.error(formatExc(format_exc()))
-        print(_("生成WEBDRIVER失败!", color="red"))
         print(_("是否有谷歌浏览器?", color="red"))
         print(_("是不是网络问题?请检查VPN节点是否可用", color="red"))
         print(_("如果还不行请尝试重装谷歌浏览器", color="red"))

@@ -8,6 +8,8 @@ class I18n:
         self.language = lang
 
     enUSI18n = {
+        "或者在配置文件中指定Chrome路径或是使用便携版Chrome并指定路径": "Or specify the Chrome path in the configuration file or use the portable version of Chrome and specify the path",
+        "该目录下文件查找失败!请检查路径": "File not found in this directory! Please check the path",
         "请前往浏览器手动解决验证码": "Please solve the captcha manually in the browser",
         "无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试": "The latest version of Google Chrome is not found.\nPlease check if Chrome downloaded or has the latest version.",
         "是否有谷歌浏览器?": "Is Google Chrome installed?",
@@ -278,6 +280,7 @@ class I18n:
     }
 
     zhTWI18n = {
+        "该目录下文件查找失败!请检查路径": "該目錄下文件查找失敗!請檢查路徑",
         "请前往浏览器手动解决验证码": "請前往瀏覽器手動解決驗證碼",
         "生成WEBDRIVER失败!": "生成WEBDRIVER失敗!",
         '无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试': '無法找到最新版谷歌瀏覽器!如沒有下載或不是最新版請檢查好再次嘗試',
@@ -540,9 +543,12 @@ class I18n:
         "结束时间: ": "結束時間: ",
         "在线": "線上",
         "验证超时 请重新打开本脚本重试": "驗證超時 請重新打開本腳本重試",
+        "或者在配置文件中指定Chrome路径或是使用便携版Chrome并指定路径": "或者在配置文件中指定Chrome路径或是使用便携版Chrome并指定路径",
     }
 
     esESI18n = {
+        "或者在配置文件中指定Chrome路径或是使用便携版Chrome并指定路径": "o especificar la ruta de Chrome en el archivo de configuración o usar la versión portátil de Chrome y especificar la ruta",
+        '该目录下文件查找失败!请检查路径': '¡Error al buscar archivos en el directorio! Verifica la ruta.',
         "请前往浏览器手动解决验证码": "Por favor, resuelve el captcha manualmente en el navegador.",
         "无法找到最新版谷歌浏览器!如没有下载或不是最新版请检查好再次尝试": "No se pudo encontrar la última versión de Google Chrome. Por favor, verifica si se ha descargado Chrome o si tienes la última versión.",
         "是否有谷歌浏览器?": "¿Está instalado Google Chrome?",
