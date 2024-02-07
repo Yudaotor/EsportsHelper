@@ -74,6 +74,9 @@ class LoginHandler:
             except TimeoutException:
                 self.log.info(_log("请前往浏览器手动解决验证码"))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('请前往浏览器手动解决验证码', 'yellow')}")
+                if config.headless:
+                    self.log.info(_log("请配置userDataDir来实现跳过验证码, 具体请查看github的wiki教程"))
+                    stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('请配置userDataDir来实现跳过验证码, 具体请查看github的wiki教程', 'yellow')}")
                 try:
                     WebDriverWait(self.driver, 110).until(ec.presence_of_element_located(
                         (By.CSS_SELECTOR, "div.riotbar-summoner-name")))
@@ -82,7 +85,7 @@ class LoginHandler:
                     self.log.error(_log("验证超时 请重新打开本脚本重试"))
                     stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('验证超时 请重新打开本脚本重试', 'red')}")
                     self.log.error(formatExc(format_exc()))
-                    raise TimeoutException
+                    return False
                 return True
             self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "div.riotbar-summoner-name")))
@@ -90,14 +93,29 @@ class LoginHandler:
         except TimeoutException:
             Utils().debugScreen(self.driver, "LoginHandler")
             wait = WebDriverWait(self.driver, 7)
-            errorInfo = wait.until(ec.presence_of_element_located(
-                (By.CSS_SELECTOR, "span.status-message.text__web-error > a")))
+            try:
+                blockInfo = wait.until(ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, "h1[data-translate=block_headline]")))
+                if blockInfo.text == "Sorry, you have been blocked":
+                    self.log.error(_log("当前网络环境被封锁,请更换网络环境"))
+                    stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('当前网络环境被封锁,请更换网络环境', 'red')}")
+                    self.log.error(formatExc(format_exc()))
+                    return False
+                errorInfo = wait.until(ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, "span.status-message.text__web-error > a")))
+            except TimeoutException:
+                self.log.error(_log("登录超时,检查网络或窗口是否被覆盖"))
+                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('登录超时,检查网络或窗口是否被覆盖', 'red')}")
+                self.log.error(formatExc(format_exc()))
+                return False
+
             if errorInfo.text == "can't sign in":
                 self.log.error(_log("登录失败,检查账号密码是否正确"))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('登录失败,检查账号密码是否正确', 'red')}")
             else:
                 self.log.error(_log("登录超时,检查网络或窗口是否被覆盖"))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('登录超时,检查网络或窗口是否被覆盖', 'red')}")
+            self.log.error(_log("登录失败"))
             self.log.error(formatExc(format_exc()))
             return False
 
