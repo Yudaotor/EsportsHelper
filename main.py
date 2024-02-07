@@ -5,6 +5,7 @@ from threading import Lock
 from EsportsHelper.Config import config
 from EsportsHelper.GUIThread import GUIThread
 from EsportsHelper.I18n import i18n
+from EsportsHelper.LiveDataProvider import fetchWatchRegions
 from EsportsHelper.Logger import log
 from EsportsHelper.LoginHandler import LoginHandler
 from EsportsHelper.Match import Match
@@ -71,6 +72,12 @@ def initWebdriver():
 def switchLanguage():
     # Open lolesports page
     try:
+        watchRegion = fetchWatchRegions()
+        if watchRegion != "ERROR":
+            stats.watchRegion = watchRegion
+        else:
+            stats.watchRegion = _log("未知")
+        log.info(f"{_log('观看属地')} {stats.watchRegion}")
         getLolesportsWeb(driver)
     except Exception:
         log.error(

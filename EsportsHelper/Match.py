@@ -8,7 +8,7 @@ from traceback import format_exc
 from retrying import retry
 
 from EsportsHelper.League import League
-from EsportsHelper.LiveDataProvider import fetchLiveMatches, checkNextMatch
+from EsportsHelper.LiveDataProvider import fetchLiveMatches, checkNextMatch, fetchWatchRegions
 from EsportsHelper.Logger import log
 from EsportsHelper.Config import config
 from EsportsHelper.Rewards import Rewards
@@ -86,6 +86,12 @@ class Match:
                 stats.banner.append(_('结束时间: ', color='green') + time.strftime('%H:%M', time.localtime(endTimePoint)))
 
             while config.maxRunHours < 0 or time.time() < endTimePoint:
+                watchRegion = fetchWatchRegions()
+                if watchRegion != "ERROR":
+                    stats.watchRegion = watchRegion
+                else:
+                    stats.watchRegion = _log("未知")
+                log.info(f"{_log('观看属地')} {stats.watchRegion}")
                 sleep(1)
                 self.driver.switch_to.window(self.mainWindow)
                 stats.lastCheckTime = "[cyan]" + datetime.now().strftime('%H:%M:%S') + "[/cyan]"

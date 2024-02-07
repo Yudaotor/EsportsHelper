@@ -145,6 +145,7 @@ class GUIThread(Thread):
                     sleepPeriodInfo = getSleepPeriodInfo()
                     if config.mode == "safe":
                         modeInfo = _("安全模式: ", "bold yellow") + "ON"
+                    watchRegion = stats.watchRegion
                     layout["upper"]["banner"]["time"].update(Panel(" ".join(stats.banner),
                                                                    style="bold yellow", title_align="left",
                                                                    title=_('电竞助手', color="bold blue") + str(config.version) + " " + sleepPeriodInfo + " " + sleepInfo,
@@ -153,7 +154,7 @@ class GUIThread(Thread):
                                                           title_align="left", style="bold yellow"))
                     layout["lower"]["live2"].update(Panel("\n".join(liveInfo2), style="bold yellow", title_align="left", title=modeInfo,
                                                           subtitle=_("请我喝一杯咖啡", "bold cyan") + ":https://github.com/Yudaotor", subtitle_align="right"))
-                    layout["lower"]["info1"].update(Panel("\n".join(info1), title=_("简略日志", "bold yellow"), title_align="left", style="bold yellow"))
+                    layout["lower"]["info1"].update(Panel("\n".join(info1), subtitle=_("观看属地", "bold yellow") + ":" + watchRegion, subtitle_align="right", title=_("简略日志", "bold yellow"), title_align="left", style="bold yellow"))
                     layout["lower"]["info2"].update(
                         Panel("\n".join(info2), subtitle=_("(详细请见log文件)", "bold yellow"), subtitle_align="right", style="bold yellow", title_align="right",
                               title=_("代挂:闲鱼搜Khalilc", "bold yellow")))

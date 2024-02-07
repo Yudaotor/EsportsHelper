@@ -21,6 +21,7 @@ class Stats:
         self.banner = []
         self.sessionDropsDict = {}
         self.nextMatch = ""
+        self.watchRegion = ""
 
 
 stats = Stats()
