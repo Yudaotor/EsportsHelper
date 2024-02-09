@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  # Last Update: 29/01/2024
+  # Last Update: 08/02/2024 (2.3.2)
   esportshelper:
     image: redr00t/esportshelper:latest
     container_name: esportshelper
