@@ -164,11 +164,10 @@ class GUIThread(Thread):
                     layout["lower"]["info1"].update(Panel("\n".join(info1), subtitle=_("观看属地", "bold yellow") + ":" + watchRegion, subtitle_align="right", title=_("简略日志", "bold yellow"), title_align="left", style="bold yellow"))
                     layout["lower"]["info2"].update(
                         Panel("\n".join(info2), subtitle=_("(详细请见log文件)", "bold yellow"), subtitle_align="right", style="bold yellow", title_align="right",
-                              title=_("代挂:闲鱼搜Khalilc", "bold yellow")))
+                              title=_("代挂:闲鱼店铺搜Khalilc", "bold yellow")))
                     sleep(1)
                     self.locks["refreshLock"].acquire()
-                    if is_dockerized:
-                        console.clear()
+                    console.clear()
                     live.refresh()
                     if self.locks["refreshLock"].locked():
                         self.locks["refreshLock"].release()
