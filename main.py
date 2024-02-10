@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from time import sleep
 from traceback import format_exc
@@ -33,10 +34,22 @@ def initWebdriver():
     # Generate webdriver
     try:
         driver = Webdriver().createWebdriver()
+    except ConnectionError:
+        driver = None
+        log.error(formatExc(format_exc()))
+        print(_("网络连接失败!请检查网络", color="red"))
+        input(_log("按回车键退出"))
+        sysQuit(driver)
     except FileNotFoundError:
         driver = None
         log.error(formatExc(format_exc()))
         print(_("该目录下文件查找失败!请检查路径", color="red"))
+        input(_log("按回车键退出"))
+        sysQuit(driver)
+    except json.decoder.JSONDecodeError:
+        driver = None
+        log.error(formatExc(format_exc()))
+        print(_("出现异常 请尝试手动打开Chrome并关闭后重试脚本", color="red"))
         input(_log("按回车键退出"))
         sysQuit(driver)
     except TypeError:
