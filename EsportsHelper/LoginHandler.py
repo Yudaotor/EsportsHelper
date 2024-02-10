@@ -154,10 +154,21 @@ class LoginHandler:
                 (By.CSS_SELECTOR, "a[data-riotbar-link-id=login]")))
             self.driver.execute_script("arguments[0].click();", loginButton)
             try:
+                blockInfo = WebDriverWait(self.driver, 7).until(ec.presence_of_element_located(
+                    (By.CSS_SELECTOR, "h1[data-translate=block_headline]")))
+                if blockInfo.text == "Sorry, you have been blocked":
+                    self.log.error(_log("当前网络环境被封锁,请更换网络环境"))
+                    stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('当前网络环境被封锁,请更换网络环境', 'red')}")
+                    sleep(4)
+                    sysQuit(self.driver, _log("当前网络环境被封锁,请更换网络环境"))
+            except TimeoutException:
+                pass
+            try:
                 WebDriverWait(self.driver, 7).until(ec.presence_of_element_located(
                     (By.CSS_SELECTOR, "input[name=username]")))
                 self.log.error(_log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试', 'red')}")
+                sleep(4)
                 sysQuit(self.driver, _log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
             except Exception:
                 pass
@@ -169,4 +180,5 @@ class LoginHandler:
             self.log.error(_log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试', 'red')}")
             self.log.error(formatExc(format_exc()))
+            sleep(4)
             sysQuit(self.driver, _log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
