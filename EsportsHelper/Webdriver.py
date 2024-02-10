@@ -58,8 +58,6 @@ class Webdriver:
                     chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
                     driverPath = chromeDriverManager.install()
             elif self.config.platForm == "windows":
-                customPath = ".\\driver"
-                chromeDriverManager = ChromeDriverManager(cache_manager=DriverCacheManager(customPath))
                 driverPath = chromeDriverManager.install()
             else:
                 self.log.error(_("不支持的操作系统"))

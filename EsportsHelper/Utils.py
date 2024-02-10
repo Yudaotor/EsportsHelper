@@ -526,7 +526,6 @@ def acceptCookies(driver):
         log.info(_log("接受cookies"))
         return True
     except TimeoutException:
-        log.info(_log("未找到cookies按钮(正常情况)"))
         return True
     except Exception:
         log.error(_log("接受cookies失败"))
