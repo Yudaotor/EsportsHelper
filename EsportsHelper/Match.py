@@ -377,13 +377,13 @@ class Match:
                 for element in matchElements:
                     matches.append(element.get_attribute("href"))
             self.log.error(_log("WEB 获取比赛列表成功"))
-            inInfo = False
-            for info in stats.info:
-                if _("WEB 获取比赛列表成功", color="green") in info:
-                    inInfo = True
-                    break
-            if not inInfo:
-                stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " + _("WEB 获取比赛列表成功", color="green"))
+            # inInfo = False
+            # for info in stats.info:
+            #     if _("WEB 获取比赛列表成功", color="green") in info:
+            #         inInfo = True
+            #         break
+            # if not inInfo:
+            #     stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} " + _("WEB 获取比赛列表成功", color="green"))
             return matches
         except Exception:
             self.log.error("WEB " + _log("获取比赛列表失败"))
@@ -725,7 +725,7 @@ class Match:
                                   f"{month}{day} " \
                                   f"{timeTrans(nextMatchTime + nextMatchAMOrPM)}"
             self.log.info(_log("WEB 获取下一场比赛时间成功"))
-            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('WEB 获取下一场比赛时间成功', color='green')}")
+            # stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('WEB 获取下一场比赛时间成功', color='green')}")
         except Exception:
             self.utils.debugScreen(self.driver, "nextMatch")
             self.log.error("WEB " + _log("获取下一场比赛时间失败"))

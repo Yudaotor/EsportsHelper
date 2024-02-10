@@ -156,9 +156,9 @@ class LoginHandler:
             try:
                 WebDriverWait(self.driver, 7).until(ec.presence_of_element_located(
                     (By.CSS_SELECTOR, "input[name=username]")))
-                self.log.error(_log("免密登录失败,请去浏览器手动登录后再行尝试"))
+                self.log.error(_log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试', 'red')}")
-                sysQuit(self.driver, _log("免密登录失败,请去浏览器手动登录后再行尝试"))
+                sysQuit(self.driver, _log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
             except Exception:
                 pass
         except TimeoutException:
@@ -166,7 +166,7 @@ class LoginHandler:
             if self.driver.find_element(By.CSS_SELECTOR, "div.riotbar-summoner-name"):
                 return
             stats.status = _("登录失败", color="red")
-            self.log.error(_log("免密登录失败,请去浏览器手动登录后再行尝试"))
-            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('免密登录失败,请去浏览器手动登录后再行尝试', 'red')}")
+            self.log.error(_log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
+            stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试', 'red')}")
             self.log.error(formatExc(format_exc()))
-            sysQuit(self.driver, _log("免密登录失败,请去浏览器手动登录后再行尝试"))
+            sysQuit(self.driver, _log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
