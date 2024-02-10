@@ -40,6 +40,9 @@ def fetchWatchRegions():
     """
     try:
         res = client.get("https://authenticate.riotgames.com/api/v1/login")
+        if res.status_code != 200:
+            log.error(_log("获取观看地区失败"))
+            return "ERROR"
         resJson = res.json()
         country = resJson["country"]
         country_names = {

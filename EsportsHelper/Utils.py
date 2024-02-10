@@ -475,7 +475,7 @@ def checkRewardPage(driver):
         - None if the reward page does not exist.
         - Returns without any value if the reward page exists.
     """
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 40)
     try:
         wait.until(ec.presence_of_element_located(
             (By.CSS_SELECTOR, "div.name")))
