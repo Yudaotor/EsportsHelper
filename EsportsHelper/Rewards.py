@@ -677,14 +677,14 @@ class Rewards:
                                     sleep(1)
                                 self.isNotified[dropRegionNow] = self.isNotified.get(dropRegionNow, 0) + dropsNeedNotify
                         totalDropsNumber = totalDropsNumber + dropNumberNow
-                    stats.totalWatchHours = totalWatchHours
+                    stats.sessionWatchHours = str(int(totalWatchHours) - int(stats.totalWatchHours))
                     return totalDropsNumber, dropNumberInfo
                 except Exception:
                     self.utils.debugScreen(self.driver, "countDrops")
                     stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('统计掉落失败', 'red')}")
                     self.log.error(_log("统计掉落失败"))
                     self.log.error(formatExc(format_exc()))
-                    stats.totalWatchHours = -1
+                    stats.sessionWatchHours = -1
                     return -1, ""
 
             # First run
@@ -731,7 +731,7 @@ class Rewards:
                     return -1, ""
         else:
             stats.historyDrops = -1
-            stats.totalWatchHours = -1
+            stats.sessionWatchHours = -1
             return -1, ""
 
     def getRewardPage(self, newTab=False):

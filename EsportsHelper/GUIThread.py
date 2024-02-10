@@ -48,13 +48,20 @@ class GUIThread(Thread):
 
         liveRegions = getLiveRegionsInfo()
         nextMatchTime = getNextMatchTimeInfo()
-
+        if stats.sessionDrops > 0:
+            dropNumber = str(stats.historyDrops) + "+" + str(stats.sessionDrops)
+        else:
+            dropNumber = str(stats.historyDrops)
+        if int(stats.sessionWatchHours) > 0:
+            watchHours = str(stats.totalWatchHours) + "+" + str(stats.sessionWatchHours)
+        else:
+            watchHours = str(stats.totalWatchHours)
         table.add_row(
             f"[bold cyan]{str(config.nickName)}[/bold cyan]",
             str(stats.status),
             str(liveRegions),
-            f"[cyan]{str(stats.historyDrops + stats.sessionDrops)}[/cyan]",
-            f"[cyan]{str(stats.totalWatchHours)}[/cyan]",
+            f"[cyan]{dropNumber}[/cyan]",
+            f"[cyan]{watchHours}[/cyan]",
             str(stats.lastCheckTime),
             str(stats.nextCheckTime),
             str(nextMatchTime)

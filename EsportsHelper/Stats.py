@@ -9,6 +9,7 @@ class Stats:
     def __init__(self):
         self.historyDrops = 0
         self.totalWatchHours = 0
+        self.sessionWatchHours = 0
         self.todayDrops = 0
         self.dropsDict = {}
         self.sessionDrops = 0
