@@ -23,6 +23,39 @@ client = cloudscraper.create_scraper(
 client.get("https://lolesports.com/&lang=en")
 
 
+def fetchLeaguesId():
+    """
+    Fetch the IDs and names of leagues.
+
+    This function sends a request to fetch the IDs and names of leagues from a specific API endpoint. It then stores
+    the league IDs and names in a dictionary for later reference.
+
+    Returns:
+    bool: True if fetching league IDs and names is successful, False otherwise.
+
+    """
+    try:
+        headers = {"x-api-key": "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z"}
+        res = client.get("https://esports-api.lolesports.com/persisted/gw/getLeagues?hl=en-US", headers=headers)
+        if res.status_code != 200:
+            log.error(_log("获取赛区ID失败"))
+            log.error(res)
+            return False
+        resJson = res.json()
+        leagues = resJson["data"]["leagues"]
+        res.close()
+        leaguesById = {}
+        for league in leagues:
+            leaguesById[league["id"]] = league["name"]
+        stats.leaguesIdDict = leaguesById
+        log.info(_log("获取赛区ID成功"))
+        return True
+    except Exception:
+        log.error(_log("获取赛区ID失败"))
+        log.error(formatExc(format_exc()))
+        return False
+
+
 def fetchWatchRegions():
     """
     Fetches the watch regions based on the country code obtained from Riot Games authentication API.

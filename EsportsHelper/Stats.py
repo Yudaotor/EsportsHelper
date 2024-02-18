@@ -1,3 +1,4 @@
+from datetime import datetime
 
 from EsportsHelper.I18n import i18n
 
@@ -7,12 +8,13 @@ _log = i18n.getLog
 
 class Stats:
     def __init__(self):
-        self.historyDrops = 0
-        self.totalWatchHours = 0
-        self.sessionWatchHours = 0
+        self.initDropsList = [" "]
+        self.currentDropsList = [" "]
+        self.initWatchHour = "-1"
+        self.currentWatchHour = "-1"
+        self.leaguesIdDict = {}
+        self.lastDropCheckTime = int(datetime.now().timestamp() * 1e3)
         self.todayDrops = 0
-        self.dropsDict = {}
-        self.sessionDrops = 0
         self.liveRegions = []
         self.lives = []
         self.lastCheckTime = ""

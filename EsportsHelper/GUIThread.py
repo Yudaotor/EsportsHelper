@@ -23,50 +23,55 @@ _ = i18n.getText
 _log = i18n.getLog
 
 
+def setAccountTable(frameCount):
+    table = Table(expand=True)
+    table.style = Style(color="yellow", bold=True)
+    spinnerDots = Spinner("dots")
+    status = _("状态", color="bold yellow") + spinnerDots.frames[frameCount % len(spinnerDots.frames)]
+
+    statusPhrases = [_log("检查中"), _log("登录中"), _log("初始化")]
+    table.add_column(_("昵称", color="bold yellow"), justify="center")
+    if any(phrase in stats.status for phrase in statusPhrases):
+        table.add_column(status, justify="center")
+    else:
+        table.add_column(_("状态", color="bold yellow"), justify="center")
+    table.add_column(_("直播赛区", color="bold yellow"), justify="center")
+    table.add_column(_("总掉落", color="bold yellow"), justify="center")
+    table.add_column(_("总时长", color="bold yellow"), justify="center")
+    table.add_column(_("上次检测", color="bold yellow"), justify="center")
+    table.add_column(_("下次检测", color="bold yellow"), justify="center")
+    table.add_column(_("下场比赛", color="bold yellow"), justify="center")
+
+    liveRegions = getLiveRegionsInfo()
+    nextMatchTime = getNextMatchTimeInfo()
+
+    currentDropsNumber = len(stats.currentDropsList) if stats.currentDropsList != [" "] else 0
+    initDropsNumber = len(stats.initDropsList) if stats.initDropsList != [" "] else 0
+
+    dropNumber = f"{initDropsNumber}+{currentDropsNumber - initDropsNumber}" if currentDropsNumber - initDropsNumber > 0 else str(initDropsNumber)
+    watchHours = f"{stats.initWatchHour}+{round(float(stats.currentWatchHour) - float(stats.initWatchHour), 2)}" if float(stats.currentWatchHour) - float(
+        stats.initWatchHour) > 0 else str(stats.initWatchHour)
+    if watchHours < "0":
+        watchHours = "0"
+
+    table.add_row(
+        f"[bold cyan]{config.nickName}[/bold cyan]",
+        str(stats.status),
+        str(liveRegions),
+        f"[cyan]{dropNumber}[/cyan]",
+        f"[cyan]{watchHours}[/cyan]",
+        str(stats.lastCheckTime),
+        str(stats.nextCheckTime),
+        str(nextMatchTime)
+    )
+    return table
+
+
 class GUIThread(Thread):
 
     def __init__(self, locks):
         super().__init__()
         self.locks = locks
-
-    def setAccountTable(self, frameCount):
-        table = Table(expand=True)
-        table.style = Style(color="yellow", bold=True)
-        spinnerDots = Spinner("dots")
-        status = _("状态", color="bold yellow")
-        statusPhrases = [_log("检查中"), _log("登录中"), _log("初始化")]
-        if any(phrase in stats.status for phrase in statusPhrases):
-            status = _("状态", color="bold yellow") + spinnerDots.frames[frameCount % len(spinnerDots.frames)]
-        table.add_column(_("昵称", color="bold yellow"), justify="center")
-        table.add_column(status, justify="center")
-        table.add_column(_("直播赛区", color="bold yellow"), justify="center")
-        table.add_column(_("总掉落", color="bold yellow"), justify="center")
-        table.add_column(_("总时长", color="bold yellow"), justify="center")
-        table.add_column(_("上次检测", color="bold yellow"), justify="center")
-        table.add_column(_("下次检测", color="bold yellow"), justify="center")
-        table.add_column(_("下场比赛", color="bold yellow"), justify="center")
-
-        liveRegions = getLiveRegionsInfo()
-        nextMatchTime = getNextMatchTimeInfo()
-        if stats.sessionDrops > 0:
-            dropNumber = str(stats.historyDrops) + "+" + str(stats.sessionDrops)
-        else:
-            dropNumber = str(stats.historyDrops)
-        if int(stats.sessionWatchHours) > 0:
-            watchHours = str(stats.totalWatchHours) + "+" + str(stats.sessionWatchHours)
-        else:
-            watchHours = str(stats.totalWatchHours)
-        table.add_row(
-            f"[bold cyan]{str(config.nickName)}[/bold cyan]",
-            str(stats.status),
-            str(liveRegions),
-            f"[cyan]{dropNumber}[/cyan]",
-            f"[cyan]{watchHours}[/cyan]",
-            str(stats.lastCheckTime),
-            str(stats.nextCheckTime),
-            str(nextMatchTime)
-        )
-        return table
 
     def run(self):
         try:
@@ -78,7 +83,7 @@ class GUIThread(Thread):
             )
             layout["upper"].split(
                 Layout(name="banner"),
-                Layout(name="table", renderable=self.setAccountTable(0))
+                Layout(name="table", renderable=setAccountTable(0))
             )
 
             is_dockerized = config.isDockerized
@@ -86,14 +91,15 @@ class GUIThread(Thread):
             configInfo = getConfigInfo()
             webhookInfo = getWebhookInfo()
             sleepPeriodInfo = getSleepPeriodInfo()
+            todayDropsInfo = _("今日掉宝", "bold yellow") + f":{stats.todayDrops}"
             layout["upper"]["banner"].split_row(
                 Layout(name="time", renderable=Panel(" ".join(stats.banner),
                                                      style="bold yellow", title_align="left",
                                                      title=_('电竞助手', color="bold blue") + str(config.version) + " " + sleepPeriodInfo,
                                                      subtitle_align="right", subtitle=configInfo)),
                 Layout(name="drop", renderable=Panel(dropInfo,
-                                                     title=_('掉宝', color="bold yellow") + f"({_('今日', color='bold yellow')})" + f"-->{stats.sessionDrops}({stats.todayDrops})",
-                                                     title_align="left", style="bold yellow", subtitle=webhookInfo, subtitle_align="right"))
+                                                     title=_('运行期间掉宝', color="bold yellow"),
+                                                     title_align="left", style="bold yellow", subtitle=webhookInfo + " 一 " + todayDropsInfo, subtitle_align="right"))
             )
 
             info1, info2 = getInfo()
@@ -133,11 +139,11 @@ class GUIThread(Thread):
                             drops += f"{key}: {stats.sessionDropsDict.get(key)}\t"
                     dropInfo = drops if drops else _("暂无掉落", "bold yellow")
                     webhookInfo = getWebhookInfo()
-                    layout["upper"]["banner"]["drop"].update(Panel(dropInfo,
-                                                                   title=_('掉宝',
-                                                                           color="bold yellow") + f"({_('今日', color='bold yellow')})" + f"-->{stats.sessionDrops}({stats.todayDrops})",
-                                                                   title_align="left", style="bold yellow", subtitle=webhookInfo, subtitle_align="right"))
-                    layout["upper"]["table"].update(self.setAccountTable(frameCount))
+                    sessionDropNumber = len(stats.currentDropsList) - len(stats.initDropsList)
+                    Layout(name="drop", renderable=Panel(dropInfo,
+                                                         title=_('运行期间掉宝', color="bold yellow"),
+                                                         title_align="left", style="bold yellow", subtitle=webhookInfo + "      " + todayDropsInfo, subtitle_align="right"))
+                    layout["upper"]["table"].update(setAccountTable(frameCount))
 
                     cleanBriefInfo()
                     width = (console.width - 8) // 2
@@ -173,5 +179,7 @@ class GUIThread(Thread):
                         self.locks["refreshLock"].release()
         except Exception:
             log.error(_log("GUI线程异常"))
+            print(_("GUI线程异常", "red"))
+            print(_("GUI线程异常", "red"))
             print(_("GUI线程异常", "red"))
             log.error(formatExc(format_exc()))
