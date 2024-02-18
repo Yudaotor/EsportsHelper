@@ -8,19 +8,54 @@ from EsportsHelper.Logger import log
 from EsportsHelper.Config import config
 from EsportsHelper.I18n import i18n
 from EsportsHelper.Stats import stats
-from EsportsHelper.Utils import formatExc
+from EsportsHelper.Utils import formatExc, debugScreen
 
 _ = i18n.getText
 _log = i18n.getLog
 
 
+def playStream(playButton) -> None:
+    """
+    Clicks on the play button of a stream.
+
+    Args:
+        playButton: WebElement - The WebElement corresponding to the play button of the stream.
+
+    Returns:
+        None
+    """
+    try:
+        playButton.click()
+        log.info(_log("Twitch: 解除暂停成功"))
+    except Exception:
+        log.error(_log("Twitch: 解除暂停失败"))
+        log.error(formatExc(format_exc()))
+
+
+def unmuteStream(muteButton) -> None:
+    """
+    Unmute the stream by clicking the given mute button. If the click fails,
+    executes a JavaScript click to try again. Also prints a message to the console
+    and logs the action to the application log.
+
+    Args:
+        muteButton (WebElement): The mute button element to click.
+
+    Returns:
+        None
+    """
+    try:
+        muteButton.click()
+        log.info(_log("Twitch: 解除静音成功"))
+    except Exception:
+        log.error(_log("Twitch: 解除静音失败"))
+        log.error(formatExc(format_exc()))
+
+
 class Twitch:
-    def __init__(self, driver, utils) -> None:
+    def __init__(self, driver) -> None:
         self.driver = driver
-        self.log = log
         self.wait = WebDriverWait(self.driver, 25)
-        self.config = config
-        self.utils = utils
 
     def setTwitchQuality(self) -> bool:
         """
@@ -48,9 +83,9 @@ class Twitch:
             self.driver.switch_to.default_content()
             return True
         except Exception:
-            self.log.error(_log("Twitch: 设置清晰度发生错误"))
-            self.log.error(formatExc(format_exc()))
-            self.utils.debugScreen(self.driver, lint="setTwitchQuality")
+            log.error(_log("Twitch: 设置清晰度发生错误"))
+            log.error(formatExc(format_exc()))
+            debugScreen(self.driver, lint="setTwitchQuality")
         self.driver.switch_to.default_content()
         return False
 
@@ -61,7 +96,7 @@ class Twitch:
         Returns:
             bool: True if the stream is active and playable, False otherwise.
         """
-        if self.config.closeStream:
+        if config.closeStream:
             return True
         try:
             self.wait.until(ec.frame_to_be_available_and_switch_to_it(
@@ -70,7 +105,7 @@ class Twitch:
             sleep(2)
             errorInfo = self.driver.find_elements(By.CSS_SELECTOR, "div[data-a-target=player-overlay-content-gate]")
             if len(errorInfo) > 0:
-                self.utils.debugScreen(self.driver, lint="streamError")
+                debugScreen(self.driver, lint="streamError")
                 self.driver.switch_to.default_content()
                 return False
             loading = self.driver.find_elements(By.CSS_SELECTOR, "div.Layout-sc-1xcs6mc-0.MIEJo.player-overlay-background > div")
@@ -84,7 +119,7 @@ class Twitch:
                         sleep(15)
                         loading = self.driver.find_elements(By.CSS_SELECTOR, "div.Layout-sc-1xcs6mc-0.MIEJo.player-overlay-background > div")
                         if len(loading) > 0:
-                            self.utils.debugScreen(self.driver, lint="streamLoading")
+                            debugScreen(self.driver, lint="streamLoading")
                             self.driver.switch_to.default_content()
                             return False
             self.driver.implicitly_wait(15)
@@ -92,19 +127,19 @@ class Twitch:
             muteButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button[data-a-target=player-mute-unmute-button]")))
             if len(isMute) <= 0:
-                self.utils.debugScreen(self.driver, lint="unmute")
-                self.unmuteStream(muteButton)
+                debugScreen(self.driver, lint="unmute")
+                unmuteStream(muteButton)
             playButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button[data-a-target=player-play-pause-button]")))
             if playButton.get_attribute("data-a-player-state") == "paused":
-                self.utils.debugScreen(self.driver, lint="play")
-                self.playStream(playButton)
+                debugScreen(self.driver, lint="play")
+                playStream(playButton)
             self.driver.switch_to.default_content()
             return True
         except Exception:
-            self.log.error(_log("Twitch: 检查直播发生失败"))
-            self.log.error(formatExc(format_exc()))
-            self.utils.debugScreen(self.driver, "rewardFailed")
+            log.error(_log("Twitch: 检查直播发生失败"))
+            log.error(formatExc(format_exc()))
+            debugScreen(self.driver, "rewardFailed")
         self.driver.switch_to.default_content()
         return False
 
@@ -113,7 +148,7 @@ class Twitch:
         Checks the status of the Twitch stream.
         :return:
         """
-        if self.config.closeStream:
+        if config.closeStream:
             return 1
         try:
             self.wait.until(ec.frame_to_be_available_and_switch_to_it(
@@ -121,50 +156,14 @@ class Twitch:
             self.driver.implicitly_wait(5)
             sleep(3)
             if len(self.driver.find_elements(By.CSS_SELECTOR, "span.offline-embeds--stylized-link")) > 0:
-                self.utils.debugScreen(self.driver, "offline")
+                debugScreen(self.driver, "offline")
                 self.driver.switch_to.default_content()
                 return -1
             self.driver.implicitly_wait(15)
             self.driver.switch_to.default_content()
             return 1
         except Exception:
-            self.log.error(_log("Twitch: 检查直播间是否在线失败"))
-            self.log.error(formatExc(format_exc()))
+            log.error(_log("Twitch: 检查直播间是否在线失败"))
+            log.error(formatExc(format_exc()))
         self.driver.switch_to.default_content()
         return 0
-
-    def unmuteStream(self, muteButton) -> None:
-        """
-        Unmute the stream by clicking the given mute button. If the click fails,
-        executes a JavaScript click to try again. Also prints a message to the console
-        and logs the action to the application log.
-
-        Args:
-            muteButton (WebElement): The mute button element to click.
-
-        Returns:
-            None
-        """
-        try:
-            muteButton.click()
-            self.log.info(_log("Twitch: 解除静音成功"))
-        except Exception:
-            self.log.error(_log("Twitch: 解除静音失败"))
-            self.log.error(formatExc(format_exc()))
-
-    def playStream(self, playButton) -> None:
-        """
-        Clicks on the play button of a stream.
-
-        Args:
-            playButton: WebElement - The WebElement corresponding to the play button of the stream.
-
-        Returns:
-            None
-        """
-        try:
-            playButton.click()
-            self.log.info(_log("Twitch: 解除暂停成功"))
-        except Exception:
-            self.log.error(_log("Twitch: 解除暂停失败"))
-            self.log.error(formatExc(format_exc()))

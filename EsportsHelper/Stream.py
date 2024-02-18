@@ -72,18 +72,19 @@ class Stream:
             titleText = f"{_log('标题: ')}{self.title} {status}"
             statusText = f"{_log('状态: ')}{status}"
             definitionText = f"{_log('清晰度: ')}{self.definition}"
+            delimeter = f"{50*'*'}"
 
             if self.status == "online":
                 if self.viewers.isdigit():
                     if self.title != "None":
-                        return f"\n{leagueText} {viewersText} {definitionText}\n{titleText}"
+                        return f"\n{delimeter}\n{leagueText} {viewersText} {definitionText}\n{titleText}\n{delimeter}"
                     else:
-                        return f"\n{leagueText} {viewersText} {definitionText}\n{statusText}"
+                        return f"\n{delimeter}\n{leagueText} {viewersText} {definitionText}\n{statusText}\n{delimeter}"
                 else:
                     if self.title != "None":
-                        return f"\n{leagueText} {definitionText}\n{titleText}"
+                        return f"\n{delimeter}\n{leagueText} {definitionText}\n{titleText}\n{delimeter}"
                     else:
-                        return f"\n{leagueText} {definitionText}\n{statusText}"
+                        return f"\n{delimeter}\n{leagueText} {definitionText}\n{statusText}\n{delimeter}"
             elif self.status == "offline":
                 return f"{self.league} {_log('比赛结束 等待关闭')}"
             elif self.status == "retry":

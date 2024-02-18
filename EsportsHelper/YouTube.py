@@ -8,18 +8,53 @@ from EsportsHelper.Logger import log
 from EsportsHelper.Config import config
 from EsportsHelper.I18n import i18n
 from EsportsHelper.Stats import stats
-from EsportsHelper.Utils import formatExc
+from EsportsHelper.Utils import formatExc, debugScreen
 
 _ = i18n.getText
 _log = i18n.getLog
 
 
+def unmuteStream(muteButton) -> None:
+    """
+    Unmute the stream by clicking the given mute button. If the click fails,
+    executes a JavaScript click to try again. Also prints a message to the console
+    and logs the action to the application log.
+
+    Args:
+        muteButton (WebElement): The mute button element to click.
+
+    Returns:
+        None
+    """
+    try:
+        muteButton.click()
+        log.info(_log("Youtube: 解除静音成功"))
+    except Exception:
+        log.error(_log("Youtube: 解除静音失败"))
+        log.error(formatExc(format_exc()))
+
+
+def playStream(playButton) -> None:
+    """
+    Clicks on the play button of a stream.
+
+    Args:
+        playButton: WebElement - The WebElement corresponding to the play button of the stream.
+
+    Returns:
+        None
+    """
+    try:
+        playButton.click()
+        log.info(_log("Youtube: 解除暂停成功"))
+    except Exception:
+        log.error(_log("Youtube: 解除暂停失败"))
+        log.error(formatExc(format_exc()))
+
+
 class YouTube:
-    def __init__(self, driver, utils) -> None:
+    def __init__(self, driver) -> None:
         self.driver = driver
-        self.log = log
-        self.config = config
-        self.utils = utils
         self.wait = WebDriverWait(self.driver, 20)
 
     def checkYoutubeStream(self) -> bool:
@@ -29,7 +64,7 @@ class YouTube:
         Returns:
             bool: Returns True if the check is successful, otherwise returns False.
         """
-        if self.config.closeStream:
+        if config.closeStream:
             return True
         try:
             self.wait.until(ec.frame_to_be_available_and_switch_to_it(
@@ -38,57 +73,21 @@ class YouTube:
             muteButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button.ytp-mute-button.ytp-button")))
             if muteButton.get_attribute("data-title-no-tooltip") == "Unmute":
-                self.utils.debugScreen(self.driver, lint="Unmute")
-                self.unmuteStream(muteButton)
+                debugScreen(self.driver, lint="Unmute")
+                unmuteStream(muteButton)
             # Play if a video pause is detected
             playButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "button.ytp-play-button.ytp-button")))
             if playButton.get_attribute("data-title-no-tooltip") == "Play":
-                self.utils.debugScreen(self.driver, lint="Play")
-                self.playStream(playButton)
+                debugScreen(self.driver, lint="Play")
+                playStream(playButton)
             self.driver.switch_to.default_content()
             return True
         except Exception:
-            self.log.error(_log("Youtube: 检查直播发生错误"))
-            self.log.error(formatExc(format_exc()))
+            log.error(_log("Youtube: 检查直播发生错误"))
+            log.error(formatExc(format_exc()))
             self.driver.switch_to.default_content()
             return False
-
-    def playStream(self, playButton) -> None:
-        """
-        Clicks on the play button of a stream.
-
-        Args:
-            playButton: WebElement - The WebElement corresponding to the play button of the stream.
-
-        Returns:
-            None
-        """
-        try:
-            playButton.click()
-            self.log.info(_log("Youtube: 解除暂停成功"))
-        except Exception:
-            self.log.error(_log("Youtube: 解除暂停失败"))
-            self.log.error(formatExc(format_exc()))
-
-    def unmuteStream(self, muteButton) -> None:
-        """
-        Unmute the stream by clicking the given mute button. If the click fails,
-        executes a JavaScript click to try again. Also prints a message to the console
-        and logs the action to the application log.
-
-        Args:
-            muteButton (WebElement): The mute button element to click.
-
-        Returns:
-            None
-        """
-        try:
-            muteButton.click()
-            self.log.info(_log("Youtube: 解除静音成功"))
-        except Exception:
-            self.log.error(_log("Youtube: 解除静音失败"))
-            self.log.error(formatExc(format_exc()))
 
     def setYoutubeQuality(self) -> bool:
         """
@@ -119,7 +118,7 @@ class YouTube:
             return True
         except Exception:
             self.driver.switch_to.default_content()
-            self.log.error(_log("Youtube: 设置清晰度时发生错误"))
-            self.log.error(formatExc(format_exc()))
-            self.utils.debugScreen(self.driver, lint="youtubeQuality")
+            log.error(_log("Youtube: 设置清晰度时发生错误"))
+            log.error(formatExc(format_exc()))
+            debugScreen(self.driver, lint="youtubeQuality")
             return False

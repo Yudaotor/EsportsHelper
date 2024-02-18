@@ -2,7 +2,6 @@ from traceback import format_exc
 import requests as req
 from EsportsHelper.Config import config
 from rich import print
-from EsportsHelper.Logger import delimiterLine
 from EsportsHelper.Logger import log
 from EsportsHelper.I18n import i18n
 from EsportsHelper.Stats import stats
