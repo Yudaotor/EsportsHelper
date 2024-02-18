@@ -3,6 +3,9 @@ from datetime import datetime
 from time import sleep
 from traceback import format_exc
 from threading import Lock
+
+import requests
+
 from EsportsHelper.Config import config
 from EsportsHelper.GUIThread import GUIThread
 from EsportsHelper.I18n import i18n
@@ -11,10 +14,10 @@ from EsportsHelper.Logger import log
 from EsportsHelper.LoginHandler import LoginHandler
 from EsportsHelper.Match import Match
 from EsportsHelper.Stats import stats
-from EsportsHelper.Utils import Utils, getLolesportsWeb, sysQuit, formatExc, acceptCookies
-from EsportsHelper.Webdriver import Webdriver
+from EsportsHelper.Utils import getLolesportsWeb, sysQuit, formatExc, acceptCookies, info, debugScreen
+from EsportsHelper.Webdriver import createWebdriver
 from rich import print
-from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
@@ -30,11 +33,11 @@ def initWebdriver():
     """
 
     global driver
-
     # Generate webdriver
     try:
-        driver = Webdriver().createWebdriver()
-    except ConnectionError:
+        driver = createWebdriver()
+
+    except requests.exceptions.ConnectionError:
         driver = None
         log.error(formatExc(format_exc()))
         print(_("网络连接失败!请检查网络", color="red"))
@@ -49,7 +52,7 @@ def initWebdriver():
     except json.decoder.JSONDecodeError:
         driver = None
         log.error(formatExc(format_exc()))
-        print(_("出现异常 请尝试手动打开Chrome并关闭后重试脚本", color="red"))
+        print(_("出现异常 请尝试手动打开Chrome并关闭后再次重试脚本", color="red"))
         input(_log("按回车键退出"))
         sysQuit(driver)
     except TypeError:
@@ -59,6 +62,12 @@ def initWebdriver():
         print(_("或可以尝试用管理员方式打开", color="red"))
         print(_("如果还不行请尝试重装谷歌浏览器", color="red"))
         print(_("或者在配置文件中指定Chrome路径或是使用便携版Chrome并指定路径", color="red"))
+        input(_log("按回车键退出"))
+        sysQuit(driver)
+    except MemoryError:
+        driver = None
+        log.error(formatExc(format_exc()))
+        print(_("内存不足!请关闭一些程序后再次尝试", color="red"))
         input(_log("按回车键退出"))
         sysQuit(driver)
     except WebDriverException:
@@ -98,11 +107,11 @@ def switchLanguage():
         log.error(formatExc(format_exc()))
         stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
                           f"{_('无法打开Lolesports网页，网络问题，将于3秒后退出...', color='red')}")
-        Utils().debugScreen(driver, "initWeb")
+        debugScreen(driver, "initWeb")
         sysQuit(driver, _log("无法打开Lolesports网页，网络问题，将于3秒后退出..."))
     # Switch web language to English
     try:
-        wait = WebDriverWait(driver, 20)
+        wait = WebDriverWait(driver, 30)
         languageButton = wait.until(ec.presence_of_element_located(
             (By.CSS_SELECTOR, "[data-testid='riotbar:localeswitcher:button-toggleLocaleMenu']")))
         languageButton.click()
@@ -111,7 +120,7 @@ def switchLanguage():
         enUSButton.click()
         log.info(_log("切换网页语言成功"))
     except Exception:
-        Utils().debugScreen(driver, "language")
+        debugScreen(driver, "language")
         log.error(_log("切换网页语言失败"))
         stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} "
                           f"{_('切换网页语言失败', color='red')}")
@@ -142,8 +151,7 @@ def login(locks):
                         stats.status = _("5秒后开始重试", color="red")
                         sleep(5)
             except Exception:
-                utils = Utils()
-                utils.debugScreen(driver, "login")
+                debugScreen(driver, "login")
                 log.error(formatExc(format_exc()))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('出现异常,登录失败', color='red')}")
                 sysQuit(driver, _log("出现异常,登录失败"))
@@ -171,8 +179,7 @@ def main():
     """
     global driver
     # Print the banner information
-    utils = Utils()
-    utils.info()
+    info()
     openDatetime = datetime.now()
     formattedOpenDatetime = openDatetime.strftime("%Y-%m-%d %H:%M:%S")
     stats.banner.append(f"{_('开始时间: ', color='green')}" + formattedOpenDatetime)
