@@ -5,7 +5,7 @@ from time import sleep
 from traceback import format_exc
 from EsportsHelper.Config import config
 from EsportsHelper.Stats import stats
-from EsportsHelper.Utils import getLolesportsWeb, sysQuit, Utils, formatExc
+from EsportsHelper.Utils import getLolesportsWeb, sysQuit, formatExc, debugScreen
 from rich import print
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
@@ -19,11 +19,9 @@ _log = i18n.getLog
 
 class LoginHandler:
     def __init__(self, driver, locks) -> None:
-        self.log = log
         self.driver = driver
-        self.config = config
         self.wait = WebDriverWait(self.driver, 20)
-        self.quickWait = WebDriverWait(self.driver, 3)
+        self.quickWait = WebDriverWait(self.driver, 8)
         self.locks = locks
 
     def automaticLogIn(self, username: str, password: str) -> bool:
@@ -37,14 +35,14 @@ class LoginHandler:
             try:
                 getLolesportsWeb(self.driver)
             except Exception:
-                self.log.error(_log("无法打开Lolesports网页，网络问题"))
-                self.log.error(formatExc(format_exc()))
+                log.error(_log("无法打开Lolesports网页，网络问题"))
+                log.error(formatExc(format_exc()))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('无法打开Lolesports网页，网络问题', 'red')}")
             sleep(2)
             loginButton = self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "a[data-riotbar-link-id=login]")))
             self.driver.execute_script("arguments[0].click();", loginButton)
-            self.log.info(f'<{self.config.nickName}> {_log("登录中...")}')
+            log.info(f'<{config.nickName}> {_log("登录中...")}')
             stats.status = _("登录中", color="yellow")
             sleep(2)
             usernameInput = self.wait.until(ec.presence_of_element_located(
@@ -63,7 +61,7 @@ class LoginHandler:
                 (By.CSS_SELECTOR, "button[data-testid='btn-signin-submit']")))  # Sometimes the button was not pressed correctly, this is a possible fix
             sleep(1)
             self.driver.execute_script("arguments[0].click();", submitButton)
-            self.log.info(_log("账密 提交成功"))
+            log.info(_log("账密 提交成功"))
             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('账密 提交成功', 'yellow')}")
             sleep(4)
             if len(self.driver.find_elements(by=By.CSS_SELECTOR, value="div.text__web-code")) > 0:
@@ -72,51 +70,53 @@ class LoginHandler:
                 self.quickWait.until(ec.element_to_be_clickable(
                     (By.CSS_SELECTOR, "button[data-testid='btn-signin-submit']")))
             except TimeoutException:
-                self.log.info(_log("请前往浏览器手动解决验证码"))
+                log.info(_log("请前往浏览器手动解决验证码"))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('请前往浏览器手动解决验证码', 'yellow')}")
                 if config.headless:
-                    self.log.info(_log("请配置userDataDir来实现跳过验证码, 具体请查看github的wiki教程"))
-                    stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('请配置userDataDir来实现跳过验证码, 具体请查看github的wiki教程', 'yellow')}")
+                    log.info(_log("headless情况下解决方案一: \n打开任意浏览器,在地址栏输入: chrome://inspect/#devices回车后等待一会,直到界面下方刷新出Remote Target,并点击对应登录界面的inspect,从而唤出调试用的浏览器界面,手动解决验证码后关闭之前弹出的界面即可."))
+                    log.info(_log("解决方案二:\n请配置userDataDir来实现跳过验证码, 具体请查看github的wiki教程"))
+                    stats.info.append(_("headless情况下解决方案一: \n打开任意浏览器,在地址栏输入: chrome://inspect/#devices回车后等待一会,直到界面下方刷新出Remote Target,并点击对应登录界面的inspect,从而唤出调试用的浏览器界面,手动解决验证码后关闭之前弹出的界面即可.", "yellow"))
+                    stats.info.append(_("解决方案二:\n请配置userDataDir来实现跳过验证码, 具体请查看github的wiki教程", "yellow"))
                 try:
                     WebDriverWait(self.driver, 110).until(ec.presence_of_element_located(
                         (By.CSS_SELECTOR, "div.riotbar-summoner-name")))
                 except TimeoutException:
-                    Utils().debugScreen(self.driver, "LoginHandler")
-                    self.log.error(_log("验证超时 请重新打开本脚本重试"))
+                    debugScreen(self.driver, "LoginHandler")
+                    log.error(_log("验证超时 请重新打开本脚本重试"))
                     stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('验证超时 请重新打开本脚本重试', 'red')}")
-                    self.log.error(formatExc(format_exc()))
+                    log.error(formatExc(format_exc()))
                     return False
                 return True
             self.wait.until(ec.presence_of_element_located(
                 (By.CSS_SELECTOR, "div.riotbar-summoner-name")))
             return True
         except TimeoutException:
-            Utils().debugScreen(self.driver, "LoginHandler")
+            debugScreen(self.driver, "LoginHandler")
             wait = WebDriverWait(self.driver, 7)
             try:
                 blockInfo = wait.until(ec.presence_of_element_located(
                     (By.CSS_SELECTOR, "h1[data-translate=block_headline]")))
                 if blockInfo.text == "Sorry, you have been blocked":
-                    self.log.error(_log("当前网络环境被封锁,请更换网络环境"))
+                    log.error(_log("当前网络环境被封锁,请更换网络环境"))
                     stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('当前网络环境被封锁,请更换网络环境', 'red')}")
-                    self.log.error(formatExc(format_exc()))
+                    log.error(formatExc(format_exc()))
                     return False
                 errorInfo = wait.until(ec.presence_of_element_located(
                     (By.CSS_SELECTOR, "span.status-message.text__web-error > a")))
             except TimeoutException:
-                self.log.error(_log("登录超时,检查网络或窗口是否被覆盖"))
+                log.error(_log("登录超时,检查网络或窗口是否被覆盖"))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('登录超时,检查网络或窗口是否被覆盖', 'red')}")
-                self.log.error(formatExc(format_exc()))
+                log.error(formatExc(format_exc()))
                 return False
 
             if errorInfo.text == "can't sign in":
-                self.log.error(_log("登录失败,检查账号密码是否正确"))
+                log.error(_log("登录失败,检查账号密码是否正确"))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('登录失败,检查账号密码是否正确', 'red')}")
             else:
-                self.log.error(_log("登录超时,检查网络或窗口是否被覆盖"))
+                log.error(_log("登录超时,检查网络或窗口是否被覆盖"))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('登录超时,检查网络或窗口是否被覆盖', 'red')}")
-            self.log.error(_log("登录失败"))
-            self.log.error(formatExc(format_exc()))
+            log.error(_log("登录失败"))
+            log.error(formatExc(format_exc()))
             return False
 
     def insert2FACode(self) -> None:
@@ -126,7 +126,7 @@ class LoginHandler:
         """
         authText = self.wait.until(ec.presence_of_element_located(
             (By.CSS_SELECTOR, "h5.grid-panel__subtitle")))
-        self.log.info(f'{_log("请输入二级验证代码:")} ({authText.text})')
+        log.info(f'{_log("请输入二级验证代码:")} ({authText.text})')
         stats.status = _("二级验证", color="yellow")
         sleep(3)
         self.locks["refreshLock"].acquire()
@@ -139,7 +139,7 @@ class LoginHandler:
         submitButton = self.wait.until(ec.element_to_be_clickable(
             (By.CSS_SELECTOR, "button[type=submit]")))
         self.driver.execute_script("arguments[0].click();", submitButton)
-        self.log.info(_log("二级验证代码提交成功"))
+        log.info(_log("二级验证代码提交成功"))
         stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('二级验证代码提交成功', 'green')}")
 
     def userDataLogin(self) -> None:
@@ -157,7 +157,7 @@ class LoginHandler:
                 blockInfo = WebDriverWait(self.driver, 7).until(ec.presence_of_element_located(
                     (By.CSS_SELECTOR, "h1[data-translate=block_headline]")))
                 if blockInfo.text == "Sorry, you have been blocked":
-                    self.log.error(_log("当前网络环境被封锁,请更换网络环境"))
+                    log.error(_log("当前网络环境被封锁,请更换网络环境"))
                     stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('当前网络环境被封锁,请更换网络环境', 'red')}")
                     sleep(4)
                     sysQuit(self.driver, _log("当前网络环境被封锁,请更换网络环境"))
@@ -166,19 +166,19 @@ class LoginHandler:
             try:
                 WebDriverWait(self.driver, 7).until(ec.presence_of_element_located(
                     (By.CSS_SELECTOR, "input[name=username]")))
-                self.log.error(_log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
+                log.error(_log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试', 'red')}")
                 sleep(4)
                 sysQuit(self.driver, _log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
             except Exception:
                 pass
         except TimeoutException:
-            Utils().debugScreen(self.driver, "userDataLogin")
             if self.driver.find_element(By.CSS_SELECTOR, "div.riotbar-summoner-name"):
                 return
+            debugScreen(self.driver, "userDataLogin")
             stats.status = _("登录失败", color="red")
-            self.log.error(_log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
+            log.error(_log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
             stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试', 'red')}")
-            self.log.error(formatExc(format_exc()))
+            log.error(formatExc(format_exc()))
             sleep(4)
             sysQuit(self.driver, _log('免密登录失败,请去谷歌浏览器手动登录并勾选保持登录后再行尝试'))
