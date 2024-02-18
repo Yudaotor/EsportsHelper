@@ -8,7 +8,7 @@ FILE_SIZE = 1024 * 1024 * 100
 BACKUP_COUNT = 5
 PROGRAM_NAME = "EsportsHelper"
 GITHUB_ADDRESS = "https://github.com/Yudaotor/EsportsHelper"
-VERSION = "2.3.2"
+VERSION = "2.4.0"
 
 
 class Logger:

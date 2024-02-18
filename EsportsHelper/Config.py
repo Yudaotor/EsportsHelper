@@ -7,7 +7,6 @@ from rich import print
 from yaml.parser import ParserError
 from yaml.scanner import ScannerError
 from EsportsHelper.I18n import i18n
-from EsportsHelper.Logger import delimiterLine
 from EsportsHelper.Logger import log
 from EsportsHelper.Stats import stats
 
@@ -32,6 +31,19 @@ def findConfigFile(configPath):
 
 
 def formatBoolean(variable):
+    """
+    Convert string representation of boolean variable to corresponding boolean value.
+
+    Args:
+        variable (str or bool): The variable to convert, can be a string or a boolean value.
+
+    Returns:
+        bool: The converted boolean value.
+
+    Notes:
+        If the input variable is a string, it converts "true" to True, "false" to False, and other strings to False.
+        If the input variable is a boolean, it returns the boolean value directly.
+    """
     if isinstance(variable, str):
         if variable.lower() == "true":
             variable = True
@@ -55,7 +67,7 @@ class Config:
                 os.kill(os.getpid(), 9)
             with open(configPath, "r", encoding='utf-8') as f:
                 configFile = yaml.safe_load(f)
-            self.version = "2.3.2"
+            self.version = "2.4.0"
             self.headless = configFile.get("headless", False)
             self.username = configFile.get("username", "账号用户名")
             self.password = configFile.get("password", "密码")
@@ -287,7 +299,6 @@ class Config:
         if self.onlyWatchMatches or self.disWatchMatches:
             self.mode = "normal"
             log.info(_log("已配置观看赛区,模式切换成默认模式."))
-
 
 
 parser = argparse.ArgumentParser(
