@@ -13,6 +13,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 from EsportsHelper.I18n import i18n
 from EsportsHelper.Logger import log
+
 _ = i18n.getText
 _log = i18n.getLog
 
@@ -73,9 +74,15 @@ class LoginHandler:
                 log.info(_log("请前往浏览器手动解决验证码"))
                 stats.info.append(f"{datetime.now().strftime('%H:%M:%S')} {_('请前往浏览器手动解决验证码', 'yellow')}")
                 if config.headless:
-                    log.info(_log("headless情况下解决方案一: \n打开任意浏览器,在地址栏输入: chrome://inspect/#devices回车后等待一会,直到界面下方刷新出Remote Target,并点击对应登录界面的inspect,从而唤出调试用的浏览器界面,手动解决验证码后关闭之前弹出的界面即可."))
+                    log.info(_log("headless情况下解决方案一: \n打开任意浏览器,在地址栏输入:") +
+                             " chrome://inspect/#devices" +
+                             _log("回车后等待一会,直到界面下方刷新出Remote Target,并点击对应登录界面的inspect,从而唤出调试用的浏览器界面,") +
+                             _log("手动解决验证码后关闭之前弹出的界面即可."))
                     log.info(_log("解决方案二:\n请配置userDataDir来实现跳过验证码, 具体请查看github的wiki教程"))
-                    stats.info.append(_("headless情况下解决方案一: \n打开任意浏览器,在地址栏输入: chrome://inspect/#devices回车后等待一会,直到界面下方刷新出Remote Target,并点击对应登录界面的inspect,从而唤出调试用的浏览器界面,手动解决验证码后关闭之前弹出的界面即可.", "yellow"))
+                    stats.info.append(_("headless情况下解决方案一: \n打开任意浏览器,在地址栏输入:", color="yellow") +
+                                      " [yellow]chrome://inspect/#devices[/]" +
+                                      _("回车后等待一会,直到界面下方刷新出Remote Target,并点击对应登录界面的inspect,从而唤出调试用的浏览器界面,", color="yellow") +
+                                      _("手动解决验证码后关闭之前弹出的界面即可.", color="yellow"))
                     stats.info.append(_("解决方案二:\n请配置userDataDir来实现跳过验证码, 具体请查看github的wiki教程", "yellow"))
                 try:
                     WebDriverWait(self.driver, 110).until(ec.presence_of_element_located(
