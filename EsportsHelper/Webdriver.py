@@ -1,4 +1,6 @@
 import os
+import socket
+
 import undetected_chromedriver as uc
 from rich import print
 from webdriver_manager.chrome import ChromeDriverManager
@@ -7,8 +9,24 @@ from webdriver_manager.core.driver_cache import DriverCacheManager
 from EsportsHelper.Config import config
 from EsportsHelper.Logger import log
 from EsportsHelper.I18n import i18n
+from EsportsHelper.Stats import stats
+
 _ = i18n.getText
 _log = i18n.getLog
+
+
+def checkPort(ip, port):
+    """
+    Check if the port is occupied
+    """
+    s = socket.socket()
+    try:
+        s.connect((ip, port))
+        return True
+    except OSError:
+        return False
+    finally:
+        s.close()
 
 
 def getDriverVersion(chromeDriverManager):
@@ -42,11 +60,33 @@ def addWebdriverOptions(options):
     Raises:
     - None
     """
+    if checkPort("localhost", 9222):
+        log.error(_log("检测到端口9222被占用"))
+        if checkPort("localhost", 9229):
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.bind(("localhost", 0))
+            sock.listen(1)
+            port = sock.getsockname()[1]
+            sock.close()
+            log.error(_log("检测到端口9229被占用,将使用随机端口:" + str(port)))
+            if config.headless:
+                stats.info.append(_("检测到端口9222和9229都被占用,将使用随机端口:", color="yellow")
+                                  + f"[yellow]{port}[/yellow]")
+                stats.info.append(_("如需使用方案一,请在打开的网页中的Configure选项中配置以下信息:", color="yellow"))
+                stats.info.append("localhost:" + str(port))
+
+            stats.debugPort = port
+        else:
+            stats.debugPort = 9229
+            log.error(_log("使用默认端口9229"))
+    else:
+        stats.debugPort = 9222
+        log.error(_log("使用默认端口9222"))
     options.add_argument("--disable-extensions")
     options.add_argument('--disable-audio-output')
     options.add_argument('--autoplay-policy=no-user-gesture-required')
     options.add_argument("--disable-gpu")
-    options.debugger_address = "127.0.0.1:9222"
+    options.debugger_address = "127.0.0.1:" + str(stats.debugPort)
     options.set_capability("goog:loggingPrefs", {
         'performance': 'ALL'
     })

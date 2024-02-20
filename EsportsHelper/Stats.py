@@ -25,6 +25,7 @@ class Stats:
         self.sessionDropsDict = {}
         self.nextMatch = ""
         self.watchRegion = ""
+        self.debugPort = 9222
 
 
 stats = Stats()
