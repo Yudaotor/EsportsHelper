@@ -16,7 +16,7 @@ from EsportsHelper.I18n import i18n
 from EsportsHelper.Stats import stats
 from EsportsHelper.Utils import colorFlicker, getWebhookInfo, \
     getConfigInfo, getLiveRegionsInfo, getNextMatchTimeInfo, \
-    getDropInfo, getSleepBalloonsInfo, cleanBriefInfo, \
+    getSessionDropInfo, getSleepBalloonsInfo, cleanBriefInfo, \
     getLiveInfo, getInfo, getWarningInfo, formatExc, getSleepPeriodInfo
 
 _ = i18n.getText
@@ -87,7 +87,7 @@ class GUIThread(Thread):
             )
 
             is_dockerized = config.isDockerized
-            dropInfo = getDropInfo()
+            sessionDropInfo = getSessionDropInfo()
             configInfo = getConfigInfo()
             webhookInfo = getWebhookInfo()
             sleepPeriodInfo = getSleepPeriodInfo()
@@ -97,7 +97,7 @@ class GUIThread(Thread):
                                                      style="bold yellow", title_align="left",
                                                      title=_('电竞助手', color="bold blue") + str(config.version) + " " + sleepPeriodInfo,
                                                      subtitle_align="right", subtitle=configInfo)),
-                Layout(name="drop", renderable=Panel(dropInfo,
+                Layout(name="drop", renderable=Panel(sessionDropInfo,
                                                      title=_('运行期间掉宝', color="bold yellow"),
                                                      title_align="left", style="bold yellow", subtitle=webhookInfo + " 一 " + todayDropsInfo, subtitle_align="right"))
             )
@@ -133,16 +133,14 @@ class GUIThread(Thread):
             frameCount = 0
             with Live(layout, auto_refresh=False, console=console) as live:
                 while True:
-                    drops = ""
-                    if stats.sessionDropsDict:
-                        for key in stats.sessionDropsDict:
-                            drops += f"{key}: {stats.sessionDropsDict.get(key)}\t"
-                    dropInfo = drops if drops else _("暂无掉落", "bold yellow")
+                    sessionDropInfo = getSessionDropInfo()
                     webhookInfo = getWebhookInfo()
                     sessionDropNumber = len(stats.currentDropsList) - len(stats.initDropsList)
-                    Layout(name="drop", renderable=Panel(dropInfo,
-                                                         title=_('运行期间掉宝', color="bold yellow"),
-                                                         title_align="left", style="bold yellow", subtitle=webhookInfo + "      " + todayDropsInfo, subtitle_align="right"))
+                    todayDropsInfo = _("今日掉宝", "bold yellow") + f":{stats.todayDrops}"
+                    layout["upper"]["banner"]["drop"].update(Panel(sessionDropInfo,
+                                                                   title=_('运行期间掉宝', color="bold yellow"),
+                                                                   title_align="left", style="bold yellow",
+                                                                   subtitle=webhookInfo + " 一 " + todayDropsInfo, subtitle_align="right"))
                     layout["upper"]["table"].update(setAccountTable(frameCount))
 
                     cleanBriefInfo()
@@ -167,7 +165,9 @@ class GUIThread(Thread):
                                                           title_align="left", style="bold yellow"))
                     layout["lower"]["live2"].update(Panel("\n".join(liveInfo2), style="bold yellow", title_align="left", title=modeInfo,
                                                           subtitle=_("请我喝一杯咖啡", "bold cyan") + ":https://github.com/Yudaotor", subtitle_align="right"))
-                    layout["lower"]["info1"].update(Panel("\n".join(info1), subtitle=_("观看属地", "bold yellow") + ":" + watchRegion, subtitle_align="right", title=_("简略日志", "bold yellow"), title_align="left", style="bold yellow"))
+                    layout["lower"]["info1"].update(
+                        Panel("\n".join(info1), subtitle=_("观看属地", "bold yellow") + ":" + watchRegion, subtitle_align="right", title=_("简略日志", "bold yellow"),
+                              title_align="left", style="bold yellow"))
                     layout["lower"]["info2"].update(
                         Panel("\n".join(info2), subtitle=_("(详细请见log文件)", "bold yellow"), subtitle_align="right", style="bold yellow", title_align="right",
                               title=_("代挂:闲鱼店铺搜Khalilc", "bold yellow")))

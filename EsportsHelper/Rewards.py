@@ -541,7 +541,7 @@ class Rewards:
             with open(f'./dropsHistory/{strftime("%Y%m%d-")}drops.txt', "a+"):
                 pass
             stats.todayDrops = 0
-        newDropList = [drop for drop in stats.currentDropsList if stats.lastDropCheckTime <= drop.get("unlockedDateMillis", -1)]
+        newDropList = [drop for drop in stats.currentDropsList if (stats.lastDropCheckTime - 6000) <= drop.get("unlockedDateMillis", -1)]
         # newDropList = [drop for drop in stats.currentDropsList if drop.get("cappedDrop", False)]
         if len(newDropList) > 0:
             newDrops = parseDropList(newDropList)
