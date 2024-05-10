@@ -35,7 +35,7 @@ def getRewardByLog(driver, isInit=False):
             if message.get('method') != 'Network.responseReceived':
                 continue
             packetType = message.get('params').get('response').get('mimeType')
-            if packetType != "application/json":
+            if packetType != "application/json" and packetType != "text/plain":
                 continue
             requestId = message.get('params').get('requestId')
             url = message.get('params').get('response').get('url')
