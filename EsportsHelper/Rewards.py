@@ -23,6 +23,26 @@ from EsportsHelper.Stats import stats
 _ = i18n.getText
 _log = i18n.getLog
 
+class DropTracker:
+    def __init__(self):
+        self.latestProcessedDropTime = int(datetime.now().timestamp() * 1e3)  # Initialize with current time
+
+    def checkNewDrops(self, currentDropsList):
+        # Sort drops by unlockedDateMillis in descending order
+        sorted_drops = sorted(currentDropsList, key=lambda drop: drop.get("unlockedDateMillis", 0), reverse=True)
+        
+        newDropList = []
+        for drop in sorted_drops:
+            unlockedDateMillis = drop.get("unlockedDateMillis", -1)
+            
+            # Early exit if we encounter a drop older than the latest processed drop time
+            if unlockedDateMillis <= self.latestProcessedDropTime:
+                break
+            
+            newDropList.append(drop)
+            self.latestProcessedDropTime = unlockedDateMillis
+
+        return newDropList
 
 class Rewards:
     def __init__(self, driver, youtube, twitch) -> None:
@@ -32,6 +52,8 @@ class Rewards:
         self.today = datetime.now().day
         self.networkHandler = NetworkHandler(driver=driver)
         self.wait = WebDriverWait(self.driver, 30)
+        self.drop_tracker = DropTracker()
+
 
     def checkRewardsFlag(self, stream: str):
         """
@@ -541,11 +563,14 @@ class Rewards:
             with open(f'./dropsHistory/{strftime("%Y%m%d-")}drops.txt', "a+"):
                 pass
             stats.todayDrops = 0
-        newDropList = [drop for drop in stats.currentDropsList if (stats.lastDropCheckTime - 6000) <= drop.get("unlockedDateMillis", -1)]
+        #log.info("stats.currentDropsList")
+        #log.info(stats.currentDropsList)
+        newDropList = self.drop_tracker.checkNewDrops(stats.currentDropsList)
         # newDropList = [drop for drop in stats.currentDropsList if drop.get("cappedDrop", False)]
-        if len(newDropList) > 0:
+        if newDropList:
             newDrops = parseDropList(newDropList)
-
+            log.info("newDrops")
+            log.info(newDrops)
             for drop in newDrops:
                 cappedInfo = " "
                 if str(drop.numberOfFansUnlocked) != "0" and drop.capped:
@@ -577,4 +602,3 @@ class Rewards:
                         log.error(formatExc(format_exc()))
         else:
             pass
-        stats.lastDropCheckTime = int(datetime.now().timestamp() * 1e3)
