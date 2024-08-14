@@ -61,7 +61,7 @@ def addWebdriverOptions(options):
     - None
     """
     if checkPort("localhost", 9222):
-        log.info(_log("检测到端口9222被占用"))
+        log.error(_log("检测到端口9222被占用"))
         if checkPort("localhost", 9229):
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.bind(("localhost", 0))
@@ -78,10 +78,10 @@ def addWebdriverOptions(options):
             stats.debugPort = port
         else:
             stats.debugPort = 9229
-            log.info(_log("使用默认端口9229"))
+            log.error(_log("使用默认端口9229"))
     else:
         stats.debugPort = 9222
-        log.info(_log("使用默认端口9222"))
+        log.error(_log("使用默认端口9222"))
     options.add_argument("--disable-extensions")
     options.add_argument('--disable-audio-output')
     options.add_argument('--autoplay-policy=no-user-gesture-required')

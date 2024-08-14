@@ -504,7 +504,6 @@ def checkRewardPage(driver, isInit=False):
         getRewardByLog(driver, isInit)
     if isInit:
         log.info(_log("初始化reward网站成功"))
-        setTodayDropsNumber(isInit=True)
         if config.exportDrops:
             try:
                 log.info(_log("总掉落文件生成中..."))
@@ -832,7 +831,7 @@ def getNextMatchTimeInfo():
     return nextMatchTime
 
 
-def getSessionDropInfo():
+def getDropInfo():
     """
     Retrieves information about dropped rewards during the current session.
 
@@ -1102,17 +1101,14 @@ def debugScreen(driver, lint="normal"):
         log.error(formatExc(format_exc()))
 
 
-def setTodayDropsNumber(isInit=False):
+def setTodayDropsNumber():
     """
     Set the number of drops for today.
 
     This function retrieves all drop items from the current drop list (stats.currentDropsList) that have a drop time after midnight today and sets the count as stats.todayDrops.
 
     """
-    if isInit:
-        dropsList = stats.initDropsList
-    else:
-        dropsList = stats.currentDropsList
+    dropsList = stats.currentDropsList
     currentTime = datetime.now()
     midnightTime = currentTime.replace(hour=0, minute=0, second=0, microsecond=0)
     midnightMillis = midnightTime.timestamp() * 1000
