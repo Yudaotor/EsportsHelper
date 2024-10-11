@@ -9,6 +9,7 @@
 **Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md) | [Spanish](https://github.com/Yudaotor/EsportsHelper/blob/main/README.ES.md)
 
 # EsportsHelper
+(This project will be updated according to the situation (will be), too busy!!!)
 Automatically watch [LolEsports](lolesports.com) broadcasts using selenium and undetected_chromedriver.
 
 Google Chrome must be downloaded in order to work (must be the latest version).
