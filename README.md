@@ -8,6 +8,7 @@
 
 **Language**: [English](https://github.com/Yudaotor/EsportsHelper/blob/main/README.EN.md) | [Chinese](https://github.com/Yudaotor/EsportsHelper/blob/main/README.md) | [Spanish](https://github.com/Yudaotor/EsportsHelper/blob/main/README.ES.md)
 # 电竞助手 EsportsHelper
+（本项目随缘更新（会的），too busy！！！）
 通过selenium模拟浏览器来自动观看电竞比赛,网址: [LolEsports](lolesports.com)  
 **避免被拳头检测,请尽量过滤掉小赛区(打开安全模式即可)(以及不要同时观看超过5个比赛!!!!)**  
 哦对了,用的是谷歌浏览器哦 （必须要下一个最新版本谷歌浏览器哦）  
