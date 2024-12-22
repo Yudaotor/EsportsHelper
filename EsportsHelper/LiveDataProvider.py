@@ -20,7 +20,7 @@ client = cloudscraper.create_scraper(
         'desktop': True
     },
     debug=False)
-client.get("https://lolesports.com/&lang=en")
+client.get("https://lolesports.com/&lang=en", allow_redirects=True)
 
 
 def fetchLeaguesId():
